@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WORLD SCRIPT</title>
+  <style>
+    :root{
+      --bg:#06080d;
+      --panel:#101216;
+      --stroke:rgba(255,255,255,.08);
+      --stroke-strong:rgba(255,255,255,.14);
+      --text:#f5f7fb;
+      --muted:#9aa5b3;
+      --green:#42f5ac;
+      --cyan:#63ddff;
+      --blue:#5f7dff;
+      --red:#ff5872;
+      --shadow:0 30px 80px rgba(0,0,0,.42);
+      --radius:28px;
+      --max:1440px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 18% 15%, rgba(95,125,255,.18), transparent 26%),
+        radial-gradient(circle at 82% 18%, rgba(255,88,114,.16), transparent 24%),
+        radial-gradient(circle at 68% 78%, rgba(99,221,255,.16), transparent 30%),
+        linear-gradient(180deg, #05070b 0%, #090b11 42%, #06090f 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+      position:relative;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-18%;
+      background:
+        radial-gradient(circle at 22% 30%, rgba(95,125,255,.10), transparent 16%),
+        radial-gradient(circle at 72% 20%, rgba(255,88,114,.10), transparent 16%),
+        radial-gradient(circle at 60% 72%, rgba(99,221,255,.10), transparent 18%);
+      filter:blur(95px);
+      animation:bgMove 18s ease-in-out infinite alternate;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    @keyframes bgMove{
+      0%{transform:translate3d(0,0,0) scale(1)}
+      100%{transform:translate3d(0,-24px,0) scale(1.06)}
+    }
+
+    .noise{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      opacity:.03;
+      background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size:3px 3px;
+      mix-blend-mode:soft-light;
+    }
+
+    .particles{
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .particle{
+      position:absolute;
+      top:-10vh;
+      opacity:.12;
+      user-select:none;
+      animation:fall linear infinite;
+      filter:drop-shadow(0 0 8px rgba(255,255,255,.08));
+    }
+
+    @keyframes fall{
+      0%{transform:translateY(-12vh) translateX(0) rotate(0deg);opacity:0}
+      10%{opacity:.12}
+      90%{opacity:.1}
+      100%{transform:translateY(112vh) translateX(26px) rotate(120deg);opacity:0}
+    }
+
+    .wrap{
+      width:min(var(--max), calc(100% - 34px));
+      margin:0 auto;
+      position:relative;
+      z-index:2;
+    }
+
+    .topbar{
+      position:fixed;
+      top:16px;
+      right:16px;
+      z-index:10;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .top-badge{
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--stroke);
+      backdrop-filter:blur(12px);
+      font-size:14px;
+    }
+
+    .side-nav{
+      position:fixed;
+      left:18px;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:5;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .side-btn{
+      width:54px;
+      height:54px;
+      border-radius:18px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04);
+      display:grid;
+      place-items:center;
+      color:#fff;
+      text-decoration:none;
+      font-size:22px;
+      backdrop-filter:blur(12px);
+      box-shadow:var(--shadow);
+      transition:.25s ease;
+    }
+
+    .side-btn:hover{
+      transform:translateY(-2px) scale(1.04);
+      border-color:rgba(99,221,255,.22);
+    }
+
+    .hero{
+      min-height:98vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:78px 0 42px;
+      position:relative;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      bottom:10px;
+      left:50%;
+      width:1px;
+      height:90px;
+      background:linear-gradient(to bottom, rgba(255,255,255,.16), transparent);
+      opacity:.4;
+      transform:translateX(-50%);
+    }
+
+    .hero-inner{max-width:1080px}
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 15px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.03);
+      color:#d0d7e0;
+      font-size:13px;
+      margin-bottom:24px;
+      backdrop-filter:blur(10px);
+    }
+
+    .title{
+      margin:0;
+      font-size:clamp(64px, 12vw, 146px);
+      line-height:.9;
+      font-weight:900;
+      letter-spacing:-.07em;
+      color:#fff;
+      text-shadow:
+        0 0 10px rgba(99,221,255,.16),
+        0 0 28px rgba(95,125,255,.14),
+        0 0 42px rgba(255,88,114,.10);
+    }
+
+    .title-neon{
+      display:inline-block;
+      background:linear-gradient(90deg,#ffffff 0%, #abffe7 34%, #78e8ff 66%, #ffffff 100%);
+      background-size:200% auto;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation:neonShift 5.5s linear infinite;
+      filter:drop-shadow(0 0 14px rgba(66,245,172,.12));
+    }
+
+    @keyframes neonShift{
+      0%{background-position:0% center}
+      100%{background-position:200% center}
+    }
+
+    .glitch-wrap{
+      min-height:92px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:24px;
+      padding:0 12px;
+    }
+
+    .glitch{
+      position:relative;
+      display:inline-block;
+      font-size:clamp(20px, 2.4vw, 36px);
+      font-weight:800;
+      color:var(--green);
+      text-shadow:0 0 14px rgba(66,245,172,.16);
+      letter-spacing:-.02em;
+    }
+
+    .glitch::before,.glitch::after{
+      content:attr(data-text);
+      position:absolute;
+      inset:0;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .glitch.glitching::before{
+      opacity:.75;
+      color:var(--red);
+      transform:translate(3px,-1px);
+      clip-path:inset(0 0 46% 0);
+      animation:glitchTop .18s linear 2;
+    }
+
+    .glitch.glitching::after{
+      opacity:.75;
+      color:var(--cyan);
+      transform:translate(-3px,1px);
+      clip-path:inset(56% 0 0 0);
+      animation:glitchBottom .18s linear 2;
+    }
+
+    @keyframes glitchTop{
+      0%{transform:translate(0,0)}
+      25%{transform:translate(3px,-2px)}
+      50%{transform:translate(-2px,1px)}
+      100%{transform:translate(2px,-1px)}
+    }
+
+    @keyframes glitchBottom{
+      0%{transform:translate(0,0)}
+      25%{transform:translate(-3px,2px)}
+      50%{transform:translate(2px,-1px)}
+      100%{transform:translate(-2px,1px)}
+    }
+
+    .hero-text{
+      max-width:780px;
+      margin:18px auto 0;
+      font-size:17px;
+      line-height:1.8;
+      color:var(--muted);
+    }
+
+    .hero-actions{
+      margin-top:32px;
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .btn{
+      text-decoration:none;
+      color:#fff;
+      font-size:15px;
+      font-weight:800;
+      padding:15px 20px;
+      border-radius:14px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04);
+      transition:.24s ease;
+      backdrop-filter:blur(12px);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+    }
+
+    .btn:hover{transform:translateY(-2px)}
+
+    .btn-primary{
+      color:#06120d;
+      background:linear-gradient(90deg, rgba(33,187,117,.96), rgba(66,245,172,.96));
+      border-color:rgba(66,245,172,.30);
+      box-shadow:0 16px 36px rgba(66,245,172,.18);
+    }
+
+    .hero-meta{
+      margin-top:44px;
+      color:#6f7884;
+      font-size:14px;
+    }
+
+    .cards-section{
+      padding:26px 0 110px;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:20px;
+      margin-bottom:18px;
+    }
+
+    .section-title{
+      font-size:42px;
+      line-height:1;
+      margin:0;
+      letter-spacing:-.04em;
+    }
+
+    .section-sub{
+      color:var(--muted);
+      max-width:650px;
+      line-height:1.7;
+    }
+
+    .cards-grid{
+      display:grid;
+      grid-template-columns:repeat(12, 1fr);
+      gap:22px;
+      grid-auto-rows:110px;
+      align-content:start;
+    }
+
+    .card{
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(18,20,25,.94), rgba(10,12,16,.96));
+      box-shadow:var(--shadow);
+      padding:28px;
+      transition:
+        transform .28s ease,
+        border-color .28s ease,
+        box-shadow .28s ease,
+        background .28s ease;
+      isolation:isolate;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .card:hover{
+      transform:translateY(-6px);
+      border-color:var(--stroke-strong);
+      box-shadow:0 36px 100px rgba(0,0,0,.48);
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 85% 82%, rgba(99,221,255,.08), transparent 18%),
+        radial-gradient(circle at 92% 78%, rgba(255,88,114,.08), transparent 16%);
+      z-index:0;
+      transition:.3s ease;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg, transparent 12%, rgba(255,255,255,.035), transparent 55%);
+      opacity:0;
+      transition:.35s ease;
+      z-index:0;
+    }
+
+    .card:hover::after{opacity:1}
+
+    .card > *{position:relative;z-index:1}
+
+    .card-top{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      color:#dce4ef;
+      font-size:15px;
+      margin-bottom:18px;
+      font-weight:600;
+    }
+
+    .card h3{
+      margin:0 0 14px;
+      font-size:34px;
+      line-height:1.02;
+      letter-spacing:-.04em;
+      max-width:74%;
+      transition:transform .28s ease;
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.8;
+      max-width:72%;
+      transition:transform .28s ease,color .28s ease;
+    }
+
+    .card ul{
+      margin:18px 0 0;
+      padding-left:18px;
+      color:#dfe7f1;
+      font-size:15px;
+      line-height:1.9;
+      max-width:72%;
+      transition:transform .28s ease;
+    }
+
+    .card:hover h3,
+    .card:hover p,
+    .card:hover ul{
+      transform:translateY(-2px);
+    }
+
+    .emoji-corner{
+      position:absolute;
+      right:22px;
+      bottom:10px;
+      font-size:120px;
+      opacity:.12;
+      line-height:1;
+      pointer-events:none;
+      user-select:none;
+      transform:translateZ(0) scale(1);
+      transition:transform .35s ease, opacity .35s ease;
+      z-index:0;
+    }
+
+    .card:hover .emoji-corner{
+      transform:scale(1.08) translateY(-4px);
+      opacity:.16;
+    }
+
+    .image-corner{
+      position:absolute;
+      pointer-events:none;
+      user-select:none;
+      object-fit:contain;
+      z-index:0;
+      transition:transform .35s ease, opacity .35s ease, filter .35s ease;
+    }
+
+    .card:hover .image-corner{
+      transform:scale(1.05);
+    }
+
+    .card-overlay{
+      position:absolute;
+      inset:auto 20px 18px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      opacity:0;
+      transform:translateY(10px);
+      transition:.28s ease;
+      pointer-events:none;
+      z-index:2;
+    }
+
+    .card:hover .card-overlay{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .mini-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(10px);
+      color:#eef3fb;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .mini-arrow{
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color:#fff;
+      font-size:16px;
+    }
+
+    .shine{
+      position:absolute;
+      inset:-40%;
+      background:radial-gradient(circle, rgba(255,255,255,.10) 0%, transparent 32%);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .3s ease;
+      mix-blend-mode:screen;
+      z-index:0;
+    }
+
+    .card:hover .shine{opacity:.6}
+
+    .overlay-layer{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(26px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .modal-bg{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:20;
+      padding:16px;
+    }
+
+    .modal-bg.show{display:flex}
+
+    .modal{
+      width:min(460px,100%);
+      background:rgba(14,16,20,.95);
+      border:1px solid var(--stroke);
+      border-radius:24px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+    }
+
+    .modal h3{
+      margin:0 0 14px;
+      font-size:26px;
+    }
+
+    .field{
+      width:100%;
+      margin:0 0 12px;
+      padding:14px 14px;
+      border-radius:14px;
+      outline:none;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#fff;
+      font-size:15px;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .row > *{flex:1}
+
+    .loader{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:260px;
+      color:var(--muted);
+      font-size:18px;
+    }
+
+    .error{
+      color:#ff8ea0;
+      font-size:14px;
+      margin-top:6px;
+    }
+
+    .admin-float{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      text-decoration:none;
+      color:#fff;
+      font-size:24px;
+      background:linear-gradient(135deg, rgba(66,245,172,.18), rgba(99,221,255,.18));
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(14px);
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+      z-index:30;
+      transition:.25s ease;
+    }
+    .admin-float:hover{
+      transform:translateY(-3px) scale(1.04);
+    }
+    .hidden{
+      display:none !important;
+    }
+
+    @media (max-width:1180px){
+      .side-nav{display:none}
+      .cards-grid{
+        grid-template-columns:repeat(6, 1fr);
+        grid-auto-rows:100px;
+      }
+      .card{
+        grid-column:span 6 !important;
+        grid-row:auto !important;
+        min-height:340px !important;
+      }
+      .card h3,.card p,.card ul{max-width:100%}
+    }
+
+    @media (max-width:760px){
+      .hero{min-height:auto;padding:72px 0 28px}
+      .glitch-wrap{min-height:100px}
+      .section-head{flex-direction:column;align-items:flex-start}
+      .cards-grid{grid-template-columns:1fr;grid-auto-rows:auto}
+      .card{
+        min-height:320px !important;
+      }
+      .card h3,.card p,.card ul{max-width:100%}
+      .emoji-corner{font-size:88px}
+      .card-overlay{opacity:1;transform:none;position:static;margin-top:20px}
+      .topbar{left:12px;right:12px;top:12px;justify-content:flex-end}
+    }
+    
+    .hero-media-stage{
+      position: relative;
+      width: min(980px, 100%);
+      min-height: 330px;
+      margin: 40px auto 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      isolation: isolate;
+    }
+    
+    /* центральная зелёная подсветка */
+    .hero-media-stage::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:8px;
+      transform:translateX(-50%);
+      width:76%;
+      height:90px;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 50%,
+          rgba(66,245,172,0.22) 0%,
+          rgba(66,245,172,0.10) 34%,
+          rgba(66,245,172,0.04) 58%,
+          transparent 78%);
+      filter: blur(20px);
+      z-index:0;
+      pointer-events:none;
+    }
+    
+    .eq-wrap{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform:translateX(-50%);
+      width:min(960px, 100%);
+      height:250px;
+      z-index:2;
+      pointer-events:none;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      opacity:.95;
+      filter:
+        drop-shadow(0 0 20px rgba(66,245,172,0.15))
+        drop-shadow(0 0 42px rgba(66,245,172,0.08));
+    }
+    
+    .eq-bars{
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      gap:7px;
+    }
+    
+    .eq-bar{
+      display:block;
+      width:18px;
+      min-height:16px;
+      border-radius: 10px 10px 4px 4px;
+      background:
+        linear-gradient(180deg,
+          rgba(230,255,237,0.98) 0%,
+          rgba(148,255,191,0.96) 14%,
+          rgba(66,245,172,0.96) 34%,
+          rgba(36,211,126,0.88) 64%,
+          rgba(14,122,72,0.72) 100%);
+      box-shadow:
+        0 0 12px rgba(66,245,172,0.30),
+        0 0 32px rgba(66,245,172,0.12);
+      transform-origin: bottom center;
+      animation: eqPulseOnly 1.15s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .eq-bar::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:18%;
+      background:linear-gradient(180deg, rgba(255,255,255,0.50), transparent);
+      opacity:.95;
+    }
+    
+    .eq-bar::after{
+      content:"";
+      position:absolute;
+      left:15%;
+      right:15%;
+      bottom:0;
+      height:100%;
+      background:linear-gradient(180deg, transparent, rgba(255,255,255,0.05));
+      opacity:.45;
+    }
+    
+    .eq-bar:nth-child(1){animation-delay:.05s}
+    .eq-bar:nth-child(2){animation-delay:.18s}
+    .eq-bar:nth-child(3){animation-delay:.31s}
+    .eq-bar:nth-child(4){animation-delay:.12s}
+    .eq-bar:nth-child(5){animation-delay:.44s}
+    .eq-bar:nth-child(6){animation-delay:.22s}
+    .eq-bar:nth-child(7){animation-delay:.36s}
+    .eq-bar:nth-child(8){animation-delay:.14s}
+    .eq-bar:nth-child(9){animation-delay:.52s}
+    .eq-bar:nth-child(10){animation-delay:.26s}
+    .eq-bar:nth-child(11){animation-delay:.08s}
+    .eq-bar:nth-child(12){animation-delay:.34s}
+    .eq-bar:nth-child(13){animation-delay:.48s}
+    .eq-bar:nth-child(14){animation-delay:.16s}
+    .eq-bar:nth-child(15){animation-delay:.29s}
+    .eq-bar:nth-child(16){animation-delay:.54s}
+    .eq-bar:nth-child(17){animation-delay:.19s}
+    .eq-bar:nth-child(18){animation-delay:.40s}
+    .eq-bar:nth-child(19){animation-delay:.11s}
+    .eq-bar:nth-child(20){animation-delay:.32s}
+    .eq-bar:nth-child(21){animation-delay:.46s}
+    .eq-bar:nth-child(22){animation-delay:.24s}
+    .eq-bar:nth-child(23){animation-delay:.38s}
+    .eq-bar:nth-child(24){animation-delay:.15s}
+    .eq-bar:nth-child(25){animation-delay:.28s}
+    .eq-bar:nth-child(26){animation-delay:.41s}
+    .eq-bar:nth-child(27){animation-delay:.21s}
+    .eq-bar:nth-child(28){animation-delay:.49s}
+    
+    @keyframes eqPulseOnly{
+      0%   { height: 14%; }
+      14%  { height: 42%; }
+      26%  { height: 78%; }
+      40%  { height: 24%; }
+      56%  { height: 92%; }
+      72%  { height: 36%; }
+      86%  { height: 68%; }
+      100% { height: 18%; }
+    }
+    
+    /* яркая база */
+    .eq-wrap::before{
+      content:"";
+      position:absolute;
+      left:3%;
+      right:3%;
+      bottom:-1px;
+      height:7px;
+      border-radius:999px;
+      background:linear-gradient(90deg,
+        rgba(66,245,172,0.22),
+        rgba(146,255,191,0.95),
+        rgba(66,245,172,0.22));
+      box-shadow:
+        0 0 14px rgba(66,245,172,0.32),
+        0 0 28px rgba(66,245,172,0.18);
+    }
+    
+    .eq-wrap::after{
+      content:"";
+      position:absolute;
+      left:8%;
+      right:8%;
+      bottom:-52px;
+      height:58px;
+      background:linear-gradient(180deg,
+        rgba(66,245,172,0.14),
+        rgba(66,245,172,0.05),
+        transparent);
+      filter: blur(10px);
+      opacity:.6;
+    }
+    
+    /* ========= green energy fire ========= */
+    
+    .eq-fire-layer{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:min(940px, 100%);
+      height:240px;
+      z-index:1;
+      pointer-events:none;
+      overflow:visible;
+    }
+    
+    .eq-flare{
+      position:absolute;
+      bottom:0;
+      width:18px;
+      height:70px;
+      border-radius:999px 999px 999px 999px;
+      background:
+        linear-gradient(180deg,
+          rgba(196,255,210,0.00) 0%,
+          rgba(120,255,170,0.18) 18%,
+          rgba(66,245,172,0.30) 48%,
+          rgba(66,245,172,0.12) 78%,
+          rgba(66,245,172,0.00) 100%);
+      filter: blur(8px);
+      opacity: 0;
+      animation: flareRise 1.4s ease-out forwards;
+    }
+    
+    .eq-flare::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-8px;
+      transform:translateX(-50%);
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(66,245,172,0.34), transparent 70%);
+      filter: blur(4px);
+    }
+    
+    @keyframes flareRise{
+      0%{
+        transform: translateY(0) scaleY(.8);
+        opacity: 0;
+      }
+      18%{
+        opacity: .55;
+      }
+      100%{
+        transform: translateY(-85px) scaleY(1.25);
+        opacity: 0;
+      }
+    }
+    
+    /* ========= smoke ========= */
+    
+    .eq-smoke-layer{
+      position:absolute;
+      left:50%;
+      bottom:68px;
+      transform:translateX(-50%);
+      width:min(920px, 100%);
+      height:240px;
+      z-index:2;
+      pointer-events:none;
+      overflow:visible;
+    }
+    
+    .eq-smoke{
+      position:absolute;
+      bottom:0;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,
+          rgba(112,255,169,0.20) 0%,
+          rgba(112,255,169,0.12) 25%,
+          rgba(112,255,169,0.06) 48%,
+          transparent 70%);
+      filter: blur(22px);
+      opacity:0;
+      animation: smokeRiseOnly 2s ease-out forwards;
+    }
+    
+    .eq-smoke.small{ width:70px; height:70px; }
+    .eq-smoke.mid{ width:110px; height:110px; }
+    .eq-smoke.big{ width:150px; height:150px; }
+    
+    @keyframes smokeRiseOnly{
+      0%{
+        transform: translateY(0) scale(.78);
+        opacity: 0;
+      }
+      12%{
+        opacity: .34;
+      }
+      45%{
+        opacity: .18;
+      }
+      100%{
+        transform: translateY(-145px) scale(1.55);
+        opacity: 0;
+      }
+    }
+    
+    @media (max-width: 900px){
+      .hero-media-stage{
+        min-height: 250px;
+        margin-top: 26px;
+      }
+    
+      .eq-wrap{
+        height:180px;
+      }
+    
+      .eq-bars{
+        gap:5px;
+      }
+    
+      .eq-bar{
+        width:12px;
+        border-radius:8px 8px 3px 3px;
+      }
+    
+      .eq-fire-layer{
+        height:180px;
+      }
+    
+      .eq-smoke-layer{
+        height:180px;
+        bottom:50px;
+      }
+    }
+    
+    @media (max-width: 640px){
+      .hero-media-stage{
+        min-height: 210px;
+      }
+    
+      .eq-wrap{
+        height:135px;
+      }
+    
+      .eq-bars{
+        gap:4px;
+      }
+    
+      .eq-bar{
+        width:8px;
+      }
+    
+      .eq-fire-layer{
+        height:120px;
+      }
+    
+      .eq-smoke-layer{
+        height:120px;
+        bottom:36px;
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="particles" id="particles"></div>
+  <a id="adminOpenBtn" class="admin-float hidden" href="admin.html" title="Открыть админку">⚙️</a>
+  <div class="topbar">
+    <div class="top-badge" id="userBadge">Гость</div>
+    <button class="btn" id="openLoginBtn">Войти</button>
+    <button class="btn btn-primary" id="openRegisterBtn">Регистрация</button>
+    <button class="btn" id="logoutBtn" style="display:none;">Выйти</button>
+  </div>
+
+  <nav class="side-nav">
+    <a class="side-btn" href="#top">🏠</a>
+    <a class="side-btn" href="#cards">🧩</a>
+    <a class="side-btn" href="#" id="sideDownload">⬇️</a>
+    <a class="side-btn" href="#" id="sideDiscord">👥</a>
+  </nav>
+
+  <div class="wrap" id="top">
+    <section class="hero">
+      <div class="hero-inner reveal show">
+        <div class="eyebrow">⚡ ПОГРУЖАЕМСЯ В МИР ТЕХНОЛОГИЙ..</div>
+
+        <h1 class="title">
+          <span class="title-neon" id="siteTitle">WORLD SCRIPT</span>
+        </h1>
+
+        <div class="glitch-wrap">
+          <div class="glitch" id="glitchText" data-text="загрузка...">загрузка...</div>
+        </div>
+
+        <div class="hero-text" id="heroDescription">
+          Загрузка описания...
+        </div>
+
+
+        <div class="hero-media-stage" id="heroMediaStage">
+        <div class="eq-fire-layer" id="eqFireLayer"></div>
+        <div class="eq-smoke-layer" id="eqSmokeLayer"></div>
+      
+        <div class="eq-wrap" aria-hidden="true">
+          <div class="eq-bars" id="eqBars">
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="cards-section" id="cards">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="section-title">Возможности</h2>
+        </div>
+      </div>
+
+      <div class="cards-grid" id="cardsGrid">
+        <div class="loader">Загрузка карточек...</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-bg" id="loginModalBg">
+    <div class="modal">
+      <h3>Вход</h3>
+      <input id="loginField" class="field" placeholder="Логин" />
+      <input id="passwordField" class="field" type="password" placeholder="Пароль" />
+      <div class="row">
+        <button class="btn" id="closeLoginBtn">Закрыть</button>
+        <button class="btn btn-primary" id="loginBtn">Войти</button>
+      </div>
+      <div id="loginMsg" class="error"></div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="registerModalBg">
+    <div class="modal">
+      <h3>Регистрация</h3>
+      <input id="registerLoginField" class="field" placeholder="Логин" />
+      <input id="registerPasswordField" class="field" type="password" placeholder="Пароль" />
+      <div class="row">
+        <button class="btn" id="closeRegisterBtn">Закрыть</button>
+        <button class="btn btn-primary" id="registerBtn">Создать</button>
+      </div>
+      <div id="registerMsg" class="error"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://world-script-api.onrender.com";
+    const TOKEN_KEY = "ws_token";
+
+    let landingData = null;
+    let glitchPhrases = [];
+    let glitchIndex = 0;
+    let glitchInterval = null;
+    let currentUser = null;
+
+    function token() {
+      return localStorage.getItem(TOKEN_KEY) || "";
+    }
+
+    async function apiGet(url, auth = false) {
+      const headers = { "Accept": "application/json" };
+      if (auth && token()) headers.Authorization = "Bearer " + token();
+
+      const res = await fetch(API_BASE + url, { headers });
+      const text = await res.text();
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(`Сервер вернул не JSON: ${text.slice(0, 160)}`);
+      }
+
+      return { res, data };
+    }
+
+    async function apiPost(url, body = {}, auth = false) {
+      const headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      };
+      if (auth && token()) headers.Authorization = "Bearer " + token();
+
+      const res = await fetch(API_BASE + url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body)
+      });
+
+      const text = await res.text();
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(`Сервер вернул не JSON: ${text.slice(0, 160)}`);
+      }
+
+      return { res, data };
+    }
+
+    function esc(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function clamp(n, min, max) {
+      return Math.min(max, Math.max(min, n));
+    }
+
+    function hexToRgba(hex, alpha = 1) {
+      const h = String(hex || "").replace("#", "").trim();
+      if (!/^[0-9a-fA-F]{6}$/.test(h)) return `rgba(99,221,255,${alpha})`;
+      const r = parseInt(h.slice(0, 2), 16);
+      const g = parseInt(h.slice(2, 4), 16);
+      const b = parseInt(h.slice(4, 6), 16);
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    function openModal(id) {
+      document.getElementById(id)?.classList.add("show");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id)?.classList.remove("show");
+    }
+
+    function updateAuthUI() {
+      const badge = document.getElementById("userBadge");
+      const openLoginBtn = document.getElementById("openLoginBtn");
+      const openRegisterBtn = document.getElementById("openRegisterBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const adminOpenBtn = document.getElementById("adminOpenBtn");
+    
+      if (currentUser) {
+        const displayName = currentUser.game_nick || currentUser.nickname || currentUser.login;
+        badge.textContent = `${displayName} · ${currentUser.role}`;
+        openLoginBtn.style.display = "none";
+        openRegisterBtn.style.display = "none";
+        logoutBtn.style.display = "";
+    
+        if (String(currentUser.role || "").toLowerCase() === "admin") {
+          adminOpenBtn?.classList.remove("hidden");
+        } else {
+          adminOpenBtn?.classList.add("hidden");
+        }
+      } else {
+        badge.textContent = "Гость";
+        openLoginBtn.style.display = "";
+        openRegisterBtn.style.display = "";
+        logoutBtn.style.display = "none";
+        adminOpenBtn?.classList.add("hidden");
+      }
+    }
+
+    async function loadMe() {
+      if (!token()) {
+        currentUser = null;
+        updateAuthUI();
+        return;
+      }
+
+      try {
+        const { data } = await apiGet("/api/ws/me", true);
+        if (data.ok) {
+          currentUser = data.user;
+        } else {
+          localStorage.removeItem(TOKEN_KEY);
+          currentUser = null;
+        }
+      } catch {
+        localStorage.removeItem(TOKEN_KEY);
+        currentUser = null;
+      }
+
+      updateAuthUI();
+    }
+
+    function startGlitch() {
+      const glitchEl = document.getElementById("glitchText");
+      if (!glitchEl || !glitchPhrases.length) return;
+
+      glitchEl.textContent = glitchPhrases[0];
+      glitchEl.setAttribute("data-text", glitchPhrases[0]);
+
+      if (glitchInterval) clearInterval(glitchInterval);
+
+      glitchInterval = setInterval(() => {
+        glitchEl.classList.add("glitching");
+
+        setTimeout(() => {
+          glitchIndex = (glitchIndex + 1) % glitchPhrases.length;
+          const nextText = glitchPhrases[glitchIndex];
+          glitchEl.textContent = nextText;
+          glitchEl.setAttribute("data-text", nextText);
+        }, 110);
+
+        setTimeout(() => {
+          glitchEl.classList.remove("glitching");
+        }, 320);
+      }, 2600);
+    }
+
+    function getImagePositionStyle(position, size, opacity, blur) {
+      let style = `
+        width:${size}%;
+        opacity:${opacity};
+        filter:blur(${blur}px);
+      `;
+
+      if (position === "right-bottom") style += "right:0;bottom:0;max-height:88%;";
+      else if (position === "right-center") style += "right:0;top:50%;transform:translateY(-50%);max-height:86%;";
+      else if (position === "center") style += "left:50%;top:50%;transform:translate(-50%,-50%);max-height:86%;";
+      else if (position === "left-bottom") style += "left:0;bottom:0;max-height:88%;";
+      else if (position === "left-center") style += "left:0;top:50%;transform:translateY(-50%);max-height:86%;";
+      else style += "right:0;bottom:0;max-height:88%;";
+
+      return style;
+    }
+
+    function renderCardMedia(card) {
+      const imageUrl = String(card.image_url || "").trim();
+      const emoji = String(card.emoji || "").trim();
+      const opacity = clamp(Number(card.image_opacity ?? 0.18), 0, 1);
+      const size = clamp(Number(card.image_size || 42), 10, 100);
+      const blur = clamp(Number(card.image_blur || 0), 0, 50);
+      const position = String(card.image_position || "right-bottom");
+      const tint = String(card.image_tint || "").trim();
+
+      if (imageUrl) {
+        return `
+          <img class="image-corner" src="${esc(imageUrl)}" alt="" style="${getImagePositionStyle(position, size, opacity, blur)}">
+          ${tint ? `<div class="overlay-layer" style="background:${esc(tint)};mix-blend-mode:screen;opacity:${Math.min(opacity, 0.24)};"></div>` : ""}
+        `;
+      }
+
+      if (emoji) {
+        return `<div class="emoji-corner" style="opacity:${Math.max(opacity, 0.08)};font-size:${Math.max(60, size * 2.2)}px;">${emoji}</div>`;
+      }
+
+      return "";
+    }
+
+    function renderCard(card) {
+      const col = clamp(Number(card.grid_col_span || 4), 1, 12);
+      const row = clamp(Number(card.grid_row_span || 4), 1, 12);
+      const posX = clamp(Number(card.pos_x || 1), 1, 12);
+      const posY = Math.max(1, Number(card.pos_y || 1));
+      const minHeight = Math.max(120, Number(card.min_height || 320));
+      const bullets = Array.isArray(card.bullet_points) ? card.bullet_points : [];
+      const align = String(card.content_align || "left");
+      const vAlign = String(card.vertical_align || "top");
+      const buttonText = esc(card.button_text || "Подробнее");
+      const buttonUrl = String(card.button_url || "#").trim();
+      const hoverEffect = String(card.hover_effect || "lift");
+      const glowColor = String(card.glow_color || "").trim();
+      const backgroundColor = String(card.background_color || "").trim();
+      const borderColor = String(card.border_color || "").trim();
+      const overlayOpacity = clamp(Number(card.overlay_opacity || 0), 0, 1);
+
+      const article = document.createElement("article");
+      article.className = "card reveal";
+      article.style.gridColumn = `${posX} / span ${col}`;
+      article.style.gridRow = `${posY} / span ${row}`;
+      article.style.minHeight = `${minHeight}px`;
+      article.style.textAlign = align;
+      article.style.justifyContent =
+        vAlign === "center" ? "center" :
+        vAlign === "bottom" ? "flex-end" : "flex-start";
+
+      if (backgroundColor) {
+        article.style.background = backgroundColor;
+      }
+
+      if (borderColor) {
+        article.style.borderColor = borderColor;
+      }
+
+      if (glowColor) {
+        article.style.boxShadow = `0 30px 80px ${hexToRgba(glowColor, 0.18)}`;
+      }
+
+      if (hoverEffect === "none") {
+        article.style.transition = "border-color .28s ease, box-shadow .28s ease, background .28s ease";
+      }
+
+      const titleStyle =
+        align === "center"
+          ? "margin-left:auto;margin-right:auto;"
+          : align === "right"
+          ? "margin-left:auto;"
+          : "";
+
+      article.innerHTML = `
+        <div class="shine"></div>
+        ${overlayOpacity > 0 ? `<div class="overlay-layer" style="background:rgba(0,0,0,${overlayOpacity});"></div>` : ""}
+        <div class="card-top">${esc(card.badge || card.subtitle || "Модуль")}</div>
+        <h3 style="${titleStyle}">${esc(card.title || "")}</h3>
+        <p style="${titleStyle}">${esc(card.description || "")}</p>
+        ${bullets.length ? `<ul style="${titleStyle}">${bullets.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+        ${renderCardMedia(card)}
+        <div class="card-overlay">
+          <div class="mini-pill">${buttonText}</div>
+          <div class="mini-arrow">↗</div>
+        </div>
+      `;
+
+      article.addEventListener("click", () => {
+        if (buttonUrl && buttonUrl !== "#") {
+          window.open(buttonUrl, "_blank");
+        }
+      });
+
+      if (hoverEffect !== "none") {
+        article.addEventListener("mousemove", (e) => {
+          const rect = article.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateY = (x - centerX) / 35;
+          const rotateX = (centerY - y) / 35;
+
+          if (hoverEffect === "lift" || hoverEffect === "glow") {
+            article.style.transform =
+              `perspective(900px) rotateX(${rotateX * 0.45}deg) rotateY(${rotateY * 0.45}deg) translateY(-6px)`;
+          }
+
+          const shine = article.querySelector(".shine");
+          if (shine) {
+            shine.style.background =
+              `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,.12) 0%, transparent 32%)`;
+          }
+
+          if (hoverEffect === "glow" && glowColor) {
+            article.style.boxShadow = `0 36px 100px ${hexToRgba(glowColor, 0.28)}`;
+          }
+        });
+
+        article.addEventListener("mouseleave", () => {
+          article.style.transform = "";
+          if (glowColor) {
+            article.style.boxShadow = `0 30px 80px ${hexToRgba(glowColor, 0.18)}`;
+          }
+        });
+      }
+
+      return article;
+    }
+
+    function revealObserve(root = document) {
+      const revealItems = root.querySelectorAll(".reveal");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add("show"), index * 60);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      revealItems.forEach(el => observer.observe(el));
+    }
+
+    function renderLanding(data) {
+      landingData = data || {};
+      const settings = data.settings || {};
+      glitchPhrases = Array.isArray(data.glitch_phrases) && data.glitch_phrases.length
+        ? data.glitch_phrases
+        : ["место, где живёт разработка"];
+
+      document.title = settings.site_title || "WORLD SCRIPT";
+      document.getElementById("siteTitle").textContent = settings.site_title || "WORLD SCRIPT";
+      document.getElementById("heroDescription").textContent =
+        settings.hero_description || "Живой тёмный лендинг с неоновым характером.";
+
+      const downloadUrl = settings.download_url || "#";
+      const discordUrl = settings.discord_url || "#";
+
+      const grid = document.getElementById("cardsGrid");
+      const cards = Array.isArray(data.cards) ? data.cards : [];
+
+      grid.innerHTML = "";
+
+      if (!cards.length) {
+        grid.innerHTML = `<div class="loader">Нет карточек.</div>`;
+      } else {
+        cards.forEach(card => {
+          grid.appendChild(renderCard(card));
+        });
+      }
+
+      startGlitch();
+      revealObserve(document);
+    }
+
+    async function loadLanding() {
+      try {
+        const { data } = await apiGet("/api/ws/landing");
+        if (!data.ok) throw new Error(data.error || "Ошибка загрузки");
+        renderLanding(data);
+      } catch (e) {
+        document.getElementById("cardsGrid").innerHTML =
+          `<div class="loader">Ошибка загрузки: ${esc(e.message)}</div>`;
+      }
+    }
+
+    async function loginUser() {
+      const login = document.getElementById("loginField").value.trim();
+      const password = document.getElementById("passwordField").value;
+      const msg = document.getElementById("loginMsg");
+      msg.textContent = "";
+
+      try {
+        const { data } = await apiPost("/api/ws/login", { login, password });
+        if (!data.ok) {
+          msg.textContent = data.error || "Ошибка входа";
+          return;
+        }
+
+        localStorage.setItem(TOKEN_KEY, data.token);
+        currentUser = data.user || null;
+        updateAuthUI();
+        closeModal("loginModalBg");
+      } catch (e) {
+        msg.textContent = e.message;
+      }
+    }
+
+    async function registerUser() {
+      const login = document.getElementById("registerLoginField").value.trim();
+      const password = document.getElementById("registerPasswordField").value;
+      const msg = document.getElementById("registerMsg");
+      msg.textContent = "";
+    
+      try {
+        const { data } = await apiPost("/api/ws/register", { login, password });
+        if (!data.ok) {
+          msg.textContent = data.error || "Ошибка регистрации";
+          return;
+        }
+    
+        localStorage.setItem(TOKEN_KEY, data.token);
+        currentUser = data.user || null;
+        updateAuthUI();
+        closeModal("registerModalBg");
+      } catch (e) {
+        msg.textContent = e.message;
+      }
+    }
+
+    function logoutUser() {
+      localStorage.removeItem(TOKEN_KEY);
+      currentUser = null;
+      updateAuthUI();
+    }
+
+    function initParticles() {
+      const wrap = document.getElementById("particles");
+      const icons = ["🔫", "⚙️"];
+      const count = 14;
+
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.textContent = icons[Math.floor(Math.random() * icons.length)];
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.fontSize = (18 + Math.random() * 16) + "px";
+        p.style.animationDuration = (14 + Math.random() * 18) + "s";
+        p.style.animationDelay = (Math.random() * 16) + "s";
+        p.style.opacity = (0.07 + Math.random() * 0.08).toFixed(2);
+        wrap.appendChild(p);
+      }
+    }
+
+    function initHeroSmoke() {
+      const smokeLayer = document.getElementById("eqSmokeLayer");
+      const fireLayer = document.getElementById("eqFireLayer");
+      const eqBars = document.querySelectorAll("#eqBars .eq-bar");
+    
+      if (!smokeLayer || !fireLayer || !eqBars.length) return;
+    
+      function randomBarHeight(bar, i, strong = false) {
+        const softGroups = [
+          [12, 18, 24, 32, 40, 48],
+          [14, 22, 28, 36, 44, 52],
+          [10, 16, 26, 34, 42, 50]
+        ];
+    
+        const strongGroups = [
+          [22, 34, 48, 62, 78, 92],
+          [18, 30, 44, 58, 74, 88],
+          [24, 38, 52, 66, 82, 96]
+        ];
+    
+        const pool = strong ? strongGroups[i % strongGroups.length] : softGroups[i % softGroups.length];
+        const h = pool[Math.floor(Math.random() * pool.length)];
+        bar.style.height = h + "%";
+      }
+    
+      function pulseBars(strong = false) {
+        eqBars.forEach((bar, i) => {
+          setTimeout(() => randomBarHeight(bar, i, strong), i * 10);
+        });
+      }
+    
+      function spawnSmoke(strong = false) {
+        const smoke = document.createElement("div");
+        const types = strong ? ["mid", "big"] : ["small", "mid"];
+        const type = types[Math.floor(Math.random() * types.length)];
+    
+        smoke.className = "eq-smoke " + type;
+        smoke.style.left = (10 + Math.random() * 80) + "%";
+    
+        if (type === "small") smoke.style.animationDuration = "1.8s";
+        if (type === "mid") smoke.style.animationDuration = "2.1s";
+        if (type === "big") smoke.style.animationDuration = "2.4s";
+    
+        smokeLayer.appendChild(smoke);
+        setTimeout(() => smoke.remove(), 2500);
+      }
+    
+      function spawnFlare(strong = false) {
+        const flare = document.createElement("div");
+        flare.className = "eq-flare";
+    
+        flare.style.left = (10 + Math.random() * 80) + "%";
+        flare.style.height = (strong ? 70 + Math.random() * 55 : 36 + Math.random() * 34) + "px";
+        flare.style.width = (strong ? 14 + Math.random() * 10 : 8 + Math.random() * 8) + "px";
+        flare.style.animationDuration = (strong ? 1.1 + Math.random() * 0.45 : 0.8 + Math.random() * 0.35) + "s";
+    
+        fireLayer.appendChild(flare);
+        setTimeout(() => flare.remove(), 1700);
+      }
+    
+      function bassHit() {
+        const strong = Math.random() > 0.35;
+    
+        pulseBars(strong);
+    
+        spawnSmoke(strong);
+        spawnFlare(strong);
+    
+        if (strong && Math.random() > 0.45) {
+          setTimeout(() => spawnSmoke(false), 120);
+        }
+    
+        if (strong && Math.random() > 0.35) {
+          setTimeout(() => spawnFlare(false), 90);
+        }
+    
+        if (strong && Math.random() > 0.55) {
+          setTimeout(() => pulseBars(false), 140);
+        }
+    
+        const nextDelay = 400 + Math.random() * 200; // 400-600ms
+        setTimeout(bassHit, nextDelay);
+      }
+    
+      pulseBars(false);
+      bassHit();
+    }
+
+    document.getElementById("openLoginBtn").addEventListener("click", () => openModal("loginModalBg"));
+    document.getElementById("openRegisterBtn").addEventListener("click", () => openModal("registerModalBg"));
+    document.getElementById("closeLoginBtn").addEventListener("click", () => closeModal("loginModalBg"));
+    document.getElementById("closeRegisterBtn").addEventListener("click", () => closeModal("registerModalBg"));
+    document.getElementById("loginBtn").addEventListener("click", loginUser);
+    document.getElementById("registerBtn").addEventListener("click", registerUser);
+    document.getElementById("logoutBtn").addEventListener("click", logoutUser);
+
+    document.getElementById("loginModalBg").addEventListener("click", (e) => {
+      if (e.target.id === "loginModalBg") closeModal("loginModalBg");
+    });
+
+    document.getElementById("registerModalBg").addEventListener("click", (e) => {
+      if (e.target.id === "registerModalBg") closeModal("registerModalBg");
+    });
+
+    initParticles();
+    loadMe();
+    initHeroSmoke();
+    loadLanding();
+  </script>
+</body>
+</html>

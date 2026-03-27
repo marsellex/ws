@@ -1,0 +1,6461 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Script</title>
+  <link rel="icon" href="./favicon1.ico" type="image/x-icon" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg-body: #070b14;
+      --bg-card: rgba(17, 24, 39, 0.78);
+      --bg-card-2: rgba(12, 18, 30, 0.88);
+      --bg-input: rgba(8, 11, 20, 0.8);
+      --border: rgba(255,255,255,0.08);
+      --text: #f3f7ff;
+      --text-secondary: #b8c2d9;
+      --text-muted: #7e8aa6;
+      --pink: #ff3e9d;
+      --cyan: #49d7ff;
+      --violet: #8d5cff;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --red: #ff6b6b;
+      --gold: #f59e0b;
+      --gold-2: #f6c857;
+      --shadow: 0 12px 40px rgba(0,0,0,0.35);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,0.45);
+      --radius: 18px;
+      --font: "Inter", sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      background: var(--bg-body);
+      overflow-x: hidden;
+    }
+
+    .hidden { display: none !important; }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .bg-animated {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bg-animated::before {
+      content: "";
+      position: absolute;
+      inset: -35%;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,62,157,0.15), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(73,215,255,0.12), transparent 35%),
+        radial-gradient(circle at 50% 70%, rgba(141,92,255,0.12), transparent 40%),
+        radial-gradient(circle at 30% 80%, rgba(74,222,128,0.08), transparent 30%),
+        radial-gradient(circle at 70% 90%, rgba(251,191,36,0.08), transparent 30%);
+      animation: bgRotate 60s linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes bgRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes gridMove {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(60px, 60px, 0); }
+    }
+
+    .bg-orbs {
+      position: absolute;
+      inset: 0;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: orbFloat 20s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .bg-orb:nth-child(1) {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,62,157,0.3), transparent 70%);
+      top: 10%;
+      left: 5%;
+      animation-delay: 0s;
+      animation-duration: 25s;
+    }
+
+    .bg-orb:nth-child(2) {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(73,215,255,0.25), transparent 70%);
+      top: 60%;
+      right: 10%;
+      animation-delay: -5s;
+      animation-duration: 30s;
+    }
+
+    .bg-orb:nth-child(3) {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(141,92,255,0.25), transparent 70%);
+      bottom: 20%;
+      left: 30%;
+      animation-delay: -10s;
+      animation-duration: 22s;
+    }
+
+    .bg-orb:nth-child(4) {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(74,222,128,0.2), transparent 70%);
+      top: 40%;
+      left: 60%;
+      animation-delay: -7s;
+      animation-duration: 28s;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      25% { transform: translate3d(30px, -40px, 0) scale(1.1); }
+      50% { transform: translate3d(-20px, 20px, 0) scale(0.95); }
+      75% { transform: translate3d(40px, 30px, 0) scale(1.05); }
+    }
+
+    .bg-particles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .bg-particle {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 3px;
+      height: 3px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      opacity: 0;
+      animation: particleFloat 15s ease-in-out infinite;
+      will-change: transform, opacity;
+      box-shadow: 0 0 8px rgba(255,255,255,0.35);
+    }
+
+    .bg-particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .bg-particle:nth-child(2) { left: 20%; animation-delay: -2s; }
+    .bg-particle:nth-child(3) { left: 30%; animation-delay: -4s; }
+    .bg-particle:nth-child(4) { left: 40%; animation-delay: -6s; }
+    .bg-particle:nth-child(5) { left: 50%; animation-delay: -8s; }
+    .bg-particle:nth-child(6) { left: 60%; animation-delay: -10s; }
+    .bg-particle:nth-child(7) { left: 70%; animation-delay: -12s; }
+    .bg-particle:nth-child(8) { left: 80%; animation-delay: -1s; }
+    .bg-particle:nth-child(9) { left: 90%; animation-delay: -3s; }
+    .bg-particle:nth-child(10) { left: 15%; animation-delay: -5s; }
+    .bg-particle:nth-child(11) { left: 25%; animation-delay: -7s; }
+    .bg-particle:nth-child(12) { left: 35%; animation-delay: -9s; }
+    .bg-particle:nth-child(13) { left: 45%; animation-delay: -11s; }
+    .bg-particle:nth-child(14) { left: 55%; animation-delay: -13s; }
+    .bg-particle:nth-child(15) { left: 65%; animation-delay: -14s; }
+    .bg-particle:nth-child(16) { left: 75%; animation-delay: -4.5s; }
+    .bg-particle:nth-child(17) { left: 85%; animation-delay: -6.5s; }
+    .bg-particle:nth-child(18) { left: 95%; animation-delay: -8.5s; }
+    .bg-particle:nth-child(19) { left: 5%; animation-delay: -10.5s; }
+    .bg-particle:nth-child(20) { left: 12%; animation-delay: -12.5s; }
+
+    @keyframes particleFloat {
+      0% { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.8); }
+      10% { opacity: 0.55; }
+      90% { opacity: 0.55; }
+      100% { opacity: 0; transform: translate3d(100px, -100vh, 0) scale(1.1); }
+    }
+
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      mix-blend-mode: overlay;
+    }
+
+    .bg-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%);
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    .glass {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s cubic-bezier(.22,.68,0,1), border-color .3s ease, box-shadow .3s ease;
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(140deg, rgba(255,255,255,0.07), transparent 24%, transparent 76%, rgba(255,255,255,0.03));
+      opacity: .7;
+      pointer-events: none;
+    }
+
+    .glass:hover {
+      transform: translateY(-2px);
+      border-color: rgba(73,215,255,0.18);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.38), 0 0 0 1px rgba(73,215,255,0.04);
+    }
+
+    .topbar.glass:hover {
+      transform: none;
+    }
+
+    .toast-wrap {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 3000;
+      display: grid;
+      gap: 10px;
+      width: min(380px, calc(100vw - 24px));
+    }
+
+    .toast {
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.45;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      animation: toastIn .24s ease;
+    }
+
+    .toast.success {
+      background: rgba(72,229,123,0.14);
+      color: #98ffc0;
+      border-color: rgba(72,229,123,0.18);
+    }
+
+    .toast.error {
+      background: rgba(255,107,107,0.14);
+      color: #ff9a9a;
+      border-color: rgba(255,107,107,0.18);
+    }
+
+    .toast.info {
+      background: rgba(73,215,255,0.14);
+      color: #95eeff;
+      border-color: rgba(73,215,255,0.18);
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(18px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 11px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease, background .18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: .55; cursor: default; transform: none !important; }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -130%;
+      width: 65%;
+      height: 100%;
+      transform: skewX(-24deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+    }
+
+    .btn:hover::after { animation: btnShine .75s ease; }
+
+    @keyframes btnShine {
+      from { left: -130%; }
+      to { left: 150%; }
+    }
+
+    .btn-pink {
+      background: linear-gradient(135deg, #ff3e9d, #cf267a);
+      box-shadow: 0 10px 30px rgba(255,62,157,0.24);
+    }
+
+    .btn-cyan {
+      background: linear-gradient(135deg, #49d7ff, #2b90ff);
+      box-shadow: 0 10px 30px rgba(73,215,255,0.22);
+    }
+
+    .btn-green {
+      background: linear-gradient(135deg, #48e57b, #1dbf62);
+      box-shadow: 0 10px 30px rgba(72,229,123,0.22);
+    }
+
+    .btn-red {
+      background: linear-gradient(135deg, #ff6b6b, #ee4444);
+      box-shadow: 0 10px 30px rgba(255,107,107,0.22);
+    }
+
+    .btn-dark {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: none;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      box-shadow: 0 10px 30px rgba(245,158,11,0.24);
+      color: #1a1305;
+    }
+
+    .btn-lg {
+      padding: 15px 24px;
+      font-size: 15px;
+      font-weight: 900;
+      border-radius: 16px;
+    }
+
+    .field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--bg-input);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: .18s ease;
+      font-family: var(--font);
+    }
+
+    .field:focus {
+      border-color: rgba(73,215,255,0.22);
+      box-shadow: 0 0 0 3px rgba(73,215,255,0.08);
+    }
+
+    .section-loader {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+
+    .section-loader.hidden {
+      display: none !important;
+    }
+
+    .section-loader-spinner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.12);
+      border-top-color: var(--cyan);
+      border-right-color: var(--pink);
+      animation: sectionSpin .9s linear infinite;
+      box-shadow: 0 0 14px rgba(73,215,255,0.22);
+    }
+
+    .section-loader-text {
+      font-size: 12px;
+      font-weight: 800;
+      color: #dff6ff;
+      white-space: nowrap;
+    }
+
+    @keyframes sectionSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    .inline-loading {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .inline-loading.hidden {
+      display: none !important;
+    }
+
+    .inline-loading-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px rgba(73,215,255,0.5);
+      animation: inlinePulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes inlinePulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.45); opacity: .6; }
+    }
+
+    .guest-wrap {
+      min-height: calc(100vh - 44px);
+      display: grid;
+      place-items: center;
+    }
+
+    .auth-shell {
+      width: min(100%, 1080px);
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .auth-hero {
+      padding: 28px;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .auth-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #8de7ff;
+      background: rgba(73,215,255,0.08);
+      border: 1px solid rgba(73,215,255,0.16);
+      margin-bottom: 16px;
+    }
+
+    .auth-title {
+      font-size: clamp(34px, 5vw, 66px);
+      font-weight: 900;
+      line-height: .95;
+      letter-spacing: -.06em;
+      margin: 0 0 14px;
+    }
+
+    .auth-title .accent {
+      background: linear-gradient(135deg, #fff, #8ae7ff 45%, #ff87c1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .auth-text {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 680px;
+    }
+
+    .auth-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 560px;
+    }
+
+    .auth-panel-head { margin-bottom: 18px; }
+
+    .auth-panel-title {
+      font-size: 28px;
+      font-weight: 900;
+      margin: 0 0 8px;
+      letter-spacing: -.04em;
+    }
+
+    .auth-panel-sub {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: var(--font);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: .2s ease;
+    }
+
+    .auth-tab-btn.active {
+      color: white;
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .auth-form { display: none; }
+
+    .auth-form.active {
+      display: block;
+      animation: fadeUp .24s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-grid { display: grid; gap: 10px; }
+    .auth-actions { display: grid; gap: 10px; margin-top: 12px; }
+
+    .auth-msg {
+      min-height: 18px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .auth-msg.error { color: #ff9a9a; }
+    .auth-msg.success { color: #98ffc0; }
+
+    .app-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 900;
+      background: linear-gradient(135deg, rgba(255,62,157,0.22), rgba(73,215,255,0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 8px 28px rgba(255,62,157,0.16);
+      flex-shrink: 0;
+    }
+
+    .brand-text { min-width: 0; }
+
+    .brand-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      margin-bottom: 4px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .account-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+        rgba(255,255,255,0.02);
+      min-width: 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      cursor: pointer;
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+    }
+
+    .account-box:hover {
+      transform: translateY(-2px);
+      border-color: rgba(73,215,255,0.16);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.22), 0 0 0 1px rgba(73,215,255,0.04);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03)),
+        rgba(255,255,255,0.03);
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      min-width: 60px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: .22s ease;
+      box-shadow: 0 8px 28px rgba(73,215,255,0.12);
+      flex-shrink: 0;
+    }
+
+    .account-box:hover .avatar-wrap {
+      box-shadow: 0 12px 34px rgba(73,215,255,0.18);
+      border-color: rgba(73,215,255,0.18);
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-fallback {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -.04em;
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.54);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #dff8ff;
+      opacity: 0;
+      transition: .2s ease;
+      text-align: center;
+      padding: 6px;
+    }
+
+    .account-box:hover .avatar-overlay { opacity: 1; }
+
+    .account-meta {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .account-login {
+      font-size: 15px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      word-break: break-word;
+      letter-spacing: -.02em;
+    }
+
+    .account-sub {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--text-muted);
+      font-size: 12px;
+      min-width: 0;
+    }
+
+    .account-gamenick {
+      color: #d9f4ff;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .user-role {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(73,215,255,0.16);
+      color: #8eeaff;
+      background: rgba(73,215,255,0.08);
+    }
+
+    .user-role.admin {
+      background: linear-gradient(135deg, rgba(255,62,157,0.16), rgba(141,92,255,0.14));
+      border-color: rgba(255,62,157,0.22);
+      color: #ffc7e4;
+      box-shadow: 0 0 18px rgba(255,62,157,0.10);
+    }
+
+    .user-role.user {
+      background: rgba(73,215,255,0.08);
+      border-color: rgba(73,215,255,0.16);
+      color: #8eeaff;
+    }
+
+    .online-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .online-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(72,229,123,0.75);
+      animation: pulseDot 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+    }
+
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 1fr 92px 320px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .center-column {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .mini-rail {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      position: sticky;
+      top: 22px;
+    }
+
+    .rail-btn {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      cursor: pointer;
+      transition: .22s ease;
+      overflow: visible;
+    }
+
+    .rail-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .rail-btn.active {
+      background: linear-gradient(135deg, rgba(255,62,157,0.16), rgba(73,215,255,0.14));
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 8px 26px rgba(73,215,255,0.12);
+    }
+
+    .rail-btn.chest {
+      background: linear-gradient(135deg, rgba(246,200,87,0.22), rgba(245,158,11,0.16));
+      border-color: rgba(246,200,87,0.24);
+      box-shadow: 0 10px 28px rgba(245,158,11,0.16);
+      color: #fff3cf;
+    }
+
+    .rail-btn.chest:hover {
+      box-shadow: 0 14px 34px rgba(245,158,11,0.22);
+      border-color: rgba(246,200,87,0.32);
+    }
+
+    .rail-badge {
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      min-width: 0;
+      white-space: nowrap;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(12,18,30,0.96);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: .2s ease;
+      margin-right: -8px;
+      z-index: 20;
+    }
+
+    .rail-btn:hover .rail-badge {
+      opacity: 1;
+      visibility: visible;
+      margin-right: -18px;
+    }
+
+    .rail-badge .sub {
+      display: block;
+      margin-top: 4px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .right-column {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      position: sticky;
+      top: 22px;
+    }
+
+    .widget-box { padding: 18px; }
+
+    .widget-title {
+      font-size: 15px;
+      font-weight: 900;
+      margin: 0 0 12px;
+      letter-spacing: -.02em;
+    }
+
+    .online-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .online-user {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .online-user-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .online-user-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .online-user-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .stat-card {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .stat-balance { color: #95eeff; }
+    .stat-output { color: #ffe08a; }
+
+    .section-tabs-wrap { margin-bottom: 4px; }
+
+    .section-tabs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .section-tabs-main {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .section-tabs-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .section-tab {
+      position: relative;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-weight: 800;
+      font-size: 14px;
+      padding: 13px 22px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      font-family: var(--font);
+      transition: all .22s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .section-tab:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.14);
+      color: #fff;
+      background: rgba(255,255,255,.06);
+    }
+
+    .section-tab.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(255,62,157,0.20), rgba(73,215,255,0.18));
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 8px 28px rgba(255,62,157,0.12), 0 0 0 1px rgba(73,215,255,0.06);
+    }
+
+    .section-tab.chest.active {
+      background: linear-gradient(135deg, rgba(246,200,87,0.22), rgba(245,158,11,0.18));
+      color: #fff9de;
+      box-shadow: 0 8px 28px rgba(245,158,11,0.16), 0 0 0 1px rgba(246,200,87,0.08);
+    }
+
+    .section-tab.contracts {
+      background: linear-gradient(135deg, rgba(255,62,157,0.10), rgba(141,92,255,0.10));
+      border-color: rgba(255,62,157,0.12);
+      color: #ffb7db;
+    }
+
+    .section-tab.contracts:hover {
+      background: linear-gradient(135deg, rgba(255,62,157,0.16), rgba(141,92,255,0.14));
+      border-color: rgba(255,62,157,0.18);
+      color: #ffd6ec;
+    }
+
+    .section-tab.contracts.active {
+      background: linear-gradient(135deg, rgba(255,62,157,0.22), rgba(141,92,255,0.18));
+      border-color: rgba(255,62,157,0.24);
+      color: #fff0f8;
+      box-shadow: 0 8px 28px rgba(255,62,157,0.16);
+    }
+
+    .tab-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: radial-gradient(circle at 50% 120%, rgba(73,215,255,0.18), transparent 60%);
+      transition: opacity .3s ease;
+      pointer-events: none;
+    }
+
+    .section-tab.active .tab-glow { opacity: 1; }
+
+    .tab-indicator {
+      font-size: 8px;
+      opacity: 0;
+      color: var(--cyan);
+      transition: opacity .2s ease;
+    }
+
+    .section-tab.active .tab-indicator { opacity: 1; }
+
+    .tab-panel { display: none; }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeUp .28s ease;
+    }
+
+    .section-box { padding: 22px; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      margin: 0;
+    }
+
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .profile-floating-card {
+      padding: 20px;
+      transition: .28s ease;
+    }
+
+    .profile-floating-card.is-hidden {
+      display: none !important;
+    }
+
+    .profile-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .profile-pill.ok {
+      color: #98ffc0;
+      border-color: rgba(72,229,123,0.18);
+      background: rgba(72,229,123,0.08);
+    }
+
+    .profile-pill.warn {
+      color: #ffe08a;
+      border-color: rgba(251,191,36,0.18);
+      background: rgba(251,191,36,0.08);
+    }
+
+    .profile-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .profile-meta-card {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .profile-meta-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-weight: 800;
+    }
+
+    .profile-meta-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .profile-link-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .profile-toggle-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s ease;
+      font-family: var(--font);
+    }
+
+    .profile-toggle-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .profile-link-body {
+      overflow: hidden;
+      transition: max-height .35s ease, opacity .25s ease, margin-top .25s ease;
+      max-height: 2400px;
+      opacity: 1;
+      margin-top: 14px;
+    }
+
+    .profile-link-body.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+
+    .link-code-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .link-code-card {
+      padding: 22px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
+        rgba(8,12,22,0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .link-code-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 10%, rgba(73,215,255,0.06), transparent 40%);
+      pointer-events: none;
+    }
+
+    .link-code-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .link-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .link-card-icon {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .link-card-icon.vk-icon {
+      background: linear-gradient(135deg, rgba(73,133,255,0.20), rgba(73,215,255,0.12));
+      border-color: rgba(73,133,255,0.18);
+    }
+
+    .link-card-icon.nick-icon {
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.14));
+      border-color: rgba(255,62,157,0.16);
+    }
+
+    .link-card-header-text { min-width: 0; }
+
+    .link-code-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 4px;
+      letter-spacing: -.02em;
+    }
+
+    .link-code-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .link-code-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 16px 0;
+    }
+
+    .link-code-value-wrap {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .link-code-value-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .link-code-value {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: .10em;
+      line-height: 1.2;
+      color: #9cefff;
+      word-break: break-word;
+    }
+
+    .link-code-value.empty {
+      color: var(--text-muted);
+      font-size: 15px;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+
+    .link-code-meta {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.65;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .link-code-meta .timer {
+      color: #ffe08a;
+      font-weight: 800;
+    }
+
+    .link-gen-btn-wrap { margin-bottom: 18px; }
+
+    .link-gen-btn-wrap .btn {
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 800;
+      border-radius: 16px;
+    }
+
+    .link-code-steps { display: grid; gap: 10px; }
+
+    .link-steps-title {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .link-step {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .link-step-bullet {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      margin-top: 1px;
+    }
+
+    .link-step-bullet.vk-bullet {
+      background: rgba(73,133,255,0.12);
+      border: 1px solid rgba(73,133,255,0.20);
+      color: #8ab4ff;
+    }
+
+    .link-step-bullet.nick-bullet {
+      background: rgba(255,62,157,0.10);
+      border: 1px solid rgba(255,62,157,0.18);
+      color: #ff8ec4;
+    }
+
+    .link-highlight {
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .link-accent {
+      color: #9cefff;
+      font-weight: 900;
+    }
+
+    .link-accent-vk {
+      color: #8ab4ff;
+      font-weight: 900;
+    }
+
+    .link-accent-pink {
+      color: #ff8ec4;
+      font-weight: 900;
+    }
+
+    .link-important {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .link-important.info {
+      background: rgba(73,215,255,0.08);
+      border: 1px solid rgba(73,215,255,0.14);
+      color: #8eeaff;
+    }
+
+    .link-important.warn {
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.14);
+      color: #ffe08a;
+    }
+
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .item-card {
+      position: relative;
+      min-height: 290px;
+      border-radius: 22px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+        rgba(10,16,28,0.82);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform .28s cubic-bezier(.22,.68,0,1), border-color .28s ease, box-shadow .28s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .item-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(73,215,255,0.16);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(73,215,255,0.05);
+    }
+
+    .item-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 15%, rgba(255,255,255,0.08), transparent 25%),
+        linear-gradient(135deg, rgba(255,255,255,0.05), transparent 22%, transparent 70%, rgba(255,255,255,0.03));
+      pointer-events: none;
+    }
+
+    .item-card > * { position: relative; z-index: 1; }
+
+    .item-rarity {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .rarity-epic, .item-rarity.rarity-epic {
+      background: rgba(255,180,0,0.16);
+      border: 1px solid rgba(255,180,0,0.22);
+      color: #ffd56a;
+      box-shadow: 0 0 18px rgba(255,180,0,0.10);
+    }
+
+    .rarity-rare, .item-rarity.rarity-rare {
+      background: rgba(73,215,255,0.14);
+      border: 1px solid rgba(73,215,255,0.22);
+      color: #97ecff;
+      box-shadow: 0 0 18px rgba(73,215,255,0.10);
+    }
+
+    .rarity-common, .item-rarity.rarity-common {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #e4e9f5;
+    }
+
+    .rarity-legend, .item-rarity.rarity-legend {
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.16));
+      border: 1px solid rgba(255,62,157,0.25);
+      color: #ffb8e0;
+      box-shadow: 0 0 22px rgba(141,92,255,0.14);
+    }
+
+    .item-icon-wrap {
+      width: 110px;
+      height: 110px;
+      border-radius: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .item-icon-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .item-title {
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .item-desc {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+      min-height: 44px;
+      margin-bottom: 16px;
+    }
+
+    .item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .item-price {
+      font-size: 18px;
+      font-weight: 900;
+      color: #ffe08a;
+    }
+
+    .inventory-box {
+      padding: 18px;
+      min-height: 100%;
+      margin-top: 18px;
+    }
+
+    .inventory-list { display: grid; gap: 12px; }
+
+    .inventory-item {
+      display: grid;
+      grid-template-columns: 52px 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      transition: .2s ease;
+    }
+
+    .inventory-item:hover {
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+
+    .inventory-item-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .inventory-item-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .inventory-item-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .inventory-item-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .inventory-count {
+      min-width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      background: rgba(73,215,255,0.08);
+      border: 1px solid rgba(73,215,255,0.16);
+      color: #8feaff;
+    }
+
+    .shop-toggle-wrap {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .shop-toggle-btn {
+      cursor: pointer;
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: .2s ease;
+      font-family: var(--font);
+    }
+
+    .shop-toggle-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.12);
+    }
+
+    .shop-toggle-btn.active {
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .roulette-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
+      margin-top: 18px;
+    }
+
+    .roulette-main { padding: 22px; }
+
+    .roulette-clean-head {
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .roulette-limit-big {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      margin-bottom: 10px;
+    }
+
+    .roulette-limit-big-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--text-muted);
+      font-weight: 800;
+    }
+
+    .roulette-limit-big-value {
+      font-size: clamp(42px, 5vw, 64px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.04em;
+      color: #fff3cf;
+      text-shadow: 0 0 18px rgba(245,158,11,0.14);
+    }
+
+    .roulette-big-btn-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .roulette-big-btn {
+      min-width: 220px;
+      padding: 16px 28px;
+      font-size: 18px;
+      font-weight: 900;
+      border-radius: 18px;
+      letter-spacing: .06em;
+    }
+
+    .roulette-strip-shell {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 20px 0;
+      margin-bottom: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+        radial-gradient(circle at 50% 50%, rgba(73,215,255,0.08), transparent 45%);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), var(--shadow);
+    }
+
+    .roulette-strip-shell::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 120px;
+      background: linear-gradient(to right, rgba(7,11,20,0.98), rgba(7,11,20,0.65), transparent);
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .roulette-strip-shell::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 120px;
+      background: linear-gradient(to left, rgba(7,11,20,0.98), rgba(7,11,20,0.65), transparent);
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .roulette-center-beam {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, transparent, rgba(73,215,255,0.6), rgba(73,215,255,1), rgba(73,215,255,0.6), transparent);
+      box-shadow: 0 0 16px rgba(73,215,255,0.7), 0 0 48px rgba(73,215,255,0.25);
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .roulette-center-marker {
+      position: absolute;
+      left: 50%;
+      bottom: 8px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 16px solid #49d7ff;
+      filter: drop-shadow(0 0 10px rgba(73,215,255,0.8));
+      z-index: 7;
+      pointer-events: none;
+    }
+
+    .roulette-viewport {
+      overflow: hidden;
+      padding: 8px 18px;
+    }
+
+    .roulette-strip {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      width: max-content;
+      min-height: 210px;
+      transform: translate3d(0,0,0);
+      will-change: transform;
+    }
+
+    .roulette-card {
+      width: 170px;
+      min-width: 170px;
+      max-width: 170px;
+      height: 190px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+      transition: .25s ease;
+    }
+
+    .roulette-card:hover {
+      transform: translateY(-5px) scale(1.03);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .roulette-card.rarity-rare {
+      border-color: rgba(73,215,255,0.18);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.24), 0 0 18px rgba(73,215,255,0.08);
+    }
+
+    .roulette-card.rarity-epic {
+      border-color: rgba(245,158,11,0.18);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.24), 0 0 18px rgba(245,158,11,0.10);
+    }
+
+    .roulette-card.rarity-legend {
+      border-color: rgba(255,62,157,0.22);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.24), 0 0 22px rgba(141,92,255,0.14);
+    }
+
+    .roulette-card-img-wrap {
+      width: 110px;
+      height: 92px;
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .roulette-card-img-wrap img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .roulette-card-noimg { font-size: 36px; }
+
+    .roulette-card-title {
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      color: #fff;
+      width: 100%;
+    }
+
+    .roulette-card-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      width: 100%;
+    }
+
+    .roulette-status-box {
+      min-height: 54px;
+      border-radius: 16px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .bonus-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .bonus-main {
+      padding: 28px;
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .bonus-main::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% -35% auto;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(72,229,123,0.16), transparent 65%);
+      pointer-events: none;
+    }
+
+    .bonus-center {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .bonus-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #94ffbb;
+      background: rgba(72,229,123,0.08);
+      border: 1px solid rgba(72,229,123,0.16);
+    }
+
+    .bonus-title {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 900;
+      line-height: .95;
+      letter-spacing: -.05em;
+      margin: 0;
+      max-width: 720px;
+    }
+
+    .bonus-amount-box {
+      min-width: 320px;
+      padding: 26px 28px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(72,229,123,0.12), rgba(255,255,255,0.03));
+      border: 1px solid rgba(72,229,123,0.16);
+      box-shadow: 0 14px 34px rgba(72,229,123,0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bonus-amount-box::before {
+      content: "";
+      position: absolute;
+      top: -120%;
+      left: -40%;
+      width: 50%;
+      height: 300%;
+      transform: rotate(24deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+      opacity: 0;
+    }
+
+    .bonus-amount-box.shine::before {
+      opacity: 1;
+      animation: bonusShine .95s ease;
+    }
+
+    @keyframes bonusShine {
+      from { left: -50%; opacity: 0; }
+      20% { opacity: 1; }
+      to { left: 130%; opacity: 0; }
+    }
+
+    .bonus-amount-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .bonus-amount {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 900;
+      letter-spacing: -.05em;
+      line-height: 1;
+      color: #d8ffe6;
+      text-shadow: 0 0 18px rgba(72,229,123,0.18);
+    }
+
+    .bonus-amount.roll {
+      animation: bonusPulse .18s ease infinite alternate;
+    }
+
+    @keyframes bonusPulse {
+      from { transform: scale(1); filter: drop-shadow(0 0 0 rgba(72,229,123,0)); }
+      to { transform: scale(1.03); filter: drop-shadow(0 0 16px rgba(72,229,123,0.22)); }
+    }
+
+    .bonus-meta {
+      color: #c8d6c8;
+      font-size: 15px;
+      margin-top: 10px;
+      font-weight: 700;
+    }
+
+    .bonus-big-timer {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: .02em;
+    }
+
+    .bonus-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .bonus-activate-btn {
+      min-width: 220px;
+      padding: 16px 28px;
+      font-size: 18px;
+      font-weight: 900;
+      border-radius: 18px;
+      letter-spacing: .05em;
+    }
+
+    .bonus-history {
+      padding: 18px;
+    }
+
+    .bonus-history-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bonus-history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+      transition: .2s ease;
+    }
+
+    .bonus-history-item:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .bonus-history-left {
+      display: grid;
+      gap: 4px;
+    }
+
+    .bonus-history-title { font-weight: 800; }
+
+    .bonus-history-date {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .bonus-history-value {
+      color: #98ffc0;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .chest-shell {
+      position: relative;
+    }
+
+    .chest-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .chest-main-card {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: visible;
+    }
+
+    .chest-side-card {
+      padding: 24px;
+    }
+
+    .chest-main-stage {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      overflow: visible;
+    }
+
+    .chest-aura {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(246,200,87,0.18), transparent 70%);
+      animation: chestAuraPulse 3s ease-in-out infinite;
+      pointer-events: none;
+      filter: blur(4px);
+    }
+
+    @keyframes chestAuraPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.24); opacity: 0.9; }
+    }
+
+    .chest-burst {
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      pointer-events: none;
+      opacity: 0;
+      border-radius: 50%;
+    }
+
+    .chest-burst.play {
+      animation: chestBurst 1s ease-out;
+    }
+
+    @keyframes chestBurst {
+      0% {
+        opacity: 1;
+        transform: scale(0.45);
+        background: radial-gradient(circle, rgba(255,215,0,0.95), rgba(255,196,0,0.28), transparent 62%);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.95);
+        background: radial-gradient(circle, rgba(255,215,0,0), transparent 62%);
+      }
+    }
+
+    .chest-particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .chest-particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff1a8 0%, #ffd166 60%, transparent 100%);
+      opacity: 0;
+      filter: blur(.2px);
+    }
+
+    .chest-particles.play .chest-particle {
+      animation: chestParticleBurst .9s ease-out forwards;
+    }
+
+    .chest-particle.p1 { left: 48%; top: 44%; animation-delay: .00s; }
+    .chest-particle.p2 { left: 52%; top: 42%; animation-delay: .05s; }
+    .chest-particle.p3 { left: 46%; top: 48%; animation-delay: .08s; }
+    .chest-particle.p4 { left: 54%; top: 46%; animation-delay: .10s; }
+    .chest-particle.p5 { left: 50%; top: 40%; animation-delay: .12s; }
+    .chest-particle.p6 { left: 49%; top: 50%; animation-delay: .14s; }
+    .chest-particle.p7 { left: 53%; top: 50%; animation-delay: .16s; }
+    .chest-particle.p8 { left: 47%; top: 41%; animation-delay: .18s; }
+
+    @keyframes chestParticleBurst {
+      0% { opacity: 0; transform: translate(0,0) scale(.3); }
+      10% { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--tx, 0), var(--ty, -80px)) scale(1.3); }
+    }
+
+    .chest-particle.p1 { --tx: -90px; --ty: -120px; }
+    .chest-particle.p2 { --tx: 95px; --ty: -118px; }
+    .chest-particle.p3 { --tx: -120px; --ty: -20px; }
+    .chest-particle.p4 { --tx: 120px; --ty: -10px; }
+    .chest-particle.p5 { --tx: 0px; --ty: -150px; }
+    .chest-particle.p6 { --tx: -70px; --ty: 40px; }
+    .chest-particle.p7 { --tx: 70px; --ty: 42px; }
+    .chest-particle.p8 { --tx: -30px; --ty: -105px; }
+
+    .chest-box-wrap {
+      position: relative;
+      width: 140px;
+      height: 118px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      perspective: 700px;
+      transform-style: preserve-3d;
+    }
+
+    .chest-box-wrap:hover {
+      transform: scale(1.05);
+    }
+
+    .chest-box-wrap.shake {
+      animation: chestShake 0.55s ease;
+    }
+
+    @keyframes chestShake {
+      0%, 100% { transform: translateX(0) rotate(0); }
+      20% { transform: translateX(-6px) rotate(-3deg); }
+      40% { transform: translateX(6px) rotate(3deg); }
+      60% { transform: translateX(-5px) rotate(-2deg); }
+      80% { transform: translateX(5px) rotate(2deg); }
+    }
+
+    .chest-body {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 118px;
+      height: 72px;
+      background: linear-gradient(135deg, #8B4513, #654321);
+      border-radius: 8px 8px 14px 14px;
+      border: 3px solid #5a3510;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.46);
+    }
+
+    .chest-body::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      border-radius: 4px;
+      border: 2px solid #cc8800;
+      box-shadow: 0 0 12px rgba(255,215,0,0.55);
+    }
+
+    .chest-lid {
+      position: absolute;
+      bottom: 66px;
+      left: 50%;
+      transform: translateX(-50%) rotateX(0deg);
+      width: 126px;
+      height: 40px;
+      background: linear-gradient(135deg, #9a5c2e, #7a4420);
+      border-radius: 14px 14px 5px 5px;
+      border: 3px solid #5a3510;
+      transform-origin: bottom center;
+      transition: transform 0.5s ease;
+      z-index: 2;
+      backface-visibility: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.24);
+    }
+
+    .chest-box-wrap.opened .chest-lid {
+      transform: translateX(-50%) rotateX(-125deg);
+    }
+
+    .chest-lock {
+      position: absolute;
+      bottom: 58px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+      z-index: 3;
+      transition: opacity 0.3s ease, transform .3s ease;
+      filter: drop-shadow(0 0 6px rgba(255,215,0,0.25));
+    }
+
+    .chest-box-wrap.opened .chest-lock {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-8px) scale(.7);
+    }
+
+    .chest-front-glow {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 72px;
+      height: 48px;
+      background: radial-gradient(ellipse, rgba(255,215,0,0.72), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      filter: blur(8px);
+    }
+
+    .chest-box-wrap.opened .chest-front-glow {
+      opacity: 1;
+      animation: chestGlow 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes chestGlow {
+      from { opacity: 0.65; transform: translateX(-50%) scale(1); }
+      to { opacity: 1; transform: translateX(-50%) scale(1.12); }
+    }
+
+    .chest-stage-floor {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 190px;
+      height: 28px;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.42), transparent 70%);
+    }
+
+    .chest-main-content {
+      text-align: center;
+      width: 100%;
+    }
+
+    .chest-current-line {
+      margin-bottom: 12px;
+    }
+
+    .chest-current-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .chest-current-day {
+      font-size: 48px;
+      font-weight: 900;
+      color: #fff3cf;
+      text-shadow: 0 0 20px rgba(245,158,11,0.3);
+      line-height: 1;
+    }
+
+    .chest-timer-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .chest-action-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .chest-scale-head {
+      margin-bottom: 16px;
+    }
+
+    .chest-scale-wrap {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .chest-scale-thermo {
+      position: relative;
+      width: 52px;
+      height: 200px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 26px;
+      border: 2px solid rgba(255,255,255,0.1);
+      overflow: visible;
+    }
+
+    .chest-scale-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0%;
+      background: linear-gradient(to top, #f59e0b, #fbbf24, #fcd34d);
+      border-radius: 0 0 24px 24px;
+      transition: height 0.5s ease;
+      box-shadow: 0 0 20px rgba(245,158,11,0.4);
+    }
+
+    .chest-scale-mark {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      z-index: 2;
+    }
+
+    .chest-scale-mark .mark-dot {
+      width: 10px;
+      height: 10px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+
+    .chest-scale-mark .mark-text {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .chest-scale-mark.m1 { bottom: calc(14.28% - 10px); }
+    .chest-scale-mark.m3 { bottom: calc(42.85% - 10px); }
+    .chest-scale-mark.m5 { bottom: calc(71.42% - 10px); }
+    .chest-scale-mark.m7 { bottom: calc(100% - 20px); }
+
+    .chest-scale-legend {
+      display: grid;
+      gap: 10px;
+      align-content: center;
+    }
+
+    .chest-legend-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .legend-day {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffe08a;
+    }
+
+    .legend-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .chest-bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .chest-reward-card,
+    .chest-history-card {
+      padding: 18px;
+    }
+
+    .chest-last-reward-box {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chest-last-reward-box.rarity-rare {
+      box-shadow: 0 0 20px rgba(73,215,255,0.10);
+      border-color: rgba(73,215,255,0.18);
+    }
+
+    .chest-last-reward-box.rarity-epic {
+      box-shadow: 0 0 20px rgba(245,158,11,0.12);
+      border-color: rgba(245,158,11,0.18);
+    }
+
+    .chest-last-reward-box.rarity-legend {
+      box-shadow: 0 0 26px rgba(141,92,255,0.16);
+      border-color: rgba(255,62,157,0.22);
+    }
+
+    .chest-reward-rarity {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+
+    .chest-rarity-common {
+      background: rgba(255,255,255,0.08);
+      color: #e4e9f5;
+    }
+
+    .chest-rarity-rare {
+      background: rgba(73,215,255,0.15);
+      color: #8feaff;
+      box-shadow: 0 0 16px rgba(73,215,255,0.10);
+    }
+
+    .chest-rarity-epic {
+      background: rgba(245,158,11,0.15);
+      color: #ffd56a;
+      box-shadow: 0 0 16px rgba(245,158,11,0.10);
+    }
+
+    .chest-rarity-legend {
+      background: linear-gradient(135deg, rgba(255,62,157,0.2), rgba(141,92,255,0.18));
+      color: #ffb8e0;
+      box-shadow: 0 0 20px rgba(141,92,255,0.12);
+    }
+
+    .chest-reward-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .chest-reward-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .contracts-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .contracts-hero {
+      padding: 24px;
+      min-height: 280px;
+      display: grid;
+      align-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contracts-hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,62,157,0.16), transparent 70%);
+      pointer-events: none;
+      filter: blur(12px);
+    }
+
+    .contracts-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #ffb7db;
+      background: rgba(255,62,157,0.08);
+      border: 1px solid rgba(255,62,157,0.16);
+      margin-bottom: 14px;
+    }
+
+    .contracts-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900;
+      letter-spacing: -.05em;
+      line-height: .98;
+      margin: 0 0 14px;
+      max-width: 720px;
+    }
+
+    .contracts-text {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 760px;
+    }
+
+    .contracts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .contract-card {
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      transition: .24s ease;
+    }
+
+    .contract-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,62,157,0.16);
+      box-shadow: 0 14px 34px rgba(255,62,157,0.10);
+    }
+
+    .contract-card-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .contract-card-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    .contract-card-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      animation: modalBgIn 0.3s ease;
+    }
+
+    .modal-bg.hidden {
+      display: none;
+    }
+
+    @keyframes modalBgIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal {
+      background: var(--bg-card-2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 28px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .confirm-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin: 0 0 12px;
+      letter-spacing: -.03em;
+    }
+
+    .confirm-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .prize-win-modal {
+      max-width: 420px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .prize-win-scene {
+      position: relative;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .prize-glow {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,215,0,0.3), transparent 70%);
+      animation: prizeGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes prizeGlow {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.3); opacity: 0.8; }
+    }
+
+    .prize-flash {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.4), transparent 50%);
+      opacity: 0;
+    }
+
+    .modal-bg.scene-start .prize-flash {
+      animation: prizeFlash 0.5s ease-out;
+    }
+
+    @keyframes prizeFlash {
+      0% { opacity: 1; transform: scale(0.5); }
+      100% { opacity: 0; transform: scale(2); }
+    }
+
+    .prize-center-wrap {
+      position: relative;
+      z-index: 2;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      border: 2px solid rgba(255,255,255,0.15);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    .modal-bg.scene-start .prize-center-wrap {
+      animation: prizePopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes prizePopIn {
+      0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .prize-win-image {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    .prize-win-noimage {
+      font-size: 48px;
+    }
+
+    .gun {
+      position: absolute;
+      font-size: 32px;
+      opacity: 0;
+    }
+
+    .gun-left {
+      left: 20px;
+      transform: scaleX(-1);
+    }
+
+    .gun-right {
+      right: 20px;
+    }
+
+    @keyframes gunAppear {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes gunAppearLeft {
+      from { opacity: 0; transform: scaleX(-1) translateY(20px); }
+      to { opacity: 1; transform: scaleX(-1) translateY(0); }
+    }
+
+    @keyframes gunShake {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+
+    @keyframes gunShakeLeft {
+      0%, 100% { transform: scaleX(-1) translateY(0) rotate(0); }
+      50% { transform: scaleX(-1) translateY(-5px) rotate(-5deg); }
+    }
+
+    .modal-bg.scene-start .gun-right {
+      animation: gunAppear 0.3s ease forwards, gunShake 0.1s ease 0.5s 3;
+    }
+
+    .modal-bg.scene-start .gun-left {
+      animation: gunAppearLeft 0.3s ease forwards, gunShakeLeft 0.1s ease 0.4s 3;
+    }
+
+    .shells {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .shell {
+      position: absolute;
+      font-size: 16px;
+      color: #ffd700;
+      opacity: 0;
+    }
+
+    .modal-bg.scene-start .shell {
+      animation: shellBurst 1s ease-out forwards;
+    }
+
+    .shell.s1 { left: 30%; top: 30%; animation-delay: 0.3s; }
+    .shell.s2 { left: 70%; top: 25%; animation-delay: 0.35s; }
+    .shell.s3 { left: 20%; top: 60%; animation-delay: 0.4s; }
+    .shell.s4 { left: 80%; top: 55%; animation-delay: 0.45s; }
+    .shell.s5 { left: 50%; top: 20%; animation-delay: 0.5s; }
+
+    @keyframes shellBurst {
+      0% { opacity: 1; transform: scale(0) translateY(0); }
+      50% { opacity: 1; transform: scale(1.5) translateY(-30px); }
+      100% { opacity: 0; transform: scale(0.5) translateY(-60px); }
+    }
+
+    .prize-win-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffd700;
+      margin: 0 0 8px;
+      letter-spacing: -.03em;
+      text-shadow: 0 0 20px rgba(255,215,0,0.3);
+    }
+
+    .prize-win-name {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .placeholder-box {
+      min-height: 400px;
+      display: grid;
+      place-items: center;
+    }
+
+    .placeholder-inner {
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .placeholder-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: placeholderFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes placeholderFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .placeholder-title {
+      font-size: 28px;
+      font-weight: 900;
+      margin: 0 0 12px;
+      letter-spacing: -.03em;
+    }
+
+    .placeholder-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 1420px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-rail,
+      .right-column {
+        position: static;
+      }
+
+      .mini-rail {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .rail-btn {
+        width: 100%;
+      }
+
+      .rail-badge {
+        right: auto;
+        left: 50%;
+        top: auto;
+        bottom: -10px;
+        transform: translateX(-50%);
+        margin-right: 0;
+        margin-bottom: -8px;
+      }
+
+      .rail-btn:hover .rail-badge {
+        margin-right: 0;
+        margin-bottom: -18px;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .auth-shell,
+      .profile-meta-grid,
+      .link-code-grid,
+      .chest-layout,
+      .chest-bottom-grid,
+      .contracts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .shop-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chest-scale-wrap {
+        grid-template-columns: 52px 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 14px; }
+
+      .topbar {
+        padding: 16px;
+        align-items: flex-start;
+      }
+
+      .brand-title { font-size: 20px; }
+
+      .section-tabs {
+        gap: 10px;
+      }
+
+      .section-tabs-main,
+      .section-tabs-right {
+        width: 100%;
+      }
+
+      .section-tabs-right {
+        justify-content: flex-start;
+        margin-left: 0;
+      }
+
+      .section-tab {
+        padding: 11px 16px;
+        font-size: 13px;
+      }
+
+      .roulette-card {
+        width: 144px;
+        min-width: 144px;
+        max-width: 144px;
+        height: 178px;
+      }
+
+      .roulette-card-img-wrap {
+        width: 92px;
+        height: 78px;
+        min-height: 78px;
+      }
+
+      .roulette-card-img-wrap img {
+        width: 76px;
+        height: 76px;
+      }
+
+      .roulette-strip-shell::before,
+      .roulette-strip-shell::after {
+        width: 70px;
+      }
+
+      .section-box,
+      .roulette-main,
+      .inventory-box,
+      .bonus-main,
+      .bonus-history,
+      .auth-panel,
+      .auth-hero,
+      .profile-floating-card,
+      .widget-box,
+      .chest-main-card,
+      .chest-side-card,
+      .chest-reward-card,
+      .chest-history-card,
+      .contracts-hero {
+        padding: 16px;
+      }
+
+      .link-code-card {
+        padding: 16px;
+      }
+
+      .link-card-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 20px;
+      }
+
+      .link-code-title { font-size: 16px; }
+      .link-code-value { font-size: 22px; }
+
+      .account-box {
+        width: 100%;
+      }
+
+      .topbar-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .mini-rail {
+        grid-template-columns: 1fr;
+      }
+
+      .inventory-item {
+        grid-template-columns: 52px 1fr;
+      }
+
+      .inventory-count {
+        grid-column: 2;
+        justify-self: start;
+      }
+
+      .chest-box-wrap {
+        transform: scale(.9);
+      }
+
+      .chest-current-day {
+        font-size: 38px;
+      }
+
+      .bonus-amount-box {
+        min-width: auto;
+        width: 100%;
+      }
+
+      .modal {
+        padding: 20px;
+        margin: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    .item-card.rarity-common {
+      box-shadow: 0 12px 34px rgba(0,0,0,0.30);
+    }
+
+    .item-card.rarity-rare {
+      border-color: rgba(73,215,255,0.18);
+      box-shadow:
+        0 12px 34px rgba(0,0,0,0.30),
+        0 0 0 1px rgba(73,215,255,0.05),
+        0 0 24px rgba(73,215,255,0.08);
+    }
+
+    .item-card.rarity-epic {
+      border-color: rgba(245,158,11,0.20);
+      box-shadow:
+        0 12px 34px rgba(0,0,0,0.30),
+        0 0 0 1px rgba(245,158,11,0.06),
+        0 0 24px rgba(245,158,11,0.10);
+    }
+
+    .item-card.rarity-legend {
+      border-color: rgba(255,62,157,0.24);
+      box-shadow:
+        0 12px 34px rgba(0,0,0,0.30),
+        0 0 0 1px rgba(255,62,157,0.08),
+        0 0 28px rgba(141,92,255,0.14);
+    }
+
+    .inventory-group {
+      margin-bottom: 22px;
+    }
+
+    .inventory-group-head {
+      margin-bottom: 12px;
+    }
+
+    .inventory-group-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: -.02em;
+    }
+
+    .inventory-group-count {
+      display: inline-flex;
+      min-width: 24px;
+      height: 24px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 0 8px;
+    }
+
+    .inventory-group-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .inventory-item-advanced {
+      grid-template-columns: auto 52px 1fr auto auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .inventory-item-check input {
+      width: 18px;
+      height: 18px;
+      accent-color: #49d7ff;
+      cursor: pointer;
+    }
+
+    .inventory-item-main {
+      min-width: 0;
+    }
+
+    .inventory-item-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .inventory-item-submeta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .inventory-sell-one {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .inventory-sell-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .qty-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .qty-input {
+      width: 62px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(8,11,20,0.7);
+      color: #fff;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .inventory-sell-total {
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+    }
+
+    .inventory-selected-sum {
+      font-size: 14px;
+      font-weight: 900;
+      color: #98ffc0;
+    }
+
+    .inventory-bulk-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .inventory-bulk-title {
+      font-size: 15px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .inventory-bulk-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .inventory-bulk-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animated">
+    <div class="bg-grid"></div>
+    <div class="bg-orbs">
+      <div class="bg-orb"></div>
+      <div class="bg-orb"></div>
+      <div class="bg-orb"></div>
+      <div class="bg-orb"></div>
+    </div>
+    <div class="bg-particles">
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+      <div class="bg-particle"></div>
+    </div>
+    <div class="bg-noise"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <div id="toastWrap" class="toast-wrap"></div>
+
+  <div class="page">
+    <div id="guestView" class="guest-wrap">
+      <div class="auth-shell">
+        <div class="glass auth-hero">
+          <div>
+            <div class="auth-kicker">World Script Access</div>
+            <h1 class="auth-title">Добро пожаловать в <span class="accent">World Script</span></h1>
+            <div id="glitchPhraseText" class="auth-text">
+              Пользовательский сайт с быстрым доступом к магазину предметов, рулетке, мастерской, сундуку и бонусам.
+            </div>
+          </div>
+
+          <div class="auth-text" id="siteDescriptionText">
+            Авторизуйся, чтобы открыть пользовательскую часть сайта. Здесь собраны только самые важные разделы.
+          </div>
+        </div>
+
+        <div class="glass auth-panel">
+          <div class="auth-panel-head">
+            <h2 class="auth-panel-title">Вход в систему</h2>
+            <div class="auth-panel-sub">Используй существующий аккаунт World Script или создай новый профиль.</div>
+          </div>
+
+          <div class="auth-tabs">
+            <button id="authLoginBtn" class="auth-tab-btn active" onclick="switchAuthTab('login')">Вход</button>
+            <button id="authRegisterBtn" class="auth-tab-btn" onclick="switchAuthTab('register')">Регистрация</button>
+          </div>
+
+          <div id="authLoginForm" class="auth-form active">
+            <div class="form-grid">
+              <input id="loginInput" class="field" placeholder="Логин" />
+              <input id="passwordInput" class="field" type="password" placeholder="Пароль" />
+            </div>
+            <div class="auth-actions">
+              <button id="loginSubmitBtn" class="btn btn-pink" onclick="loginWs()">🔐 Войти</button>
+            </div>
+            <div id="loginMsg" class="auth-msg"></div>
+          </div>
+
+          <div id="authRegisterForm" class="auth-form">
+            <div class="form-grid">
+              <input id="regLoginInput" class="field" placeholder="Логин" />
+              <input id="regPasswordInput" class="field" type="password" placeholder="Пароль" />
+            </div>
+            <div class="auth-actions">
+              <button id="registerSubmitBtn" class="btn btn-cyan" onclick="registerWs()">✨ Создать аккаунт</button>
+            </div>
+            <div id="registerMsg" class="auth-msg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="appView" class="hidden">
+      <div class="app-shell">
+        <div class="topbar glass">
+          <div class="brand">
+            <div class="brand-logo">WS</div>
+            <div class="brand-text">
+              <div class="brand-title" id="brandTitle">World Script</div>
+            </div>
+          </div>
+
+          <div class="topbar-right">
+            <div class="online-inline">
+              <span class="online-dot"></span>
+              На сайте: <span id="siteOnlineCountText">0</span>
+            </div>
+
+            <div id="globalSectionLoader" class="section-loader hidden">
+              <div class="section-loader-spinner"></div>
+              <div id="globalSectionLoaderText" class="section-loader-text">Загрузка раздела...</div>
+            </div>
+
+            <div class="account-box" id="accountBox" onclick="showProfileCard(true)">
+              <label class="avatar-wrap" for="avatarInput">
+                <img id="avatarImage" class="avatar-img hidden" alt="avatar" />
+                <div id="avatarFallback" class="avatar-fallback">WS</div>
+                <div class="avatar-overlay">Открыть<br>профиль</div>
+              </label>
+              <input id="avatarInput" type="file" accept="image/*" class="hidden" />
+
+              <div class="account-meta">
+                <div id="accountLoginText" class="account-login">user</div>
+                <div class="account-sub">
+                  <span id="accountGameNickText" class="account-gamenick">Игровой ник</span>
+                  <span id="userRoleText" class="user-role user">ПОЛЬЗОВАТЕЛЬ</span>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-dark" onclick="logoutWs()">🚪 Выйти</button>
+          </div>
+        </div>
+
+        <div class="dashboard-layout">
+          <div class="center-column">
+            <div class="section-tabs-wrap">
+              <div class="section-tabs">
+                <div class="section-tabs-main">
+                  <button id="tabBtn-chest" class="section-tab chest active" onclick="switchMainTab('chest')">
+                    <span class="tab-glow"></span>
+                    🎁 Дневной сундук
+                    <span class="tab-indicator">◆</span>
+                  </button>
+
+                  <button id="tabBtn-shop" class="section-tab" onclick="switchMainTab('shop')">
+                    <span class="tab-glow"></span>
+                    🛒 Магазин
+                    <span class="tab-indicator">◆</span>
+                  </button>
+
+                  <button id="tabBtn-workshop" class="section-tab" onclick="switchMainTab('workshop')">
+                    <span class="tab-glow"></span>
+                    🛠 Мастерская
+                    <span class="tab-indicator">◆</span>
+                  </button>
+
+                  <button id="tabBtn-roulette" class="section-tab" onclick="switchMainTab('roulette')">
+                    <span class="tab-glow"></span>
+                    🎰 Рулетка
+                    <span class="tab-indicator">◆</span>
+                  </button>
+
+                  <button id="tabBtn-bonus" class="section-tab" onclick="switchMainTab('bonus')">
+                    <span class="tab-glow"></span>
+                    💸 Бонус
+                    <span class="tab-indicator">◆</span>
+                  </button>
+                </div>
+
+                <div class="section-tabs-right">
+                  <button id="tabBtn-contracts" class="section-tab contracts" onclick="switchMainTab('contracts')">
+                    <span class="tab-glow"></span>
+                    🎯 Заказные контракты
+                    <span class="tab-indicator">◆</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="profileFloatingCard" class="glass profile-floating-card">
+              <div class="section-head">
+                <div>
+                  <h2 class="section-title">Игровой профиль</h2>
+                  <div class="section-sub">Управление привязкой никнейма и VK ID к сайту</div>
+                </div>
+                <button id="profileToggleBtn" class="profile-toggle-btn" onclick="hideProfileCardCompletely()">Скрыть</button>
+              </div>
+
+              <div id="gameLinkStatusPill" class="profile-pill warn">⚠ Не привязан</div>
+
+              <div class="profile-meta-grid">
+                <div class="profile-meta-card">
+                  <div class="profile-meta-label">Игровой ник</div>
+                  <div id="gameNickText" class="profile-meta-value">—</div>
+                </div>
+
+                <div class="profile-meta-card">
+                  <div class="profile-meta-label">VK ID</div>
+                  <div id="gameVkIdText" class="profile-meta-value">—</div>
+                </div>
+
+                <div class="profile-meta-card">
+                  <div class="profile-meta-label">Статус</div>
+                  <div id="gameProfileStateText" class="profile-meta-value">Ожидание привязки</div>
+                </div>
+              </div>
+
+              <div class="profile-link-actions">
+                <button class="btn btn-dark" onclick="loadProfileFull(); loadLinkCodesStatus(); loadRightbarWidgets();">↺ Обновить</button>
+                <button class="btn btn-dark" onclick="openUnlinkConfirmModal()">✖ Отвязать профиль</button>
+              </div>
+
+              <div id="profileLinkBody" class="profile-link-body">
+                <div class="link-code-grid">
+                  <div class="link-code-card">
+                    <div class="link-card-header">
+                      <div class="link-card-icon vk-icon">🔗</div>
+                      <div class="link-card-header-text">
+                        <div class="link-code-title">Привязка VK</div>
+                        <div class="link-code-sub">Привяжи свой VK ID через личные сообщения группы</div>
+                      </div>
+                    </div>
+
+                    <div class="link-code-divider"></div>
+
+                    <div class="link-code-value-wrap">
+                      <div class="link-code-value-label">Твой код привязки VK</div>
+                      <div id="vkCodeValue" class="link-code-value empty">Нет активного кода</div>
+                    </div>
+
+                    <div id="vkCodeMeta" class="link-code-meta">Сгенерируй код, чтобы начать привязку VK.</div>
+
+                    <div class="link-gen-btn-wrap">
+                      <button class="btn btn-cyan btn-lg" onclick="generateVkCode()">🔗 Сгенерировать код VK</button>
+                    </div>
+
+                    <div class="link-code-steps">
+                      <div class="link-steps-title">📋 Как привязать VK</div>
+
+                      <div class="link-step">
+                        <div class="link-step-bullet vk-bullet">1</div>
+                        <div>Нажми кнопку <span class="link-highlight">«Сгенерировать код VK»</span> выше — появится уникальный код</div>
+                      </div>
+
+                      <div class="link-step">
+                        <div class="link-step-bullet vk-bullet">2</div>
+                        <div>Перейди в <span class="link-highlight">личные сообщения</span> группы VK: <a class="link-accent-vk" href="https://vk.com/im/convo/-222804759?entrypoint=list_all" target="_blank" rel="noopener noreferrer">vk.com / absroleplay1script</a></div>
+                      </div>
+
+                      <div class="link-step">
+                        <div class="link-step-bullet vk-bullet">3</div>
+                        <div>Отправь <span class="link-highlight">пустым сообщением</span> сгенерированный код: <span id="vkCodeInline" class="link-accent">—</span></div>
+                      </div>
+
+                      <div class="link-step">
+                        <div class="link-step-bullet vk-bullet">4</div>
+                        <div>Дождись подтверждения — твой <span class="link-accent-vk">VK ID</span> будет автоматически привязан к профилю</div>
+                      </div>
+                    </div>
+
+                    <div class="link-important info">
+                      ℹ️ Код действует ограниченное время. Если истёк — сгенерируй новый.
+                    </div>
+                  </div>
+
+                  <div class="link-code-card">
+                    <div class="link-card-header">
+                      <div class="link-card-icon nick-icon">🪪</div>
+                      <div class="link-card-header-text">
+                        <div class="link-code-title">Привязка никнейма</div>
+                        <div class="link-code-sub">Привяжи игровой никнейм через СМС боту в игре</div>
+                      </div>
+                    </div>
+
+                    <div class="link-code-divider"></div>
+
+                    <div class="link-code-value-wrap">
+                      <div class="link-code-value-label">Твой код привязки ника</div>
+                      <div id="nickCodeValue" class="link-code-value empty">Нет активного кода</div>
+                    </div>
+
+                    <div id="nickCodeMeta" class="link-code-meta">Сгенерируй код, чтобы начать привязку никнейма.</div>
+
+                    <div class="link-gen-btn-wrap">
+                      <button class="btn btn-pink btn-lg" onclick="generateNickCode()">🪪 Сгенерировать код ника</button>
+                    </div>
+
+                    <div class="link-code-steps">
+                      <div class="link-steps-title">📋 Как привязать никнейм</div>
+
+                      <div class="link-step">
+                        <div class="link-step-bullet nick-bullet">1</div>
+                        <div>Нажми кнопку <span class="link-highlight">«Сгенерировать код ника»</span> выше — появится уникальный код</div>
+                      </div>
+
+                      <div class="link-step">
+                        <div class="link-step-bullet nick-bullet">2</div>
+                        <div>Зайди в игру и проверь, что бот <span class="link-accent-pink">Morah Herad</span> находится <span class="link-highlight">в сети</span></div>
+                      </div>
+
+                      <div class="link-step">
+                        <div class="link-step-bullet nick-bullet">3</div>
+                        <div>Отправь боту SMS на номер <span class="link-highlight">/смс 817</span> с текстом — сгенерированным кодом: <span id="nickCodeInline" class="link-accent">—</span></div>
+                      </div>
+
+                      <div class="link-step">
+                        <div class="link-step-bullet nick-bullet">4</div>
+                        <div>Дождись ответного СМС от бота — твой <span class="link-accent-pink">игровой никнейм</span> будет привязан к профилю</div>
+                      </div>
+                    </div>
+
+                    <div class="link-important warn">
+                      ⚠️ Бот должен быть онлайн. Если бот оффлайн — попробуй позже.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tab-chest" class="tab-panel active">
+              <div class="glass section-box chest-shell">
+                <div class="section-head">
+                  <div>
+                    <h2 class="section-title">Дневной сундук</h2>
+                    <div class="section-sub">Открывай сундук каждый день и поддерживай серию наград</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div id="chestInlineLoading" class="inline-loading hidden">
+                      <div class="inline-loading-dot"></div>
+                      <span>Обновляем сундук...</span>
+                    </div>
+                    <div id="chestStatusPill" class="profile-pill warn">⏳ Ожидание данных</div>
+                  </div>
+                </div>
+
+                <div class="chest-layout">
+                  <div class="glass chest-main-card">
+                    <div class="chest-main-stage">
+                      <div id="chestAura" class="chest-aura"></div>
+                      <div id="chestBurst" class="chest-burst"></div>
+
+                      <div id="chestParticles" class="chest-particles">
+                        <span class="chest-particle p1"></span>
+                        <span class="chest-particle p2"></span>
+                        <span class="chest-particle p3"></span>
+                        <span class="chest-particle p4"></span>
+                        <span class="chest-particle p5"></span>
+                        <span class="chest-particle p6"></span>
+                        <span class="chest-particle p7"></span>
+                        <span class="chest-particle p8"></span>
+                      </div>
+
+                      <div id="chestBoxWrap" class="chest-box-wrap">
+                        <div class="chest-lock">🔒</div>
+                        <div class="chest-lid"></div>
+                        <div class="chest-body"></div>
+                        <div class="chest-front-glow"></div>
+                      </div>
+
+                      <div class="chest-stage-floor"></div>
+                    </div>
+
+                    <div class="chest-main-content">
+                      <div class="chest-current-line">
+                        <div class="chest-current-label">Текущая серия</div>
+                        <div id="chestCurrentDayText" class="chest-current-day">0 дней</div>
+                      </div>
+
+                      <div id="chestTimerText" class="chest-timer-text">Загружаем данные...</div>
+
+                      <div class="chest-action-wrap">
+                        <button id="openChestBtn" class="btn btn-gold btn-lg" onclick="openDailyChest()">🎁 Открыть сундук</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="glass chest-side-card">
+                    <div class="chest-scale-head">
+                      <div>
+                        <div class="widget-title" style="margin-bottom:4px;">Шкала серии</div>
+                        <div class="section-sub">Если пропустишь день — серия сбросится</div>
+                      </div>
+                    </div>
+
+                    <div class="chest-scale-wrap">
+                      <div class="chest-scale-thermo">
+                        <div id="chestScaleFill" class="chest-scale-fill"></div>
+
+                        <div class="chest-scale-mark m1">
+                          <span class="mark-dot"></span>
+                          <span class="mark-text">1</span>
+                        </div>
+
+                        <div class="chest-scale-mark m3">
+                          <span class="mark-dot"></span>
+                          <span class="mark-text">3</span>
+                        </div>
+
+                        <div class="chest-scale-mark m5">
+                          <span class="mark-dot"></span>
+                          <span class="mark-text">5</span>
+                        </div>
+
+                        <div class="chest-scale-mark m7">
+                          <span class="mark-dot"></span>
+                          <span class="mark-text">7</span>
+                        </div>
+                      </div>
+
+                      <div class="chest-scale-legend">
+                        <div class="chest-legend-row">
+                          <span class="legend-day">1 день</span>
+                          <span class="legend-desc">Базовый сундук</span>
+                        </div>
+                        <div class="chest-legend-row">
+                          <span class="legend-day">3 день</span>
+                          <span class="legend-desc">Повышенный шанс</span>
+                        </div>
+                        <div class="chest-legend-row">
+                          <span class="legend-day">5 день</span>
+                          <span class="legend-desc">Редкая награда</span>
+                        </div>
+                        <div class="chest-legend-row">
+                          <span class="legend-day">7 день</span>
+                          <span class="legend-desc">Большой сундук</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="chest-bottom-grid">
+                  <div class="glass chest-reward-card">
+                    <div class="widget-title">Последняя награда</div>
+                    <div id="chestLastRewardBox" class="chest-last-reward-box">
+                      <div class="muted">Открой сундук, чтобы получить награду</div>
+                    </div>
+                  </div>
+
+                  <div class="glass chest-history-card">
+                    <div class="section-head" style="margin-bottom:12px;">
+                      <div>
+                        <div class="widget-title" style="margin:0;">История сундука</div>
+                      </div>
+                      <div id="chestHistoryLoading" class="inline-loading hidden">
+                        <div class="inline-loading-dot"></div>
+                        <span>Загрузка...</span>
+                      </div>
+                    </div>
+                    <div id="chestHistoryList" class="bonus-history-list"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tab-shop" class="tab-panel">
+              <div class="glass section-box">
+                <div class="section-head">
+                  <div>
+                    <h2 class="section-title">Магазин и предметы</h2>
+                    <div class="section-sub">Переключайся между своим инвентарём и магазином предметов</div>
+                  </div>
+                  <div id="shopLoading" class="inline-loading hidden">
+                    <div class="inline-loading-dot"></div>
+                    <span>Загружаем предметы...</span>
+                  </div>
+                </div>
+
+                <div class="shop-toggle-wrap">
+                  <button id="shopViewInventoryBtn" class="shop-toggle-btn active" onclick="switchShopView('inventory')">🎒 Свои предметы</button>
+                  <button id="shopViewStoreBtn" class="shop-toggle-btn" onclick="switchShopView('store')">🛒 Магазин предметов</button>
+                </div>
+
+                <div class="shop-layout">
+                  <div id="inventoryBlock" class="glass inventory-box" style="margin-top:0;">
+                    <div class="section-head">
+                      <div>
+                        <h2 class="section-title">Свой инвентарь</h2>
+                        <div class="section-sub">Предметы пользователя</div>
+                      </div>
+                      <div id="inventoryLoading" class="inline-loading hidden">
+                        <div class="inline-loading-dot"></div>
+                        <span>Обновляем инвентарь...</span>
+                      </div>
+                    </div>
+                    <div id="inventoryList" class="inventory-list"></div>
+                  </div>
+
+                  <div id="shopBlock" class="glass section-box hidden" style="margin-top:0;">
+                    <div class="section-head">
+                      <div>
+                        <h2 class="section-title">Магазин предметов</h2>
+                        <div class="section-sub">Доступные предметы для покупки</div>
+                      </div>
+                    </div>
+                    <div id="shopGrid" class="shop-grid"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tab-workshop" class="tab-panel">
+              <div class="glass section-box">
+                <div class="placeholder-box">
+                  <div class="placeholder-inner">
+                    <div class="placeholder-icon">🛠</div>
+                    <h2 class="placeholder-title">Мастерская</h2>
+                    <div class="placeholder-text">
+                      Раздел находится в разработке. Здесь будет крафт предметов, переработка ресурсов и сбор уникальных игровых вещей.
+                    </div>
+                    <div>
+                      <button class="btn btn-cyan" onclick="showToast('Раздел Мастерская скоро будет доступен', 'info')">Скоро откроется</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tab-roulette" class="tab-panel">
+              <div class="roulette-layout">
+                <div class="glass roulette-main">
+                  <div class="roulette-clean-head">
+                    <div class="roulette-limit-big">
+                      <div class="roulette-limit-big-label">Прокрутов</div>
+                      <div class="roulette-limit-big-value"><span id="rouletteLeftText">0</span> / <span id="rouletteMaxText">10</span></div>
+                    </div>
+                    <div id="rouletteLoading" class="inline-loading hidden">
+                      <div class="inline-loading-dot"></div>
+                      <span>Обновляем рулетку...</span>
+                    </div>
+                  </div>
+
+                  <div class="roulette-big-btn-wrap">
+                    <button class="btn btn-pink roulette-big-btn" id="spinButton" onclick="spinRoulette()">КРУТИТЬ</button>
+                  </div>
+
+                  <div class="roulette-strip-shell">
+                    <div class="roulette-center-beam"></div>
+                    <div class="roulette-center-marker"></div>
+
+                    <div class="roulette-viewport">
+                      <div id="rouletteStrip" class="roulette-strip"></div>
+                    </div>
+                  </div>
+
+                  <div id="rouletteResult" class="roulette-status-box">Нажми «Крутить», чтобы испытать удачу.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tab-bonus" class="tab-panel">
+              <div class="bonus-layout">
+                <div class="glass bonus-main">
+                  <div class="bonus-center">
+                    <div class="bonus-kicker">Daily Bonus</div>
+                    <h2 class="bonus-title">Ежедневный бонус</h2>
+
+                    <div id="bonusAmountBox" class="bonus-amount-box">
+                      <div class="bonus-amount-label">Награда</div>
+                      <div id="bonusAmount" class="bonus-amount">$0</div>
+                      <div id="bonusMeta" class="bonus-meta">Ожидание активации бонуса</div>
+                    </div>
+
+                    <div id="bonusBigTimer" class="bonus-big-timer">Загружаем таймер...</div>
+
+                    <div class="bonus-actions">
+                      <button id="activateBonusBtn" class="btn btn-green bonus-activate-btn" onclick="activateBonus()">АКТИВИРОВАТЬ</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="glass bonus-history">
+                  <div class="section-head">
+                    <div>
+                      <h2 class="section-title">История бонусов</h2>
+                      <div class="section-sub">Последние активированные награды</div>
+                    </div>
+                    <div id="bonusLoading" class="inline-loading hidden">
+                      <div class="inline-loading-dot"></div>
+                      <span>Обновляем бонус...</span>
+                    </div>
+                  </div>
+                  <div id="bonusHistoryList" class="bonus-history-list"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tab-contracts" class="tab-panel">
+              <div class="contracts-layout">
+                <div class="glass contracts-hero">
+                  <div class="contracts-kicker">Special Contracts</div>
+                  <h2 class="contracts-title">Заказные контракты на особо опасных преступников</h2>
+                  <div class="contracts-text">
+                    В этом разделе будут появляться эксклюзивные задания по поимке особо опасных целей. За выполнение таких контрактов можно будет получать уникальные награды, увеличенные выплаты и редкие предметы.
+                  </div>
+                </div>
+
+                <div class="contracts-grid">
+                  <div class="glass contract-card">
+                    <div class="contract-card-title">Особые цели</div>
+                    <div class="contract-card-text">
+                      Будут публиковаться преступники повышенной опасности с персональными условиями поимки.
+                    </div>
+                    <div class="contract-card-meta">Статус: скоро доступно</div>
+                  </div>
+
+                  <div class="glass contract-card">
+                    <div class="contract-card-title">Уникальные награды</div>
+                    <div class="contract-card-text">
+                      За выполнение заказного контракта игрок сможет получить деньги, бонусы, предметы или специальные жетоны.
+                    </div>
+                    <div class="contract-card-meta">Статус: скоро доступно</div>
+                  </div>
+
+                  <div class="glass contract-card">
+                    <div class="contract-card-title">Контрактная история</div>
+                    <div class="contract-card-text">
+                      Позже здесь появится история выполненных заказов, рейтинг охотников и журнал целей.
+                    </div>
+                    <div class="contract-card-meta">Статус: скоро доступно</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-rail">
+            <button id="railChestBtn" class="rail-btn chest" onclick="switchMainTab('chest')">
+              🎁
+              <span class="rail-badge">
+                Дневной сундук
+                <span class="sub">Ежедневная награда</span>
+              </span>
+            </button>
+
+            <button id="railProfileBtn" class="rail-btn active" onclick="showProfileCard()">
+              🧩
+              <span class="rail-badge">
+                Игровой профиль
+                <span class="sub">Привязка VK и ника</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="right-column">
+            <div id="balanceWidget" class="glass widget-box">
+              <h3 class="widget-title">Игровой баланс</h3>
+              <div class="stat-card">
+                <div class="stat-label">Текущий баланс</div>
+                <div id="widgetBalanceValue" class="stat-value stat-balance">$0</div>
+              </div>
+            </div>
+
+            <div id="outputWidget" class="glass widget-box">
+              <h3 class="widget-title">Доступно к выводу</h3>
+              <div class="stat-card">
+                <div class="stat-label">Сумма к выводу</div>
+                <div id="widgetOutputValue" class="stat-value stat-output">$0</div>
+              </div>
+            </div>
+
+            <div class="glass widget-box">
+              <div class="section-head" style="margin-bottom:12px;">
+                <div>
+                  <h3 class="widget-title" style="margin:0;">PS ONLINE</h3>
+                  <div class="section-sub" style="margin-top:4px;">Игроки из биндера онлайн</div>
+                </div>
+                <div class="profile-pill ok">● <span id="psOnlineCountText">0</span></div>
+              </div>
+              <div id="psOnlineList" class="online-list"></div>
+            </div>
+
+            <div class="glass widget-box">
+              <div class="section-head" style="margin-bottom:12px;">
+                <div>
+                  <h3 class="widget-title" style="margin:0;">Онлайн на сайте</h3>
+                  <div class="section-sub" style="margin-top:4px;">Текущие пользователи</div>
+                </div>
+                <div class="profile-pill ok">● <span id="siteOnlineCountPill">0</span></div>
+              </div>
+              <div id="siteOnlineList" class="online-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="prizeViewModalBg" class="modal-bg hidden">
+      <div class="modal prize-win-modal">
+        <div class="prize-win-scene">
+          <div class="gun gun-left">🔫</div>
+          <div class="gun gun-right">🔫</div>
+          <div class="shells">
+            <span class="shell s1">✦</span>
+            <span class="shell s2">✦</span>
+            <span class="shell s3">✦</span>
+            <span class="shell s4">✦</span>
+            <span class="shell s5">✦</span>
+          </div>
+          <div class="prize-glow"></div>
+          <div class="prize-flash"></div>
+          <div class="prize-center-wrap">
+            <img id="prizeViewImage" class="prize-win-image hidden" alt="prize" />
+            <div id="prizeViewNoImage" class="prize-win-noimage">🎁</div>
+          </div>
+        </div>
+        <h3 class="prize-win-title">ТЫ ВЫИГРАЛ ПРИЗ</h3>
+        <p id="prizeViewTitle" class="prize-win-name"></p>
+        <div class="modal-actions">
+          <button class="btn btn-dark" onclick="closePrizeViewModal()">✖ Закрыть</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="unlinkConfirmModalBg" class="modal-bg hidden">
+      <div class="modal">
+        <h3 class="confirm-title">Отвязать профиль?</h3>
+        <div class="confirm-text">
+          Ты действительно хочешь отвязать игровой профиль от сайта World Script?
+          После отвязки привязанный никнейм и VK ID будут очищены.
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-dark" onclick="closeUnlinkConfirmModal()">Отмена</button>
+          <button class="btn btn-red" onclick="confirmUnlinkGameProfile()">Да, отвязать</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="adminVkModalBg" class="modal-bg hidden admin-code-modal">
+      <div class="modal">
+        <h3 class="confirm-title">Подтверждение входа</h3>
+        <div class="confirm-text">
+          Для защиты админ-аккаунта нужно вручную получить код подтверждения через VK.
+        </div>
+
+        <div class="glass" style="padding:16px; margin-top:14px; border-radius:18px;">
+          <div style="font-size:13px; font-weight:800; color:#dff8ff; margin-bottom:10px;">
+            Как получить код:
+          </div>
+
+          <div style="display:grid; gap:10px; color:var(--text-secondary); font-size:14px; line-height:1.65;">
+            <div>1. Перейди в личные сообщения группы World Script</div>
+            <div>
+              2. Открой ссылку:
+              <a
+                href="https://vk.com/im/convo/-222804759?entrypoint=list_all"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="color:#8ab4ff; font-weight:900; text-decoration:none;"
+              >vk.com / absroleplay1script</a>
+            </div>
+            <div>3. Напиши команду: <span style="color:#ffe08a; font-weight:900;">!кодвк</span></div>
+            <div>4. Введи полученный код в поле ниже</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <input id="adminVkCodeInput" class="field" placeholder="Введите код из VK" />
+        </div>
+
+        <div id="adminVkMsg" class="auth-msg" style="margin-top:10px;"></div>
+
+        <div class="modal-actions">
+          <button class="btn btn-dark" onclick="closeAdminVkModal()">Отмена</button>
+          <button id="adminVkSubmitBtn" class="btn btn-cyan" onclick="confirmAdminVkLogin()">Подтвердить вход</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const API_BASE = "https://world-script-api.onrender.com";
+  const toastWrap = document.getElementById("toastWrap");
+  const guestView = document.getElementById("guestView");
+  const appView = document.getElementById("appView");
+
+  let currentWsUser = null;
+  let currentMainTab = "chest";
+  let currentShopView = "inventory";
+  let glitchPhrases = [];
+  let glitchTimer = null;
+  let vkCodeTimer = null;
+  let nickCodeTimer = null;
+  let pollInterval = null;
+  let sitePresenceInterval = null;
+  let rightbarInterval = null;
+  let chestCountdownInterval = null;
+  let bonusCountdownInterval = null;
+  let isFirstProfileForceOpen = false;
+  let firstProfilePromptHandled = false;
+  let profileCardVisible = true;
+  let balance = 0;
+  let toOutput = 0;
+  let rouletteSpinning = false;
+  let inventoryItems = [];
+  let roulettePrizes = [];
+  let bonusHistory = [];
+  let shopItems = [];
+  let adminTempUserId = 0;
+  let lastChestReward = null;
+  let currentChestStatus = null;
+  let inventorySellSelection = {};
+
+  // ═══════════════════════════════════════════════════════════
+  // UTILITIES
+  // ═══════════════════════════════════════════════════════════
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function setGlobalSectionLoading(show, text = "Загрузка...") {
+    const wrap = document.getElementById("globalSectionLoader");
+    const txt = document.getElementById("globalSectionLoaderText");
+    if (txt) txt.textContent = text;
+    if (wrap) wrap.classList.toggle("hidden", !show);
+  }
+
+  function setInlineLoading(id, show) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle("hidden", !show);
+  }
+
+  function getInventoryGroupedByRarity(items) {
+    const groups = {
+      legend: [],
+      epic: [],
+      rare: [],
+      common: []
+    };
+
+    for (const item of (items || [])) {
+      const type = normalizeRarityLabel(item.meta);
+      if (!groups[type]) groups.common.push(item);
+      else groups[type].push(item);
+    }
+
+    return groups;
+  }
+
+  function getInventoryGroupTitle(type) {
+    if (type === "legend") return "Легендарные";
+    if (type === "epic") return "Эпические";
+    if (type === "rare") return "Редкие";
+    return "Обычные";
+  }
+
+  function getInventorySelectionKey(item) {
+    return String(item.object_id || item.id || "");
+  }
+
+  function setInventorySellQty(item, qty) {
+    const key = getInventorySelectionKey(item);
+    if (!key) return;
+
+    const max = Math.max(0, Number(item.count || 0));
+    const safeQty = Math.max(0, Math.min(max, Number(qty || 0)));
+
+    if (safeQty <= 0) {
+      delete inventorySellSelection[key];
+    } else {
+      inventorySellSelection[key] = safeQty;
+    }
+
+    renderInventory();
+  }
+
+  function changeInventorySellQty(item, delta) {
+    const key = getInventorySelectionKey(item);
+    const current = Number(inventorySellSelection[key] || 0);
+    setInventorySellQty(item, current + Number(delta || 0));
+  }
+
+  function toggleInventorySellItem(item, checked) {
+    const max = Math.max(0, Number(item.count || 0));
+    if (checked) {
+      setInventorySellQty(item, Math.max(1, Number(inventorySellSelection[getInventorySelectionKey(item)] || 1)));
+    } else {
+      setInventorySellQty(item, 0);
+    }
+  }
+
+  function clearInventorySellSelection() {
+    inventorySellSelection = {};
+    renderInventory();
+  }
+
+  function getInventorySellSummary() {
+    let totalItems = 0;
+    let totalMoney = 0;
+    let selectedRows = [];
+
+    for (const item of inventoryItems) {
+      const key = getInventorySelectionKey(item);
+      const qty = Number(inventorySellSelection[key] || 0);
+
+      if (qty > 0) {
+        const sellPriceOne = Math.max(1, Math.floor(Number(item.price || 0) * 0.5));
+        totalItems += qty;
+        totalMoney += sellPriceOne * qty;
+        selectedRows.push({
+          item,
+          qty,
+          sellPriceOne
+        });
+      }
+    }
+
+    return {
+      totalItems,
+      totalMoney,
+      selectedRows
+    };
+  }
+
+  function showToast(message, type = "info", duration = 2600) {
+    if (!toastWrap) return;
+    const el = document.createElement("div");
+    el.className = "toast " + type;
+    el.textContent = String(message || "");
+    toastWrap.appendChild(el);
+
+    setTimeout(() => {
+      el.style.transition = ".22s ease";
+      el.style.opacity = "0";
+      el.style.transform = "translateX(18px)";
+      setTimeout(() => el.remove(), 220);
+    }, duration);
+  }
+
+  function setAuthMsg(id, text, type = "") {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text || "";
+    el.className = "auth-msg" + (type ? " " + type : "");
+  }
+
+  function wsSetToken(token) {
+    localStorage.setItem("ws_token", token);
+  }
+
+  function wsGetToken() {
+    return localStorage.getItem("ws_token") || "";
+  }
+
+  function wsClearToken() {
+    localStorage.removeItem("ws_token");
+  }
+
+  async function wsGet(path) {
+    const token = wsGetToken();
+
+    const res = await fetch(API_BASE + path, {
+      headers: token ? { Authorization: "Bearer " + token } : {}
+    });
+
+    const data = await res.json().catch(() => ({ ok: false, error: "Bad JSON" }));
+    return { res, data };
+  }
+
+  async function wsPost(path, body) {
+    const token = wsGetToken();
+
+    const res = await fetch(API_BASE + path, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: "Bearer " + token } : {})
+      },
+      body: JSON.stringify(body || {})
+    });
+
+    const data = await res.json().catch(() => ({ ok: false, error: "Bad JSON" }));
+    return { res, data };
+  }
+
+  function formatMoney(n) {
+    return "$" + Number(n || 0).toLocaleString("ru-RU");
+  }
+
+  function formatRole(role) {
+    const val = String(role || "").trim().toLowerCase();
+    return val === "admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
+  }
+
+  function getRoleClass(role) {
+    const val = String(role || "").trim().toLowerCase();
+    return val === "admin" ? "admin" : "user";
+  }
+
+  function updateBalance() {
+    const widget = document.getElementById("widgetBalanceValue");
+    if (widget) widget.textContent = formatMoney(balance);
+  }
+
+  function updateToOutput() {
+    const widget = document.getElementById("widgetOutputValue");
+    if (widget) widget.textContent = formatMoney(toOutput);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // RARITY HELPERS
+  // ═══════════════════════════════════════════════════════════
+  function normalizeRarityLabel(rarity) {
+    const value = String(rarity || "").trim().toLowerCase();
+
+    if (value.includes("леген")) return "legend";
+    if (value.includes("эпич")) return "epic";
+    if (value.includes("ред")) return "rare";
+    return "common";
+  }
+
+  function getShopRarityClass(rarity) {
+    return "rarity-" + normalizeRarityLabel(rarity);
+  }
+
+  function getChestRarityClass(rarity) {
+    return "chest-rarity-" + normalizeRarityLabel(rarity);
+  }
+
+  function getRarityDisplayName(rarity) {
+    const type = normalizeRarityLabel(rarity);
+    if (type === "legend") return "Легендарный";
+    if (type === "epic") return "Эпический";
+    if (type === "rare") return "Редкий";
+    return "Обычный";
+  }
+
+  function inferPrizeRarity(prize) {
+    const title = String(prize?.title || "").toLowerCase();
+    const rewards = Array.isArray(prize?.rewards) ? prize.rewards : [];
+
+    if (title.includes("леген") || rewards.some(r => String(r?.reward_type || "") === "item" && normalizeRarityLabel(r?.object?.rarity || r?.rarity || "") === "legend")) {
+      return "legend";
+    }
+    if (title.includes("эпич") || title.includes("эпик") || rewards.some(r => String(r?.reward_type || "") === "item" && normalizeRarityLabel(r?.object?.rarity || r?.rarity || "") === "epic")) {
+      return "epic";
+    }
+    if (title.includes("ред") || rewards.some(r => String(r?.reward_type || "") === "item" && normalizeRarityLabel(r?.object?.rarity || r?.rarity || "") === "rare")) {
+      return "rare";
+    }
+    if (String(prize?.type || "") === "combo") return "epic";
+    return "common";
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // VIEW MANAGEMENT
+  // ═══════════════════════════════════════════════════════════
+  function showGuestView() {
+    if (guestView) guestView.classList.remove("hidden");
+    if (appView) appView.classList.add("hidden");
+  }
+
+  function showAppView() {
+    if (guestView) guestView.classList.add("hidden");
+    if (appView) appView.classList.remove("hidden");
+  }
+
+  function switchAuthTab(tab) {
+    const loginBtn = document.getElementById("authLoginBtn");
+    const registerBtn = document.getElementById("authRegisterBtn");
+    const loginForm = document.getElementById("authLoginForm");
+    const registerForm = document.getElementById("authRegisterForm");
+
+    if (loginBtn) loginBtn.classList.toggle("active", tab === "login");
+    if (registerBtn) registerBtn.classList.toggle("active", tab === "register");
+    if (loginForm) loginForm.classList.toggle("active", tab === "login");
+    if (registerForm) registerForm.classList.toggle("active", tab === "register");
+  }
+
+  function switchMainTab(tab) {
+    currentMainTab = tab;
+
+    ["chest", "shop", "workshop", "roulette", "bonus", "contracts"].forEach((name) => {
+      const btn = document.getElementById("tabBtn-" + name);
+      const panel = document.getElementById("tab-" + name);
+      if (btn) btn.classList.toggle("active", name === tab);
+      if (panel) panel.classList.toggle("active", name === tab);
+    });
+
+    if (tab === "roulette") {
+      loadRouletteLimits();
+    }
+    if (tab === "bonus") {
+      loadBonusStatus();
+    }
+    if (tab === "chest") {
+      loadChestStatus();
+      loadChestHistory();
+    }
+  }
+
+  function switchShopView(view) {
+    currentShopView = view;
+    const inventoryBlock = document.getElementById("inventoryBlock");
+    const shopBlock = document.getElementById("shopBlock");
+    const inventoryBtn = document.getElementById("shopViewInventoryBtn");
+    const storeBtn = document.getElementById("shopViewStoreBtn");
+
+    if (inventoryBlock) inventoryBlock.classList.toggle("hidden", view !== "inventory");
+    if (shopBlock) shopBlock.classList.toggle("hidden", view !== "store");
+    if (inventoryBtn) inventoryBtn.classList.toggle("active", view === "inventory");
+    if (storeBtn) storeBtn.classList.toggle("active", view === "store");
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // PROFILE CARD MANAGEMENT
+  // ═══════════════════════════════════════════════════════════
+  function showProfileCard(forceExpand = false) {
+    const card = document.getElementById("profileFloatingCard");
+    const body = document.getElementById("profileLinkBody");
+    const railBtn = document.getElementById("railProfileBtn");
+
+    if (card) {
+      card.classList.remove("is-hidden");
+      profileCardVisible = true;
+    }
+
+    if (forceExpand && body) {
+      body.classList.remove("collapsed");
+    }
+
+    if (railBtn) {
+      railBtn.classList.add("active");
+    }
+
+    if (isFirstProfileForceOpen && currentWsUser) {
+      isFirstProfileForceOpen = false;
+      wsPost("/api/ws/profile/mark-link-seen", {}).catch(() => {});
+    }
+  }
+
+  function hideProfileCardCompletely() {
+    const card = document.getElementById("profileFloatingCard");
+    const railBtn = document.getElementById("railProfileBtn");
+
+    if (card) {
+      card.classList.add("is-hidden");
+      profileCardVisible = false;
+    }
+
+    if (railBtn) {
+      railBtn.classList.remove("active");
+    }
+  }
+
+  function toggleProfileLinkBody() {
+    const body = document.getElementById("profileLinkBody");
+    if (body) body.classList.toggle("collapsed");
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // UNLINK MODAL
+  // ═══════════════════════════════════════════════════════════
+  function openUnlinkConfirmModal() {
+    const bg = document.getElementById("unlinkConfirmModalBg");
+    if (bg) bg.classList.remove("hidden");
+  }
+
+  function closeUnlinkConfirmModal() {
+    const bg = document.getElementById("unlinkConfirmModalBg");
+    if (bg) bg.classList.add("hidden");
+  }
+
+  async function confirmUnlinkGameProfile() {
+    try {
+      const { res, data } = await wsPost("/api/ws/profile/unlink-game", {});
+
+      if (res.status === 401) {
+        closeUnlinkConfirmModal();
+        return logoutWs();
+      }
+
+      if (!data.ok) {
+        showToast(data.error || "Ошибка отвязки профиля", "error");
+        return;
+      }
+
+      closeUnlinkConfirmModal();
+      showToast("Профиль успешно отвязан", "success");
+
+      await loadProfileFull();
+      await loadLinkCodesStatus();
+      await loadRightbarWidgets();
+    } catch (e) {
+      showToast("Ошибка отвязки профиля: " + e.message, "error");
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // PUBLIC DATA & RIGHTBAR WIDGETS
+  // ═══════════════════════════════════════════════════════════
+  async function loadPublicWsData() {
+    try {
+      const { data } = await wsGet("/api/ws/public/settings");
+
+      if (data && data.ok && data.settings) {
+        applyWsSettings(data.settings);
+      }
+
+      if (data && data.ok && Array.isArray(data.glitch_phrases)) {
+        startGlitchRotation(data.glitch_phrases);
+      }
+    } catch (e) {
+      console.log("loadPublicWsData error:", e.message);
+    }
+  }
+
+  async function loadRightbarWidgets() {
+    try {
+      const psRes = await wsGet("/api/ws/presence/ps-online");
+      if (psRes.res.status === 401) return logoutWs();
+      if (psRes.data && psRes.data.ok) {
+        renderPsOnlineList(psRes.data.items || psRes.data.users || []);
+      }
+
+      const siteRes = await wsGet("/api/ws/presence/site-online");
+      if (siteRes.res.status === 401) return logoutWs();
+      if (siteRes.data && siteRes.data.ok) {
+        renderSiteOnlineList(siteRes.data.items || siteRes.data.users || []);
+      }
+    } catch (e) {
+      console.log("loadRightbarWidgets error:", e.message);
+    }
+  }
+
+  function renderPsOnlineList(users) {
+    const safeUsers = Array.isArray(users) ? users : [];
+    const list = document.getElementById("psOnlineList");
+    const countText = document.getElementById("psOnlineCountText");
+
+    if (countText) countText.textContent = String(safeUsers.length);
+    if (!list) return;
+
+    if (!safeUsers.length) {
+      list.innerHTML = '<div class="muted">Нет игроков онлайн</div>';
+      return;
+    }
+
+    list.innerHTML = safeUsers.slice(0, 10).map(user => `
+      <div class="online-user">
+        <div class="online-user-main">
+          <span class="online-user-name">${escapeHtml(user.nick || user.name || "Игрок")}</span>
+          <span class="online-dot"></span>
+        </div>
+        ${user.server_name || user.server ? `<div class="online-user-meta">Сервер: ${escapeHtml(user.server_name || user.server)}</div>` : ""}
+      </div>
+    `).join("");
+  }
+
+  function renderSiteOnlineList(users) {
+    const safeUsers = Array.isArray(users) ? users : [];
+    const list = document.getElementById("siteOnlineList");
+    const countText = document.getElementById("siteOnlineCountText");
+    const countPill = document.getElementById("siteOnlineCountPill");
+
+    const count = String(safeUsers.length);
+    if (countText) countText.textContent = count;
+    if (countPill) countPill.textContent = count;
+    if (!list) return;
+
+    if (!safeUsers.length) {
+      list.innerHTML = '<div class="muted">Нет пользователей онлайн</div>';
+      return;
+    }
+
+    list.innerHTML = safeUsers.slice(0, 10).map(user => `
+      <div class="online-user">
+        <div class="online-user-main">
+          <span class="online-user-name">${escapeHtml(user.login || user.nickname || user.name || "Пользователь")}</span>
+          <span class="online-dot"></span>
+        </div>
+        ${(user.game_nick || user.nickname) ? `<div class="online-user-meta">${escapeHtml(user.game_nick || user.nickname)}</div>` : ""}
+      </div>
+    `).join("");
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // AUTH
+  // ═══════════════════════════════════════════════════════════
+  async function loginWs() {
+    const login = document.getElementById("loginInput")?.value.trim();
+    const password = document.getElementById("passwordInput")?.value;
+    const btn = document.getElementById("loginSubmitBtn");
+
+    setAuthMsg("loginMsg", "");
+
+    if (!login || !password) {
+      setAuthMsg("loginMsg", "Заполни логин и пароль", "error");
+      return;
+    }
+
+    try {
+      if (btn) btn.disabled = true;
+
+      const { data } = await wsPost("/api/ws/login", { login, password });
+
+      if (!data.ok) {
+        setAuthMsg("loginMsg", data.error || "Ошибка входа", "error");
+        return;
+      }
+
+      if (data.need_admin_vk_confirm) {
+        adminTempUserId = Number(data.temp_user_id || 0);
+        openAdminVkModal();
+        setAuthMsg("loginMsg", "");
+        showToast("Для входа получи код через ЛС группы VK", "info");
+        return;
+      }
+
+      wsSetToken(data.token);
+      currentWsUser = data.user || null;
+
+      setAuthMsg("loginMsg", "Вход выполнен", "success");
+      showToast("Вход выполнен", "success");
+
+      await bootstrapAuthorized();
+    } catch (e) {
+      setAuthMsg("loginMsg", "Ошибка: " + e.message, "error");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function registerWs() {
+    const login = document.getElementById("regLoginInput")?.value.trim();
+    const password = document.getElementById("regPasswordInput")?.value;
+    const btn = document.getElementById("registerSubmitBtn");
+
+    setAuthMsg("registerMsg", "");
+
+    if (!login || !password) {
+      setAuthMsg("registerMsg", "Заполни логин и пароль", "error");
+      return;
+    }
+
+    if (login.length < 3) {
+      setAuthMsg("registerMsg", "Логин должен быть минимум 3 символа", "error");
+      return;
+    }
+
+    if (password.length < 4) {
+      setAuthMsg("registerMsg", "Пароль должен быть минимум 4 символа", "error");
+      return;
+    }
+
+    try {
+      if (btn) btn.disabled = true;
+
+      const { data } = await wsPost("/api/ws/register", { login, password });
+
+      if (!data.ok) {
+        setAuthMsg("registerMsg", data.error || "Ошибка регистрации", "error");
+        return;
+      }
+
+      wsSetToken(data.token);
+      currentWsUser = data.user || null;
+
+      setAuthMsg("registerMsg", "Аккаунт создан", "success");
+      showToast("Аккаунт создан", "success");
+
+      await bootstrapAuthorized();
+    } catch (e) {
+      setAuthMsg("registerMsg", "Ошибка: " + e.message, "error");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function openAdminVkModal() {
+    const bg = document.getElementById("adminVkModalBg");
+    const msg = document.getElementById("adminVkMsg");
+    const input = document.getElementById("adminVkCodeInput");
+
+    if (bg) bg.classList.remove("hidden");
+
+    if (msg) {
+      msg.textContent = "";
+      msg.className = "auth-msg";
+    }
+
+    if (input) {
+      input.value = "";
+      setTimeout(() => input.focus(), 60);
+    }
+  }
+
+  function closeAdminVkModal() {
+    const bg = document.getElementById("adminVkModalBg");
+    if (bg) bg.classList.add("hidden");
+    adminTempUserId = 0;
+  }
+
+  async function confirmAdminVkLogin() {
+    const input = document.getElementById("adminVkCodeInput");
+    const btn = document.getElementById("adminVkSubmitBtn");
+    const msg = document.getElementById("adminVkMsg");
+
+    const code = input?.value.trim();
+
+    if (!adminTempUserId) {
+      if (msg) {
+        msg.textContent = "Запрос подтверждения не найден. Повтори вход.";
+        msg.className = "auth-msg error";
+      }
+      return;
+    }
+
+    if (!code) {
+      if (msg) {
+        msg.textContent = "Сначала получи код через команду !кодвк и введи его сюда";
+        msg.className = "auth-msg error";
+      }
+      return;
+    }
+
+    try {
+      if (btn) btn.disabled = true;
+
+      const { data } = await wsPost("/api/ws/admin/confirm-vk-login", {
+        temp_user_id: adminTempUserId,
+        code
+      });
+
+      if (!data.ok) {
+        if (msg) {
+          msg.textContent = data.error || "Не удалось подтвердить вход. Проверь код из VK.";
+          msg.className = "auth-msg error";
+        }
+        return;
+      }
+
+      wsSetToken(data.token);
+      currentWsUser = data.user || null;
+
+      closeAdminVkModal();
+      showToast("Защита подтверждена, вход выполнен", "success");
+
+      await bootstrapAuthorized();
+    } catch (e) {
+      if (msg) {
+        msg.textContent = "Ошибка: " + e.message;
+        msg.className = "auth-msg error";
+      }
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function logoutWs() {
+    try {
+      await wsPost("/api/ws/presence/site-leave", {});
+    } catch {}
+
+    wsClearToken();
+    currentWsUser = null;
+    currentMainTab = "chest";
+    currentShopView = "inventory";
+    profileCardVisible = true;
+    isFirstProfileForceOpen = false;
+    firstProfilePromptHandled = false;
+    balance = 0;
+    toOutput = 0;
+    inventoryItems = [];
+    roulettePrizes = [];
+    bonusHistory = [];
+    shopItems = [];
+    adminTempUserId = 0;
+    currentChestStatus = null;
+    lastChestReward = null;
+
+    if (glitchTimer) clearInterval(glitchTimer);
+    if (pollInterval) clearInterval(pollInterval);
+    if (sitePresenceInterval) clearInterval(sitePresenceInterval);
+    if (rightbarInterval) clearInterval(rightbarInterval);
+    if (chestCountdownInterval) clearInterval(chestCountdownInterval);
+    if (bonusCountdownInterval) clearInterval(bonusCountdownInterval);
+
+    glitchTimer = null;
+    pollInterval = null;
+    sitePresenceInterval = null;
+    rightbarInterval = null;
+    chestCountdownInterval = null;
+    bonusCountdownInterval = null;
+
+    clearLinkCodeTimers();
+    closePrizeViewModal();
+    closeUnlinkConfirmModal();
+    closeAdminVkModal();
+    showGuestView();
+    loadPublicWsData();
+    showToast("Выход выполнен", "info");
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // USER RENDERING
+  // ═══════════════════════════════════════════════════════════
+  function renderWsUser(user) {
+    const userRoleText = document.getElementById("userRoleText");
+    const accountLoginText = document.getElementById("accountLoginText");
+    const accountGameNickText = document.getElementById("accountGameNickText");
+
+    const displayGameNick = user?.game_nick || user?.nickname || user?.login || "Игровой ник";
+    const roleClass = getRoleClass(user?.role);
+
+    if (accountLoginText) accountLoginText.textContent = user?.login || "user";
+    if (accountGameNickText) accountGameNickText.textContent = displayGameNick;
+
+    if (userRoleText) {
+      userRoleText.textContent = formatRole(user?.role);
+      userRoleText.classList.remove("admin", "user");
+      userRoleText.classList.add(roleClass);
+    }
+
+    renderAvatar(user?.avatar_url || "", user?.login || "WS");
+  }
+
+  function renderAvatar(url, login) {
+    const img = document.getElementById("avatarImage");
+    const fallback = document.getElementById("avatarFallback");
+    const initials = String(login || "WS").slice(0, 2).toUpperCase();
+
+    if (url) {
+      if (img) {
+        img.src = url;
+        img.classList.remove("hidden");
+      }
+      if (fallback) fallback.classList.add("hidden");
+    } else {
+      if (img) {
+        img.removeAttribute("src");
+        img.classList.add("hidden");
+      }
+      if (fallback) {
+        fallback.textContent = initials;
+        fallback.classList.remove("hidden");
+      }
+    }
+  }
+
+  function applyWsSettings(settings) {
+    const brandTitle = document.getElementById("brandTitle");
+    const siteDescriptionText = document.getElementById("siteDescriptionText");
+
+    if (brandTitle && settings.site_title) brandTitle.textContent = settings.site_title;
+    if (siteDescriptionText && settings.guest_description) siteDescriptionText.textContent = settings.guest_description;
+  }
+
+  function startGlitchRotation(phrases) {
+    if (glitchTimer) clearInterval(glitchTimer);
+
+    glitchPhrases = Array.isArray(phrases) ? phrases.filter(Boolean) : [];
+
+    const target = document.getElementById("glitchPhraseText");
+    if (!target || !glitchPhrases.length) return;
+
+    let index = 0;
+    target.textContent = glitchPhrases[0];
+
+    glitchTimer = setInterval(() => {
+      index = (index + 1) % glitchPhrases.length;
+      target.style.opacity = "0";
+      target.style.transform = "translateY(6px)";
+      target.style.transition = ".22s ease";
+
+      setTimeout(() => {
+        target.textContent = glitchPhrases[index];
+        target.style.opacity = "1";
+        target.style.transform = "translateY(0)";
+      }, 180);
+    }, 2800);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // PROFILE
+  // ═══════════════════════════════════════════════════════════
+  function normalizeShopObject(item) {
+    return {
+      id: item.id,
+      title: String(item.title || "Без названия"),
+      desc: String(item.description || item.desc || "Игровой предмет магазина World Script."),
+      price: Number(item.price || 0),
+      rarity: String(item.rarity || "Обычный"),
+      image_url: String(item.image_url || ""),
+      icon: "📦"
+    };
+  }
+
+  function normalizeInventoryRow(row) {
+    const object = row.object || row.ws_object || {};
+    return {
+      id: row.id || row.object_id || object.id || ("obj_" + Math.random()),
+      object_id: Number(row.object_id || object.id || 0),
+      title: String(object.title || "Без названия"),
+      meta: String(object.rarity || "Обычный предмет"),
+      icon: "📦",
+      count: Number(row.count || 0),
+      image_url: String(object.image_url || ""),
+      price: Number(object.price || 0)
+    };
+  }
+
+  async function loadWsObjects() {
+    setInlineLoading("shopLoading", true);
+    try {
+      const { res, data } = await wsGet("/api/ws/objects");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка загрузки предметов", "error");
+      shopItems = (data.items || []).map(normalizeShopObject);
+      renderShop();
+    } catch {
+      showToast("Ошибка загрузки предметов", "error");
+    } finally {
+      setInlineLoading("shopLoading", false);
+    }
+  }
+
+  async function loadProfileFull() {
+    setGlobalSectionLoading(true, "Загружаем профиль...");
+    setInlineLoading("inventoryLoading", true);
+    try {
+      const { res, data } = await wsGet("/api/ws/profile-full");
+      if (res.status === 401) {
+        await logoutWs();
+        return false;
+      }
+      if (!data.ok) {
+        showToast(data.error || "Ошибка загрузки профиля", "error");
+        return false;
+      }
+
+      currentWsUser = {
+        ...(currentWsUser || {}),
+        ...(data.user || {})
+      };
+
+      renderWsUser(currentWsUser);
+
+      balance = Number(data?.binder?.game_balance || data?.balance || 0);
+      toOutput = Number(data?.binder?.to_output || data?.to_output || 0);
+
+      inventoryItems = Array.isArray(data.inventory)
+        ? data.inventory.map(normalizeInventoryRow)
+        : [];
+
+      updateBalance();
+      updateToOutput();
+      renderInventory();
+      renderGameProfileInfo(data.user || {}, data.binder || {});
+
+      if (
+        currentWsUser &&
+        currentWsUser.profile_link_seen === false &&
+        !firstProfilePromptHandled
+      ) {
+        firstProfilePromptHandled = true;
+        isFirstProfileForceOpen = true;
+        showProfileCard(true);
+      }
+
+      return true;
+    } catch {
+      showToast("Ошибка загрузки профиля", "error");
+      return false;
+    } finally {
+      setGlobalSectionLoading(false);
+      setInlineLoading("inventoryLoading", false);
+    }
+  }
+
+  function renderGameProfileInfo(user, binder) {
+    const gameNickText = document.getElementById("gameNickText");
+    const gameVkIdText = document.getElementById("gameVkIdText");
+    const gameLinkStatusPill = document.getElementById("gameLinkStatusPill");
+    const stateText = document.getElementById("gameProfileStateText");
+
+    const hasNick = !!(user?.game_nick || binder?.nick);
+    const hasVk = !!(user?.vk_id || binder?.vk_id);
+
+    const gameNick = user?.game_nick || binder?.nick || "";
+    const vkId = user?.vk_id || binder?.vk_id || null;
+
+    if (gameNickText) gameNickText.textContent = gameNick || "—";
+    if (gameVkIdText) gameVkIdText.textContent = vkId ? String(vkId) : "—";
+
+    if (stateText) {
+      if (hasNick && hasVk) stateText.textContent = "Полностью привязан";
+      else if (hasNick || hasVk) stateText.textContent = "Частично привязан";
+      else stateText.textContent = "Ожидание привязки";
+    }
+
+    if (gameLinkStatusPill) {
+      if (hasNick && hasVk) {
+        gameLinkStatusPill.className = "profile-pill ok";
+        gameLinkStatusPill.textContent = "✅ Профиль полностью привязан";
+      } else if (hasNick || hasVk) {
+        gameLinkStatusPill.className = "profile-pill warn";
+        gameLinkStatusPill.textContent = "⚠ Профиль привязан частично";
+      } else {
+        gameLinkStatusPill.className = "profile-pill warn";
+        gameLinkStatusPill.textContent = "⚠ Не привязан";
+      }
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // SHOP & INVENTORY
+  // ═══════════════════════════════════════════════════════════
+  function renderShop() {
+    const box = document.getElementById("shopGrid");
+    if (!box) return;
+
+    if (!shopItems.length) {
+      box.innerHTML = '<div class="muted">Предметов пока нет.</div>';
+      return;
+    }
+
+    box.innerHTML = shopItems.map((item) => {
+      const rarityClass = getShopRarityClass(item.rarity);
+
+      return `
+        <div class="item-card ${rarityClass}">
+          <div class="item-rarity ${rarityClass}">${escapeHtml(getRarityDisplayName(item.rarity))}</div>
+          <div class="item-icon-wrap">
+            ${item.image_url ? `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.title)}" />` : escapeHtml(item.icon)}
+          </div>
+          <div class="item-title">${escapeHtml(item.title)}</div>
+          <div class="item-desc">${escapeHtml(item.desc)}</div>
+          <div class="item-footer">
+            <div class="item-price">${formatMoney(item.price)}</div>
+            <button class="btn btn-cyan" onclick="buyItem(${Number(item.id)}, this)">Купить</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderInventory() {
+    const box = document.getElementById("inventoryList");
+    if (!box) return;
+
+    if (!inventoryItems.length) {
+      box.innerHTML = '<div class="muted">Инвентарь пока пуст.</div>';
+      return;
+    }
+
+    const groups = getInventoryGroupedByRarity(inventoryItems);
+    const order = ["legend", "epic", "rare", "common"];
+    const summary = getInventorySellSummary();
+
+    const sectionsHtml = order.map(groupKey => {
+      const items = groups[groupKey] || [];
+      if (!items.length) return "";
+
+      const groupClass = getShopRarityClass(groupKey);
+
+      return `
+        <div class="inventory-group inventory-group-${groupKey}">
+          <div class="inventory-group-head">
+            <div class="inventory-group-title ${groupClass}">
+              ${getInventoryGroupTitle(groupKey)}
+              <span class="inventory-group-count">${items.length}</span>
+            </div>
+          </div>
+
+          <div class="inventory-group-list">
+            ${items.map(item => {
+              const rarityClass = getShopRarityClass(item.meta);
+              const rarityName = getRarityDisplayName(item.meta);
+              const key = getInventorySelectionKey(item);
+              const selectedQty = Number(inventorySellSelection[key] || 0);
+              const isChecked = selectedQty > 0;
+              const maxQty = Math.max(0, Number(item.count || 0));
+              const sellPriceOne = Math.max(1, Math.floor(Number(item.price || 0) * 0.5));
+              const totalForSelected = selectedQty * sellPriceOne;
+
+              return `
+                <div class="inventory-item inventory-item-advanced ${rarityClass}">
+                  <div class="inventory-item-check">
+                    <input
+                      type="checkbox"
+                      ${isChecked ? "checked" : ""}
+                      onchange="toggleInventorySellItem(${JSON.stringify({
+                        object_id: Number(item.object_id),
+                        id: item.id,
+                        count: maxQty
+                      }).replace(/"/g, '&quot;')}, this.checked)"
+                    />
+                  </div>
+
+                  <div class="inventory-item-icon">
+                    ${item.image_url
+                      ? `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.title)}" />`
+                      : escapeHtml(item.icon)}
+                  </div>
+
+                  <div class="inventory-item-main">
+                    <div class="inventory-item-title-row">
+                      <div class="inventory-item-title">${escapeHtml(item.title)}</div>
+                      <span class="item-rarity ${rarityClass}" style="margin-bottom:0;">${escapeHtml(rarityName)}</span>
+                    </div>
+
+                    <div class="inventory-item-meta">${escapeHtml(item.meta)}</div>
+
+                    <div class="inventory-item-submeta">
+                      <span class="inventory-count">x${maxQty}</span>
+                      <span class="inventory-sell-one">Цена продажи 1 шт: ${formatMoney(sellPriceOne)}</span>
+                    </div>
+                  </div>
+
+                  <div class="inventory-sell-controls">
+                    <button class="qty-btn" onclick="changeInventorySellQty(${JSON.stringify({
+                      object_id: Number(item.object_id),
+                      id: item.id,
+                      count: maxQty
+                    }).replace(/"/g, '&quot;')}, -1)">−</button>
+
+                    <input
+                      class="qty-input"
+                      type="number"
+                      min="0"
+                      max="${maxQty}"
+                      value="${selectedQty}"
+                      onchange="setInventorySellQty(${JSON.stringify({
+                        object_id: Number(item.object_id),
+                        id: item.id,
+                        count: maxQty
+                      }).replace(/"/g, '&quot;')}, this.value)"
+                    />
+
+                    <button class="qty-btn" onclick="changeInventorySellQty(${JSON.stringify({
+                      object_id: Number(item.object_id),
+                      id: item.id,
+                      count: maxQty
+                    }).replace(/"/g, '&quot;')}, 1)">+</button>
+                  </div>
+
+                  <div class="inventory-sell-total">
+                    ${selectedQty > 0 ? `<div class="inventory-selected-sum">${formatMoney(totalForSelected)}</div>` : `<div class="muted">Не выбрано</div>`}
+                    <button class="btn btn-dark" onclick="sellSingleQuantity(${Number(item.object_id)}, ${Math.max(1, selectedQty || 1)}, this)">
+                      Продать
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    const bulkPanel = `
+      <div class="inventory-bulk-panel">
+        <div class="inventory-bulk-info">
+          <div class="inventory-bulk-title">Массовая продажа</div>
+          <div class="inventory-bulk-meta">
+            Выбрано: <b>${summary.totalItems}</b> шт. · Сумма: <b>${formatMoney(summary.totalMoney)}</b>
+          </div>
+        </div>
+
+        <div class="inventory-bulk-actions">
+          <button class="btn btn-dark" onclick="clearInventorySellSelection()" ${summary.totalItems <= 0 ? "disabled" : ""}>
+            Сбросить выбор
+          </button>
+          <button class="btn btn-red" onclick="sellSelectedInventory()" ${summary.totalItems <= 0 ? "disabled" : ""}>
+            💸 Продать выбранное
+          </button>
+        </div>
+      </div>
+    `;
+
+    box.innerHTML = bulkPanel + sectionsHtml;
+  }
+
+  function findInventoryItemByObjectId(objectId) {
+    return inventoryItems.find(x => Number(x.object_id) === Number(objectId)) || null;
+  }
+
+  function setInventorySellQtyByObjectId(objectId, qty) {
+    const item = findInventoryItemByObjectId(objectId);
+    if (!item) return;
+    setInventorySellQty(item, qty);
+  }
+
+  function changeInventorySellQtyByObjectId(objectId, delta) {
+    const item = findInventoryItemByObjectId(objectId);
+    if (!item) return;
+    changeInventorySellQty(item, delta);
+  }
+
+  function toggleInventorySellItemByObjectId(objectId, checked) {
+    const item = findInventoryItemByObjectId(objectId);
+    if (!item) return;
+    toggleInventorySellItem(item, checked);
+  }
+
+  async function sellSingleQuantity(objectId, qty, btnEl) {
+    const count = Math.max(1, Number(qty || 1));
+
+    try {
+      if (btnEl) btnEl.disabled = true;
+      setInlineLoading("inventoryLoading", true);
+
+      const { res, data } = await wsPost("/api/ws/shop/sell-many", {
+        items: [
+          {
+            object_id: Number(objectId),
+            count
+          }
+        ]
+      });
+
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка продажи", "error");
+
+      balance = Number(data.balance || balance);
+      updateBalance();
+
+      inventoryItems = Array.isArray(data.inventory)
+        ? data.inventory.map(normalizeInventoryRow)
+        : inventoryItems;
+
+      delete inventorySellSelection[String(objectId)];
+
+      renderInventory();
+      showToast(`Продажа выполнена · +${formatMoney(data.total_sold_for || 0)}`, "success");
+      await loadRightbarWidgets();
+    } catch {
+      showToast("Ошибка продажи", "error");
+    } finally {
+      if (btnEl) btnEl.disabled = false;
+      setInlineLoading("inventoryLoading", false);
+    }
+  }
+
+  async function sellSelectedInventory() {
+    const summary = getInventorySellSummary();
+
+    if (!summary.selectedRows.length) {
+      return showToast("Сначала выбери предметы для продажи", "info");
+    }
+
+    try {
+      setInlineLoading("inventoryLoading", true);
+
+      const { res, data } = await wsPost("/api/ws/shop/sell-many", {
+        items: summary.selectedRows.map(row => ({
+          object_id: Number(row.item.object_id),
+          count: Number(row.qty)
+        }))
+      });
+
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка массовой продажи", "error");
+
+      balance = Number(data.balance || balance);
+      updateBalance();
+
+      inventoryItems = Array.isArray(data.inventory)
+        ? data.inventory.map(normalizeInventoryRow)
+        : inventoryItems;
+
+      inventorySellSelection = {};
+      renderInventory();
+
+      showToast(`Продано предметов на ${formatMoney(data.total_sold_for || 0)}`, "success");
+      await loadRightbarWidgets();
+    } catch {
+      showToast("Ошибка массовой продажи", "error");
+    } finally {
+      setInlineLoading("inventoryLoading", false);
+    }
+  }
+
+  async function buyItem(id, btnEl) {
+    try {
+      if (btnEl) btnEl.disabled = true;
+      setInlineLoading("shopLoading", true);
+
+      const { res, data } = await wsPost("/api/ws/shop/buy", { object_id: Number(id) });
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка покупки", "error");
+
+      balance = Number(data.balance || 0);
+      updateBalance();
+
+      inventoryItems = Array.isArray(data.inventory)
+        ? data.inventory.map(normalizeInventoryRow)
+        : inventoryItems;
+
+      renderInventory();
+      showToast(`Куплен предмет: ${data.object?.title || "Предмет"}`, "success");
+      loadRightbarWidgets();
+    } catch {
+      showToast("Ошибка покупки", "error");
+    } finally {
+      if (btnEl) btnEl.disabled = false;
+      setInlineLoading("shopLoading", false);
+    }
+  }
+
+  async function sellItem(objectId, btnEl) {
+    try {
+      if (btnEl) btnEl.disabled = true;
+      setInlineLoading("inventoryLoading", true);
+
+      const { res, data } = await wsPost("/api/ws/shop/sell", { object_id: Number(objectId) });
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка продажи", "error");
+
+      balance = Number(data.balance || balance);
+      updateBalance();
+
+      inventoryItems = Array.isArray(data.inventory)
+        ? data.inventory.map(normalizeInventoryRow)
+        : inventoryItems;
+
+      renderInventory();
+      showToast(`Продан предмет: ${data.object?.title || "Предмет"} · +${formatMoney(data.sold_for || 0)}`, "success");
+      loadRightbarWidgets();
+    } catch {
+      showToast("Ошибка продажи", "error");
+    } finally {
+      if (btnEl) btnEl.disabled = false;
+      setInlineLoading("inventoryLoading", false);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // ROULETTE
+  // ═══════════════════════════════════════════════════════════
+  function getPrizeCardHtml(prize) {
+    const rarityClass = getShopRarityClass(inferPrizeRarity(prize));
+    return `
+      <div class="roulette-card ${rarityClass}" data-prize-id="${Number(prize.id)}">
+        <div class="roulette-card-img-wrap">
+          ${prize.image_url ? `<img src="${escapeHtml(prize.image_url)}" alt="${escapeHtml(prize.title)}" />` : `<div class="roulette-card-noimg">${escapeHtml(prize.icon || "🎁")}</div>`}
+        </div>
+        <div class="roulette-card-title">${escapeHtml(prize.title)}</div>
+        <div class="roulette-card-meta">
+          ${prize.type === "money" ? "Денежный приз" : prize.type === "combo" ? "Комбо-приз" : "Предмет"}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderRouletteStrip(items, duplicateRounds = 16) {
+    const strip = document.getElementById("rouletteStrip");
+    if (!strip) return;
+
+    if (!items.length) {
+      strip.innerHTML = `
+        <div class="roulette-card">
+          <div class="roulette-card-img-wrap"><div class="roulette-card-noimg">🎁</div></div>
+          <div class="roulette-card-title">Нет призов</div>
+          <div class="roulette-card-meta">Список пуст</div>
+        </div>
+      `;
+      strip.style.transition = "none";
+      strip.style.transform = "translate3d(0,0,0)";
+      return;
+    }
+
+    const rendered = [];
+    for (let i = 0; i < duplicateRounds; i++) {
+      for (const prize of items) rendered.push(getPrizeCardHtml(prize));
+    }
+
+    strip.style.transition = "none";
+    strip.style.transform = "translate3d(0,0,0)";
+    strip.innerHTML = rendered.join("");
+  }
+
+  async function loadRoulettePrizes() {
+    setInlineLoading("rouletteLoading", true);
+    try {
+      const { res, data } = await wsGet("/api/ws/roulette/prizes");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка загрузки рулетки", "error");
+
+      roulettePrizes = Array.isArray(data.items) ? data.items : [];
+      renderRouletteStrip(roulettePrizes);
+    } catch {
+      showToast("Ошибка загрузки рулетки", "error");
+    } finally {
+      setInlineLoading("rouletteLoading", false);
+    }
+  }
+
+  async function loadRouletteLimits() {
+    try {
+      const { res, data } = await wsGet("/api/ws/roulette/limits");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+
+      const left = Number(data.left || 0);
+      const max = Number(data.max || 10);
+
+      const leftEl = document.getElementById("rouletteLeftText");
+      const maxEl = document.getElementById("rouletteMaxText");
+      const spinBtn = document.getElementById("spinButton");
+
+      if (leftEl) leftEl.textContent = String(left);
+      if (maxEl) maxEl.textContent = String(max);
+      if (spinBtn) spinBtn.disabled = left <= 0 || rouletteSpinning;
+    } catch {}
+  }
+
+  function getCardMetrics() {
+    const strip = document.getElementById("rouletteStrip");
+    if (!strip) return { cardWidth: 188, gap: 18 };
+    const firstCard = strip.querySelector(".roulette-card");
+    if (!firstCard) return { cardWidth: 188, gap: 18 };
+    const style = window.getComputedStyle(strip);
+    const gap = parseFloat(style.columnGap || style.gap || "18") || 18;
+    const cardWidth = firstCard.getBoundingClientRect().width || 170;
+    return { cardWidth, gap };
+  }
+
+  function buildWeightedSequence(prizes, minLength = 90) {
+    const result = [];
+    const normalized = prizes
+      .map((p) => ({
+        prize: p,
+        weight: Math.max(1, Math.round(Number(p.probability || 1)))
+      }))
+      .filter((x) => x.prize);
+
+    if (!normalized.length) return [];
+
+    while (result.length < minLength) {
+      for (const item of normalized) {
+        for (let i = 0; i < item.weight; i++) result.push(item.prize);
+      }
+    }
+    return result;
+  }
+
+  function findBestWeightedStopIndex(sequence, prizeId, minIndex) {
+    for (let i = minIndex; i < sequence.length; i++) {
+      if (String(sequence[i]?.id) === String(prizeId)) return i;
+    }
+    return sequence.findIndex((x, idx) => idx >= minIndex && String(x?.id) === String(prizeId));
+  }
+
+  function animateRouletteToPrize(prize) {
+    return new Promise((resolve) => {
+      const strip = document.getElementById("rouletteStrip");
+      const shell = document.querySelector(".roulette-strip-shell");
+      if (!strip || !shell || !roulettePrizes.length) return resolve();
+
+      const weightedSequence = buildWeightedSequence(roulettePrizes, 120);
+      if (!weightedSequence.length) return resolve();
+
+      strip.innerHTML = weightedSequence.map((item) => getPrizeCardHtml(item)).join("");
+
+      const viewportWidth = shell.getBoundingClientRect().width;
+      const { cardWidth, gap } = getCardMetrics();
+
+      const minIndex = Math.max(20, Math.floor(weightedSequence.length * 0.55));
+      let stopIndex = findBestWeightedStopIndex(weightedSequence, prize.id, minIndex);
+      if (stopIndex < 0) stopIndex = minIndex;
+
+      const cardFull = cardWidth + gap;
+      const centerOffset = (viewportWidth / 2) - (cardWidth / 2);
+      const targetX = -((stopIndex * cardFull) - centerOffset);
+
+      strip.style.transition = "none";
+      strip.style.transform = "translate3d(0,0,0)";
+      strip.offsetHeight;
+
+      requestAnimationFrame(() => {
+        strip.style.transition = "transform 6.2s cubic-bezier(.08,.72,0,1)";
+        strip.style.transform = `translate3d(${targetX}px,0,0)`;
+      });
+
+      setTimeout(resolve, 6400);
+    });
+  }
+
+  function formatComboPrizeText(prize, comboApplied) {
+    const rows = Array.isArray(comboApplied) && comboApplied.length
+      ? comboApplied
+      : Array.isArray(prize?.rewards) ? prize.rewards : [];
+
+    if (!rows.length) return prize?.title || "Комбо-приз";
+
+    return rows.map(r => {
+      const type = String(r?.type || r?.reward_type || "").trim();
+      if (type === "money") {
+        return `💸 Деньги: ${formatMoney(r?.value ?? r?.money_amount ?? 0)}`;
+      }
+      if (type === "item") {
+        const objectTitle = r?.object?.title || r?.title || `Предмет #${Number(r?.object_id || 0)}`;
+        const count = Number(r?.count ?? r?.item_count ?? 1);
+        return `📦 ${objectTitle} ×${count}`;
+      }
+      if (type === "roulette_reset") {
+        return `🔄 Сброс рулетки`;
+      }
+      return `🎁 ${escapeHtml(type || "Награда")}`;
+    }).join(" · ");
+  }
+
+  async function spinRoulette() {
+    if (rouletteSpinning) return;
+
+    const spinBtn = document.getElementById("spinButton");
+    const resultBox = document.getElementById("rouletteResult");
+
+    try {
+      rouletteSpinning = true;
+      if (spinBtn) spinBtn.disabled = true;
+      if (resultBox) resultBox.innerHTML = "🎰 Крутим рулетку...";
+      setInlineLoading("rouletteLoading", true);
+
+      const { res, data } = await wsPost("/api/ws/roulette/spin", {});
+      if (res.status === 401) return logoutWs();
+
+      if (!data.ok) {
+        if (resultBox) resultBox.textContent = data.error || "Ошибка рулетки";
+        showToast(data.error || "Ошибка рулетки", "error");
+        await loadRouletteLimits();
+        return;
+      }
+
+      const prize = data.prize;
+      if (!prize) {
+        showToast("Не удалось получить приз", "error");
+        await loadRouletteLimits();
+        return;
+      }
+
+      await animateRouletteToPrize(prize);
+
+      toOutput = Number(data.to_output || toOutput);
+      updateToOutput();
+
+      if (Array.isArray(data.inventory)) {
+        inventoryItems = data.inventory.map(normalizeInventoryRow);
+        renderInventory();
+      }
+
+      openPrizeModal(prize, data.combo_applied || []);
+
+      if (resultBox) {
+        if (prize.type === "money") {
+          resultBox.innerHTML = `🎉 Выпал приз: <b>${escapeHtml(prize.title)}</b> · +${formatMoney(prize.value)} в вывод`;
+        } else if (prize.type === "combo") {
+          resultBox.innerHTML = `🎉 Выпал комбо-приз: <b>${escapeHtml(prize.title)}</b><br><span style="color:#b8c2d9;">${formatComboPrizeText(prize, data.combo_applied || [])}</span>`;
+        } else {
+          resultBox.innerHTML = `🎉 Выпал приз: <b>${escapeHtml(prize.title)}</b>`;
+        }
+      }
+
+      showToast(`Приз получен: ${prize.title}`, "success", 4200);
+      loadRightbarWidgets();
+    } catch {
+      showToast("Ошибка рулетки", "error");
+    } finally {
+      rouletteSpinning = false;
+      setInlineLoading("rouletteLoading", false);
+      await loadRouletteLimits();
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // PRIZE MODAL
+  // ═══════════════════════════════════════════════════════════
+  function startPrizeWinScene() {
+    const modalBg = document.getElementById("prizeViewModalBg");
+    if (!modalBg) return;
+    modalBg.classList.remove("scene-start");
+    void modalBg.offsetWidth;
+    modalBg.classList.add("scene-start");
+  }
+
+  function openPrizeModal(prize, comboApplied = []) {
+    const modalBg = document.getElementById("prizeViewModalBg");
+    const prizeImage = document.getElementById("prizeViewImage");
+    const prizeNoImage = document.getElementById("prizeViewNoImage");
+    const prizeTitle = document.getElementById("prizeViewTitle");
+
+    if (!modalBg || !prizeTitle) return;
+
+    if (prize.type === "combo") {
+      prizeTitle.textContent = `${prize.title} · ${formatComboPrizeText(prize, comboApplied)}`;
+    } else {
+      prizeTitle.textContent = prize.type === "money"
+        ? `${prize.title} · ${formatMoney(prize.value)}`
+        : prize.title;
+    }
+
+    if (prize.image_url) {
+      if (prizeImage) {
+        prizeImage.src = prize.image_url;
+        prizeImage.classList.remove("hidden");
+      }
+      if (prizeNoImage) prizeNoImage.classList.add("hidden");
+    } else {
+      if (prizeImage) {
+        prizeImage.removeAttribute("src");
+        prizeImage.classList.add("hidden");
+      }
+      if (prizeNoImage) {
+        prizeNoImage.classList.remove("hidden");
+        prizeNoImage.textContent = prize.icon || (prize.type === "combo" ? "🎯" : "🎁");
+      }
+    }
+
+    modalBg.classList.remove("hidden");
+    startPrizeWinScene();
+  }
+
+  function closePrizeViewModal() {
+    const modalBg = document.getElementById("prizeViewModalBg");
+    const prizeImage = document.getElementById("prizeViewImage");
+    const prizeTitle = document.getElementById("prizeViewTitle");
+
+    if (modalBg) {
+      modalBg.classList.add("hidden");
+      modalBg.classList.remove("scene-start");
+    }
+
+    if (prizeImage) {
+      prizeImage.removeAttribute("src");
+      prizeImage.classList.add("hidden");
+    }
+
+    if (prizeTitle) prizeTitle.textContent = "";
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // BONUS
+  // ═══════════════════════════════════════════════════════════
+  function renderBonusHistory() {
+    const box = document.getElementById("bonusHistoryList");
+    if (!box) return;
+
+    if (!bonusHistory.length) {
+      box.innerHTML = '<div class="muted">История бонусов пока пуста.</div>';
+      return;
+    }
+
+    box.innerHTML = bonusHistory.map((item) => `
+      <div class="bonus-history-item">
+        <div class="bonus-history-left">
+          <div class="bonus-history-title">${escapeHtml(item.title || "Бонус активирован")}</div>
+          <div class="bonus-history-date">${escapeHtml(item.date || "")}</div>
+        </div>
+        <div class="bonus-history-value">+${formatMoney(item.value || 0)}</div>
+      </div>
+    `).join("");
+  }
+
+  async function loadBonusStatus() {
+    const amountEl = document.getElementById("bonusAmount");
+    const metaEl = document.getElementById("bonusMeta");
+    const btn = document.getElementById("activateBonusBtn");
+    const bigTimer = document.getElementById("bonusBigTimer");
+
+    if (bonusCountdownInterval) {
+      clearInterval(bonusCountdownInterval);
+      bonusCountdownInterval = null;
+    }
+
+    setInlineLoading("bonusLoading", true);
+
+    try {
+      const { res, data } = await wsGet("/api/ws/bonus/status");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка загрузки бонуса", "error");
+
+      toOutput = Number(data.to_output || 0);
+      updateToOutput();
+
+      bonusHistory = Array.isArray(data.history)
+        ? data.history.map(item => ({
+            title: "Бонус активирован",
+            value: Number(item.amount || 0),
+            date: item.created_at
+              ? new Date(item.created_at).toLocaleString("ru-RU", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit"
+                })
+              : ""
+          }))
+        : [];
+
+      renderBonusHistory();
+
+      if (amountEl) amountEl.textContent = "$0";
+
+      if (data.can_claim) {
+        if (metaEl) metaEl.textContent = "Бонус доступен для активации";
+        if (bigTimer) bigTimer.textContent = "ДОСТУПЕН СЕЙЧАС";
+        if (btn) btn.disabled = false;
+      } else {
+        if (btn) btn.disabled = true;
+
+        const targetTime = Date.now() + (Number(data.seconds_left || 0) * 1000);
+
+        const tick = () => {
+          const diff = Math.max(0, Math.floor((targetTime - Date.now()) / 1000));
+          const hours = Math.floor(diff / 3600);
+          const minutes = Math.floor((diff % 3600) / 60);
+          const seconds = diff % 60;
+          const txt = `${hours}ч ${minutes}м ${seconds}с`;
+
+          if (metaEl) metaEl.textContent = `Следующий бонус через ${txt}`;
+          if (bigTimer) bigTimer.textContent = txt;
+
+          if (diff <= 0) {
+            clearInterval(bonusCountdownInterval);
+            bonusCountdownInterval = null;
+            loadBonusStatus();
+          }
+        };
+
+        tick();
+        bonusCountdownInterval = setInterval(tick, 1000);
+      }
+    } catch {
+      showToast("Ошибка загрузки бонуса", "error");
+    } finally {
+      setInlineLoading("bonusLoading", false);
+    }
+  }
+
+  async function activateBonus() {
+    const amountEl = document.getElementById("bonusAmount");
+    const metaEl = document.getElementById("bonusMeta");
+    const btn = document.getElementById("activateBonusBtn");
+    const box = document.getElementById("bonusAmountBox");
+
+    if (!amountEl || !metaEl || !btn || !box) return;
+
+    btn.disabled = true;
+    amountEl.classList.add("roll");
+    metaEl.textContent = "Подбираем случайную сумму...";
+
+    let ticks = 0;
+    const maxTicks = 26;
+
+    const interval = setInterval(() => {
+      ticks++;
+      const randomValue = 1000 + Math.floor(Math.random() * 9001);
+      amountEl.textContent = formatMoney(randomValue);
+      if (ticks >= maxTicks) clearInterval(interval);
+    }, 85);
+
+    try {
+      const { res, data } = await wsPost("/api/ws/bonus/claim", {});
+      if (res.status === 401) {
+        clearInterval(interval);
+        return logoutWs();
+      }
+
+      if (!data.ok) {
+        clearInterval(interval);
+        amountEl.classList.remove("roll");
+        amountEl.textContent = "$0";
+        metaEl.textContent = data.error || "Бонус недоступен";
+        showToast(data.error || "Бонус недоступен", "error");
+        return loadBonusStatus();
+      }
+
+      const finalValue = Number(data.amount || 0);
+
+      setTimeout(async () => {
+        amountEl.classList.remove("roll");
+        amountEl.textContent = formatMoney(finalValue);
+        metaEl.textContent = "Бонус успешно активирован";
+        box.classList.remove("shine");
+        void box.offsetWidth;
+        box.classList.add("shine");
+
+        toOutput = Number(data.to_output || toOutput);
+        updateToOutput();
+
+        showToast(`Ты получил бонус ${formatMoney(finalValue)}`, "success", 3600);
+
+        await loadBonusStatus();
+        await loadRightbarWidgets();
+      }, 500);
+    } catch {
+      clearInterval(interval);
+      amountEl.classList.remove("roll");
+      amountEl.textContent = "$0";
+      metaEl.textContent = "Ошибка активации бонуса";
+      showToast("Ошибка активации бонуса", "error");
+      await loadBonusStatus();
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // LINK CODES
+  // ═══════════════════════════════════════════════════════════
+  function clearLinkCodeTimers() {
+    if (vkCodeTimer) clearInterval(vkCodeTimer);
+    if (nickCodeTimer) clearInterval(nickCodeTimer);
+    vkCodeTimer = null;
+    nickCodeTimer = null;
+  }
+
+  function startSingleCodeCountdown(expiresAt, metaEl, valueEl, emptyText) {
+    function tick() {
+      if (!expiresAt) {
+        if (metaEl) metaEl.textContent = emptyText;
+        return;
+      }
+
+      const diff = new Date(expiresAt).getTime() - Date.now();
+
+      if (diff <= 0) {
+        if (valueEl) {
+          valueEl.textContent = "Нет активного кода";
+          valueEl.classList.add("empty");
+        }
+        if (metaEl) metaEl.innerHTML = "Код истёк. Сгенерируй новый, чтобы продолжить привязку.";
+        return false;
+      }
+
+      const totalSec = Math.floor(diff / 1000);
+      const minutes = Math.floor(totalSec / 60);
+      const seconds = totalSec % 60;
+
+      if (metaEl) {
+        metaEl.innerHTML = `Код действует ещё <span class="timer">${minutes}м ${seconds}с</span>`;
+      }
+      return true;
+    }
+
+    return tick;
+  }
+
+  function loadSingleCodeTimer(type, expiresAt) {
+    const isVk = type === "vk";
+    const valueEl = document.getElementById(isVk ? "vkCodeValue" : "nickCodeValue");
+    const metaEl = document.getElementById(isVk ? "vkCodeMeta" : "nickCodeMeta");
+
+    const tick = startSingleCodeCountdown(expiresAt, metaEl, valueEl, "Сгенерируй код, чтобы начать привязку.");
+
+    if (isVk) {
+      if (vkCodeTimer) clearInterval(vkCodeTimer);
+      if (!tick()) return;
+      vkCodeTimer = setInterval(() => {
+        if (!tick() && vkCodeTimer) {
+          clearInterval(vkCodeTimer);
+          vkCodeTimer = null;
+        }
+      }, 1000);
+    } else {
+      if (nickCodeTimer) clearInterval(nickCodeTimer);
+      if (!tick()) return;
+      nickCodeTimer = setInterval(() => {
+        if (!tick() && nickCodeTimer) {
+          clearInterval(nickCodeTimer);
+          nickCodeTimer = null;
+        }
+      }, 1000);
+    }
+  }
+
+  async function loadLinkCodesStatus() {
+    try {
+      const { res, data } = await wsGet("/api/ws/profile/link-codes");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+
+      updateCodeBlock("vk", data.vk_active, data.vk_code, data.vk_expires_at);
+      updateCodeBlock("nick", data.nick_active, data.nick_code, data.nick_expires_at);
+    } catch {}
+  }
+
+  function updateCodeBlock(type, active, code, expiresAt) {
+    const isVk = type === "vk";
+    const valueEl = document.getElementById(isVk ? "vkCodeValue" : "nickCodeValue");
+    const metaEl = document.getElementById(isVk ? "vkCodeMeta" : "nickCodeMeta");
+    const inlineEl = document.getElementById(isVk ? "vkCodeInline" : "nickCodeInline");
+
+    if (!active || !code) {
+      if (valueEl) {
+        valueEl.textContent = "Нет активного кода";
+        valueEl.classList.add("empty");
+      }
+      if (metaEl) metaEl.textContent = "Сгенерируй код, чтобы начать привязку.";
+      if (inlineEl) inlineEl.textContent = "—";
+
+      if (isVk && vkCodeTimer) clearInterval(vkCodeTimer);
+      if (!isVk && nickCodeTimer) clearInterval(nickCodeTimer);
+      if (isVk) vkCodeTimer = null;
+      else nickCodeTimer = null;
+      return;
+    }
+
+    if (valueEl) {
+      valueEl.textContent = code;
+      valueEl.classList.remove("empty");
+    }
+    if (inlineEl) inlineEl.textContent = code;
+    loadSingleCodeTimer(type, expiresAt);
+  }
+
+  async function generateVkCode() {
+    try {
+      const { res, data } = await wsPost("/api/ws/profile/generate-vk-link-code", {});
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка генерации VK-кода", "error");
+
+      updateCodeBlock("vk", true, data.code || "", data.expires_at || null);
+      showToast("VK-код привязки сгенерирован", "success");
+    } catch {
+      showToast("Ошибка генерации VK-кода", "error");
+    }
+  }
+
+  async function generateNickCode() {
+    try {
+      const { res, data } = await wsPost("/api/ws/profile/generate-nick-link-code", {});
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка генерации кода ника", "error");
+
+      updateCodeBlock("nick", true, data.code || "", data.expires_at || null);
+      showToast("Код привязки никнейма сгенерирован", "success");
+    } catch {
+      showToast("Ошибка генерации кода ника", "error");
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CHEST
+  // ═══════════════════════════════════════════════════════════
+  async function loadChestStatus() {
+    setInlineLoading("chestInlineLoading", true);
+    try {
+      const { res, data } = await wsGet("/api/ws/chest/status");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка загрузки сундука", "error");
+
+      setChestStatusUI(data);
+    } catch {
+      showToast("Ошибка загрузки сундука", "error");
+    } finally {
+      setInlineLoading("chestInlineLoading", false);
+    }
+  }
+
+  async function loadChestHistory() {
+    setInlineLoading("chestHistoryLoading", true);
+    try {
+      const { res, data } = await wsGet("/api/ws/chest/history");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+      renderChestHistory(Array.isArray(data.items) ? data.items : []);
+    } catch {} finally {
+      setInlineLoading("chestHistoryLoading", false);
+    }
+  }
+
+  function updateChestScale(streak) {
+    const fill = document.getElementById("chestScaleFill");
+    const currentDay = Math.max(0, Number(streak || 0));
+    const maxDay = 7;
+    const percent = Math.min(100, (currentDay / maxDay) * 100);
+
+    if (fill) fill.style.height = percent + "%";
+
+    const currentDayText = document.getElementById("chestCurrentDayText");
+    if (currentDayText) {
+      let label = "дней";
+      if (currentDay % 10 === 1 && currentDay % 100 !== 11) label = "день";
+      else if ([2,3,4].includes(currentDay % 10) && ![12,13,14].includes(currentDay % 100)) label = "дня";
+      currentDayText.textContent = `${currentDay} ${label}`;
+    }
+  }
+
+  function formatCountdown(secondsLeft) {
+    const sec = Math.max(0, Number(secondsLeft || 0));
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `${h}ч ${m}м ${s}с`;
+  }
+
+  function setChestStatusUI(status) {
+    currentChestStatus = status || null;
+
+    const pill = document.getElementById("chestStatusPill");
+    const timerText = document.getElementById("chestTimerText");
+    const btn = document.getElementById("openChestBtn");
+
+    const streak = Math.max(0, Number(status?.streak || 0));
+    updateChestScale(streak);
+
+    if (chestCountdownInterval) {
+      clearInterval(chestCountdownInterval);
+      chestCountdownInterval = null;
+    }
+
+    if (!status) {
+      if (pill) {
+        pill.className = "profile-pill warn";
+        pill.textContent = "⚠ Нет данных";
+      }
+      if (timerText) timerText.textContent = "Не удалось загрузить статус сундука";
+      if (btn) btn.disabled = true;
+      return;
+    }
+
+    if (status.can_open) {
+      if (pill) {
+        pill.className = "profile-pill ok";
+        pill.textContent = "🎁 Сундук доступен";
+      }
+      if (timerText) timerText.textContent = "Сундук можно открыть прямо сейчас";
+      if (btn) btn.disabled = false;
+      return;
+    }
+
+    if (pill) {
+      pill.className = "profile-pill warn";
+      pill.textContent = "⏳ Сундук недоступен";
+    }
+    if (btn) btn.disabled = true;
+
+    let nextClaimAt = status.next_claim_at ? new Date(status.next_claim_at).getTime() : 0;
+
+    if (!nextClaimAt && Number.isFinite(Number(status.seconds_left))) {
+      nextClaimAt = Date.now() + Number(status.seconds_left) * 1000;
+    }
+
+    if (!nextClaimAt) {
+      if (timerText) timerText.textContent = "Следующее открытие позже";
+      return;
+    }
+
+    const tick = () => {
+      const diff = Math.max(0, Math.floor((nextClaimAt - Date.now()) / 1000));
+      if (timerText) timerText.textContent = `Следующее открытие через ${formatCountdown(diff)}`;
+
+      if (diff <= 0) {
+        clearInterval(chestCountdownInterval);
+        chestCountdownInterval = null;
+        loadChestStatus();
+      }
+    };
+
+    tick();
+    chestCountdownInterval = setInterval(tick, 1000);
+  }
+
+  function renderChestReward(reward) {
+    const box = document.getElementById("chestLastRewardBox");
+    if (!box) return;
+
+    if (!reward) {
+      box.className = "chest-last-reward-box";
+      box.innerHTML = `<div class="muted">Открой сундук, чтобы получить награду</div>`;
+      return;
+    }
+
+    const type = String(reward?.type || "");
+    const rawRarity = reward?.meta?.rarity || reward?.rarity || reward?.object?.rarity || "";
+    const rarityNorm = normalizeRarityLabel(rawRarity);
+    let rarityClass = getChestRarityClass(rawRarity);
+    let rarityText = getRarityDisplayName(rawRarity) + " награда";
+
+    if (type === "roulette_reset") {
+      rarityClass = "chest-rarity-epic";
+      rarityText = "Особая награда";
+    }
+
+    if (type === "money" && !rawRarity) {
+      rarityClass = "chest-rarity-common";
+      rarityText = "Денежная награда";
+    }
+
+    let metaLine = "";
+    if (type === "money") metaLine = `+${formatMoney(reward.value || 0)} на игровой баланс`;
+    else if (type === "roulette_reset") metaLine = `Прокруты рулетки за сегодня были обнулены`;
+    else if (type === "item") {
+      const count = Number(reward.item_count || reward.value || 1);
+      metaLine = `${count} шт. предмета добавлено в инвентарь`;
+    }
+
+    box.className = `chest-last-reward-box rarity-${rarityNorm}`;
+    box.innerHTML = `
+      <div class="chest-reward-rarity ${rarityClass}">${escapeHtml(rarityText)}</div>
+      <div class="chest-reward-title">${escapeHtml(reward.title || "Награда")}</div>
+      <div class="chest-reward-meta">${escapeHtml(metaLine)}</div>
+    `;
+  }
+
+  function renderChestHistory(items) {
+    const box = document.getElementById("chestHistoryList");
+    if (!box) return;
+
+    if (!items.length) {
+      box.innerHTML = '<div class="muted">История сундука пока пуста.</div>';
+      return;
+    }
+
+    box.innerHTML = items.map((item) => {
+      let valueText = "";
+      if (item.reward_type === "money") valueText = `+${formatMoney(item.reward_value || 0)}`;
+      else if (item.reward_type === "roulette_reset") valueText = "Сброс рулетки";
+      else valueText = `x${Number(item.reward_value || 0)}`;
+
+      const rawRarity = item.reward_meta?.rarity || item.rarity || "";
+      const rarityClass = getChestRarityClass(rawRarity);
+
+      return `
+        <div class="bonus-history-item">
+          <div class="bonus-history-left">
+            <div class="bonus-history-title">
+              <span class="chest-reward-rarity ${rarityClass}" style="margin-right:8px;">${escapeHtml(getRarityDisplayName(rawRarity))}</span>
+              День ${Number(item.day_number || 0)} · ${escapeHtml(item.reward_title || "Награда")}
+            </div>
+            <div class="bonus-history-date">${item.created_at ? new Date(item.created_at).toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : ""}</div>
+          </div>
+          <div class="bonus-history-value">${escapeHtml(valueText)}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  let chestOpening = false;
+
+  async function openDailyChest() {
+    if (chestOpening) return;
+    chestOpening = true;
+
+    const btn = document.getElementById("openChestBtn");
+    const burst = document.getElementById("chestBurst");
+    const boxWrap = document.getElementById("chestBoxWrap");
+    const particles = document.getElementById("chestParticles");
+
+    try {
+      if (btn) btn.disabled = true;
+      setInlineLoading("chestInlineLoading", true);
+
+      if (boxWrap) {
+        boxWrap.classList.remove("opened", "shake");
+        void boxWrap.offsetWidth;
+        boxWrap.classList.add("shake");
+      }
+
+      setTimeout(() => {
+        if (boxWrap) boxWrap.classList.add("opened");
+        if (burst) {
+          burst.classList.remove("play");
+          void burst.offsetWidth;
+          burst.classList.add("play");
+        }
+        if (particles) {
+          particles.classList.remove("play");
+          void particles.offsetWidth;
+          particles.classList.add("play");
+        }
+      }, 260);
+
+      const { res, data } = await wsPost("/api/ws/chest/open", {});
+      if (res.status === 401) return logoutWs();
+
+      if (!data.ok) {
+        showToast(data.error || "Не удалось открыть сундук", "error");
+        await loadChestStatus();
+        return;
+      }
+
+      lastChestReward = data.reward || null;
+
+      balance = Number(data.balance || balance);
+      updateBalance();
+
+      if (Array.isArray(data.inventory)) {
+        inventoryItems = data.inventory.map(normalizeInventoryRow);
+        renderInventory();
+      }
+
+      if (data.roulette_reset) {
+        await loadRouletteLimits();
+      }
+
+      renderChestReward(lastChestReward);
+      await loadChestHistory();
+      await loadChestStatus();
+
+      if (lastChestReward?.type === "item") {
+        openPrizeModal({
+          title: lastChestReward.title,
+          type: "item",
+          value: Number(lastChestReward.value || 0),
+          image_url: lastChestReward.object?.image_url || "",
+          icon: "🎁",
+          rarity: lastChestReward.object?.rarity || lastChestReward.meta?.rarity || ""
+        });
+      } else if (lastChestReward?.type === "money") {
+        openPrizeModal({
+          title: lastChestReward.title || "Денежная награда",
+          type: "money",
+          value: Number(lastChestReward.value || 0),
+          image_url: "",
+          icon: "💸"
+        });
+      } else if (lastChestReward?.type === "roulette_reset") {
+        openPrizeModal({
+          title: lastChestReward.title || "Сброс рулетки",
+          type: "combo",
+          value: 0,
+          image_url: "",
+          icon: "🔄",
+          rewards: [{ reward_type: "roulette_reset", roulette_reset_count: 1 }]
+        }, [{ reward_type: "roulette_reset", value: 1 }]);
+      }
+
+      showToast(`Сундук открыт: ${lastChestReward?.title || "награда получена"}`, "success", 3600);
+      await loadRightbarWidgets();
+
+    } catch (e) {
+      showToast("Ошибка открытия сундука", "error");
+      await loadChestStatus();
+    } finally {
+      setInlineLoading("chestInlineLoading", false);
+      chestOpening = false;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CONTRACTS TAB
+  // ═══════════════════════════════════════════════════════════
+  function loadContractsStub() {
+    // Заглушка под будущую механику
+    return true;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // PRESENCE & AVATAR
+  // ═══════════════════════════════════════════════════════════
+  async function sitePing() {
+    try {
+      await wsPost("/api/ws/presence/site-ping", {});
+    } catch {}
+  }
+
+  async function uploadAvatarFromFile(file) {
+    if (!file) return;
+
+    const MAX_SIZE = 2 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      return showToast("Файл слишком большой (максимум 2MB)", "error");
+    }
+
+    const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return showToast("Допустимы только изображения (JPG, PNG, WebP, GIF)", "error");
+    }
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const base64 = String(reader.result || "");
+        const { res, data } = await wsPost("/api/ws/profile/upload-avatar", { image_base64: base64 });
+        if (res.status === 401) return logoutWs();
+        if (!data.ok) return showToast(data.error || "Ошибка загрузки аватарки", "error");
+
+        currentWsUser = {
+          ...(currentWsUser || {}),
+          ...(data.user || {})
+        };
+
+        renderWsUser(currentWsUser);
+        showToast("Аватарка обновлена", "success");
+      } catch {
+        showToast("Ошибка загрузки аватарки", "error");
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // POLLING
+  // ═══════════════════════════════════════════════════════════
+  async function pollProfileBindingState() {
+    try {
+      await loadProfileFull();
+      await loadLinkCodesStatus();
+    } catch {}
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // BOOTSTRAP
+  // ═══════════════════════════════════════════════════════════
+  async function bootstrapAuthorized() {
+    setGlobalSectionLoading(true, "Подготовка сайта...");
+    const { res, data } = await wsGet("/api/ws/me");
+    if (res.status === 401 || !data.ok || !data.user) {
+      wsClearToken();
+      currentWsUser = null;
+      showGuestView();
+      setGlobalSectionLoading(false);
+      return;
+    }
+
+    currentWsUser = data.user;
+    renderWsUser(currentWsUser);
+    showAppView();
+    switchMainTab("chest");
+    switchShopView("inventory");
+
+    if (currentWsUser.profile_link_seen === false) {
+      isFirstProfileForceOpen = true;
+      showProfileCard(true);
+    }
+
+    await loadPublicWsData();
+    await loadProfileFull();
+
+    await Promise.allSettled([
+      loadLinkCodesStatus(),
+      loadWsObjects(),
+      loadChestStatus(),
+      loadChestHistory(),
+      loadRoulettePrizes(),
+      loadRouletteLimits(),
+      loadBonusStatus(),
+      loadRightbarWidgets(),
+      sitePing()
+    ]);
+
+    if (pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(pollProfileBindingState, 12000);
+
+    if (sitePresenceInterval) clearInterval(sitePresenceInterval);
+    sitePresenceInterval = setInterval(sitePing, 25000);
+
+    if (rightbarInterval) clearInterval(rightbarInterval);
+    rightbarInterval = setInterval(async () => {
+      await loadRightbarWidgets();
+      if (currentMainTab === "roulette") await loadRouletteLimits();
+      if (currentMainTab === "chest") await loadChestStatus();
+      if (currentMainTab === "bonus") await loadBonusStatus();
+    }, 15000);
+
+    setGlobalSectionLoading(false);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // INIT
+  // ═══════════════════════════════════════════════════════════
+  async function init() {
+    switchAuthTab("login");
+    switchShopView("inventory");
+    switchMainTab("chest");
+    updateBalance();
+    updateToOutput();
+    renderInventory();
+    renderBonusHistory();
+    renderChestHistory([]);
+    renderChestReward(null);
+    await loadPublicWsData();
+
+    const avatarInput = document.getElementById("avatarInput");
+    if (avatarInput) {
+      avatarInput.addEventListener("change", (e) => {
+        const file = e.target.files?.[0];
+        uploadAvatarFromFile(file);
+        e.target.value = "";
+      });
+    }
+
+    const accountBox = document.getElementById("accountBox");
+    if (accountBox) {
+      accountBox.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          showProfileCard(true);
+        }
+      });
+      accountBox.setAttribute("tabindex", "0");
+      accountBox.setAttribute("role", "button");
+      accountBox.setAttribute("aria-label", "Открыть игровой профиль");
+    }
+
+    if (!wsGetToken()) {
+      showGuestView();
+      return;
+    }
+
+    await bootstrapAuthorized();
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // EVENT LISTENERS
+  // ═══════════════════════════════════════════════════════════
+  document.getElementById("prizeViewModalBg")?.addEventListener("click", (e) => {
+    if (e.target.id === "prizeViewModalBg") closePrizeViewModal();
+  });
+
+  document.getElementById("unlinkConfirmModalBg")?.addEventListener("click", (e) => {
+    if (e.target.id === "unlinkConfirmModalBg") closeUnlinkConfirmModal();
+  });
+
+  document.getElementById("adminVkModalBg")?.addEventListener("click", (e) => {
+    if (e.target.id === "adminVkModalBg") closeAdminVkModal();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closePrizeViewModal();
+      closeUnlinkConfirmModal();
+      closeAdminVkModal();
+    }
+  });
+
+  window.addEventListener("beforeunload", () => {
+    const token = wsGetToken();
+    if (!token) return;
+
+    const payload = JSON.stringify({ token });
+
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(
+        API_BASE + "/api/ws/presence/site-leave",
+        new Blob([payload], { type: "application/json" })
+      );
+    } else {
+      fetch(API_BASE + "/api/ws/presence/site-leave", {
+        method: "POST",
+        body: payload,
+        headers: { "Content-Type": "application/json" },
+        keepalive: true
+      }).catch(() => {});
+    }
+  });
+  init();
+  </script>
+</body>
+</html>
+
+

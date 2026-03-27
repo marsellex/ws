@@ -1,0 +1,5070 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Police Quest</title>
+  <link rel="icon" href="./favicon1.ico" type="image/x-icon" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    * { box-sizing: border-box; }
+    :root {
+      --bg-body: #090c16;
+      --bg-card: #111820;
+      --bg-card-hover: #151d27;
+      --bg-elevated: #1a2332;
+      --bg-input: #0d1117;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.10);
+      --text: #ededed;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59,130,246,0.15);
+      --green: #3fb950;
+      --green-glow: rgba(63,185,80,0.12);
+      --yellow: #d29922;
+      --yellow-glow: rgba(210,153,34,0.12);
+      --red: #f85149;
+      --red-glow: rgba(248,81,73,0.12);
+      --blue-chip: #58a6ff;
+      --cyan: #56d4dd;
+      --pink: #ff3296;
+      --pink-glow: rgba(255,50,150,0.15);
+      --magenta: #c850c0;
+      --magenta-glow: rgba(200,80,192,0.12);
+      --neon-cyan: #40e0ff;
+      --neon-cyan-glow: rgba(64,224,255,0.12);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2);
+      --shadow-lg: 0 4px 12px rgba(0,0,0,0.4), 0 16px 40px rgba(0,0,0,0.3);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body {
+      margin: 0; font-family: var(--font);
+      color: var(--text); background-color: var(--bg-body);
+      min-height: 100vh;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: -2;
+      background: url('./fon.png') center/cover no-repeat;
+      filter: blur(18px) brightness(0.22) saturate(0.7);
+      transform: scale(1.08);
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: -1;
+      background:
+        radial-gradient(ellipse at 15% 5%, rgba(255,50,150,0.06), transparent 45%),
+        radial-gradient(ellipse at 85% 90%, rgba(64,224,255,0.05), transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(9,12,22,0.80), rgba(9,12,22,0.92));
+    }
+    .page-wrap { max-width: 1500px; margin: 0 auto; padding: 16px; }
+    .hidden { display: none !important; }
+
+    .glass {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      animation: fadeInUp .4s cubic-bezier(.22,.68,0,1);
+      transition: border-color .3s ease, box-shadow .3s ease;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .glass.glow-top-pink:hover {
+      border-top-color: rgba(255,50,150,0.35);
+      box-shadow: 0 -3px 20px -4px rgba(255,50,150,0.20), var(--shadow);
+    }
+    .glass.glow-left-cyan:hover {
+      border-left-color: rgba(64,224,255,0.30);
+      box-shadow: -3px 0 20px -4px rgba(64,224,255,0.18), var(--shadow);
+    }
+    .glass.glow-bottom-magenta:hover {
+      border-bottom-color: rgba(200,80,192,0.30);
+      box-shadow: 0 3px 20px -4px rgba(200,80,192,0.18), var(--shadow);
+    }
+    .glass.glow-top-cyan:hover {
+      border-top-color: rgba(64,224,255,0.30);
+      box-shadow: 0 -3px 20px -4px rgba(64,224,255,0.18), var(--shadow);
+    }
+    .glass.glow-left-pink:hover {
+      border-left-color: rgba(255,50,150,0.30);
+      box-shadow: -3px 0 20px -4px rgba(255,50,150,0.18), var(--shadow);
+    }
+    .glass.glow-bottom-cyan:hover {
+      border-bottom-color: rgba(64,224,255,0.25);
+      box-shadow: 0 3px 20px -4px rgba(64,224,255,0.15), var(--shadow);
+    }
+
+    .app-layout { display: flex; gap: 16px; align-items: flex-start; }
+    .left-info {
+      width: 240px; min-width: 240px; flex-shrink: 0;
+      position: sticky; top: 16px;
+      display: flex; flex-direction: column; gap: 16px;
+      transition: .35s cubic-bezier(.22,.68,0,1); overflow: hidden;
+    }
+    .app-layout.sidebar-hidden .left-info {
+      width: 0; min-width: 0; opacity: 0; pointer-events: none; padding: 0; gap: 0;
+    }
+    .main { flex: 1; min-width: 0; overflow: hidden; }
+
+    .profile-info { padding: 20px 16px; }
+    .avatar-wrap {
+      position: relative; width: 88px; margin: 0 auto 14px;
+      cursor: pointer; transition: .25s ease;
+    }
+    .avatar-wrap:hover { transform: translateY(-2px); }
+    .avatar, .avatar-placeholder {
+      width: 88px; height: 88px; border-radius: 50%; object-fit: cover;
+      border: 2px solid rgba(255,50,150,0.25);
+      box-shadow: 0 0 0 4px rgba(255,50,150,0.06), 0 0 20px rgba(255,50,150,0.08);
+      background: var(--bg-elevated); display: block;
+    }
+    .avatar-placeholder {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-weight: 800; color: var(--text-secondary);
+    }
+    .avatar-overlay {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: rgba(0,0,0,0.65);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: .2s ease;
+      font-size: 11px; font-weight: 600; color: #fff; text-align: center;
+    }
+    .avatar-wrap:hover .avatar-overlay { opacity: 1; }
+
+    .level-badge {
+      margin: 0 auto 12px; display: table; border-radius: 999px;
+      padding: 5px 14px;
+      background: rgba(255,50,150,0.10); border: 1px solid rgba(255,50,150,0.18);
+      color: #ff7eb6; font-weight: 700; font-size: 11px; letter-spacing: .5px;
+    }
+    .profile-name { text-align: center; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .profile-login { text-align: center; color: var(--text-muted); font-size: 12px; margin-bottom: 16px; }
+
+    .xp-title {
+      font-size: 11px; color: var(--text-secondary); font-weight: 600;
+      margin-bottom: 6px; display: flex; justify-content: space-between;
+    }
+    .progress-bar {
+      width: 100%; height: 6px; border-radius: 999px;
+      overflow: hidden; background: rgba(255,255,255,0.06); margin-bottom: 12px;
+    }
+    .progress-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--pink), var(--neon-cyan));
+      border-radius: 999px; transition: width .3s ease;
+    }
+
+    .role-badge{
+      margin: 0 auto 16px;
+      display: table;
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(135deg,#5d6bff,#9f5bff);
+      box-shadow: 0 8px 24px rgba(95,91,255,.28);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .role-badge.senior{
+      background: linear-gradient(135deg,#00b894,#00cec9);
+      box-shadow: 0 8px 24px rgba(0,206,201,.25);
+    }
+    .role-badge.leader{
+      background: linear-gradient(135deg,#ffb300,#ff5e00);
+      box-shadow: 0 8px 24px rgba(255,145,0,.30);
+    }
+
+    .profile-stats {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px; margin-bottom: 16px;
+    }
+    .profile-stat {
+      border-radius: var(--radius); padding: 10px 6px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      text-align: center; transition: .2s ease;
+    }
+    .profile-stat:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,50,150,0.15); }
+    .profile-stat-value { font-size: 16px; font-weight: 800; }
+    .profile-stat-label {
+      margin-top: 2px; font-size: 9px; color: var(--text-muted);
+      font-weight: 600; letter-spacing: .8px; text-transform: uppercase;
+    }
+    .profile-actions { display: grid; gap: 8px; }
+
+    .topbar {
+      padding: 16px 20px; margin-bottom: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .topbar-left { display: flex; flex-direction: column; gap: 4px; }
+    .topbar-title { font-size: 20px; font-weight: 800; letter-spacing: -.2px; }
+    .topbar-sub { color: var(--text-muted); font-size: 13px; }
+    .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    .timer-badge {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 999px;
+      background: rgba(255,50,150,0.06); border: 1px solid rgba(255,50,150,0.12);
+      font-size: 12px; font-weight: 600; color: #ff7eb6;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tabs {
+      display: flex; gap: 4px; flex-wrap: wrap;
+      margin-bottom: 14px; border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      border: none; background: transparent; color: var(--text-muted);
+      padding: 10px 16px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: .15s ease;
+      border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: var(--font);
+    }
+    .tab-btn:hover { color: var(--text-secondary); }
+    .tab-btn.active { color: var(--text); border-bottom-color: var(--pink); }
+
+    .panel { padding: 20px; }
+
+    .btn {
+      border: none; border-radius: var(--radius);
+      padding: 9px 16px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: .18s ease; font-family: var(--font);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(59,130,246,0.14); border: 1px solid rgba(59,130,246,0.22);
+      color: #93c5fd; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn:hover { background: rgba(59,130,246,0.24); transform: translateY(-1px); color: #bdd9fe; }
+    .btn:active { transform: translateY(0); }
+    .btn.secondary {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text-secondary);
+    }
+    .btn.secondary:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+    .btn.success {
+      background: rgba(63,185,80,0.14); border: 1px solid rgba(63,185,80,0.22); color: #7ee295;
+    }
+    .btn.success:hover { background: rgba(63,185,80,0.24); }
+    .btn.danger {
+      background: rgba(248,81,73,0.10); border: 1px solid rgba(248,81,73,0.18); color: #ff9590;
+    }
+    .btn.danger:hover { background: rgba(248,81,73,0.20); }
+    .btn.warning, .btn.yellow {
+      background: rgba(210,153,34,0.12); border: 1px solid rgba(210,153,34,0.22); color: #e8c45e;
+    }
+    .btn.warning:hover, .btn.yellow:hover { background: rgba(210,153,34,0.22); }
+    .btn.pink {
+      background: rgba(255,50,150,0.12); border: 1px solid rgba(255,50,150,0.22); color: #ff7eb6;
+    }
+    .btn.pink:hover { background: rgba(255,50,150,0.22); }
+    .btn.small { padding: 6px 12px; font-size: 12px; }
+    .btn:disabled { opacity: 0.5; cursor: default; transform: none !important; }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 70%;
+      height: 100%;
+      transform: skewX(-24deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+    .btn:hover::after {
+      opacity: 1;
+      animation: btnShine .75s ease;
+    }
+    @keyframes btnShine {
+      from { left: -120%; }
+      to { left: 150%; }
+    }
+
+    .tasks-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+
+    .task-card {
+      position: relative; overflow: hidden;
+      border-radius: var(--radius-lg); background: var(--bg-card);
+      border: 1px solid var(--border); padding: 22px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: var(--shadow); min-height: 200px;
+      transition: .3s cubic-bezier(.22,.68,0,1);
+      animation: fadeInUp .4s cubic-bezier(.22,.68,0,1);
+      transform-style: preserve-3d;
+    }
+    .task-card:hover { background: var(--bg-card-hover); transform: translateY(-6px) scale(1.01); }
+
+    .task-card:nth-child(6n+1):hover {
+      border-top-color: rgba(255,50,150,0.35);
+      box-shadow: 0 -3px 22px -4px rgba(255,50,150,0.22), var(--shadow-lg);
+    }
+    .task-card:nth-child(6n+2):hover {
+      border-left-color: rgba(64,224,255,0.30);
+      box-shadow: -3px 0 22px -4px rgba(64,224,255,0.20), var(--shadow-lg);
+    }
+    .task-card:nth-child(6n+3):hover {
+      border-bottom-color: rgba(200,80,192,0.30);
+      box-shadow: 0 3px 22px -4px rgba(200,80,192,0.20), var(--shadow-lg);
+    }
+    .task-card:nth-child(6n+4):hover {
+      border-top-color: rgba(64,224,255,0.30);
+      border-left-color: rgba(64,224,255,0.18);
+      box-shadow: -2px -3px 22px -4px rgba(64,224,255,0.18), var(--shadow-lg);
+    }
+    .task-card:nth-child(6n+5):hover {
+      border-bottom-color: rgba(255,50,150,0.30);
+      border-right-color: rgba(255,50,150,0.15);
+      box-shadow: 2px 3px 22px -4px rgba(255,50,150,0.18), var(--shadow-lg);
+    }
+    .task-card:nth-child(6n+6):hover {
+      border-top-color: rgba(200,80,192,0.25);
+      box-shadow: 0 -3px 22px -4px rgba(200,80,192,0.18), var(--shadow-lg);
+    }
+
+    .task-card.size-1 { grid-column: span 6; min-height: 150px; }
+    .task-card.size-2 { grid-column: span 4; min-height: 200px; }
+    .task-card.size-3 { grid-column: span 2; min-height: 200px; }
+    .task-card.size-4 { grid-column: span 3; min-height: 210px; }
+    .task-card.size-5 { grid-column: span 3; min-height: 210px; }
+    .task-card.size-6 { grid-column: span 6; min-height: 150px; }
+
+    .task-card.task-completed {
+      background: rgba(6,8,14,0.88); border-color: rgba(255,255,255,0.02); opacity: 0.50;
+    }
+    .task-card.task-completed:hover {
+      opacity: 0.65; background: rgba(10,14,22,0.90);
+      box-shadow: var(--shadow) !important; border-color: rgba(255,255,255,0.04) !important;
+    }
+    .task-card.task-pending { border-color: rgba(210,153,34,0.10); }
+    .task-card.task-rejected { border-color: rgba(248,81,73,0.06); }
+
+    .task-emoji-bg {
+      position: absolute; right: -14px; bottom: -22px;
+      font-size: 150px; line-height: 1; opacity: 0.05;
+      pointer-events: none; user-select: none; z-index: 0;
+      transition: transform .45s cubic-bezier(.22,.68,0,1), opacity .35s ease, filter .35s ease;
+    }
+    .task-card.size-1 .task-emoji-bg { font-size: 180px; right: 20px; }
+    .task-card.size-2 .task-emoji-bg { font-size: 170px; }
+    .task-card.task-completed .task-emoji-bg { opacity: 0.02; }
+    .task-card:hover .task-emoji-bg {
+      transform: scale(1.07) rotate(-4deg);
+      opacity: 0.085;
+      filter: drop-shadow(0 0 12px rgba(255,255,255,0.06));
+    }
+    .task-card.task-completed:hover .task-emoji-bg { opacity: 0.035; }
+
+    .task-content { position: relative; z-index: 1; transition: transform .32s cubic-bezier(.22,.68,0,1), opacity .25s ease; }
+    .task-card:hover .task-content { transform: translateY(-2px); }
+    .task-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 10px; margin-bottom: 8px;
+    }
+    .task-title { font-size: 16px; font-weight: 700; line-height: 1.35; max-width: 65%; }
+    .task-xp {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(210,153,34,0.10); border: 1px solid rgba(210,153,34,0.15);
+      color: var(--yellow); font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+    }
+    .task-diff-row { margin-bottom: 10px; }
+    .difficulty-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .diff-easy   { color: var(--green); background: var(--green-glow); border-color: rgba(63,185,80,0.15); }
+    .diff-normal { color: var(--blue-chip); background: var(--accent-glow); border-color: rgba(88,166,255,0.15); }
+    .diff-mid    { color: var(--yellow); background: var(--yellow-glow); border-color: rgba(210,153,34,0.15); }
+    .diff-hard   { color: var(--red); background: var(--red-glow); border-color: rgba(248,81,73,0.15); }
+
+    .task-desc { font-size: 13px; line-height: 1.5; color: var(--text-secondary); margin-bottom: 10px; max-width: 70%; }
+    .task-status { position: relative; z-index: 1; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+    .status-new { color: var(--text-muted); }
+    .status-pending { color: var(--yellow); }
+    .status-approved { color: var(--green); }
+    .status-rejected { color: var(--red); }
+    .mini-note { font-size: 12px; color: var(--text-muted); line-height: 1.4; max-width: 70%; margin-bottom: 6px; }
+    .task-actions { position: relative; z-index: 1; display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; transition: transform .32s cubic-bezier(.22,.68,0,1), opacity .25s ease; }
+    .task-card:hover .task-actions { transform: translateY(-1px); }
+
+    .auth-wrap { max-width: 420px; margin: 80px auto 0; padding: 28px; }
+    .auth-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+
+    .field, textarea, select {
+      width: 100%; padding: 10px 14px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text); font-size: 13px; font-family: var(--font);
+      outline: none; margin-bottom: 10px; transition: .18s ease;
+    }
+    .field:focus, textarea:focus, select:focus {
+      border-color: rgba(255,50,150,0.30);
+      box-shadow: 0 0 0 3px rgba(255,50,150,0.06);
+      transform: translateY(-1px);
+    }
+    .field:hover, textarea:hover, select:hover {
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.045);
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    select { cursor: pointer; }
+
+    .muted { color: var(--text-muted); font-size: 13px; }
+    .msg { min-height: 20px; margin-top: 6px; white-space: pre-wrap; font-size: 12px; font-weight: 500; }
+    .msg.error { color: var(--red); }
+    .msg.success { color: var(--green); }
+
+    .modal-bg {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.60);
+      backdrop-filter: blur(8px); display: flex; align-items: center;
+      justify-content: center; padding: 20px; z-index: 1000; animation: fadeIn .15s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal {
+      width: 100%; max-width: 620px; border-radius: var(--radius-lg);
+      background: var(--bg-card); border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg); padding: 24px; animation: popIn .2s ease;
+      max-height: 85vh; overflow-y: auto;
+      transform-origin: center;
+    }
+    .modal:hover {
+      box-shadow: 0 18px 50px rgba(0,0,0,0.36), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.96) translateY(8px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal h3 { margin-top: 0; margin-bottom: 8px; font-size: 18px; font-weight: 700; }
+    .modal-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; margin-top: 16px; }
+
+    .admin-layout { display: grid; grid-template-columns: 320px 1fr; gap: 14px; }
+    .admin-sidebar, .admin-content { padding: 16px; }
+    .admin-card, .review-card {
+      border-radius: var(--radius); background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); padding: 14px; margin-bottom: 12px;
+      transition: .25s ease; animation: fadeInUp .35s ease;
+    }
+    .review-card:hover, .admin-card:hover { border-color: var(--border-hover); background: rgba(255,255,255,0.04); transform: translateY(-3px); }
+    .section-title { font-size: 15px; font-weight: 700; margin: 0 0 12px; }
+    .admin-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .check-row {
+      display: flex; align-items: center; gap: 8px;
+      margin: 6px 0; font-size: 13px; color: var(--text-secondary);
+    }
+    .check-row input[type="checkbox"] { accent-color: var(--pink); }
+
+    .queue-section { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .queue-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); margin-bottom: 6px; font-size: 12px;
+      color: var(--text-secondary); animation: fadeInUp .2s ease;
+      transition: transform .32s cubic-bezier(.22,.68,0,1), box-shadow .32s cubic-bezier(.22,.68,0,1), border-color .32s ease, background .32s ease;
+    }
+    .queue-item:hover { transform: translateY(-3px); }
+    .queue-item span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .queue-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+    .admin-stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px;
+    }
+    .admin-stat {
+      border-radius: var(--radius-lg); padding: 16px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      text-align: center; animation: fadeInUp .35s ease; transition: .25s ease;
+    }
+    .admin-stat:nth-child(odd):hover {
+      border-top-color: rgba(255,50,150,0.25);
+      box-shadow: 0 -2px 16px -4px rgba(255,50,150,0.15);
+      transform: translateY(-4px);
+    }
+    .admin-stat:nth-child(even):hover {
+      border-bottom-color: rgba(64,224,255,0.25);
+      box-shadow: 0 2px 16px -4px rgba(64,224,255,0.15);
+      transform: translateY(-4px);
+    }
+    .admin-stat-value { font-size: 24px; font-weight: 800; }
+    .admin-stat-label { margin-top: 4px; font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: .5px; }
+
+    .user-card {
+      border-radius: var(--radius); background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); padding: 16px; margin-bottom: 10px;
+      transition: .25s ease; animation: fadeInUp .35s ease;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .user-card:hover {
+      border-color: var(--border-hover); background: rgba(255,255,255,0.05);
+      border-left-color: rgba(255,50,150,0.25);
+      box-shadow: -2px 0 16px -4px rgba(255,50,150,0.12);
+      transform: translateY(-3px);
+    }
+    .user-avatar-sm {
+      width: 42px; height: 42px; border-radius: 50%;
+      object-fit: cover; background: var(--bg-elevated);
+      border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;
+    }
+    .user-avatar-ph {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px; color: var(--text-muted); flex-shrink: 0;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-nick { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+    .user-meta { font-size: 11px; color: var(--text-muted); }
+    .user-actions-col { display: flex; gap: 6px; flex-shrink: 0; }
+
+    .user-task-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); margin-bottom: 6px; font-size: 13px;
+      flex-wrap: wrap; transition: .15s ease;
+    }
+    .user-task-row:hover { background: rgba(255,255,255,0.05); transform: translateY(-3px); }
+    .user-task-name { flex: 1; min-width: 120px; font-weight: 600; }
+    .user-task-status { min-width: 140px; }
+    .user-task-status select { margin-bottom: 0; padding: 6px 10px; font-size: 12px; }
+
+    .loading-overlay { display:none !important; }
+    .loading-box {
+      min-width: 180px; padding: 16px 20px; border-radius: var(--radius-lg);
+      background: var(--bg-card); border: 1px solid var(--border);
+      display: flex; gap: 12px; align-items: center; justify-content: center;
+      color: var(--text); font-weight: 600; font-size: 13px; box-shadow: var(--shadow-lg);
+    }
+    .spinner {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.10); border-top-color: var(--pink);
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast-wrap {
+      position: fixed; top: 16px; right: 16px; z-index: 3000;
+      display: grid; gap: 10px; width: min(380px, calc(100vw - 24px));
+    }
+    .toast {
+      border-radius: var(--radius); padding: 14px 16px;
+      font-size: 13px; font-weight: 500; line-height: 1.4;
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+      animation: toastIn .25s ease; backdrop-filter: blur(12px);
+    }
+    .toast.success { background: rgba(63,185,80,0.16); border-color: rgba(63,185,80,0.20); color: var(--green); }
+    .toast.error   { background: rgba(248,81,73,0.16); border-color: rgba(248,81,73,0.20); color: var(--red); }
+    .toast.info    { background: rgba(255,50,150,0.12); border-color: rgba(255,50,150,0.18); color: #ff7eb6; }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+    .loading-mini{
+      position:relative;
+      overflow:hidden;
+      font-weight:700;
+    }
+    .loading-mini::after{
+      content:"";
+      position:absolute;
+      left:-40%;
+      top:0;
+      width:40%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+      animation:loadingShine 1s linear infinite;
+    }
+    @keyframes loadingShine{
+      from{ left:-40%; }
+      to{ left:120%; }
+    }
+
+    .log-item {
+      border-radius: var(--radius); background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border); padding: 12px; margin-bottom: 8px;
+      font-size: 12px; color: var(--text-muted); transition: .15s ease;
+    }
+    .log-item:hover { background: rgba(255,255,255,0.04); transform: translateY(-3px); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+
+    #rouletteTab {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .roulette-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 18px;
+      align-items: start;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .roulette-main-card,
+    .roulette-side-card {
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      padding: 18px;
+      transition: transform .32s cubic-bezier(.22,.68,0,1), box-shadow .32s cubic-bezier(.22,.68,0,1), border-color .32s ease, background .32s ease;
+    }
+    .roulette-main-card:hover,
+    .roulette-side-card:hover {
+      border-color: rgba(64,224,255,0.14);
+      box-shadow: 0 0 0 1px rgba(64,224,255,0.04), 0 12px 34px rgba(0,0,0,0.28);
+      transform: translateY(-3px);
+    }
+
+    .roulette-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .roulette-chances-box {
+      min-width: 220px;
+      border-radius: 18px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(255,50,150,0.10), rgba(64,224,255,0.08));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .roulette-chances-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .roulette-chances-value {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .roulette-xp-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .roulette-strip-shell {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+      border-radius: 22px;
+      padding: 18px 0;
+      margin-bottom: 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)),
+        radial-gradient(circle at 50% 50%, rgba(64,224,255,0.06), transparent 45%);
+      border: 1px solid var(--border);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), var(--shadow);
+    }
+
+    .roulette-strip-shell::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      width: 140px;
+      background: linear-gradient(to right, rgba(9,12,22,0.97) 0%, rgba(9,12,22,0.80) 30%, rgba(9,12,22,0.40) 60%, transparent 100%);
+      z-index: 5;
+      pointer-events: none;
+      border-radius: 22px 0 0 22px;
+    }
+
+    .roulette-strip-shell::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; right: 0;
+      width: 140px;
+      background: linear-gradient(to left, rgba(9,12,22,0.97) 0%, rgba(9,12,22,0.80) 30%, rgba(9,12,22,0.40) 60%, transparent 100%);
+      z-index: 5;
+      pointer-events: none;
+      border-radius: 0 22px 22px 0;
+    }
+
+    .roulette-viewport {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+      padding: 8px 18px;
+    }
+
+    .roulette-strip {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      width: max-content;
+      min-height: 210px;
+      will-change: transform;
+      transform: translate3d(0,0,0);
+    }
+
+    .roulette-center-beam {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(64,224,255,0) 0%, rgba(64,224,255,0.50) 15%, rgba(64,224,255,1) 50%, rgba(64,224,255,0.50) 85%, rgba(64,224,255,0) 100%);
+      box-shadow: 0 0 18px 4px rgba(64,224,255,0.50), 0 0 60px 8px rgba(64,224,255,0.20);
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .roulette-center-marker {
+      position: absolute;
+      left: 50%;
+      bottom: 8px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 11px solid transparent;
+      border-right: 11px solid transparent;
+      border-bottom: 15px solid #40e0ff;
+      filter: drop-shadow(0 0 10px rgba(64,224,255,0.80)) drop-shadow(0 0 20px rgba(64,224,255,0.40));
+      z-index: 7;
+      pointer-events: none;
+    }
+
+    .roulette-card {
+      width: 170px !important;
+      min-width: 170px !important;
+      max-width: 170px !important;
+      height: 190px !important;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      padding: 14px !important;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0 !important;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+      box-sizing: border-box;
+      transition: transform .28s cubic-bezier(.22,.68,0,1), border-color .28s ease, box-shadow .28s ease, background .28s ease;
+    }
+
+    .roulette-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.26), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    .roulette-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 45%);
+      pointer-events: none;
+    }
+
+    .roulette-card-img-wrap {
+      width: 110px;
+      height: 92px;
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.26);
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: transform .35s ease, filter .35s ease;
+    }
+    .roulette-card:hover .roulette-card-img-wrap {
+      transform: translateY(-2px);
+    }
+
+    .roulette-card img {
+      width: 92px !important;
+      height: 92px !important;
+      object-fit: contain;
+      display: block;
+      transition: transform .35s ease, filter .35s ease;
+    }
+    .roulette-card:hover img {
+      transform: scale(1.06);
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.18));
+    }
+
+    .roulette-card-noimg {
+      font-size: 34px;
+      opacity: .9;
+    }
+
+    .roulette-card-title {
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      color: #fff;
+      width: 100%;
+      word-break: break-word;
+    }
+
+    .roulette-card-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.3;
+      width: 100%;
+    }
+
+    .roulette-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .roulette-status-box {
+      min-height: 48px;
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .roulette-prize-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .roulette-prize-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+    }
+
+    .roulette-prize-item-left {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .roulette-prize-thumb,
+    .roulette-prize-thumb-ph {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .roulette-prize-thumb {
+      object-fit: contain;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .roulette-prize-thumb-ph {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.05);
+      font-size: 18px;
+    }
+
+    .roulette-prize-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .roulette-prize-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .prize-admin-card { margin-bottom: 12px; transition: transform .32s cubic-bezier(.22,.68,0,1), box-shadow .32s cubic-bezier(.22,.68,0,1), border-color .32s ease, background .32s ease; }
+    .prize-admin-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.045); }
+    .prize-admin-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .prize-admin-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .image-dropzone {
+      position: relative;
+      width: 100%;
+      min-height: 180px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.02);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      overflow: hidden;
+      transition: .18s ease;
+      margin-bottom: 10px;
+    }
+    .image-dropzone:hover {
+      border-color: rgba(64,224,255,0.30);
+      background: rgba(64,224,255,0.04);
+      box-shadow: 0 0 0 3px rgba(64,224,255,0.05);
+    }
+    .image-dropzone.dragover {
+      border-color: rgba(255,50,150,0.35);
+      background: rgba(255,50,150,0.05);
+    }
+    .image-dropzone-inner {
+      padding: 20px;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+    .image-dropzone-icon {
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+    .image-dropzone-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .image-dropzone-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .image-drop-preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: rgba(0,0,0,0.24);
+    }
+
+    .my-prizes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .my-prize-card {
+      position: relative;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: .3s cubic-bezier(.22,.68,0,1);
+      animation: fadeInUp .4s cubic-bezier(.22,.68,0,1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .my-prize-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,50,150,0.25);
+      box-shadow: 0 8px 30px -6px rgba(255,50,150,0.18), 0 0 0 1px rgba(255,50,150,0.08), var(--shadow-lg);
+    }
+
+    .my-prize-card.prize-delivered {
+      opacity: 0.72;
+    }
+    .my-prize-card.prize-delivered:hover {
+      opacity: 0.88;
+      border-color: rgba(63,185,80,0.25);
+      box-shadow: 0 8px 30px -6px rgba(63,185,80,0.15), var(--shadow-lg);
+    }
+
+    .my-prize-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: rgba(0,0,0,0.30);
+      overflow: hidden;
+    }
+
+    .my-prize-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease;
+    }
+
+    .my-prize-card:hover .my-prize-img-wrap img {
+      transform: scale(1.06);
+    }
+
+    .my-prize-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%);
+      opacity: 0;
+      transition: opacity .3s ease;
+      pointer-events: none;
+    }
+    .my-prize-card:hover .my-prize-img-wrap::after {
+      opacity: 1;
+    }
+
+    .my-prize-img-ph {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: linear-gradient(135deg, rgba(255,50,150,0.08), rgba(64,224,255,0.06));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .my-prize-body {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .my-prize-title {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.3;
+      color: #fff;
+      word-break: break-word;
+    }
+
+    .my-prize-type {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+
+    .my-prize-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .my-prize-status.status-pending {
+      background: rgba(210,153,34,0.12);
+      border: 1px solid rgba(210,153,34,0.20);
+      color: #e8c45e;
+    }
+
+    .my-prize-status.status-given {
+      background: rgba(63,185,80,0.12);
+      border: 1px solid rgba(63,185,80,0.20);
+      color: #7ee295;
+    }
+
+    .my-prize-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+
+    .my-prizes-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .my-prizes-empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: .5;
+    }
+
+    .my-prizes-empty-text {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .my-prizes-empty-sub {
+      font-size: 12px;
+      margin-top: 6px;
+      color: var(--text-muted);
+    }
+
+    .online-box {
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 12px;
+      overflow: hidden;
+      transition: transform .32s cubic-bezier(.22,.68,0,1), box-shadow .32s cubic-bezier(.22,.68,0,1), border-color .32s ease, background .32s ease;
+    }
+    .online-box:hover { transform: translateY(-3px); }
+
+    .online-box-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .online-box-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .online-box-count {
+      min-width: 24px;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(64,224,255,0.10);
+      border: 1px solid rgba(64,224,255,0.18);
+      color: #7eefff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .online-users-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .online-user {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform .28s cubic-bezier(.22,.68,0,1), filter .28s ease;
+    }
+
+    .online-user:hover {
+      transform: translateY(-4px) scale(1.08);
+      filter: drop-shadow(0 6px 16px rgba(255,50,150,0.12));
+    }
+
+    .online-user-avatar,
+    .online-user-ph {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: block;
+      object-fit: cover;
+      border: 2px solid rgba(64,224,255,0.16);
+      background: var(--bg-elevated);
+      box-shadow: 0 0 0 3px rgba(64,224,255,0.05);
+    }
+
+    .online-user:hover .online-user-avatar,
+    .online-user:hover .online-user-ph {
+      border-color: rgba(255,50,150,0.28);
+      box-shadow: 0 0 0 4px rgba(255,50,150,0.07), 0 0 18px rgba(255,50,150,0.18);
+    }
+
+    .online-user-ph {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-secondary);
+    }
+
+    .online-user-dot {
+      position: absolute;
+      right: 0;
+      bottom: 1px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #3fb950;
+      border: 2px solid var(--bg-card);
+      box-shadow: 0 0 10px rgba(63,185,80,0.45);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .online-user:hover .online-user-dot {
+      transform: scale(1.12);
+      box-shadow: 0 0 0 3px rgba(63,185,80,0.12), 0 0 14px rgba(63,185,80,0.50);
+    }
+
+    .online-user-name {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%) translateY(6px);
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(10,14,22,0.96);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s ease;
+      box-shadow: var(--shadow-lg);
+      z-index: 5;
+    }
+
+    .online-user-name::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid rgba(10,14,22,0.96);
+    }
+
+    .online-user:hover .online-user-name {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .online-empty {
+      width: 100%;
+      text-align: center;
+      padding: 8px 4px 2px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .prize-win-modal{
+      max-width:640px;
+      width:min(92vw,640px);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .prize-win-scene{
+      position:relative;
+      min-height:280px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:14px;
+      border-radius:18px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.08), transparent 45%),
+        linear-gradient(180deg, rgba(18,22,38,.95), rgba(8,10,18,.98));
+      border:1px solid rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .prize-center-wrap{
+      position:relative;
+      z-index:5;
+      width:220px;
+      height:220px;
+      border-radius:22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 0 60px rgba(255,215,0,.15);
+    }
+
+    .prize-win-image{
+      max-width:88%;
+      max-height:88%;
+      object-fit:contain;
+      animation:prizeFloat 1.8s ease-in-out infinite alternate;
+    }
+
+    .prize-win-noimage{
+      font-size:84px;
+      animation:prizeFloat 1.8s ease-in-out infinite alternate;
+    }
+
+    .prize-win-title{
+      text-align:center;
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.08em;
+      margin:0 0 8px;
+      text-transform:uppercase;
+    }
+
+    .prize-win-name{
+      text-align:center;
+      font-size:18px;
+      font-weight:700;
+      margin:0 0 10px;
+    }
+
+    .gun{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:64px;
+      z-index:4;
+      filter:drop-shadow(0 8px 20px rgba(0,0,0,.4));
+    }
+
+    .gun-left{ left:-120px; }
+    .gun-right{ right:-120px; transform:translateY(-50%) scaleX(-1); }
+
+    .scene-start .gun-left{
+      animation:gunLeftIn .45s ease-out forwards, gunShootLeft .4s ease .8s 2;
+    }
+    .scene-start .gun-right{
+      animation:gunRightIn .45s ease-out forwards, gunShootRight .25s ease .7s 5;
+    }
+
+    .prize-glow{
+      position:absolute;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,215,0,.35), transparent 70%);
+      z-index:2;
+      opacity:0;
+    }
+    .scene-start .prize-glow{
+      animation:glowPulse 1.6s ease-out .5s forwards;
+    }
+
+    .prize-flash{
+      position:absolute;
+      top:0;
+      left:-50%;
+      width:40%;
+      height:100%;
+      transform:skewX(-25deg);
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+      z-index:6;
+      opacity:0;
+    }
+    .scene-start .prize-flash{
+      animation:flashSweep .8s ease 1.25s forwards;
+    }
+
+    .shells{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:7;
+    }
+
+    .shell{
+      position:absolute;
+      top:-20px;
+      font-size:18px;
+      opacity:0;
+      color:#ffd166;
+    }
+    .scene-start .shell{
+      animation:shellFall 1.6s linear .95s forwards;
+    }
+    .s1{ left:20%; animation-delay:1s !important; }
+    .s2{ left:35%; animation-delay:1.08s !important; }
+    .s3{ left:52%; animation-delay:1.15s !important; }
+    .s4{ left:67%; animation-delay:1.23s !important; }
+    .s5{ left:80%; animation-delay:1.31s !important; }
+
+    @keyframes gunLeftIn{
+      from{ left:-120px; opacity:0; }
+      to{ left:24px; opacity:1; }
+    }
+    @keyframes gunRightIn{
+      from{ right:-120px; opacity:0; }
+      to{ right:24px; opacity:1; }
+    }
+    @keyframes gunShootLeft{
+      0%,100%{ transform:translateY(-50%) translateX(0) rotate(0deg); }
+      50%{ transform:translateY(-50%) translateX(10px) rotate(-4deg); }
+    }
+    @keyframes gunShootRight{
+      0%,100%{ transform:translateY(-50%) translateX(0) scaleX(-1); }
+      50%{ transform:translateY(-50%) translateX(-10px) scaleX(-1); }
+    }
+    @keyframes shellFall{
+      0%{ transform:translateY(-20px) rotate(0deg); opacity:0; }
+      10%{ opacity:1; }
+      100%{ transform:translateY(280px) rotate(380deg); opacity:0; }
+    }
+    @keyframes flashSweep{
+      0%{ left:-45%; opacity:0; }
+      20%{ opacity:1; }
+      100%{ left:120%; opacity:0; }
+    }
+    @keyframes glowPulse{
+      0%{ opacity:0; transform:scale(.7); }
+      35%{ opacity:1; transform:scale(1); }
+      100%{ opacity:.65; transform:scale(1.08); }
+    }
+    @keyframes prizeFloat{
+      from{ transform:translateY(-4px) scale(1); }
+      to{ transform:translateY(6px) scale(1.02); }
+    }
+
+    .glass,
+    .task-card,
+    .admin-card,
+    .review-card,
+    .user-card,
+    .admin-stat,
+    .roulette-main-card,
+    .roulette-side-card,
+    .my-prize-card,
+    .online-box,
+    .profile-stat,
+    .queue-item,
+    .prize-admin-card,
+    .log-item,
+    .user-task-row {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass::before,
+    .task-card::before,
+    .admin-card::before,
+    .review-card::before,
+    .user-card::before,
+    .admin-stat::before,
+    .roulette-main-card::before,
+    .roulette-side-card::before,
+    .my-prize-card::before,
+    .online-box::before,
+    .profile-stat::before,
+    .queue-item::before,
+    .prize-admin-card::before,
+    .log-item::before,
+    .user-task-row::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.035), transparent 28%, transparent 72%, rgba(255,255,255,0.025)),
+        radial-gradient(circle at 85% 15%, rgba(255,255,255,0.04), transparent 28%);
+      opacity: 0;
+      transition: opacity .35s ease;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glass:hover::before,
+    .task-card:hover::before,
+    .admin-card:hover::before,
+    .review-card:hover::before,
+    .user-card:hover::before,
+    .admin-stat:hover::before,
+    .roulette-main-card:hover::before,
+    .roulette-side-card:hover::before,
+    .my-prize-card:hover::before,
+    .online-box:hover::before,
+    .profile-stat:hover::before,
+    .queue-item:hover::before,
+    .prize-admin-card:hover::before,
+    .log-item:hover::before,
+    .user-task-row:hover::before {
+      opacity: 1;
+    }
+
+    .glass > *,
+    .task-card > *,
+    .admin-card > *,
+    .review-card > *,
+    .user-card > *,
+    .admin-stat > *,
+    .roulette-main-card > *,
+    .roulette-side-card > *,
+    .my-prize-card > *,
+    .online-box > *,
+    .profile-stat > *,
+    .queue-item > *,
+    .prize-admin-card > *,
+    .log-item > *,
+    .user-task-row > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass,
+    .task-card,
+    .admin-card,
+    .review-card,
+    .user-card,
+    .admin-stat,
+    .roulette-main-card,
+    .roulette-side-card,
+    .my-prize-card,
+    .online-box,
+    .profile-stat,
+    .queue-item,
+    .prize-admin-card,
+    .log-item,
+    .user-task-row {
+      transition:
+        transform .32s cubic-bezier(.22,.68,0,1),
+        box-shadow .32s cubic-bezier(.22,.68,0,1),
+        border-color .32s ease,
+        background .32s ease;
+    }
+
+    .glass:hover,
+    .admin-card:hover,
+    .review-card:hover,
+    .user-card:hover,
+    .admin-stat:hover,
+    .roulette-main-card:hover,
+    .roulette-side-card:hover,
+    .online-box:hover,
+    .profile-stat:hover,
+    .queue-item:hover,
+    .prize-admin-card:hover,
+    .log-item:hover,
+    .user-task-row:hover {
+      transform: translateY(-3px);
+    }
+
+    .glass::after,
+    .task-card::after,
+    .admin-card::after,
+    .review-card::after,
+    .user-card::after,
+    .admin-stat::after,
+    .roulette-main-card::after,
+    .roulette-side-card::after,
+    .my-prize-card::after,
+    .online-box::after,
+    .profile-stat::after,
+    .queue-item::after,
+    .prize-admin-card::after,
+    .log-item::after,
+    .user-task-row::after {
+      content: "";
+      position: absolute;
+      top: -120%;
+      left: -60%;
+      width: 55%;
+      height: 260%;
+      transform: rotate(22deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      z-index: 0;
+    }
+
+    .glass:hover::after,
+    .task-card:hover::after,
+    .admin-card:hover::after,
+    .review-card:hover::after,
+    .user-card:hover::after,
+    .admin-stat:hover::after,
+    .roulette-main-card:hover::after,
+    .roulette-side-card:hover::after,
+    .my-prize-card:hover::after,
+    .online-box:hover::after,
+    .profile-stat:hover::after,
+    .queue-item:hover::after,
+    .prize-admin-card:hover::after,
+    .log-item:hover::after,
+    .user-task-row:hover::after {
+      opacity: 1;
+      animation: premiumShine 1.2s ease;
+    }
+
+    @keyframes premiumShine {
+      0% { left: -70%; opacity: 0; }
+      20% { opacity: 1; }
+      100% { left: 130%; opacity: 0; }
+    }
+
+    .profile-info:hover .avatar-wrap {
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .profile-info:hover .avatar,
+    .profile-info:hover .avatar-placeholder {
+      box-shadow: 0 0 0 4px rgba(255,50,150,0.08), 0 0 26px rgba(255,50,150,0.16);
+    }
+
+    .topbar,
+    .profile-info,
+    .online-box,
+    .roulette-main-card,
+    .admin-content {
+      animation: softFloatIdle 6s ease-in-out infinite;
+    }
+    .topbar { animation-delay: 0s; }
+    .profile-info { animation-delay: .8s; }
+    .online-box { animation-delay: 1.4s; }
+    .roulette-main-card { animation-delay: 1.8s; }
+    .admin-content { animation-delay: 2.2s; }
+
+    @keyframes softFloatIdle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-1.5px); }
+    }
+
+    .app-layout.sidebar-hidden .left-info,
+    .app-layout.sidebar-hidden .left-info * {
+      animation: none !important;
+    }
+
+    .admin-content { min-height: 680px; }
+
+    @media (max-width: 1180px) {
+      .app-layout { flex-wrap: wrap; }
+      .left-info { width: 100%; min-width: 100%; position: static; }
+    }
+
+    @media (max-width: 980px) {
+      .roulette-wrap {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .roulette-card {
+        width: 148px !important;
+        min-width: 148px !important;
+        max-width: 148px !important;
+        height: 180px !important;
+      }
+      .roulette-strip-shell::before,
+      .roulette-strip-shell::after {
+        width: 100px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .roulette-card {
+        width: 132px !important;
+        min-width: 132px !important;
+        max-width: 132px !important;
+        height: 170px !important;
+      }
+
+      .roulette-card-img-wrap {
+        width: 90px;
+        height: 78px;
+        min-height: 78px;
+      }
+
+      .roulette-card img {
+        width: 76px !important;
+        height: 76px !important;
+      }
+
+      .roulette-strip-shell::before,
+      .roulette-strip-shell::after {
+        width: 60px;
+      }
+
+      .my-prizes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+      }
+
+      .my-prize-body {
+        padding: 12px;
+      }
+
+      .my-prize-title {
+        font-size: 13px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .glass,
+      .task-card,
+      .admin-card,
+      .review-card,
+      .user-card,
+      .admin-stat,
+      .roulette-main-card,
+      .roulette-side-card,
+      .my-prize-card,
+      .online-box,
+      .profile-stat,
+      .queue-item,
+      .prize-admin-card,
+      .log-item,
+      .user-task-row,
+      .btn,
+      .online-user {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .glass::after,
+      .task-card::after,
+      .admin-card::after,
+      .review-card::after,
+      .user-card::after,
+      .admin-stat::after,
+      .roulette-main-card::after,
+      .roulette-side-card::after,
+      .my-prize-card::after,
+      .online-box::after,
+      .profile-stat::after,
+      .queue-item::after,
+      .prize-admin-card::after,
+      .log-item::after,
+      .user-task-row::after,
+      .btn::after {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-box"><div class="spinner"></div><div>Загрузка...</div></div>
+  </div>
+
+  <div id="toastWrap" class="toast-wrap"></div>
+
+  <div class="page-wrap">
+    <div id="guestView">
+      <div class="glass glow-top-pink auth-wrap">
+        <div class="auth-title">🔐 Вход в систему</div>
+        <div class="muted" style="margin-bottom:14px;">Авторизация и ежедневные задания сотрудника.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn pink" onclick="openRegister()">📝 Регистрация</button>
+          <button class="btn secondary" onclick="openLogin()">🔑 Вход</button>
+        </div>
+      </div>
+
+      <div id="registerCard" class="glass glow-left-cyan auth-wrap hidden">
+        <div class="auth-title">📝 Регистрация</div>
+        <input id="regLogin" class="field" placeholder="Логин" />
+        <input id="regNick" class="field" placeholder="Игровой ник" />
+        <input id="regPassword" class="field" type="password" placeholder="Пароль" />
+        <button class="btn pink" style="width:100%;" onclick="registerUser()">✨ Создать аккаунт</button>
+        <div id="regMsg" class="msg"></div>
+        <div class="muted" style="margin-top:12px;">Уже есть аккаунт? <span style="color:#ff7eb6;cursor:pointer;" onclick="openLogin()">Войти</span></div>
+      </div>
+
+      <div id="loginCard" class="glass glow-left-pink auth-wrap hidden">
+        <div class="auth-title">🔑 Вход</div>
+        <input id="loginLogin" class="field" placeholder="Логин" />
+        <input id="loginPassword" class="field" type="password" placeholder="Пароль" />
+        <button class="btn pink" style="width:100%;" onclick="loginUser()">🚀 Войти</button>
+        <div id="loginMsg" class="msg"></div>
+        <div class="muted" style="margin-top:12px;">Нет аккаунта? <span style="color:#ff7eb6;cursor:pointer;" onclick="openRegister()">Регистрация</span></div>
+      </div>
+    </div>
+
+    <div id="appView" class="hidden">
+      <div class="app-layout" id="appLayout">
+        <div class="left-info">
+          <div class="profile-info glass glow-left-pink">
+            <div class="avatar-wrap" onclick="document.getElementById('avatarInput').click()">
+              <img id="heroAvatar" class="avatar hidden" alt="" />
+              <div id="heroAvatarPlaceholder" class="avatar-placeholder">?</div>
+              <div class="avatar-overlay">📷 Загрузить</div>
+            </div>
+
+            <input id="avatarInput" type="file" accept="image/*" class="hidden" onchange="handleAvatarSelect(event)" />
+
+            <div class="level-badge">⭐ LVL <span id="heroLevel">1</span></div>
+            <div id="heroNick" class="profile-name">Сотрудник</div>
+            <div id="heroLogin" class="profile-login">—</div>
+
+            <div class="xp-title">
+              <span id="heroXp">0 XP</span>
+              <span id="heroNeedXp">500 XP</span>
+            </div>
+            <div class="progress-bar">
+              <div id="heroProgressFill" class="progress-fill"></div>
+            </div>
+
+            <div id="heroRoleBadge" class="role-badge">СОТРУДНИК</div>
+
+            <div class="profile-stats">
+              <div class="profile-stat">
+                <div id="statLevel" class="profile-stat-value">1</div>
+                <div class="profile-stat-label">Уровень</div>
+              </div>
+              <div class="profile-stat">
+                <div id="statCompletedCount" class="profile-stat-value">0</div>
+                <div class="profile-stat-label">Заданий</div>
+              </div>
+              <div class="profile-stat">
+                <div id="statTotalXp" class="profile-stat-value">0</div>
+                <div class="profile-stat-label">Опыт</div>
+              </div>
+            </div>
+
+            <div class="profile-actions">
+              <button class="btn danger" onclick="logout()">🚪 Выйти</button>
+            </div>
+          </div>
+
+          <div class="online-box glass glow-bottom-cyan">
+            <div class="online-box-head">
+              <div class="online-box-title">🟢 Онлайн</div>
+              <div id="onlineCount" class="online-box-count">0</div>
+            </div>
+
+            <div id="onlineUsersList" class="online-users-list">
+              <div class="muted" style="font-size:12px;">Никого нет онлайн</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="main">
+          <div class="glass glow-top-cyan topbar">
+            <div class="topbar-left">
+              <div class="topbar-title">🏛️ Кабинет сотрудника</div>
+            </div>
+            <div class="topbar-actions">
+              <div class="timer-badge">⏰ <span id="refreshTimer">--:--:--</span></div>
+              <button class="btn secondary small" onclick="toggleProfile()" id="toggleProfileBtn">👤 Скрыть</button>
+              <button class="btn secondary small" onclick="toggleSound()" id="soundToggleBtn">🔊</button>
+            </div>
+          </div>
+
+          <div class="tabs" id="mainTabs">
+            <button id="tabTasksBtn" class="tab-btn active" onclick="switchMainTab('tasks')">📋 Задания</button>
+            <button id="tabRouletteBtn" class="tab-btn" onclick="switchMainTab('roulette')">🎰 Рулетка</button>
+            <button id="tabPrizesBtn" class="tab-btn" onclick="switchMainTab('prizes')">🎁 Призы</button>
+            <button id="tabAdminBtn" class="tab-btn hidden" onclick="switchMainTab('admin')">⚙️ Управление</button>
+          </div>
+
+          <div id="tasksTab" class="glass glow-top-pink panel">
+            <div id="tasksGrid" class="tasks-grid"></div>
+          </div>
+
+          <div id="rouletteTab" class="glass glow-top-pink panel hidden">
+            <div class="section-title">🎰 Рулетка</div>
+
+            <div class="roulette-wrap">
+              <div class="roulette-main-card">
+                <div class="roulette-topline">
+                  <div class="roulette-chances-box">
+                    <div class="roulette-chances-label">Доступно прокрутов</div>
+                    <div id="rouletteChances" class="roulette-chances-value">0</div>
+                  </div>
+
+                  <div class="roulette-xp-note">
+                    +1 попытка за каждые 1000 XP
+                  </div>
+                </div>
+
+                <div class="roulette-strip-shell">
+                  <div class="roulette-center-beam"></div>
+                  <div class="roulette-center-marker"></div>
+
+                  <div class="roulette-viewport">
+                    <div id="rouletteStrip" class="roulette-strip"></div>
+                  </div>
+                </div>
+
+                <div class="roulette-controls">
+                  <button class="btn pink" id="spinButton" onclick="spinRoulette()">🎰 Крутить</button>
+                  <button class="btn secondary" onclick="loadRoulette(true)">🔄 Обновить</button>
+                </div>
+
+                <div id="rouletteResult" class="roulette-status-box">Загрузка рулетки...</div>
+              </div>
+
+              <div class="roulette-side-card">
+                <div class="section-title">🎁 Возможные призы</div>
+                <div id="roulettePrizePreview" class="roulette-prize-list">
+                  <div class="muted">Загрузка призов...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="prizesTab" class="glass glow-top-pink panel hidden">
+            <div class="section-title">🎁 Мои призы</div>
+            <div id="userPrizesList"></div>
+          </div>
+
+          <div id="adminTab" class="hidden">
+            <div class="admin-stats-grid">
+              <div class="admin-stat">
+                <div id="adminStatUsers" class="admin-stat-value">0</div>
+                <div class="admin-stat-label">ПОЛЬЗОВАТЕЛЕЙ</div>
+              </div>
+              <div class="admin-stat">
+                <div id="adminStatPending" class="admin-stat-value">0</div>
+                <div class="admin-stat-label">НА ПРОВЕРКЕ</div>
+              </div>
+              <div class="admin-stat">
+                <div id="adminStatActiveTasks" class="admin-stat-value">0</div>
+                <div class="admin-stat-label">АКТИВНЫХ</div>
+              </div>
+              <div class="admin-stat">
+                <div id="adminStatAllTasks" class="admin-stat-value">0</div>
+                <div class="admin-stat-label">ВСЕГО</div>
+              </div>
+            </div>
+
+            <div class="admin-layout">
+              <div class="glass glow-left-pink admin-sidebar">
+                <div class="section-title">➕ Создать задание</div>
+
+                <div class="admin-card">
+                  <input id="adminCreateTitle" class="field" placeholder="Название задания" />
+                  <textarea id="adminCreateDescription" placeholder="Описание задания"></textarea>
+                  <input id="adminCreateReward" class="field" type="number" placeholder="Награда (XP)" />
+
+                  <select id="adminCreateDifficulty" class="field">
+                    <option>Легкое</option>
+                    <option selected>Обычное</option>
+                    <option>Среднее</option>
+                    <option>Сложное</option>
+                  </select>
+
+                  <select id="adminCreateEmoji" class="field">
+                    <option value="🚓">🚓 Машина</option>
+                    <option value="🛡️">🛡️ Щит</option>
+                    <option value="📋">📋 Документы</option>
+                    <option value="🚨">🚨 Сирена</option>
+                    <option value="🕵️">🕵️ Слежка</option>
+                    <option value="📡">📡 Рация</option>
+                    <option value="🧾">🧾 Протокол</option>
+                    <option value="⚖️">⚖️ Закон</option>
+                    <option value="🔍">🔍 Поиск</option>
+                    <option value="👮">👮 Офицер</option>
+                  </select>
+
+                  <div class="section-title" style="font-size:13px;margin-top:8px;">👥 Кому показывать задание</div>
+                  <label class="check-row"><input type="checkbox" id="taskGroupAll" checked /> <span>Обычный / для всех</span></label>
+                  <label class="check-row"><input type="checkbox" id="taskGroupSenior" /> <span>Старший состав</span></label>
+                  <label class="check-row"><input type="checkbox" id="taskGroupLeader" /> <span>Лидер</span></label>
+
+                  <div style="display:grid;gap:8px;">
+                    <button class="btn pink" style="width:100%;" onclick="adminCreateTask()">✨ Создать</button>
+                    <button class="btn secondary" style="width:100%;" onclick="addToQueue()">📋 В очередь</button>
+                  </div>
+
+                  <div id="adminCreateMsg" class="msg"></div>
+
+                  <div class="queue-section">
+                    <div class="section-title" style="font-size:13px;">📋 Очередь (<span id="bulkQueueCount">0</span>)</div>
+                    <div id="bulkQueueList"><div class="muted" style="font-size:12px;">Пусто</div></div>
+
+                    <div class="queue-actions">
+                      <button class="btn success small" style="flex:1;" onclick="createAllFromQueue()">🚀 Создать все</button>
+                      <button class="btn danger small" onclick="clearQueue()">🗑️</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="glass glow-top-cyan admin-content">
+                <div class="tabs" style="margin-bottom:12px;">
+                  <button id="adminSubTasksBtn" class="tab-btn active" onclick="switchAdminSubTab('tasks')">📋 Задания</button>
+                  <button id="adminSubReviewsBtn" class="tab-btn" onclick="switchAdminSubTab('reviews')">🔍 Проверка</button>
+                  <button id="adminSubUsersBtn" class="tab-btn" onclick="switchAdminSubTab('users')">👥 Пользователи</button>
+                  <button id="adminSubPrizesBtn" class="tab-btn" onclick="switchAdminSubTab('prizes')">🎁 Призы рулетки</button>
+                  <button id="adminSubGiveprizesBtn" class="tab-btn" onclick="switchAdminSubTab('giveprizes')">📦 Выдать призы</button>
+                  <button id="adminSubLogsBtn" class="tab-btn" onclick="switchAdminSubTab('logs')">📜 Логи</button>
+                </div>
+
+                <div id="adminSubTasksTab">
+                  <div class="section-title">📋 Все задания</div>
+                  <div class="admin-toolbar">
+                    <button class="btn secondary small" onclick="selectAllAdminTasks(true)">☑️ Все</button>
+                    <button class="btn secondary small" onclick="selectAllAdminTasks(false)">✖️ Снять</button>
+                    <button class="btn warning small" onclick="bulkSetTasksActive(false)">⏸️ Выкл</button>
+                    <button class="btn success small" onclick="bulkSetTasksActive(true)">⚡ Вкл</button>
+                    <button class="btn danger small" onclick="bulkDeleteTasks()">🗑️ Удалить</button>
+                  </div>
+                  <div id="adminTasksList"></div>
+                </div>
+
+                <div id="adminSubReviewsTab" class="hidden">
+                  <div class="section-title">🔍 На проверке</div>
+                  <div id="adminReviewsList"></div>
+                </div>
+
+                <div id="adminSubUsersTab" class="hidden">
+                  <div class="section-title">👥 Пользователи</div>
+                  <div id="adminUsersList"></div>
+                </div>
+
+                <div id="adminSubPrizesTab" class="hidden">
+                  <div class="section-title">🎁 Управление призами рулетки</div>
+                  <div class="admin-toolbar">
+                    <button class="btn success small" onclick="openAddPrizeModal()">➕ Добавить приз</button>
+                  </div>
+                  <div id="prizesList"></div>
+                </div>
+
+                <div id="adminSubGiveprizesTab" class="hidden">
+                  <div class="section-title">📦 Выдать призы</div>
+                  <div id="pendingPrizesList"></div>
+                </div>
+
+                <div id="adminSubLogsTab" class="hidden">
+                  <div class="section-title">📜 Логи</div>
+                  <div id="adminLogsList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="prizeViewModalBg" class="modal-bg hidden">
+        <div class="modal prize-win-modal">
+          <div class="prize-win-scene">
+            <div class="gun gun-left">🔫</div>
+            <div class="gun gun-right">🔫</div>
+
+            <div class="shells">
+              <span class="shell s1">✦</span>
+              <span class="shell s2">✦</span>
+              <span class="shell s3">✦</span>
+              <span class="shell s4">✦</span>
+              <span class="shell s5">✦</span>
+            </div>
+
+            <div class="prize-glow"></div>
+            <div class="prize-flash"></div>
+
+            <div class="prize-center-wrap">
+              <img id="prizeViewImage" class="prize-win-image hidden" alt="prize" />
+              <div id="prizeViewNoImage" class="prize-win-noimage">🎁</div>
+            </div>
+          </div>
+
+          <h3 class="prize-win-title">ТЫ ВЫИГРАЛ ПРИЗ</h3>
+          <p id="prizeViewTitle" class="prize-win-name"></p>
+
+          <div class="modal-actions">
+            <button class="btn secondary" onclick="closePrizeViewModal()">✖️ Закрыть</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="submitModalBg" class="modal-bg hidden">
+        <div class="modal">
+          <h3 id="submitModalTitle">📤 Отправка</h3>
+          <div class="muted" style="margin-bottom:12px;">Добавьте текст или ссылку с доказательствами.</div>
+          <textarea id="submitReportText" placeholder="Текст отчёта..."></textarea>
+          <div class="modal-actions">
+            <button class="btn secondary" onclick="closeSubmitModal()">❌ Отмена</button>
+            <button class="btn yellow" onclick="submitTaskReport()">📤 Отправить</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editTaskModalBg" class="modal-bg hidden">
+        <div class="modal">
+          <h3>✏️ Редактирование</h3>
+          <input id="editTaskTitle" class="field" placeholder="Название" />
+          <textarea id="editTaskDescription" placeholder="Описание"></textarea>
+          <input id="editTaskReward" class="field" type="number" placeholder="Награда" />
+          <select id="editTaskDifficulty" class="field">
+            <option>Легкое</option>
+            <option>Обычное</option>
+            <option>Среднее</option>
+            <option>Сложное</option>
+          </select>
+          <select id="editTaskEmoji" class="field">
+            <option value="🚓">🚓</option>
+            <option value="🛡️">🛡️</option>
+            <option value="📋">📋</option>
+            <option value="🚨">🚨</option>
+            <option value="🕵️">🕵️</option>
+            <option value="📡">📡</option>
+            <option value="🧾">🧾</option>
+            <option value="⚖️">⚖️</option>
+            <option value="🔍">🔍</option>
+            <option value="👮">👮</option>
+          </select>
+          <select id="editTaskActive" class="field">
+            <option value="true">Активно</option>
+            <option value="false">Выключено</option>
+          </select>
+
+          <div class="section-title" style="font-size:13px;margin-top:8px;">👥 Кому показывать задание</div>
+          <label class="check-row"><input type="checkbox" id="editTaskGroupAll" /> <span>Обычный / для всех</span></label>
+          <label class="check-row"><input type="checkbox" id="editTaskGroupSenior" /> <span>Старший состав</span></label>
+          <label class="check-row"><input type="checkbox" id="editTaskGroupLeader" /> <span>Лидер</span></label>
+
+          <div class="modal-actions">
+            <button class="btn secondary" onclick="closeEditTaskModal()">❌ Отмена</button>
+            <button class="btn pink" onclick="saveTaskEdit()">💾 Сохранить</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="reviewModalBg" class="modal-bg hidden">
+        <div class="modal">
+          <h3>🔍 Проверка</h3>
+          <div id="reviewModalInfo" class="muted" style="margin-bottom:12px;"></div>
+          <textarea id="reviewCommentText" placeholder="Комментарий (необязательно)"></textarea>
+          <div class="modal-actions">
+            <button class="btn danger" onclick="submitReviewDecision('reject')">❌ Отклонить</button>
+            <button class="btn success" onclick="submitReviewDecision('approve')">✅ Одобрить</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="userManageModalBg" class="modal-bg hidden">
+        <div class="modal">
+          <h3 id="userManageTitle">👤 Управление</h3>
+          <div id="userManageInfo" class="muted" style="margin-bottom:12px;"></div>
+
+          <div class="admin-card" style="margin-bottom:14px;">
+            <div class="section-title" style="font-size:13px;">⚙️ Параметры пользователя</div>
+
+            <input id="manageUserNick" class="field" placeholder="Ник" />
+            <input id="manageUserLogin" class="field" placeholder="Логин" />
+            <input id="manageUserXp" class="field" type="number" placeholder="Опыт (XP)" />
+            <input id="manageUserSpins" class="field" type="number" placeholder="Прокруты" />
+            <input id="manageUserNewPassword" class="field" type="password" placeholder="Новый пароль" />
+
+            <select id="manageUserRole" class="field">
+              <option value="user">Пользователь</option>
+              <option value="admin">Администратор</option>
+            </select>
+
+            <select id="manageUserPrizeGroup" class="field">
+              <option value="all">Обычный / для всех</option>
+              <option value="senior">Старший состав</option>
+              <option value="leader">Лидер</option>
+            </select>
+
+            <div class="section-title" style="font-size:13px;margin-top:8px;">🖼️ Аватар</div>
+
+            <div id="manageAvatarDropzone" class="image-dropzone" onclick="document.getElementById('manageAvatarFile').click()">
+              <div class="image-dropzone-inner">
+                <div class="image-dropzone-icon">🖼️</div>
+                <div class="image-dropzone-title">Нажми или перетащи аватар</div>
+                <div class="image-dropzone-sub">PNG / JPG / WEBP</div>
+              </div>
+              <img id="manageAvatarPreview" class="image-drop-preview hidden" alt="preview" />
+            </div>
+
+            <input id="manageAvatarFile" type="file" accept="image/*" class="hidden" />
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn pink small" onclick="saveManagedUserProfile()">💾 Сохранить профиль</button>
+              <button class="btn warning small" onclick="resetManagedUserPassword()">🔐 Сбросить пароль</button>
+              <button class="btn secondary small" onclick="clearManagedUserAvatar()">🧹 Очистить аватар</button>
+              <button class="btn success small" onclick="addManagedUserSpins()">🎰 Добавить прокруты</button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+            <button class="btn pink small" onclick="refreshUserTasks()">🔄 Обновить все задания</button>
+          </div>
+
+          <div class="section-title" style="font-size:13px;">📋 Задания пользователя</div>
+          <div id="userTasksList"></div>
+
+          <div class="modal-actions">
+            <button class="btn secondary" onclick="closeUserManageModal()">✖️ Закрыть</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="addPrizeModalBg" class="modal-bg hidden">
+        <div class="modal">
+          <h3>🎁 Добавить приз</h3>
+
+          <input id="addPrizeTitle" class="field" placeholder="Название приза" />
+
+          <div class="section-title" style="font-size:13px;margin-top:6px;">🖼️ Картинка приза</div>
+
+          <div id="prizeImageDropzone" class="image-dropzone" onclick="document.getElementById('prizeImageFile').click()">
+            <div class="image-dropzone-inner">
+              <div class="image-dropzone-icon">🖼️</div>
+              <div class="image-dropzone-title">Нажми или перетащи картинку сюда</div>
+              <div class="image-dropzone-sub">PNG / JPG / WEBP</div>
+            </div>
+            <img id="prizeImagePreview" class="image-drop-preview hidden" alt="preview" />
+          </div>
+
+          <input id="prizeImageFile" type="file" accept="image/*" class="hidden" />
+
+          <div class="section-title" style="font-size:13px;margin-top:8px;">👥 Кому доступен приз</div>
+          <label class="check-row"><input type="checkbox" id="addPrizeGroupAll" checked /> <span>Для всех</span></label>
+          <label class="check-row"><input type="checkbox" id="addPrizeGroupSenior" /> <span>Старший состав</span></label>
+          <label class="check-row"><input type="checkbox" id="addPrizeGroupLeader" /> <span>Лидер</span></label>
+
+          <div class="modal-actions">
+            <button class="btn secondary" onclick="closeAddPrizeModal()">❌ Отмена</button>
+            <button class="btn pink" onclick="createPrize()">💾 Создать</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editPrizeModalBg" class="modal-bg hidden">
+        <div class="modal">
+          <h3>✏️ Редактировать приз</h3>
+
+          <input id="editPrizeTitle" class="field" placeholder="Название приза" />
+
+          <select id="editPrizeActive" class="field">
+            <option value="true">Активен</option>
+            <option value="false">Выключен</option>
+          </select>
+
+          <div class="section-title" style="font-size:13px;margin-top:6px;">🖼️ Картинка приза</div>
+
+          <div id="editPrizeImageDropzone" class="image-dropzone" onclick="document.getElementById('editPrizeImageFile').click()">
+            <div class="image-dropzone-inner">
+              <div class="image-dropzone-icon">🖼️</div>
+              <div class="image-dropzone-title">Нажми или перетащи новую картинку</div>
+              <div class="image-dropzone-sub">Если не выбирать новую — останется текущая</div>
+            </div>
+            <img id="editPrizeImagePreview" class="image-drop-preview hidden" alt="preview" />
+          </div>
+
+          <input id="editPrizeImageFile" type="file" accept="image/*" class="hidden" />
+
+          <div class="section-title" style="font-size:13px;margin-top:8px;">👥 Кому доступен приз</div>
+          <label class="check-row"><input type="checkbox" id="editPrizeGroupAll" /> <span>Для всех</span></label>
+          <label class="check-row"><input type="checkbox" id="editPrizeGroupSenior" /> <span>Старший состав</span></label>
+          <label class="check-row"><input type="checkbox" id="editPrizeGroupLeader" /> <span>Лидер</span></label>
+
+          <div class="modal-actions">
+            <button class="btn secondary" onclick="closeEditPrizeModal()">❌ Отмена</button>
+            <button class="btn pink" onclick="savePrizeEdit()">💾 Сохранить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://world-script-api.onrender.com";
+    const guestView = document.getElementById("guestView");
+    const appView = document.getElementById("appView");
+    const registerCard = document.getElementById("registerCard");
+    const loginCard = document.getElementById("loginCard");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+    const toastWrap = document.getElementById("toastWrap");
+
+    let currentUser = null;
+    let currentTasks = [];
+    let currentSubmitTaskId = null;
+    let currentEditTaskId = null;
+    let currentReviewId = null;
+    let currentMainTab = "tasks";
+    let currentAdminSubTab = "tasks";
+    let adminTaskMap = new Map();
+    let adminSelectedTaskIds = new Set();
+    let bulkQueue = [];
+    let currentManageUserId = null;
+    let adminAllTasks = [];
+
+    let roulettePrizes = [];
+    let rouletteSpinning = false;
+    let currentEditPrizeId = null;
+    let prizeMap = new Map();
+    let rouletteLastState = null;
+
+    let addPrizeImageBase64 = "";
+    let editPrizeImageBase64 = "";
+    let manageAvatarBase64 = "";
+    let managedUserRaw = null;
+
+    let audioCtx = null;
+    let soundEnabled = localStorage.getItem("sound_enabled") !== "false";
+    let loadingCounter = 0;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTone(frequency, volume, delay, duration, type = "sine") {
+      const ctx = getAudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.value = frequency;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      const t = ctx.currentTime + delay;
+      gain.gain.setValueAtTime(volume, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+
+      osc.start(t);
+      osc.stop(t + duration + 0.01);
+    }
+
+    function playSound(name) {
+      if (!soundEnabled) return;
+
+      try {
+        switch (name) {
+          case "success":
+            playTone(523, 0.07, 0, 0.14);
+            playTone(659, 0.07, 0.1, 0.18);
+            playTone(784, 0.05, 0.22, 0.22);
+            break;
+          case "error":
+            playTone(392, 0.07, 0, 0.14);
+            playTone(311, 0.07, 0.12, 0.18);
+            break;
+          case "submit":
+            playTone(587, 0.05, 0, 0.1);
+            playTone(784, 0.04, 0.08, 0.14);
+            break;
+          case "click":
+            playTone(800, 0.025, 0, 0.04);
+            break;
+          case "notify":
+            playTone(880, 0.04, 0, 0.08);
+            playTone(1047, 0.03, 0.06, 0.1);
+            break;
+          case "spin":
+            playTone(520, 0.03, 0, 0.06);
+            playTone(680, 0.025, 0.06, 0.06);
+            playTone(760, 0.02, 0.12, 0.08);
+            break;
+        }
+      } catch (e) {}
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      localStorage.setItem("sound_enabled", String(soundEnabled));
+      const btn = document.getElementById("soundToggleBtn");
+      if (btn) btn.textContent = soundEnabled ? "🔊" : "🔇";
+      showToast(soundEnabled ? "Звуки включены" : "Звуки выключены", "info");
+    }
+
+    function updateSoundBtn() {
+      const btn = document.getElementById("soundToggleBtn");
+      if (btn) btn.textContent = soundEnabled ? "🔊" : "🔇";
+    }
+
+    function startRefreshTimer() {
+      function tick() {
+        const now = new Date();
+        const midnight = new Date(now);
+        midnight.setHours(24, 0, 0, 0);
+
+        const diff = midnight - now;
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+
+        const el = document.getElementById("refreshTimer");
+        if (el) {
+          el.textContent = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+        }
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    function toggleProfile() {
+      playSound("click");
+      const layout = document.getElementById("appLayout");
+      const btn = document.getElementById("toggleProfileBtn");
+      if (!layout) return;
+
+      layout.classList.toggle("sidebar-hidden");
+      const hidden = layout.classList.contains("sidebar-hidden");
+
+      if (btn) btn.innerHTML = hidden ? "👤 Показать" : "👤 Скрыть";
+      localStorage.setItem("sidebar_hidden", hidden ? "1" : "");
+    }
+
+    function restoreSidebar() {
+      if (localStorage.getItem("sidebar_hidden") !== "1") return;
+
+      const layout = document.getElementById("appLayout");
+      const btn = document.getElementById("toggleProfileBtn");
+      if (!layout) return;
+
+      layout.classList.add("sidebar-hidden");
+      if (btn) btn.innerHTML = "👤 Показать";
+    }
+
+    function showLoading(text = "Загружаю...") {
+      loadingCounter++;
+
+      if (!toastWrap) return;
+
+      let el = document.getElementById("miniLoadingToast");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "miniLoadingToast";
+        el.className = "toast info loading-mini";
+        toastWrap.appendChild(el);
+      }
+
+      el.textContent = "⏳ " + text;
+      el.style.opacity = "1";
+      el.style.transform = "translateX(0)";
+    }
+
+    function hideLoading() {
+      loadingCounter = Math.max(0, loadingCounter - 1);
+
+      if (loadingCounter > 0) return;
+
+      const el = document.getElementById("miniLoadingToast");
+      if (!el) return;
+
+      el.style.opacity = "0";
+      el.style.transform = "translateX(20px)";
+      setTimeout(() => {
+        if (el.parentNode) el.remove();
+      }, 220);
+    }
+
+    function showToast(message, type = "info", duration = 3200) {
+      if (!toastWrap) return;
+
+      const el = document.createElement("div");
+      el.className = "toast " + type;
+      el.textContent = message;
+      toastWrap.appendChild(el);
+
+      setTimeout(() => {
+        el.style.transition = "0.22s ease";
+        el.style.opacity = "0";
+        el.style.transform = "translateX(20px)";
+        setTimeout(() => el.remove(), 240);
+      }, duration);
+    }
+
+    function esc(v) {
+      return String(v || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function clearMessages() {
+      ["regMsg", "loginMsg", "adminCreateMsg"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.textContent = "";
+          el.className = "msg";
+        }
+      });
+    }
+
+    function showGuest() {
+      if (guestView) guestView.classList.remove("hidden");
+      if (appView) appView.classList.add("hidden");
+      if (registerCard) registerCard.classList.add("hidden");
+      if (loginCard) loginCard.classList.add("hidden");
+      clearMessages();
+    }
+
+    function showApp() {
+      if (guestView) guestView.classList.add("hidden");
+      if (appView) appView.classList.remove("hidden");
+      clearMessages();
+    }
+
+    function openRegister() {
+      if (registerCard) registerCard.classList.remove("hidden");
+      if (loginCard) loginCard.classList.add("hidden");
+      clearMessages();
+      playSound("click");
+    }
+
+    function openLogin() {
+      if (loginCard) loginCard.classList.remove("hidden");
+      if (registerCard) registerCard.classList.add("hidden");
+      clearMessages();
+      playSound("click");
+    }
+
+    function setToken(token) {
+      localStorage.setItem("police_token", token);
+    }
+
+    function getToken() {
+      return localStorage.getItem("police_token") || "";
+    }
+
+    function clearToken() {
+      localStorage.removeItem("police_token");
+    }
+
+    function safeNum(v) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function calcUserLevel(totalXp) {
+      const xp = safeNum(totalXp);
+      return Math.max(1, Math.floor(xp / 500) + 1);
+    }
+
+    function calcNeedXpForProgress() {
+      return 500;
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function formatPrizeDate(value) {
+      if (!value) return "";
+
+      try {
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return String(value);
+
+        return d.toLocaleString("ru-RU", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return String(value);
+      }
+    }
+
+    function getSelectedPrizeGroups(mode) {
+      const prefix = mode === "edit" ? "editPrizeGroup" : "addPrizeGroup";
+      const all = document.getElementById(prefix + "All")?.checked;
+      const senior = document.getElementById(prefix + "Senior")?.checked;
+      const leader = document.getElementById(prefix + "Leader")?.checked;
+
+      const groups = [];
+      if (all) groups.push("all");
+      if (senior) groups.push("senior");
+      if (leader) groups.push("leader");
+
+      return groups;
+    }
+
+    function setPrizeGroupsToForm(mode, groups) {
+      const prefix = mode === "edit" ? "editPrizeGroup" : "addPrizeGroup";
+      const set = new Set(Array.isArray(groups) && groups.length ? groups : ["all"]);
+
+      const allEl = document.getElementById(prefix + "All");
+      const seniorEl = document.getElementById(prefix + "Senior");
+      const leaderEl = document.getElementById(prefix + "Leader");
+
+      if (allEl) allEl.checked = set.has("all");
+      if (seniorEl) seniorEl.checked = set.has("senior");
+      if (leaderEl) leaderEl.checked = set.has("leader");
+    }
+
+    function getUserAccessGroup(user = currentUser) {
+      if (!user) return "all";
+
+      const group = String(
+        user.access_group ||
+        user.prize_access_group ||
+        user.task_access_group ||
+        "all"
+      ).toLowerCase();
+
+      if (group === "leader") return "leader";
+      if (group === "senior") return "senior";
+      return "all";
+    }
+
+    function getUserRoleBadge(group) {
+      if (group === "leader") return "ЛИДЕР";
+      if (group === "senior") return "СТАРШИЙ СОСТАВ";
+      return "СОТРУДНИК";
+    }
+
+    function isVisibleForUserGroup(itemGroups, userGroup) {
+      const groups = Array.isArray(itemGroups) && itemGroups.length ? itemGroups : ["all"];
+
+      if (userGroup === "leader") {
+        return groups.includes("leader") || groups.includes("senior") || groups.includes("all");
+      }
+
+      if (userGroup === "senior") {
+        return groups.includes("senior") || groups.includes("all");
+      }
+
+      return groups.includes("all");
+    }
+
+    function getSelectedTaskGroups(mode) {
+      const prefix = mode === "edit" ? "editTaskGroup" : "taskGroup";
+
+      const all = document.getElementById(prefix + "All")?.checked;
+      const senior = document.getElementById(prefix + "Senior")?.checked;
+      const leader = document.getElementById(prefix + "Leader")?.checked;
+
+      const groups = [];
+      if (all) groups.push("all");
+      if (senior) groups.push("senior");
+      if (leader) groups.push("leader");
+
+      return groups;
+    }
+
+    function setTaskGroupsToForm(mode, groups) {
+      const prefix = mode === "edit" ? "editTaskGroup" : "taskGroup";
+      const set = new Set(Array.isArray(groups) && groups.length ? groups : ["all"]);
+
+      const allEl = document.getElementById(prefix + "All");
+      const seniorEl = document.getElementById(prefix + "Senior");
+      const leaderEl = document.getElementById(prefix + "Leader");
+
+      if (allEl) allEl.checked = set.has("all");
+      if (seniorEl) seniorEl.checked = set.has("senior");
+      if (leaderEl) leaderEl.checked = set.has("leader");
+    }
+
+    function formatGroupsLabel(groups) {
+      const list = Array.isArray(groups) && groups.length ? groups : ["all"];
+      return list.map((g) => {
+        if (g === "all") return "Обычный / для всех";
+        if (g === "senior") return "Старший состав";
+        if (g === "leader") return "Лидер";
+        return g;
+      }).join(" · ");
+    }
+
+    function switchMainTab(tab) {
+      playSound("click");
+      currentMainTab = tab;
+
+      const tasksBtn = document.getElementById("tabTasksBtn");
+      const rouletteBtn = document.getElementById("tabRouletteBtn");
+      const prizesBtn = document.getElementById("tabPrizesBtn");
+      const adminBtn = document.getElementById("tabAdminBtn");
+
+      const tasksTab = document.getElementById("tasksTab");
+      const rouletteTab = document.getElementById("rouletteTab");
+      const prizesTab = document.getElementById("prizesTab");
+      const adminTab = document.getElementById("adminTab");
+
+      if (tasksBtn) tasksBtn.classList.toggle("active", tab === "tasks");
+      if (rouletteBtn) rouletteBtn.classList.toggle("active", tab === "roulette");
+      if (prizesBtn) prizesBtn.classList.toggle("active", tab === "prizes");
+      if (adminBtn) adminBtn.classList.toggle("active", tab === "admin");
+
+      if (tasksTab) tasksTab.classList.toggle("hidden", tab !== "tasks");
+      if (rouletteTab) rouletteTab.classList.toggle("hidden", tab !== "roulette");
+      if (prizesTab) prizesTab.classList.toggle("hidden", tab !== "prizes");
+      if (adminTab) adminTab.classList.toggle("hidden", tab !== "admin");
+
+      if (tab === "roulette") loadRoulette(true);
+      if (tab === "admin") loadAdminData();
+      if (tab === "prizes") loadUserPrizes();
+    }
+
+    function switchAdminSubTab(tab) {
+      playSound("click");
+      currentAdminSubTab = tab;
+
+      ["tasks", "reviews", "users", "prizes", "giveprizes", "logs"].forEach((t) => {
+        const btn = document.getElementById("adminSub" + t.charAt(0).toUpperCase() + t.slice(1) + "Btn");
+        const content = document.getElementById("adminSub" + t.charAt(0).toUpperCase() + t.slice(1) + "Tab");
+        if (btn) btn.classList.toggle("active", tab === t);
+        if (content) content.classList.toggle("hidden", tab !== t);
+      });
+
+      if (tab === "prizes") loadPrizes();
+      if (tab === "giveprizes") loadPendingPrizes();
+    }
+
+    async function apiGet(path) {
+      const res = await fetch(API_BASE + path, {
+        headers: {
+          "Authorization": "Bearer " + getToken()
+        }
+      });
+
+      const data = await res.json().catch(() => ({ ok: false, error: "Bad JSON" }));
+
+      if (res.status === 401) {
+        clearToken();
+        showGuest();
+        throw new Error("Unauthorized");
+      }
+
+      return { res, data };
+    }
+
+    async function apiPost(path, body) {
+      const res = await fetch(API_BASE + path, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + getToken()
+        },
+        body: JSON.stringify(body || {})
+      });
+
+      const data = await res.json().catch(() => ({ ok: false, error: "Bad JSON" }));
+
+      if (res.status === 401) {
+        clearToken();
+        showGuest();
+        throw new Error("Unauthorized");
+      }
+
+      return { res, data };
+    }
+
+    async function registerUser() {
+      const login = document.getElementById("regLogin")?.value.trim();
+      const nick = document.getElementById("regNick")?.value.trim();
+      const pw = document.getElementById("regPassword")?.value.trim();
+      const msg = document.getElementById("regMsg");
+
+      if (!login || !nick || !pw) {
+        if (msg) {
+          msg.textContent = "Заполните все поля";
+          msg.className = "msg error";
+        }
+        playSound("error");
+        return;
+      }
+
+      try {
+        showLoading("Регистрирую...");
+        const res = await fetch(API_BASE + "/api/police/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ login, nick, password: pw })
+        });
+        const data = await res.json();
+
+        if (!res.ok || !data.ok) {
+          if (msg) {
+            msg.textContent = data.error || "Ошибка";
+            msg.className = "msg error";
+          }
+          playSound("error");
+          return;
+        }
+
+        if (msg) {
+          msg.textContent = "Успешно";
+          msg.className = "msg success";
+        }
+
+        playSound("success");
+        showToast("✅ Регистрация", "success");
+
+        const regLogin = document.getElementById("regLogin");
+        const regNick = document.getElementById("regNick");
+        const regPassword = document.getElementById("regPassword");
+        if (regLogin) regLogin.value = "";
+        if (regNick) regNick.value = "";
+        if (regPassword) regPassword.value = "";
+
+        setTimeout(() => openLogin(), 800);
+      } catch (e) {
+        if (msg) {
+          msg.textContent = "Ошибка: " + e.message;
+          msg.className = "msg error";
+        }
+        playSound("error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function loginUser() {
+      const login = document.getElementById("loginLogin")?.value.trim();
+      const pw = document.getElementById("loginPassword")?.value.trim();
+      const msg = document.getElementById("loginMsg");
+
+      if (!login || !pw) {
+        if (msg) {
+          msg.textContent = "Заполните все поля";
+          msg.className = "msg error";
+        }
+        playSound("error");
+        return;
+      }
+
+      try {
+        showLoading("Вхожу...");
+        const res = await fetch(API_BASE + "/api/police/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ login, password: pw })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.ok) {
+          if (msg) {
+            msg.textContent = data.error || "Ошибка";
+            msg.className = "msg error";
+          }
+          playSound("error");
+          return;
+        }
+
+        setToken(data.token);
+        playSound("success");
+        showToast("✅ Вход выполнен", "success");
+        await loadAll();
+      } catch (e) {
+        if (msg) {
+          msg.textContent = "Ошибка: " + e.message;
+          msg.className = "msg error";
+        }
+        playSound("error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function logout() {
+      clearToken();
+      showGuest();
+      currentMainTab = "tasks";
+      playSound("click");
+      showToast("🚪 Вы вышли", "info");
+    }
+
+    function getDiffClass(d) {
+      d = String(d || "").toLowerCase();
+      if (d.includes("слож")) return "diff-hard";
+      if (d.includes("сред")) return "diff-mid";
+      if (d.includes("обыч")) return "diff-normal";
+      if (d.includes("лег")) return "diff-easy";
+      return "diff-normal";
+    }
+
+    function getDiffEmoji(d) {
+      d = String(d || "").toLowerCase();
+      if (d.includes("слож")) return "🔥";
+      if (d.includes("сред")) return "⚠️";
+      if (d.includes("обыч")) return "🔹";
+      if (d.includes("лег")) return "🌿";
+      return "🔹";
+    }
+
+    function getStatusLabel(status) {
+      if (status === "pending_review") return '<span class="status-pending">⏳ На проверке</span>';
+      if (status === "approved") return '<span class="status-approved">✅ Одобрено</span>';
+      if (status === "rejected") return '<span class="status-rejected">❌ Отклонено</span>';
+      return '<span class="status-new">⬜ Не отправлено</span>';
+    }
+
+    function getLayoutClass(index) {
+      return ["size-1", "size-2", "size-3", "size-4", "size-5", "size-6"][index] || "size-4";
+    }
+
+    function renderProfile(user, tasks) {
+      currentUser = user;
+
+      const totalXp = safeNum(user.total_xp);
+      const level = calcUserLevel(totalXp);
+      const currentLevelXp = totalXp % calcNeedXpForProgress();
+      const needXp = calcNeedXpForProgress();
+      const percent = Math.round((currentLevelXp / needXp) * 100);
+      const approvedCount = (tasks || []).filter((t) => t.status === "approved").length;
+
+      const heroNick = document.getElementById("heroNick");
+      const heroLogin = document.getElementById("heroLogin");
+      const heroLevel = document.getElementById("heroLevel");
+      const heroXp = document.getElementById("heroXp");
+      const heroNeedXp = document.getElementById("heroNeedXp");
+      const heroProgressFill = document.getElementById("heroProgressFill");
+      const statLevel = document.getElementById("statLevel");
+      const statCompletedCount = document.getElementById("statCompletedCount");
+      const statTotalXp = document.getElementById("statTotalXp");
+      const av = document.getElementById("heroAvatar");
+      const ph = document.getElementById("heroAvatarPlaceholder");
+      const tabAdminBtn = document.getElementById("tabAdminBtn");
+      const tabRouletteBtn = document.getElementById("tabRouletteBtn");
+      const tabPrizesBtn = document.getElementById("tabPrizesBtn");
+      const roleBadge = document.getElementById("heroRoleBadge");
+
+      currentUser.available_spins = safeNum(user.available_spins);
+
+      if (heroNick) heroNick.textContent = user.nick || "Сотрудник";
+      if (heroLogin) heroLogin.textContent = user.login || "—";
+      if (heroLevel) heroLevel.textContent = level;
+      if (heroXp) heroXp.textContent = currentLevelXp + " XP";
+      if (heroNeedXp) heroNeedXp.textContent = needXp + " XP";
+      if (heroProgressFill) heroProgressFill.style.width = percent + "%";
+
+      if (statLevel) statLevel.textContent = level;
+      if (statCompletedCount) statCompletedCount.textContent = approvedCount;
+      if (statTotalXp) {
+        statTotalXp.textContent = totalXp >= 1000 ? (totalXp / 1000).toFixed(1) + "k" : totalXp;
+      }
+
+      if (av && ph) {
+        if (user.avatar_url) {
+          av.src = user.avatar_url;
+          av.classList.remove("hidden");
+          ph.classList.add("hidden");
+        } else {
+          av.classList.add("hidden");
+          ph.classList.remove("hidden");
+          ph.textContent = (user.nick || "?")[0].toUpperCase();
+        }
+      }
+
+      const accessGroup = getUserAccessGroup(user);
+      if (roleBadge) {
+        roleBadge.textContent = getUserRoleBadge(accessGroup);
+        roleBadge.className = "role-badge";
+        if (accessGroup === "senior") roleBadge.classList.add("senior");
+        if (accessGroup === "leader") roleBadge.classList.add("leader");
+      }
+
+      const isAdmin = String(user.role || "").toLowerCase() === "admin";
+
+      if (tabAdminBtn) tabAdminBtn.classList.toggle("hidden", !isAdmin);
+      if (tabRouletteBtn) tabRouletteBtn.classList.remove("hidden");
+      if (tabPrizesBtn) tabPrizesBtn.classList.remove("hidden");
+
+      if (!isAdmin && currentMainTab === "admin") {
+        switchMainTab("tasks");
+      }
+
+      if (isAdmin && currentMainTab === "admin") {
+        loadAdminData();
+      }
+    }
+
+    function renderTasks(items) {
+      currentTasks = items || [];
+      const grid = document.getElementById("tasksGrid");
+      if (!grid) return;
+
+      if (!currentTasks.length) {
+        grid.innerHTML = '<div class="muted" style="padding:10px;">На сегодня заданий нет.</div>';
+        return;
+      }
+
+      grid.innerHTML = currentTasks.map((t, i) => {
+        const diffClass = getDiffClass(t.difficulty);
+        const diffEmoji = getDiffEmoji(t.difficulty);
+        const statusHtml = getStatusLabel(t.status);
+        const emoji = t.card_emoji || "🚓";
+        const layoutClass = getLayoutClass(i);
+
+        let stateClass = "";
+        if (t.status === "approved") stateClass = "task-completed";
+        else if (t.status === "pending_review") stateClass = "task-pending";
+        else if (t.status === "rejected") stateClass = "task-rejected";
+
+        const reviewBlock = t.review_comment ? `<div class="mini-note">💬 ${esc(t.review_comment)}</div>` : "";
+
+        let actionButton = "";
+        if (t.status === "approved") {
+          actionButton = '<button class="btn success small" disabled>✅ Выполнено</button>';
+        } else if (t.status === "pending_review") {
+          actionButton = '<button class="btn warning small" disabled>⏳ На проверке</button>';
+        } else {
+          actionButton = `<button class="btn yellow small" onclick="openSubmitModal('${t.id}')">📤 Отправить</button>`;
+        }
+
+        return `
+          <div class="task-card ${layoutClass} ${stateClass}">
+            <div class="task-emoji-bg">${esc(emoji)}</div>
+            <div class="task-content">
+              <div class="task-header">
+                <div class="task-title">${esc(t.title)}</div>
+                <div class="task-xp">⚡ ${safeNum(t.reward)} XP</div>
+              </div>
+              <div class="task-diff-row">
+                <span class="difficulty-chip ${diffClass}">${diffEmoji} ${esc(t.difficulty || "Обычное")}</span>
+              </div>
+              <div class="task-desc">${esc(t.description)}</div>
+              <div class="task-status">${statusHtml}</div>
+              ${reviewBlock}
+            </div>
+            <div class="task-actions">${actionButton}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadAll() {
+      try {
+        showLoading("Загружаю профиль и задания...");
+        showApp();
+
+        const { data: me } = await apiGet("/api/police/me");
+        if (!me.ok) throw new Error(me.error || "Ошибка профиля");
+
+        const { data: td } = await apiGet("/api/police/tasks");
+        if (!td.ok) throw new Error(td.error || "Ошибка заданий");
+
+        const allTasks = td.items || [];
+        const userGroup = getUserAccessGroup(me.user);
+
+        const filteredTasks = allTasks.filter((task) => {
+          const groups = Array.isArray(task.allowed_groups) ? task.allowed_groups : ["all"];
+          return isVisibleForUserGroup(groups, userGroup);
+        });
+
+        renderProfile(me.user, filteredTasks);
+        renderTasks(filteredTasks);
+
+        if (currentMainTab === "roulette") {
+          await loadRoulette(true);
+        }
+
+        if (String(me.user?.role || "").toLowerCase() === "admin" && currentMainTab === "admin") {
+          await loadAdminData();
+        }
+      } catch (e) {
+        if (e.message !== "Unauthorized") {
+          showToast("Ошибка: " + e.message, "error");
+        }
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function handleAvatarSelect(e) {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function () {
+        try {
+          showLoading("Обновляю аватар...");
+          const { data } = await apiPost("/api/police/avatar", {
+            avatar_base64: String(reader.result || "")
+          });
+
+          if (!data.ok) {
+            showToast(data.error || "Ошибка", "error");
+            return;
+          }
+
+          playSound("success");
+          showToast("✅ Аватар обновлён", "success");
+          await loadAll();
+        } catch (err) {
+          showToast("Ошибка: " + err.message, "error");
+        } finally {
+          hideLoading();
+          e.target.value = "";
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function openSubmitModal(id) {
+      playSound("click");
+      currentSubmitTaskId = id;
+
+      const task = currentTasks.find((x) => x.id === id);
+      const title = document.getElementById("submitModalTitle");
+      const report = document.getElementById("submitReportText");
+      const bg = document.getElementById("submitModalBg");
+
+      if (title) title.textContent = task ? "📤 " + task.title : "📤 Отправка";
+      if (report) report.value = task?.user_report || "";
+      if (bg) bg.classList.remove("hidden");
+    }
+
+    function closeSubmitModal() {
+      currentSubmitTaskId = null;
+      const report = document.getElementById("submitReportText");
+      const bg = document.getElementById("submitModalBg");
+      if (report) report.value = "";
+      if (bg) bg.classList.add("hidden");
+    }
+
+    async function loadOnlineUsers() {
+      const box = document.getElementById("onlineUsersList");
+      const count = document.getElementById("onlineCount");
+      if (!box) return;
+
+      try {
+        const { data } = await apiGet("/api/police/online-users");
+
+        if (!data.ok) {
+          box.innerHTML = '<div class="online-empty">Ошибка загрузки</div>';
+          if (count) count.textContent = "0";
+          return;
+        }
+
+        const items = data.items || [];
+        if (count) count.textContent = String(items.length);
+
+        if (!items.length) {
+          box.innerHTML = '<div class="online-empty">Никого нет онлайн</div>';
+          return;
+        }
+
+        box.innerHTML = items.map((u) => {
+          const nick = esc(u.nick || "—");
+          const avatar = u.avatar_url
+            ? `<img class="online-user-avatar" src="${esc(u.avatar_url)}" alt="${nick}" />`
+            : `<div class="online-user-ph">${esc((u.nick || "?")[0].toUpperCase())}</div>`;
+
+          return `
+            <div class="online-user">
+              <div class="online-user-name">${nick}</div>
+              ${avatar}
+              <div class="online-user-dot"></div>
+            </div>
+          `;
+        }).join("");
+      } catch (e) {
+        box.innerHTML = '<div class="online-empty">Ошибка загрузки</div>';
+        if (count) count.textContent = "0";
+      }
+    }
+
+    async function pingOnline() {
+      try {
+        await apiPost("/api/police/ping", {});
+      } catch {}
+    }
+
+    async function sendVkTaskSubmitMock(taskId, reportText) {
+      console.log("[VK MOCK] notify submit", { taskId, reportText });
+      showToast("📨 VK-уведомление отправлено (заглушка)", "info", 2500);
+      return { ok: true, mock: true };
+    }
+
+    async function submitTaskReport() {
+      const reportText = document.getElementById("submitReportText")?.value.trim();
+      if (!currentSubmitTaskId) return;
+
+      try {
+        showLoading("Отправляю задание на проверку...");
+        const { data } = await apiPost("/api/police/tasks/submit", {
+          task_id: currentSubmitTaskId,
+          report_text: reportText
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          playSound("error");
+          return;
+        }
+
+        await sendVkTaskSubmitMock(currentSubmitTaskId, reportText);
+
+        closeSubmitModal();
+        playSound("submit");
+        showToast("📤 Отправлено", "success");
+        await loadAll();
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+        playSound("error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function loadAdminData() {
+      try {
+        showLoading("Загружаю админку...");
+
+        const [
+          { data: td },
+          { data: rv },
+          { data: lg },
+          { data: st },
+          usersResult
+        ] = await Promise.all([
+          apiGet("/api/police/admin/tasks"),
+          apiGet("/api/police/admin/reviews"),
+          apiGet("/api/police/admin/logs"),
+          apiGet("/api/police/admin/stats"),
+          apiGet("/api/police/admin/users").catch(() => ({ data: { ok: true, items: [] } }))
+        ]);
+
+        const us = usersResult?.data || { ok: true, items: [] };
+
+        if (td?.ok) {
+          adminAllTasks = td.items || [];
+          renderAdminTasks(adminAllTasks);
+        }
+        if (rv?.ok) renderAdminReviews(rv.items || []);
+        renderAdminLogs(lg?.items || []);
+        renderAdminStats(st || {});
+        renderAdminUsers(us?.items || []);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function renderAdminStats(data) {
+      setText("adminStatUsers", safeNum(data.users_count));
+      setText("adminStatPending", safeNum(data.pending_reviews_count));
+      setText("adminStatActiveTasks", safeNum(data.active_tasks_count));
+      setText("adminStatAllTasks", safeNum(data.all_tasks_count));
+    }
+
+    async function adminCreateTask() {
+      const title = document.getElementById("adminCreateTitle")?.value.trim();
+      const desc = document.getElementById("adminCreateDescription")?.value.trim();
+      const reward = safeNum(document.getElementById("adminCreateReward")?.value);
+      const diff = document.getElementById("adminCreateDifficulty")?.value;
+      const emoji = document.getElementById("adminCreateEmoji")?.value;
+      const msg = document.getElementById("adminCreateMsg");
+
+      if (!title) {
+        if (msg) {
+          msg.textContent = "Введите название";
+          msg.className = "msg error";
+        }
+        playSound("error");
+        return;
+      }
+
+      const allowedGroups = getSelectedTaskGroups("create");
+      if (!allowedGroups.length) {
+        if (msg) {
+          msg.textContent = "Выберите хотя бы одну группу";
+          msg.className = "msg error";
+        }
+        playSound("error");
+        return;
+      }
+
+      try {
+        showLoading("Создаю задание...");
+        const { data } = await apiPost("/api/police/admin/tasks/create", {
+          title,
+          description: desc,
+          reward,
+          difficulty: diff,
+          card_emoji: emoji,
+          allowed_groups: allowedGroups
+        });
+
+        if (!data.ok) {
+          if (msg) {
+            msg.textContent = data.error || "Ошибка";
+            msg.className = "msg error";
+          }
+          playSound("error");
+          return;
+        }
+
+        if (msg) {
+          msg.textContent = "✅ Создано";
+          msg.className = "msg success";
+        }
+
+        playSound("success");
+        showToast("✅ Задание создано", "success");
+
+        const titleEl = document.getElementById("adminCreateTitle");
+        const descEl = document.getElementById("adminCreateDescription");
+        const rewardEl = document.getElementById("adminCreateReward");
+        if (titleEl) titleEl.value = "";
+        if (descEl) descEl.value = "";
+        if (rewardEl) rewardEl.value = "";
+
+        setTaskGroupsToForm("create", ["all"]);
+
+        await loadAdminData();
+        await loadAll();
+      } catch (e) {
+        if (msg) {
+          msg.textContent = "Ошибка: " + e.message;
+          msg.className = "msg error";
+        }
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function addToQueue() {
+      const title = document.getElementById("adminCreateTitle")?.value.trim();
+      const description = document.getElementById("adminCreateDescription")?.value.trim();
+      const reward = safeNum(document.getElementById("adminCreateReward")?.value);
+      const difficulty = document.getElementById("adminCreateDifficulty")?.value;
+      const emoji = document.getElementById("adminCreateEmoji")?.value;
+      const allowedGroups = getSelectedTaskGroups("create");
+
+      if (!title) {
+        showToast("Введите название", "error");
+        playSound("error");
+        return;
+      }
+
+      if (!allowedGroups.length) {
+        showToast("Выберите хотя бы одну группу", "error");
+        playSound("error");
+        return;
+      }
+
+      bulkQueue.push({
+        title,
+        description,
+        reward,
+        difficulty,
+        card_emoji: emoji,
+        allowed_groups: allowedGroups
+      });
+
+      renderQueue();
+
+      const titleEl = document.getElementById("adminCreateTitle");
+      const descEl = document.getElementById("adminCreateDescription");
+      const rewardEl = document.getElementById("adminCreateReward");
+      if (titleEl) titleEl.value = "";
+      if (descEl) descEl.value = "";
+      if (rewardEl) rewardEl.value = "";
+
+      setTaskGroupsToForm("create", ["all"]);
+
+      playSound("click");
+      showToast(`📋 В очередь: ${title}`, "info");
+    }
+
+    function removeFromQueue(index) {
+      bulkQueue.splice(index, 1);
+      renderQueue();
+      playSound("click");
+    }
+
+    function clearQueue() {
+      bulkQueue = [];
+      renderQueue();
+      playSound("click");
+    }
+
+    function renderQueue() {
+      const box = document.getElementById("bulkQueueList");
+      const count = document.getElementById("bulkQueueCount");
+      if (count) count.textContent = String(bulkQueue.length);
+      if (!box) return;
+
+      if (!bulkQueue.length) {
+        box.innerHTML = '<div class="muted" style="font-size:12px;">Пусто</div>';
+        return;
+      }
+
+      box.innerHTML = bulkQueue.map((x, i) => `
+        <div class="queue-item">
+          <span>${esc(x.card_emoji)} ${esc(x.title)} — ⚡${x.reward}<br><small>👥 ${esc(formatGroupsLabel(x.allowed_groups))}</small></span>
+          <button class="btn danger small" onclick="removeFromQueue(${i})" style="padding:4px 8px;">✕</button>
+        </div>
+      `).join("");
+    }
+
+    async function createAllFromQueue() {
+      if (!bulkQueue.length) {
+        showToast("Очередь пуста", "error");
+        return;
+      }
+
+      try {
+        showLoading("Создаю задания из очереди...");
+        const { data } = await apiPost("/api/police/admin/tasks/bulk-create", { rows: bulkQueue });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          return;
+        }
+
+        playSound("success");
+        showToast(`🚀 Создано: ${bulkQueue.length}`, "success");
+
+        bulkQueue = [];
+        renderQueue();
+        await loadAdminData();
+        await loadAll();
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function renderAdminTasks(items) {
+      const box = document.getElementById("adminTasksList");
+      if (!box) return;
+
+      adminTaskMap = new Map();
+      items.forEach((x) => adminTaskMap.set(x.id, x));
+
+      if (!items.length) {
+        box.innerHTML = '<div class="muted">Заданий нет.</div>';
+        return;
+      }
+
+      box.innerHTML = items.map((t) => `
+        <div class="review-card">
+          <label class="check-row">
+            <input type="checkbox" ${adminSelectedTaskIds.has(t.id) ? "checked" : ""} onchange="toggleSel('${t.id}',this.checked)" />
+            <span>Выбрать</span>
+          </label>
+
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">${esc(t.card_emoji || "🚓")} ${esc(t.title)}</div>
+          <div class="muted" style="margin-bottom:6px;">${esc(t.description)}</div>
+
+          <div class="muted" style="margin-bottom:10px;font-size:12px;">
+            ${esc(t.difficulty || "Обычное")} · ⚡${safeNum(t.reward)} ·
+            ${t.is_active ? '<span style="color:var(--green)">✅ Активно</span>' : '<span style="color:var(--text-muted)">⏸️ Выкл</span>'}
+            <br>👥 ${esc(formatGroupsLabel(t.allowed_groups))}
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn secondary small" onclick="openEditTaskModalById('${t.id}')">✏️ Редактировать</button>
+            <button class="btn danger small" onclick="deleteTask('${t.id}')">🗑️ Удалить</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openEditTaskModalById(id) {
+      const task = adminTaskMap.get(id);
+      if (!task) return;
+      openEditTaskModal(task);
+    }
+
+    function toggleSel(id, checked) {
+      if (checked) adminSelectedTaskIds.add(id);
+      else adminSelectedTaskIds.delete(id);
+    }
+
+    function selectAllAdminTasks(select) {
+      const ids = [...adminTaskMap.keys()];
+      if (select) ids.forEach((id) => adminSelectedTaskIds.add(id));
+      else adminSelectedTaskIds.clear();
+
+      renderAdminTasks([...adminTaskMap.values()]);
+      playSound("click");
+    }
+
+    async function bulkDeleteTasks() {
+      const ids = [...adminSelectedTaskIds];
+      if (!ids.length) {
+        showToast("Не выбрано", "error");
+        return;
+      }
+
+      if (!confirm("🗑️ Удалить выбранные?")) return;
+
+      try {
+        showLoading("Удаляю задания...");
+        const { data } = await apiPost("/api/police/admin/tasks/bulk-delete", { task_ids: ids });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          return;
+        }
+
+        adminSelectedTaskIds.clear();
+        playSound("success");
+        showToast("🗑️ Удалено", "success");
+
+        await loadAdminData();
+        await loadAll();
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function bulkSetTasksActive(active) {
+      const ids = [...adminSelectedTaskIds];
+      if (!ids.length) {
+        showToast("Не выбрано", "error");
+        return;
+      }
+
+      try {
+        showLoading(active ? "Включаю задания..." : "Выключаю задания...");
+        const { data } = await apiPost("/api/police/admin/tasks/bulk-set-active", {
+          task_ids: ids,
+          is_active: !!active
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          return;
+        }
+
+        playSound("success");
+        showToast(active ? "⚡ Включены" : "⏸️ Выключены", "success");
+
+        await loadAdminData();
+        await loadAll();
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function openEditTaskModal(task) {
+      playSound("click");
+      currentEditTaskId = task.id;
+
+      const title = document.getElementById("editTaskTitle");
+      const description = document.getElementById("editTaskDescription");
+      const reward = document.getElementById("editTaskReward");
+      const difficulty = document.getElementById("editTaskDifficulty");
+      const emoji = document.getElementById("editTaskEmoji");
+      const active = document.getElementById("editTaskActive");
+      const bg = document.getElementById("editTaskModalBg");
+
+      if (title) title.value = task.title || "";
+      if (description) description.value = task.description || "";
+      if (reward) reward.value = safeNum(task.reward);
+      if (difficulty) difficulty.value = task.difficulty || "Обычное";
+      if (emoji) emoji.value = task.card_emoji || "🚓";
+      if (active) active.value = String(!!task.is_active);
+
+      setTaskGroupsToForm("edit", task.allowed_groups || ["all"]);
+
+      if (bg) bg.classList.remove("hidden");
+    }
+
+    function closeEditTaskModal() {
+      currentEditTaskId = null;
+      const bg = document.getElementById("editTaskModalBg");
+      if (bg) bg.classList.add("hidden");
+    }
+
+    async function saveTaskEdit() {
+      if (!currentEditTaskId) return;
+
+      const allowedGroups = getSelectedTaskGroups("edit");
+      if (!allowedGroups.length) {
+        showToast("Выберите хотя бы одну группу", "error");
+        return;
+      }
+
+      try {
+        showLoading("Сохраняю задание...");
+        const { data } = await apiPost("/api/police/admin/tasks/update", {
+          task_id: currentEditTaskId,
+          title: document.getElementById("editTaskTitle")?.value.trim(),
+          description: document.getElementById("editTaskDescription")?.value.trim(),
+          reward: safeNum(document.getElementById("editTaskReward")?.value),
+          difficulty: document.getElementById("editTaskDifficulty")?.value,
+          card_emoji: document.getElementById("editTaskEmoji")?.value,
+          is_active: document.getElementById("editTaskActive")?.value === "true",
+          allowed_groups: allowedGroups
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          return;
+        }
+
+        closeEditTaskModal();
+        playSound("success");
+        showToast("💾 Сохранено", "success");
+
+        await loadAdminData();
+        await loadAll();
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function resetManagedUserPassword() {
+      if (!currentManageUserId) return;
+
+      const passwordEl = document.getElementById("manageUserNewPassword");
+      const newPassword = passwordEl?.value.trim();
+
+      if (!newPassword || newPassword.length < 5) {
+        showToast("Пароль должен быть не короче 5 символов", "error");
+        return;
+      }
+
+      try {
+        showLoading("Сбрасываю пароль...");
+        const { data } = await apiPost("/api/police/admin/users/reset-password", {
+          user_id: currentManageUserId,
+          new_password: newPassword
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка сброса пароля", "error");
+          return;
+        }
+
+        if (passwordEl) passwordEl.value = "";
+
+        playSound("success");
+        showToast("🔐 Пароль успешно сброшен", "success");
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function deleteTask(id) {
+      if (!confirm("🗑️ Удалить?")) return;
+
+      try {
+        showLoading("Удаляю задание...");
+        const { data } = await apiPost("/api/police/admin/tasks/delete", { task_id: id });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          return;
+        }
+
+        playSound("success");
+        showToast("🗑️ Удалено", "success");
+
+        await loadAdminData();
+        await loadAll();
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function renderAdminReviews(items) {
+      const box = document.getElementById("adminReviewsList");
+      if (!box) return;
+
+      if (!items.length) {
+        box.innerHTML = '<div class="muted">Нет на проверке.</div>';
+        return;
+      }
+
+      box.innerHTML = items.map((x) => `
+        <div class="review-card">
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">${esc(x.task_title)}</div>
+          <div class="muted" style="margin-bottom:6px;">👤 ${esc(x.user_nick)} (${esc(x.user_login)})</div>
+          <div class="muted" style="margin-bottom:6px;font-size:12px;">📅 ${esc(x.progress_date)} · ⚡${safeNum(x.task_reward)} · ${esc(x.task_difficulty || "Обычное")}</div>
+          <div style="margin:10px 0;padding:12px;border-radius:var(--radius);background:rgba(255,255,255,0.03);border:1px solid var(--border);white-space:pre-wrap;font-size:13px;color:var(--text-secondary);">${esc(x.user_report || "")}</div>
+          <button class="btn success small" onclick='openReviewModal(${JSON.stringify(x).replace(/'/g, "&apos;")})'>🔍 Проверить</button>
+        </div>
+      `).join("");
+    }
+
+    function openReviewModal(x) {
+      playSound("click");
+      currentReviewId = x.id;
+
+      const info = document.getElementById("reviewModalInfo");
+      const comment = document.getElementById("reviewCommentText");
+      const bg = document.getElementById("reviewModalBg");
+
+      if (info) {
+        info.innerHTML = `<b style="color:var(--text)">${esc(x.task_title)}</b><br>👤 ${esc(x.user_nick)} (${esc(x.user_login)})<br><br><div style="white-space:pre-wrap;">${esc(x.user_report || "")}</div>`;
+      }
+      if (comment) comment.value = "";
+      if (bg) bg.classList.remove("hidden");
+    }
+
+    function closeReviewModal() {
+      currentReviewId = null;
+      const bg = document.getElementById("reviewModalBg");
+      if (bg) bg.classList.add("hidden");
+    }
+
+    async function submitReviewDecision(action) {
+      if (!currentReviewId) return;
+
+      try {
+        showLoading(action === "approve" ? "Одобряю..." : "Отклоняю...");
+        const { data } = await apiPost("/api/police/admin/reviews/update", {
+          progress_id: currentReviewId,
+          action,
+          review_comment: document.getElementById("reviewCommentText")?.value.trim()
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          return;
+        }
+
+        closeReviewModal();
+        playSound(action === "approve" ? "success" : "error");
+        showToast(action === "approve" ? "✅ Одобрено" : "❌ Отклонено", "success");
+
+        await loadAdminData();
+        await loadAll();
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function renderAdminUsers(items) {
+      const box = document.getElementById("adminUsersList");
+      if (!box) return;
+
+      if (!items.length) {
+        box.innerHTML = '<div class="muted">Нет пользователей.</div>';
+        return;
+      }
+
+      box.innerHTML = items.map((u) => {
+        const avatar = u.avatar_url
+          ? `<img class="user-avatar-sm" src="${esc(u.avatar_url)}" />`
+          : `<div class="user-avatar-ph">${esc((u.nick || "?")[0].toUpperCase())}</div>`;
+
+        return `
+          <div class="user-card">
+            ${avatar}
+            <div class="user-info">
+              <div class="user-nick">${esc(u.nick || "—")} <span style="font-size:11px;color:var(--text-muted);font-weight:400;">${esc(u.login || "")}</span></div>
+              <div class="user-meta">🎖️ ${esc(u.role || "user")} · ⚡ ${safeNum(u.total_xp)} XP</div>
+            </div>
+            <div class="user-actions-col">
+              <button class="btn pink small" onclick="openUserManage('${esc(u.id)}','${esc(u.nick)}','${esc(u.login)}')">⚙️ Управление</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function openUserManage(userId, nick, login) {
+      playSound("click");
+      currentManageUserId = userId;
+
+      const title = document.getElementById("userManageTitle");
+      const info = document.getElementById("userManageInfo");
+      const list = document.getElementById("userTasksList");
+      const bg = document.getElementById("userManageModalBg");
+
+      if (title) title.textContent = `👤 ${nick} (${login})`;
+      if (info) info.textContent = "Загрузка заданий...";
+      if (list) list.innerHTML = "";
+      if (bg) bg.classList.remove("hidden");
+
+      try {
+        const { data } = await apiPost("/api/police/admin/users/tasks", { user_id: userId });
+
+        if (!data.ok) {
+          if (info) info.textContent = "Ошибка: " + data.error;
+          return;
+        }
+
+        if (info) info.textContent = `Задания для ${nick}:`;
+        renderUserTasks(data.items || []);
+        await loadManagedUserProfile(userId);
+      } catch (e) {
+        if (info) info.textContent = "Ошибка: " + e.message;
+      }
+    }
+
+    function renderUserTasks(items) {
+      const box = document.getElementById("userTasksList");
+      if (!box) return;
+
+      if (!items.length) {
+        box.innerHTML = '<div class="muted">Нет заданий.</div>';
+        return;
+      }
+
+      const taskOptions = adminAllTasks.map((t) => `
+        <option value="${esc(t.id)}">${esc(t.card_emoji || "🚓")} ${esc(t.title)}</option>
+      `).join("");
+
+      box.innerHTML = items.map((t) => {
+        const statuses = [
+          { v: "none", l: "⬜ Не отправлено" },
+          { v: "pending_review", l: "⏳ На проверке" },
+          { v: "approved", l: "✅ Одобрено" },
+          { v: "rejected", l: "❌ Отклонено" }
+        ];
+
+        const statusOptions = statuses.map((s) => `
+          <option value="${s.v}" ${(t.status || "none") === s.v ? "selected" : ""}>${s.l}</option>
+        `).join("");
+
+        return `
+          <div class="user-task-row">
+            <div class="user-task-name">${esc(t.card_emoji || "🚓")} ${esc(t.title)}</div>
+            <div class="user-task-status">
+              <select onchange="changeUserTaskStatus('${esc(t.task_id)}','${esc(t.progress_id || "")}',this.value)">${statusOptions}</select>
+            </div>
+            <div>
+              <select onchange="swapUserTask('${esc(t.task_id)}','${esc(t.progress_id || "")}',this.value)" style="margin-bottom:0;padding:6px 10px;font-size:12px;min-width:140px;">
+                <option value="">🔄 Заменить на...</option>
+                ${taskOptions}
+              </select>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadManagedUserProfile(userId) {
+      try {
+        const { data } = await apiPost("/api/police/admin/users/profile", { user_id: userId });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка загрузки профиля", "error");
+          return;
+        }
+
+        const u = data.user || {};
+        managedUserRaw = u;
+
+        const nick = document.getElementById("manageUserNick");
+        const login = document.getElementById("manageUserLogin");
+        const xp = document.getElementById("manageUserXp");
+        const spins = document.getElementById("manageUserSpins");
+        const role = document.getElementById("manageUserRole");
+        const prizeGroup = document.getElementById("manageUserPrizeGroup");
+
+        if (nick) nick.value = u.nick || "";
+        if (login) login.value = u.login || "";
+        if (xp) xp.value = safeNum(u.total_xp);
+        if (spins) spins.value = safeNum(u.available_spins);
+        if (role) role.value = String(u.role || "user");
+        if (prizeGroup) prizeGroup.value = String(u.access_group || u.prize_access_group || "all");
+
+        manageAvatarBase64 = "";
+        setDropzonePreview("manageAvatarPreview", u.avatar_url || "");
+      } catch (e) {
+        showToast("Ошибка профиля: " + e.message, "error");
+      }
+    }
+
+    async function handleManageAvatarFile(file) {
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        showToast("Нужен файл изображения", "error");
+        return;
+      }
+
+      try {
+        manageAvatarBase64 = await fileToBase64(file);
+        setDropzonePreview("manageAvatarPreview", manageAvatarBase64);
+      } catch {
+        showToast("Ошибка чтения картинки", "error");
+      }
+    }
+
+    function bindManageAvatarDropzone() {
+      const zone = document.getElementById("manageAvatarDropzone");
+      const input = document.getElementById("manageAvatarFile");
+      if (!zone || !input) return;
+
+      input.addEventListener("change", (e) => {
+        const file = e.target.files?.[0];
+        handleManageAvatarFile(file);
+      });
+
+      ["dragenter", "dragover"].forEach((eventName) => {
+        zone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.add("dragover");
+        });
+      });
+
+      ["dragleave", "dragend", "drop"].forEach((eventName) => {
+        zone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.remove("dragover");
+        });
+      });
+
+      zone.addEventListener("drop", (e) => {
+        const file = e.dataTransfer?.files?.[0];
+        handleManageAvatarFile(file);
+      });
+    }
+
+    async function saveManagedUserProfile() {
+      if (!currentManageUserId) return;
+
+      const payload = {
+        user_id: currentManageUserId,
+        nick: document.getElementById("manageUserNick")?.value.trim(),
+        login: document.getElementById("manageUserLogin")?.value.trim(),
+        total_xp: safeNum(document.getElementById("manageUserXp")?.value),
+        available_spins: safeNum(document.getElementById("manageUserSpins")?.value),
+        role: document.getElementById("manageUserRole")?.value,
+        access_group: document.getElementById("manageUserPrizeGroup")?.value,
+        prize_access_group: document.getElementById("manageUserPrizeGroup")?.value,
+        avatar_base64: manageAvatarBase64 || ""
+      };
+
+      try {
+        showLoading("Сохраняю профиль пользователя...");
+        const { data } = await apiPost("/api/police/admin/users/update-profile", payload);
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка сохранения профиля", "error");
+          return;
+        }
+
+        playSound("success");
+        showToast("💾 Профиль пользователя сохранён", "success");
+
+        await loadAdminData();
+        await loadManagedUserProfile(currentManageUserId);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function addManagedUserSpins() {
+      if (!currentManageUserId) return;
+
+      const spins = safeNum(prompt("Сколько прокрутов добавить?", "1"));
+      if (!spins) return;
+
+      try {
+        showLoading("Добавляю прокруты...");
+        const { data } = await apiPost("/api/police/admin/users/add-spins", {
+          user_id: currentManageUserId,
+          spins
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка добавления прокрутов", "error");
+          return;
+        }
+
+        playSound("success");
+        showToast(`🎰 Добавлено прокрутов: ${spins}`, "success");
+
+        await loadManagedUserProfile(currentManageUserId);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function clearManagedUserAvatar() {
+      if (!currentManageUserId) return;
+
+      try {
+        showLoading("Очищаю аватар...");
+        const { data } = await apiPost("/api/police/admin/users/clear-avatar", {
+          user_id: currentManageUserId
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка очистки аватара", "error");
+          return;
+        }
+
+        manageAvatarBase64 = "";
+        setDropzonePreview("manageAvatarPreview", "");
+
+        playSound("success");
+        showToast("🧹 Аватар очищен", "success");
+
+        await loadManagedUserProfile(currentManageUserId);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function changeUserTaskStatus(taskId, progressId, status) {
+      if (!currentManageUserId) return;
+
+      try {
+        showLoading("Меняю статус задания...");
+        const { data } = await apiPost("/api/police/admin/users/set-task-status", {
+          user_id: currentManageUserId,
+          task_id: taskId,
+          progress_id: progressId || null,
+          status
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          playSound("error");
+          return;
+        }
+
+        playSound("success");
+        showToast("✅ Статус изменён", "success");
+
+        const titleText = document.getElementById("userManageTitle")?.textContent || "";
+        const nick = titleText.replace("👤 ", "").split(" (")[0];
+        const login = titleText.split("(")[1]?.replace(")", "") || "";
+        await openUserManage(currentManageUserId, nick, login);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function swapUserTask(taskId, progressId, newTaskId) {
+      if (!currentManageUserId || !newTaskId) return;
+
+      try {
+        showLoading("Меняю задание...");
+        const { data } = await apiPost("/api/police/admin/users/swap-task", {
+          user_id: currentManageUserId,
+          task_id: taskId,
+          progress_id: progressId || null,
+          new_task_id: newTaskId
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          playSound("error");
+          return;
+        }
+
+        playSound("success");
+        showToast("🔄 Задание заменено", "success");
+
+        const titleText = document.getElementById("userManageTitle")?.textContent || "";
+        const nick = titleText.replace("👤 ", "").split(" (")[0];
+        const login = titleText.split("(")[1]?.replace(")", "") || "";
+        await openUserManage(currentManageUserId, nick, login);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function refreshUserTasks() {
+      if (!currentManageUserId) return;
+      if (!confirm("🔄 Обновить все задания для этого пользователя?")) return;
+
+      try {
+        showLoading("Обновляю задания пользователя...");
+        const { data } = await apiPost("/api/police/admin/users/refresh-tasks", {
+          user_id: currentManageUserId
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка", "error");
+          playSound("error");
+          return;
+        }
+
+        playSound("success");
+        showToast("🔄 Задания обновлены", "success");
+
+        const titleText = document.getElementById("userManageTitle")?.textContent || "";
+        const nick = titleText.replace("👤 ", "").split(" (")[0];
+        const login = titleText.split("(")[1]?.replace(")", "") || "";
+        await openUserManage(currentManageUserId, nick, login);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function closeUserManageModal() {
+      currentManageUserId = null;
+      manageAvatarBase64 = "";
+      managedUserRaw = null;
+      const bg = document.getElementById("userManageModalBg");
+      if (bg) bg.classList.add("hidden");
+    }
+
+    function renderAdminLogs(items) {
+      const box = document.getElementById("adminLogsList");
+      if (!box) return;
+
+      if (!items.length) {
+        box.innerHTML = '<div class="muted">Логи отсутствуют.</div>';
+        return;
+      }
+
+      box.innerHTML = items.map((x) => `
+        <div class="log-item">
+          <div style="color:var(--text-secondary);font-weight:600;">${esc(x.action_text || "Действие")}</div>
+          <div>👤 ${esc(x.actor_login || "")}</div>
+          <div style="font-size:11px;margin-top:4px;">📅 ${esc(x.created_at || "")}</div>
+        </div>
+      `).join("");
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function setDropzonePreview(imgId, src) {
+      const img = document.getElementById(imgId);
+      if (!img) return;
+
+      if (!src || typeof src !== "string") {
+        img.removeAttribute("src");
+        img.classList.add("hidden");
+        return;
+      }
+
+      img.onload = () => {
+        img.classList.remove("hidden");
+      };
+
+      img.onerror = () => {
+        img.removeAttribute("src");
+        img.classList.add("hidden");
+        showToast("Не удалось загрузить изображение", "error");
+      };
+
+      img.src = src;
+    }
+
+    async function handlePrizeImageFile(file, mode) {
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        showToast("Нужен файл изображения", "error");
+        return;
+      }
+
+      try {
+        const base64 = await fileToBase64(file);
+        if (mode === "add") {
+          addPrizeImageBase64 = base64;
+          setDropzonePreview("prizeImagePreview", base64);
+        } else {
+          editPrizeImageBase64 = base64;
+          setDropzonePreview("editPrizeImagePreview", base64);
+        }
+      } catch (e) {
+        showToast("Ошибка чтения картинки", "error");
+      }
+    }
+
+    function bindDropzone(dropzoneId, inputId, mode) {
+      const zone = document.getElementById(dropzoneId);
+      const input = document.getElementById(inputId);
+      if (!zone || !input) return;
+
+      input.addEventListener("change", (e) => {
+        const file = e.target.files?.[0];
+        handlePrizeImageFile(file, mode);
+      });
+
+      ["dragenter", "dragover"].forEach((eventName) => {
+        zone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.add("dragover");
+        });
+      });
+
+      ["dragleave", "dragend", "drop"].forEach((eventName) => {
+        zone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.remove("dragover");
+        });
+      });
+
+      zone.addEventListener("drop", (e) => {
+        const file = e.dataTransfer?.files?.[0];
+        handlePrizeImageFile(file, mode);
+      });
+    }
+
+    function getRouletteAvailableSpins(state) {
+      if (state && state.available_spins !== undefined) {
+        return Math.max(0, safeNum(state.available_spins));
+      }
+
+      if (currentUser && currentUser.available_spins !== undefined) {
+        return Math.max(0, safeNum(currentUser.available_spins));
+      }
+
+      return 0;
+    }
+
+    function updateRouletteChances(state) {
+      const el = document.getElementById("rouletteChances");
+      if (!el) return;
+      el.textContent = String(getRouletteAvailableSpins(state));
+    }
+
+    function getPrizeTypeLabel(type) {
+      const t = String(type || "").toLowerCase();
+      if (t === "xp") return "XP";
+      if (t === "text") return "Приз";
+      if (t === "nothing") return "Пусто";
+      if (t === "refresh_tasks") return "Обновление";
+      return type || "Приз";
+    }
+
+    function getPrizeCardHtml(prize) {
+      const title = esc(prize.title || "Без названия");
+      const imageUrl = prize.image_url ? esc(prize.image_url) : "";
+
+      return `
+        <div class="roulette-card" data-prize-id="${esc(prize.id)}">
+          <div class="roulette-card-img-wrap">
+            ${
+              imageUrl
+                ? `<img src="${imageUrl}" alt="${title}" draggable="false" />`
+                : `<div class="roulette-card-noimg">🎁</div>`
+            }
+          </div>
+          <div class="roulette-card-title">${title}</div>
+          <div class="roulette-card-meta">Приз</div>
+        </div>
+      `;
+    }
+
+    function renderRouletteStrip(items, duplicateRounds = 16) {
+      const strip = document.getElementById("rouletteStrip");
+      if (!strip) return;
+
+      if (!items.length) {
+        strip.innerHTML = `
+          <div class="roulette-card">
+            <div class="roulette-card-img-wrap"><div class="roulette-card-noimg">🎁</div></div>
+            <div class="roulette-card-title">Нет призов</div>
+            <div class="roulette-card-meta">Добавьте активные призы</div>
+          </div>
+        `;
+        strip.style.transition = "none";
+        strip.style.transform = "translate3d(0,0,0)";
+        return;
+      }
+
+      const rendered = [];
+      for (let i = 0; i < duplicateRounds; i++) {
+        for (const prize of items) {
+          rendered.push(getPrizeCardHtml(prize));
+        }
+      }
+
+      strip.style.transition = "none";
+      strip.style.transform = "translate3d(0,0,0)";
+      strip.innerHTML = rendered.join("");
+    }
+
+    function renderRoulettePrizePreview(items) {
+      const box = document.getElementById("roulettePrizePreview");
+      if (!box) return;
+
+      if (!items.length) {
+        box.innerHTML = '<div class="muted">Нет активных призов.</div>';
+        return;
+      }
+
+      box.innerHTML = items.map((p) => `
+        <div class="roulette-prize-item">
+          <div class="roulette-prize-item-left">
+            ${
+              p.image_url
+                ? `<img class="roulette-prize-thumb" src="${esc(p.image_url)}" alt="${esc(p.title)}" />`
+                : `<div class="roulette-prize-thumb-ph">🎁</div>`
+            }
+            <div>
+              <div class="roulette-prize-title">${esc(p.title)}</div>
+              <div class="roulette-prize-meta">Приз</div>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    async function loadRoulette(forceRedraw = false) {
+      try {
+        const { data } = await apiGet("/api/police/roulette/prizes");
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка загрузки рулетки", "error");
+          return;
+        }
+
+        rouletteLastState = data;
+
+        const userGroup = getUserAccessGroup(currentUser);
+
+        roulettePrizes = (data.items || []).filter((prize) => {
+          const groups = Array.isArray(prize.allowed_groups) ? prize.allowed_groups : ["all"];
+          return isVisibleForUserGroup(groups, userGroup);
+        });
+
+        if (currentUser) {
+          currentUser.available_spins = safeNum(data.available_spins);
+        }
+
+        updateRouletteChances(data);
+        renderRoulettePrizePreview(roulettePrizes);
+
+        if (forceRedraw || roulettePrizes.length) {
+          renderRouletteStrip(roulettePrizes);
+        }
+
+        const spinBtn = document.getElementById("spinButton");
+        const resultBox = document.getElementById("rouletteResult");
+        const available = getRouletteAvailableSpins(data);
+
+        if (spinBtn) {
+          spinBtn.disabled = available <= 0 || !roulettePrizes.length || rouletteSpinning;
+        }
+
+        if (resultBox) {
+          if (!roulettePrizes.length) {
+            resultBox.innerHTML = "Нет активных призов для вашей группы.";
+          } else if (data.today_spin?.reward_title) {
+            resultBox.innerHTML = `Последний приз: <b>${esc(data.today_spin.reward_title)}</b>`;
+          } else {
+            resultBox.innerHTML = available > 0
+              ? `Готово. Доступно прокрутов: <b>${available}</b>`
+              : "Сейчас нет доступных прокрутов.";
+          }
+        }
+      } catch (e) {
+        showToast("Ошибка рулетки: " + e.message, "error");
+      }
+    }
+
+    function getCardMetrics() {
+      const strip = document.getElementById("rouletteStrip");
+      if (!strip) return { cardWidth: 188, gap: 18 };
+
+      const firstCard = strip.querySelector(".roulette-card");
+      if (!firstCard) return { cardWidth: 188, gap: 18 };
+
+      const style = window.getComputedStyle(strip);
+      const gap = parseFloat(style.columnGap || style.gap || "18") || 18;
+      const cardWidth = firstCard.getBoundingClientRect().width || 170;
+      return { cardWidth, gap };
+    }
+
+    function buildWeightedSequence(prizes, minLength = 90) {
+      const result = [];
+      const normalized = prizes
+        .map((p) => ({
+          prize: p,
+          weight: Math.max(1, Math.round(safeNum(p.probability)))
+        }))
+        .filter((x) => x.prize);
+
+      if (!normalized.length) return [];
+
+      while (result.length < minLength) {
+        for (const item of normalized) {
+          for (let i = 0; i < item.weight; i++) {
+            result.push(item.prize);
+          }
+        }
+      }
+
+      return result;
+    }
+
+    function findBestWeightedStopIndex(sequence, prizeId, minIndex) {
+      for (let i = minIndex; i < sequence.length; i++) {
+        if (String(sequence[i]?.id) === String(prizeId)) return i;
+      }
+      return sequence.findIndex((x, idx) => idx >= minIndex && String(x?.id) === String(prizeId));
+    }
+
+    function animateRouletteToPrize(prize) {
+      return new Promise((resolve) => {
+        const strip = document.getElementById("rouletteStrip");
+        const shell = document.querySelector(".roulette-strip-shell");
+        if (!strip || !shell || !roulettePrizes.length) {
+          resolve();
+          return;
+        }
+
+        const weightedSequence = buildWeightedSequence(roulettePrizes, 120);
+        if (!weightedSequence.length) {
+          resolve();
+          return;
+        }
+
+        strip.innerHTML = weightedSequence.map((item) => getPrizeCardHtml(item)).join("");
+
+        const viewportWidth = shell.getBoundingClientRect().width;
+        const { cardWidth, gap } = getCardMetrics();
+
+        const minIndex = Math.max(20, Math.floor(weightedSequence.length * 0.55));
+        let stopIndex = findBestWeightedStopIndex(weightedSequence, prize.id, minIndex);
+        if (stopIndex < 0) stopIndex = minIndex;
+
+        const cardFull = cardWidth + gap;
+        const centerOffset = (viewportWidth / 2) - (cardWidth / 2);
+        const targetX = -((stopIndex * cardFull) - centerOffset);
+
+        strip.style.transition = "none";
+        strip.style.transform = "translate3d(0,0,0)";
+        strip.offsetHeight;
+
+        playSound("spin");
+
+        requestAnimationFrame(() => {
+          strip.style.transition = "transform 6.2s cubic-bezier(.08,.72,0,1)";
+          strip.style.transform = `translate3d(${targetX}px,0,0)`;
+        });
+
+        setTimeout(resolve, 6400);
+      });
+    }
+
+    function startPrizeWinScene() {
+      const modalBg = document.getElementById("prizeViewModalBg");
+      if (!modalBg) return;
+
+      modalBg.classList.remove("scene-start");
+      void modalBg.offsetWidth;
+      modalBg.classList.add("scene-start");
+
+      playPrizeWinSound();
+    }
+
+    function playPrizeWinSound() {
+      if (!soundEnabled) return;
+
+      try {
+        playTone(740, 0.05, 0, 0.08, "square");
+        playTone(980, 0.045, 0.09, 0.1, "square");
+        playTone(1174, 0.05, 0.18, 0.18, "triangle");
+        playTone(1568, 0.04, 0.32, 0.22, "triangle");
+      } catch {}
+    }
+
+    function openPrizeModal(prize) {
+      const modalBg = document.getElementById("prizeViewModalBg");
+      const prizeImage = document.getElementById("prizeViewImage");
+      const prizeNoImage = document.getElementById("prizeViewNoImage");
+      const prizeTitle = document.getElementById("prizeViewTitle");
+
+      if (!modalBg || !prizeTitle) return;
+
+      const title = prize?.title || prize?.reward_title || "Приз";
+      const imageUrl = prize?.image_url || prize?.imageUrl || "";
+
+      prizeTitle.textContent = title;
+
+      if (prizeImage && prizeNoImage) {
+        if (imageUrl) {
+          prizeImage.src = imageUrl;
+          prizeImage.classList.remove("hidden");
+          prizeNoImage.classList.add("hidden");
+        } else {
+          prizeImage.removeAttribute("src");
+          prizeImage.classList.add("hidden");
+          prizeNoImage.classList.remove("hidden");
+        }
+      }
+
+      modalBg.classList.remove("hidden");
+      startPrizeWinScene();
+    }
+
+    function closePrizeViewModal() {
+      const modalBg = document.getElementById("prizeViewModalBg");
+      const prizeImage = document.getElementById("prizeViewImage");
+      const prizeTitle = document.getElementById("prizeViewTitle");
+      const prizeNoImage = document.getElementById("prizeViewNoImage");
+
+      if (modalBg) {
+        modalBg.classList.add("hidden");
+        modalBg.classList.remove("scene-start");
+      }
+
+      if (prizeImage) {
+        prizeImage.removeAttribute("src");
+        prizeImage.classList.add("hidden");
+      }
+
+      if (prizeNoImage) {
+        prizeNoImage.classList.remove("hidden");
+      }
+
+      if (prizeTitle) prizeTitle.textContent = "";
+    }
+
+    async function spinRoulette() {
+      if (rouletteSpinning) return;
+    
+      if (!roulettePrizes.length) {
+        showToast("Нет активных призов", "error");
+        return;
+      }
+    
+      const available = getRouletteAvailableSpins(rouletteLastState);
+      if (available <= 0) {
+        showToast("Нет доступных прокрутов", "error");
+        return;
+      }
+    
+      try {
+        rouletteSpinning = true;
+    
+        const spinBtn = document.getElementById("spinButton");
+        const resultBox = document.getElementById("rouletteResult");
+    
+        if (spinBtn) spinBtn.disabled = true;
+        if (resultBox) resultBox.innerHTML = "🎰 Крутим рулетку...";
+    
+        const { data } = await apiPost("/api/police/roulette/spin", {});
+        if (!data.ok) {
+          if (resultBox) resultBox.innerHTML = esc(data.error || "Ошибка прокрута");
+          showToast(data.error || "Ошибка прокрута", "error");
+          return;
+        }
+    
+        const prize = data.prize || data.spin || {};
+    
+        await animateRouletteToPrize(prize);
+    
+        openPrizeModal(prize);
+    
+        if (resultBox) {
+          resultBox.innerHTML = `🎉 Выпал приз: <b>${esc(prize.title || prize.reward_title || "Приз")}</b>${
+            String(prize.reward_type || "").toLowerCase() === "xp"
+              ? ` · +${safeNum(prize.reward_value)} XP`
+              : ""
+          }`;
+        }
+    
+        playSound("success");
+        showToast(`🎉 Твой приз: ${prize.title || prize.reward_title || "Приз"}`, "success", 4500);
+    
+        await loadAll();
+        await loadRoulette(true);
+    
+        if (currentUser && String(currentUser.role || "").toLowerCase() === "admin") {
+          await loadPrizes();
+        }
+    
+        await loadUserPrizes();
+      } catch (e) {
+        showToast("Ошибка рулетки: " + e.message, "error");
+      } finally {
+        rouletteSpinning = false;
+        const spinBtn = document.getElementById("spinButton");
+        if (spinBtn) {
+          spinBtn.disabled = getRouletteAvailableSpins(rouletteLastState) <= 0 || !roulettePrizes.length;
+        }
+      }
+    }
+
+    async function loadPrizes() {
+      try {
+        const { data } = await apiGet("/api/police/admin/roulette/prizes");
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка загрузки призов", "error");
+          return;
+        }
+
+        const items = data.items || [];
+        prizeMap = new Map(items.map((x) => [x.id, x]));
+        renderPrizes(items);
+      } catch (e) {
+        showToast("Ошибка призов: " + e.message, "error");
+      }
+    }
+
+    function renderPrizes(items) {
+      const box = document.getElementById("prizesList");
+      if (!box) return;
+
+      if (!items.length) {
+        box.innerHTML = '<div class="muted">Призов нет.</div>';
+        return;
+      }
+
+      box.innerHTML = items.map((p) => `
+        <div class="prize-admin-card">
+          <div class="prize-admin-row">
+            <div style="flex:1;min-width:220px;">
+              <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
+                ${
+                  p.image_url
+                    ? `<img src="${esc(p.image_url)}" alt="${esc(p.title)}" style="width:52px;height:52px;border-radius:12px;background:rgba(0,0,0,0.24);border:1px solid rgba(255,255,255,0.05);object-fit:contain;" />`
+                    : `<div style="width:52px;height:52px;border-radius:12px;background:rgba(0,0,0,0.24);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;">🎁</div>`
+                }
+                <div>
+                  <div style="font-weight:700;font-size:15px;margin-bottom:4px;">${esc(p.title)}</div>
+                  <div class="muted" style="font-size:12px;">
+                    ${p.is_active ? '<span style="color:var(--green)">✅ Активен</span>' : '<span style="color:var(--red)">⛔ Выключен</span>'}
+                  </div>
+                  <div class="muted" style="font-size:12px;margin-top:4px;">
+                    ${(p.allowed_groups || ["all"]).map(g => {
+                      if (g === "all") return "🌍 Для всех";
+                      if (g === "senior") return "🎖️ Старший состав";
+                      if (g === "leader") return "👑 Лидер";
+                      return esc(g);
+                    }).join(" · ")}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="prize-admin-actions">
+              <button class="btn secondary small" onclick="openEditPrizeModal('${p.id}')">✏️ Ред.</button>
+              <button class="btn danger small" onclick="deletePrize('${p.id}')">🗑️ Удалить</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function resetAddPrizeModalState() {
+      addPrizeImageBase64 = "";
+      setDropzonePreview("prizeImagePreview", "");
+      const file = document.getElementById("prizeImageFile");
+      if (file) file.value = "";
+    }
+
+    function resetEditPrizeModalState() {
+      editPrizeImageBase64 = "";
+      setDropzonePreview("editPrizeImagePreview", "");
+      const file = document.getElementById("editPrizeImageFile");
+      if (file) file.value = "";
+    }
+
+    function openAddPrizeModal() {
+      playSound("click");
+
+      const title = document.getElementById("addPrizeTitle");
+      const bg = document.getElementById("addPrizeModalBg");
+
+      if (title) title.value = "";
+
+      resetAddPrizeModalState();
+      setPrizeGroupsToForm("add", ["all"]);
+
+      if (bg) bg.classList.remove("hidden");
+    }
+
+    function closeAddPrizeModal() {
+      const bg = document.getElementById("addPrizeModalBg");
+      if (bg) bg.classList.add("hidden");
+      resetAddPrizeModalState();
+    }
+
+    async function createPrize() {
+      const payload = {
+        title: document.getElementById("addPrizeTitle")?.value.trim(),
+        image_base64: addPrizeImageBase64 || "",
+        allowed_groups: getSelectedPrizeGroups("add")
+      };
+
+      if (!payload.title) {
+        showToast("Заполни название приза", "error");
+        return;
+      }
+
+      if (!payload.allowed_groups.length) {
+        showToast("Выбери хотя бы одну группу для приза", "error");
+        return;
+      }
+
+      try {
+        showLoading("Создаю приз...");
+        const { data } = await apiPost("/api/police/admin/roulette/prizes", payload);
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка создания приза", "error");
+          return;
+        }
+
+        closeAddPrizeModal();
+        playSound("success");
+        showToast("🎁 Приз добавлен", "success");
+
+        await loadPrizes();
+        await loadRoulette(true);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function renderUserPrizesBeautiful(items) {
+      const box = document.getElementById("userPrizesList");
+      if (!box) return;
+
+      if (!items.length) {
+        box.innerHTML = `
+          <div class="my-prizes-empty">
+            <div class="my-prizes-empty-icon">🎁</div>
+            <div class="my-prizes-empty-text">У тебя пока нет призов</div>
+            <div class="my-prizes-empty-sub">Покрути рулетку и здесь появятся награды</div>
+          </div>
+        `;
+        return;
+      }
+
+      box.innerHTML = `
+        <div class="my-prizes-grid">
+          ${items.map((p) => {
+            const title = p.title || p.prize_title || "Приз";
+            const imageUrl = p.image_url || "";
+            const isClaimed = !!p.is_claimed;
+            const rewardType = getPrizeTypeLabel(p.reward_type);
+            const rewardValue = p.reward_type === "xp" ? ` · +${safeNum(p.reward_value)} XP` : "";
+            const dateText = isClaimed
+              ? formatPrizeDate(p.claimed_at || p.updated_at || p.created_at)
+              : formatPrizeDate(p.created_at);
+
+            return `
+              <div class="my-prize-card ${isClaimed ? "prize-delivered" : ""}">
+                ${
+                  imageUrl
+                    ? `
+                      <div class="my-prize-img-wrap">
+                        <img src="${esc(imageUrl)}" alt="${esc(title)}" loading="lazy" />
+                      </div>
+                    `
+                    : `
+                      <div class="my-prize-img-ph">🎁</div>
+                    `
+                }
+
+                <div class="my-prize-body">
+                  <div class="my-prize-type">${esc(rewardType)}${rewardValue}</div>
+                  <div class="my-prize-title">${esc(title)}</div>
+
+                  <div class="my-prize-status ${isClaimed ? "status-given" : "status-pending"}">
+                    ${isClaimed ? "✅ Выдано" : "⏳ Ожидает выдачи"}
+                  </div>
+
+                  ${
+                    dateText
+                      ? `<div class="my-prize-date">📅 ${esc(dateText)}</div>`
+                      : ""
+                  }
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    async function loadUserPrizes() {
+      const box = document.getElementById("userPrizesList");
+      if (!box) return;
+
+      try {
+        box.innerHTML = '<div class="muted">Загрузка призов...</div>';
+
+        const { data } = await apiGet("/api/police/roulette/my-prizes");
+
+        if (!data.ok) {
+          box.innerHTML = `<div class="muted">Ошибка: ${esc(data.error || "не удалось загрузить")}</div>`;
+          return;
+        }
+
+        const items = data.items || [];
+        renderUserPrizesBeautiful(items);
+      } catch (e) {
+        box.innerHTML = `<div class="muted">Ошибка: ${esc(e.message)}</div>`;
+      }
+    }
+
+    async function claimPrize() {
+      showToast("Призы выдаёт администратор", "info");
+    }
+
+    function openEditPrizeModal(id) {
+      const prize = prizeMap.get(id);
+      if (!prize) return;
+
+      currentEditPrizeId = id;
+      playSound("click");
+
+      const title = document.getElementById("editPrizeTitle");
+      const active = document.getElementById("editPrizeActive");
+      const bg = document.getElementById("editPrizeModalBg");
+
+      if (title) title.value = prize.title || "";
+      if (active) active.value = String(!!prize.is_active);
+
+      resetEditPrizeModalState();
+      setPrizeGroupsToForm("edit", prize.allowed_groups || ["all"]);
+
+      if (prize.image_url) {
+        setDropzonePreview("editPrizeImagePreview", prize.image_url);
+      }
+
+      if (bg) bg.classList.remove("hidden");
+    }
+
+    function closeEditPrizeModal() {
+      currentEditPrizeId = null;
+      const bg = document.getElementById("editPrizeModalBg");
+      if (bg) bg.classList.add("hidden");
+      resetEditPrizeModalState();
+    }
+
+    async function savePrizeEdit() {
+      if (!currentEditPrizeId) return;
+
+      const oldPrize = prizeMap.get(currentEditPrizeId);
+
+      const payload = {
+        prize_id: currentEditPrizeId,
+        title: document.getElementById("editPrizeTitle")?.value.trim(),
+        image_base64: editPrizeImageBase64 || "",
+        is_active: document.getElementById("editPrizeActive")?.value === "true",
+        allowed_groups: getSelectedPrizeGroups("edit")
+      };
+
+      if (!payload.title) {
+        showToast("Заполни название приза", "error");
+        return;
+      }
+
+      if (!payload.allowed_groups.length) {
+        showToast("Выбери хотя бы одну группу для приза", "error");
+        return;
+      }
+
+      if (!payload.image_base64 && oldPrize?.image_url) {
+        payload.keep_old_image = true;
+      }
+
+      try {
+        showLoading("Сохраняю приз...");
+        const { data } = await apiPost("/api/police/admin/roulette/prizes/update", payload);
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка сохранения", "error");
+          return;
+        }
+
+        closeEditPrizeModal();
+        playSound("success");
+        showToast("💾 Приз сохранён", "success");
+
+        await loadPrizes();
+        await loadRoulette(true);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function deletePrize(id) {
+      if (!confirm("🗑️ Удалить этот приз?")) return;
+
+      try {
+        showLoading("Удаляю приз...");
+        const { data } = await apiPost("/api/police/admin/roulette/prizes/delete", { prize_id: id });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка удаления", "error");
+          return;
+        }
+
+        playSound("success");
+        showToast("🗑️ Приз удалён", "success");
+
+        await loadPrizes();
+        await loadRoulette(true);
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function loadPendingPrizes() {
+      const box = document.getElementById("pendingPrizesList");
+      if (!box) return;
+
+      try {
+        box.innerHTML = '<div class="muted">Загрузка...</div>';
+
+        const { data } = await apiGet("/api/police/admin/roulette/pending-prizes");
+
+        if (!data.ok) {
+          box.innerHTML = `<div class="muted">Ошибка: ${esc(data.error || "не удалось загрузить")}</div>`;
+          return;
+        }
+
+        const items = data.items || [];
+
+        if (!items.length) {
+          box.innerHTML = '<div class="muted">Невыданных призов нет 🎉</div>';
+          return;
+        }
+
+        box.innerHTML = items.map((p) => `
+          <div class="prize-admin-card">
+            <div class="prize-admin-row">
+              <div style="flex:1;min-width:220px;">
+                <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
+                  ${
+                    p.image_url
+                      ? `<img src="${esc(p.image_url)}" alt="${esc(p.prize_title)}" style="width:52px;height:52px;border-radius:12px;background:rgba(0,0,0,0.24);border:1px solid rgba(255,255,255,0.05);object-fit:contain;" />`
+                      : `<div style="width:52px;height:52px;border-radius:12px;background:rgba(0,0,0,0.24);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;">🎁</div>`
+                  }
+
+                  <div>
+                    <div style="font-weight:700;font-size:15px;margin-bottom:4px;">${esc(p.prize_title)}</div>
+                    <div class="muted" style="font-size:12px;">
+                      👤 ${esc(p.user_nick)} (${esc(p.user_login)})
+                    </div>
+                    <div class="muted" style="font-size:12px;">
+                      ${esc(getPrizeTypeLabel(p.reward_type))}${p.reward_type === "xp" ? ` · ${safeNum(p.reward_value)} XP` : ""}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="muted" style="font-size:12px;">
+                  Создан: ${esc(p.created_at || "")}
+                </div>
+              </div>
+
+              <div class="prize-admin-actions">
+                <button class="btn success small" onclick="givePrizeToUser('${p.id}')">📦 Выдать</button>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      } catch (e) {
+        box.innerHTML = `<div class="muted">Ошибка: ${esc(e.message)}</div>`;
+      }
+    }
+
+    function initPrizeDropzones() {
+      bindDropzone("prizeImageDropzone", "prizeImageFile", "add");
+      bindDropzone("editPrizeImageDropzone", "editPrizeImageFile", "edit");
+    }
+
+    async function givePrizeToUser(userPrizeId) {
+      try {
+        showLoading("Выдаю приз...");
+        const { data } = await apiPost("/api/police/admin/roulette/give-prize", {
+          user_prize_id: userPrizeId
+        });
+
+        if (!data.ok) {
+          showToast(data.error || "Ошибка выдачи", "error");
+          return;
+        }
+
+        playSound("success");
+        showToast("📦 Приз выдан", "success");
+
+        await loadPendingPrizes();
+        await loadUserPrizes();
+      } catch (e) {
+        showToast("Ошибка: " + e.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function init() {
+      startRefreshTimer();
+      updateSoundBtn();
+      restoreSidebar();
+      renderQueue();
+      initPrizeDropzones();
+      bindManageAvatarDropzone();
+      renderRouletteStrip([]);
+      setTaskGroupsToForm("create", ["all"]);
+
+      if (!getToken()) {
+        showGuest();
+        return;
+      }
+
+      try {
+        await loadAll();
+        await loadRoulette(true);
+        await loadOnlineUsers();
+        await pingOnline();
+
+        setInterval(() => {
+          pingOnline();
+          loadOnlineUsers();
+        }, 30000);
+      } catch {
+        clearToken();
+        showGuest();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
+```
