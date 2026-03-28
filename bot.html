@@ -7690,9 +7690,6 @@
     }
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // PRESENCE & AVATAR
-  // ═══════════════════════════════════════════════════════════
   async function sitePing() {
     try {
       await wsPost("/api/ws/presence/site-ping", {});
@@ -7701,30 +7698,33 @@
 
   async function uploadAvatarFromFile(file) {
     if (!file) return;
-
-    const MAX_SIZE = 2 * 1024 * 1024;
+  
+    const MAX_SIZE = 2 * 1024 * 1024; // 2MB
     if (file.size > MAX_SIZE) {
-      return showToast("Файл слишком большой (максимум 2MB)", "error");
+      return showToast("Аватар слишком большой. Максимум 2 МБ", "error");
     }
-
+  
     const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!ALLOWED_TYPES.includes(file.type)) {
       return showToast("Допустимы только изображения (JPG, PNG, WebP, GIF)", "error");
     }
-
+  
     const reader = new FileReader();
     reader.onload = async () => {
       try {
         const base64 = String(reader.result || "");
-        const { res, data } = await wsPost("/api/ws/profile/upload-avatar", { image_base64: base64 });
+        const { res, data } = await wsPost("/api/ws/profile/upload-avatar", {
+          image_base64: base64
+        });
+  
         if (res.status === 401) return logoutWs();
         if (!data.ok) return showToast(data.error || "Ошибка загрузки аватарки", "error");
-
+  
         currentWsUser = {
           ...(currentWsUser || {}),
           ...(data.user || {})
         };
-
+  
         renderWsUser(currentWsUser);
         showToast("Аватарка обновлена", "success");
         await sitePing();
@@ -7733,12 +7733,10 @@
         showToast("Ошибка загрузки аватарки", "error");
       }
     };
+  
     reader.readAsDataURL(file);
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // POLLING
-  // ═══════════════════════════════════════════════════════════
   async function pollProfileBindingState() {
     try {
       await loadProfileFull();
@@ -7746,9 +7744,6 @@
     } catch {}
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // BOOTSTRAP
-  // ═══════════════════════════════════════════════════════════
   async function bootstrapAuthorized() {
     setGlobalSectionLoading(true, "Подготовка сайта...");
     const { res, data } = await wsGet("/api/ws/me");
