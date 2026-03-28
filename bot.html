@@ -3893,7 +3893,7 @@
             </div>
 
             <button class="btn btn-dark" id="notificationsToggleBtn" onclick="toggleNotificationsPanel()" style="position:relative;">
-              🔔 Уведомления
+              🔔
               <span id="notificationsUnreadBadge" class="hidden" style="
                 position:absolute;
                 top:-6px;
@@ -4740,7 +4740,6 @@
         <div class="section-head" style="margin-bottom:14px;">
           <div>
             <h3 class="confirm-title" style="margin:0;">Уведомления</h3>
-            <div class="confirm-text">Все события аккаунта, контрактов, бонусов и наград</div>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn btn-dark" onclick="markAllNotificationsRead()">Прочитать всё</button>
@@ -4760,9 +4759,6 @@
       </div>
     </div>
   </div>
-</body>
-</html>
-```html
 <script>
   const API_BASE = "https://world-script-api.onrender.com";
   const toastWrap = document.getElementById("toastWrap");
