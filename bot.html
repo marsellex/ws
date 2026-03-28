@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -221,7 +220,7 @@
     .page {
       position: relative;
       z-index: 1;
-      max-width: 1680px;
+      max-width: 1860px;
       margin: 0 auto;
       padding: 22px;
     }
@@ -816,9 +815,17 @@
 
     .dashboard-layout {
       display: grid;
-      grid-template-columns: 1fr 92px 320px;
+      grid-template-columns: 300px 1fr 92px 320px;
       gap: 18px;
       align-items: start;
+    }
+
+    .left-column {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      position: sticky;
+      top: 22px;
     }
 
     .center-column {
@@ -966,6 +973,99 @@
       line-height: 1.5;
     }
 
+    .activity-feed-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      transition: .2s ease;
+    }
+
+    .activity-feed-item:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .activity-feed-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 15px;
+      color: #fff;
+    }
+
+    .activity-feed-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .activity-feed-name {
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 3px;
+      word-break: break-word;
+    }
+
+    .activity-feed-action {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 4px;
+    }
+
+    .activity-feed-date {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .site-online-user {
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .site-online-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .site-online-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     .stat-card {
       padding: 16px;
       border-radius: 16px;
@@ -1071,6 +1171,15 @@
       border-color: rgba(255,62,157,0.24);
       color: #fff0f8;
       box-shadow: 0 8px 28px rgba(255,62,157,0.16);
+    }
+
+    .section-tab.has-badge {
+      animation: contractPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes contractPulse {
+      0%, 100% { box-shadow: 0 0 0 rgba(255,62,157,0); }
+      50% { box-shadow: 0 0 24px rgba(255,62,157,0.20); }
     }
 
     .tab-glow {
@@ -1217,7 +1326,7 @@
     .profile-link-body {
       overflow: hidden;
       transition: max-height .35s ease, opacity .25s ease, margin-top .25s ease;
-      max-height: 2400px;
+      max-height: 3400px;
       opacity: 1;
       margin-top: 14px;
     }
@@ -2609,6 +2718,18 @@
       filter: blur(12px);
     }
 
+    .contracts-hero-real {
+      min-height: 220px;
+    }
+
+    .contracts-hero-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
     .contracts-kicker {
       display: inline-flex;
       width: fit-content;
@@ -2640,43 +2761,363 @@
       max-width: 760px;
     }
 
-    .contracts-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+    .contracts-mini-stat {
+      min-width: 180px;
+      padding: 18px 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
     }
 
-    .contract-card {
-      padding: 18px;
+    .contracts-mini-stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .10em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .contracts-mini-stat-value {
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .contracts-top-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .contracts-subtab {
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-family: var(--font);
+      transition: .2s ease;
+    }
+
+    .contracts-subtab:hover {
+      transform: translateY(-2px);
+      color: #fff;
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .contracts-subtab.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.16));
+      border-color: rgba(255,62,157,0.20);
+      box-shadow: 0 10px 26px rgba(255,62,157,0.12);
+    }
+
+    .contracts-subpanel { display: none; }
+
+    .contracts-subpanel.active {
+      display: block;
+      animation: fadeUp .24s ease;
+    }
+
+    .contracts-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .contract-entry {
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      transition: .24s ease;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+        rgba(10,16,28,0.82);
+      padding: 18px;
+      transition: .22s ease;
     }
 
-    .contract-card:hover {
-      transform: translateY(-4px);
+    .contract-entry:hover {
+      transform: translateY(-3px);
       border-color: rgba(255,62,157,0.16);
       box-shadow: 0 14px 34px rgba(255,62,157,0.10);
     }
 
-    .contract-card-title {
-      font-size: 18px;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    .contract-card-text {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.65;
+    .contract-entry-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
       margin-bottom: 14px;
     }
 
-    .contract-card-meta {
-      font-size: 12px;
-      color: var(--text-muted);
+    .contract-entry-left {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .contract-avatar {
+      width: 72px;
+      height: 72px;
+      min-width: 72px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.14));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .contract-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .contract-main {
+      min-width: 0;
+    }
+
+    .contract-badge-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .contract-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .contract-badge.status-available {
+      background: rgba(73,215,255,0.10);
+      border: 1px solid rgba(73,215,255,0.18);
+      color: #97ecff;
+    }
+
+    .contract-badge.status-in_progress {
+      background: rgba(251,191,36,0.10);
+      border: 1px solid rgba(251,191,36,0.18);
+      color: #ffe08a;
+    }
+
+    .contract-badge.status-completed {
+      background: rgba(72,229,123,0.10);
+      border: 1px solid rgba(72,229,123,0.18);
+      color: #98ffc0;
+    }
+
+    .contract-badge.status-expired,
+    .contract-badge.status-cancelled {
+      background: rgba(255,107,107,0.10);
+      border: 1px solid rgba(255,107,107,0.18);
+      color: #ff9a9a;
+    }
+
+    .contract-difficulty-stars {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      color: #ffcc66;
+      font-size: 16px;
+    }
+
+    .contract-entry-title {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -.03em;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+
+    .contract-entry-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
       line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .contract-reward-box {
+      min-width: 220px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      display: grid;
+      gap: 8px;
+    }
+
+    .contract-reward-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+    }
+
+    .contract-reward-main {
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffe08a;
+      line-height: 1.1;
+    }
+
+    .contract-reward-sub {
+      font-size: 13px;
+      color: #95eeff;
+      font-weight: 800;
+    }
+
+    .contract-entry-body {
+      display: grid;
+      gap: 14px;
+    }
+
+    .contract-text-block {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .contract-text-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .contract-text-content {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #e8efff;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .contract-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .contract-meta-chip {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .contract-meta-chip strong {
+      color: #fff;
+    }
+
+    .contract-timer {
+      font-weight: 900;
+    }
+
+    .contract-timer.normal { color: #dfe7ff; }
+    .contract-timer.warning { color: #ffe08a; }
+    .contract-timer.danger { color: #ffb36b; }
+    .contract-timer.expired { color: #ff8f8f; }
+
+    .contract-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .contract-proof-box {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .contract-proof-box textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .contract-proof-links-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .contract-proof-link-item {
+      font-size: 12px;
+      color: #9cefff;
+      word-break: break-all;
+    }
+
+    .contract-history-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .contract-history-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .contract-history-type {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .contract-history-text {
+      font-size: 13px;
+      color: #eef4ff;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .contract-history-date {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .contract-empty {
+      padding: 24px;
+      border-radius: 18px;
+      border: 1px dashed rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.02);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
     }
 
     .modal-bg {
@@ -2939,193 +3380,6 @@
       margin-bottom: 20px;
     }
 
-    @media (max-width: 1420px) {
-      .dashboard-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .mini-rail,
-      .right-column {
-        position: static;
-      }
-
-      .mini-rail {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .rail-btn {
-        width: 100%;
-      }
-
-      .rail-badge {
-        right: auto;
-        left: 50%;
-        top: auto;
-        bottom: -10px;
-        transform: translateX(-50%);
-        margin-right: 0;
-        margin-bottom: -8px;
-      }
-
-      .rail-btn:hover .rail-badge {
-        margin-right: 0;
-        margin-bottom: -18px;
-      }
-    }
-
-    @media (max-width: 1200px) {
-      .auth-shell,
-      .profile-meta-grid,
-      .link-code-grid,
-      .chest-layout,
-      .chest-bottom-grid,
-      .contracts-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .shop-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .chest-scale-wrap {
-        grid-template-columns: 52px 1fr;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .page { padding: 14px; }
-
-      .topbar {
-        padding: 16px;
-        align-items: flex-start;
-      }
-
-      .brand-title { font-size: 20px; }
-
-      .section-tabs {
-        gap: 10px;
-      }
-
-      .section-tabs-main,
-      .section-tabs-right {
-        width: 100%;
-      }
-
-      .section-tabs-right {
-        justify-content: flex-start;
-        margin-left: 0;
-      }
-
-      .section-tab {
-        padding: 11px 16px;
-        font-size: 13px;
-      }
-
-      .roulette-card {
-        width: 144px;
-        min-width: 144px;
-        max-width: 144px;
-        height: 178px;
-      }
-
-      .roulette-card-img-wrap {
-        width: 92px;
-        height: 78px;
-        min-height: 78px;
-      }
-
-      .roulette-card-img-wrap img {
-        width: 76px;
-        height: 76px;
-      }
-
-      .roulette-strip-shell::before,
-      .roulette-strip-shell::after {
-        width: 70px;
-      }
-
-      .section-box,
-      .roulette-main,
-      .inventory-box,
-      .bonus-main,
-      .bonus-history,
-      .auth-panel,
-      .auth-hero,
-      .profile-floating-card,
-      .widget-box,
-      .chest-main-card,
-      .chest-side-card,
-      .chest-reward-card,
-      .chest-history-card,
-      .contracts-hero {
-        padding: 16px;
-      }
-
-      .link-code-card {
-        padding: 16px;
-      }
-
-      .link-card-icon {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-        font-size: 20px;
-      }
-
-      .link-code-title { font-size: 16px; }
-      .link-code-value { font-size: 22px; }
-
-      .account-box {
-        width: 100%;
-      }
-
-      .topbar-right {
-        width: 100%;
-        justify-content: flex-start;
-      }
-
-      .mini-rail {
-        grid-template-columns: 1fr;
-      }
-
-      .inventory-item {
-        grid-template-columns: 52px 1fr;
-      }
-
-      .inventory-count {
-        grid-column: 2;
-        justify-self: start;
-      }
-
-      .chest-box-wrap {
-        transform: scale(.9);
-      }
-
-      .chest-current-day {
-        font-size: 38px;
-      }
-
-      .bonus-amount-box {
-        min-width: auto;
-        width: 100%;
-      }
-
-      .modal {
-        padding: 20px;
-        margin: 10px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
-    }
-
     .item-card.rarity-common {
       box-shadow: 0 12px 34px rgba(0,0,0,0.30);
     }
@@ -3308,6 +3562,223 @@
       gap: 10px;
       flex-wrap: wrap;
     }
+
+    @media (max-width: 1680px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr 92px 320px;
+      }
+
+      .left-column {
+        grid-column: 1 / -1;
+        position: static;
+      }
+    }
+
+    @media (max-width: 1420px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-rail,
+      .right-column,
+      .left-column {
+        position: static;
+      }
+
+      .mini-rail {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .rail-btn {
+        width: 100%;
+      }
+
+      .rail-badge {
+        right: auto;
+        left: 50%;
+        top: auto;
+        bottom: -10px;
+        transform: translateX(-50%);
+        margin-right: 0;
+        margin-bottom: -8px;
+      }
+
+      .rail-btn:hover .rail-badge {
+        margin-right: 0;
+        margin-bottom: -18px;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .auth-shell,
+      .profile-meta-grid,
+      .link-code-grid,
+      .chest-layout,
+      .chest-bottom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .shop-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chest-scale-wrap {
+        grid-template-columns: 52px 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .contract-entry-top {
+        grid-template-columns: 1fr;
+      }
+
+      .contract-entry-left {
+        align-items: flex-start;
+      }
+
+      .contract-reward-box {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 14px; }
+
+      .topbar {
+        padding: 16px;
+        align-items: flex-start;
+      }
+
+      .brand-title { font-size: 20px; }
+
+      .section-tabs {
+        gap: 10px;
+      }
+
+      .section-tabs-main,
+      .section-tabs-right {
+        width: 100%;
+      }
+
+      .section-tabs-right {
+        justify-content: flex-start;
+        margin-left: 0;
+      }
+
+      .section-tab {
+        padding: 11px 16px;
+        font-size: 13px;
+      }
+
+      .roulette-card {
+        width: 144px;
+        min-width: 144px;
+        max-width: 144px;
+        height: 178px;
+      }
+
+      .roulette-card-img-wrap {
+        width: 92px;
+        height: 78px;
+        min-height: 78px;
+      }
+
+      .roulette-card-img-wrap img {
+        width: 76px;
+        height: 76px;
+      }
+
+      .roulette-strip-shell::before,
+      .roulette-strip-shell::after {
+        width: 70px;
+      }
+
+      .section-box,
+      .roulette-main,
+      .inventory-box,
+      .bonus-main,
+      .bonus-history,
+      .auth-panel,
+      .auth-hero,
+      .profile-floating-card,
+      .widget-box,
+      .chest-main-card,
+      .chest-side-card,
+      .chest-reward-card,
+      .chest-history-card,
+      .contracts-hero {
+        padding: 16px;
+      }
+
+      .link-code-card {
+        padding: 16px;
+      }
+
+      .link-card-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 20px;
+      }
+
+      .link-code-title { font-size: 16px; }
+      .link-code-value { font-size: 22px; }
+
+      .account-box {
+        width: 100%;
+      }
+
+      .topbar-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .mini-rail {
+        grid-template-columns: 1fr;
+      }
+
+      .inventory-item {
+        grid-template-columns: 52px 1fr;
+      }
+
+      .inventory-count {
+        grid-column: 2;
+        justify-self: start;
+      }
+
+      .chest-box-wrap {
+        transform: scale(.9);
+      }
+
+      .chest-current-day {
+        font-size: 38px;
+      }
+
+      .bonus-amount-box {
+        min-width: auto;
+        width: 100%;
+      }
+
+      .modal {
+        padding: 20px;
+        margin: 10px;
+      }
+
+      .site-online-user {
+        grid-template-columns: 38px 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -3421,6 +3892,27 @@
               <div id="globalSectionLoaderText" class="section-loader-text">Загрузка раздела...</div>
             </div>
 
+            <button class="btn btn-dark" id="notificationsToggleBtn" onclick="toggleNotificationsPanel()" style="position:relative;">
+              🔔 Уведомления
+              <span id="notificationsUnreadBadge" class="hidden" style="
+                position:absolute;
+                top:-6px;
+                right:-6px;
+                min-width:22px;
+                height:22px;
+                padding:0 6px;
+                border-radius:999px;
+                background:linear-gradient(135deg,#ff3e9d,#ff6b6b);
+                color:#fff;
+                font-size:11px;
+                font-weight:900;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                box-shadow:0 8px 20px rgba(255,62,157,0.22);
+              ">0</span>
+            </button>
+
             <div class="account-box" id="accountBox" onclick="showProfileCard(true)">
               <label class="avatar-wrap" for="avatarInput">
                 <img id="avatarImage" class="avatar-img hidden" alt="avatar" />
@@ -3443,6 +3935,23 @@
         </div>
 
         <div class="dashboard-layout">
+          <div class="left-column">
+            <div class="glass widget-box">
+              <div class="section-head" style="margin-bottom:12px;">
+                <div>
+                  <h3 class="widget-title" style="margin:0;">История действий</h3>
+                  <div class="section-sub" style="margin-top:4px;">Последняя активность пользователей</div>
+                </div>
+                <div id="activityFeedLoading" class="inline-loading hidden">
+                  <div class="inline-loading-dot"></div>
+                  <span>Загрузка...</span>
+                </div>
+              </div>
+
+              <div id="activityFeedList" class="online-list"></div>
+            </div>
+          </div>
+
           <div class="center-column">
             <div class="section-tabs-wrap">
               <div class="section-tabs">
@@ -3479,10 +3988,27 @@
                 </div>
 
                 <div class="section-tabs-right">
-                  <button id="tabBtn-contracts" class="section-tab contracts" onclick="switchMainTab('contracts')">
+                  <button id="tabBtn-contracts" class="section-tab contracts" onclick="switchMainTab('contracts')" style="position:relative;">
                     <span class="tab-glow"></span>
                     🎯 Заказные контракты
                     <span class="tab-indicator">◆</span>
+                    <span id="contractsTabBadge" class="hidden" style="
+                      position:absolute;
+                      top:-8px;
+                      right:-8px;
+                      min-width:24px;
+                      height:24px;
+                      padding:0 7px;
+                      border-radius:999px;
+                      background:linear-gradient(135deg,#fbbf24,#ff3e9d);
+                      color:#fff;
+                      font-size:11px;
+                      font-weight:900;
+                      display:flex;
+                      align-items:center;
+                      justify-content:center;
+                      box-shadow:0 8px 20px rgba(255,62,157,0.25);
+                    ">0</span>
                   </button>
                 </div>
               </div>
@@ -3492,7 +4018,7 @@
               <div class="section-head">
                 <div>
                   <h2 class="section-title">Игровой профиль</h2>
-                  <div class="section-sub">Управление привязкой никнейма и VK ID к сайту</div>
+                  <div class="section-sub">Управление привязкой никнейма, VK ID и уведомлениями</div>
                 </div>
                 <button id="profileToggleBtn" class="profile-toggle-btn" onclick="hideProfileCardCompletely()">Скрыть</button>
               </div>
@@ -3560,7 +4086,7 @@
 
                       <div class="link-step">
                         <div class="link-step-bullet vk-bullet">3</div>
-                        <div>Отправь <span class="link-highlight">пустым сообщением</span> сгенерированный код: <span id="vkCodeInline" class="link-accent">—</span></div>
+                        <div>Отправь пустым сообщением сгенерированный код: <span id="vkCodeInline" class="link-accent">—</span></div>
                       </div>
 
                       <div class="link-step">
@@ -3622,6 +4148,94 @@
 
                     <div class="link-important warn">
                       ⚠️ Бот должен быть онлайн. Если бот оффлайн — попробуй позже.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="glass" style="padding:18px; margin-top:18px; border-radius:18px;">
+                  <div class="section-head" style="margin-bottom:12px;">
+                    <div>
+                      <h3 class="widget-title" style="margin:0;">Настройки уведомлений</h3>
+                      <div class="section-sub" style="margin-top:4px;">Какие уведомления присылать на сайте и во VK</div>
+                    </div>
+                    <div id="notifySettingsLoading" class="inline-loading hidden">
+                      <div class="inline-loading-dot"></div>
+                      <span>Сохраняем...</span>
+                    </div>
+                  </div>
+
+                  <div style="display:grid; gap:18px;">
+                    <div>
+                      <div class="profile-meta-label" style="margin-bottom:10px;">Уведомления на сайте</div>
+                      <div style="display:grid; gap:10px;">
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Бонус готов</span>
+                          <input id="notifySiteBonusReady" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Сундук доступен</span>
+                          <input id="notifySiteChestReady" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Рулетка доступна</span>
+                          <input id="notifySiteRouletteReady" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Появился контракт</span>
+                          <input id="notifySiteContractAvailable" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Контракт скоро истечёт</span>
+                          <input id="notifySiteContractExpiring" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Контракт истёк</span>
+                          <input id="notifySiteContractExpired" type="checkbox" />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="profile-meta-label" style="margin-bottom:10px;">Уведомления во VK</div>
+                      <div style="display:grid; gap:10px;">
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Бонус готов</span>
+                          <input id="notifyVkBonusReady" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Сундук доступен</span>
+                          <input id="notifyVkChestReady" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Рулетка доступна</span>
+                          <input id="notifyVkRouletteReady" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Доступен новый контракт</span>
+                          <input id="notifyVkContractAvailable" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Контракт скоро истечёт</span>
+                          <input id="notifyVkContractExpiring" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Контракт истёк</span>
+                          <input id="notifyVkContractExpired" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Контракт взят в работу</span>
+                          <input id="notifyVkContractTaken" type="checkbox" />
+                        </label>
+                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                          <span>Контракт принят</span>
+                          <input id="notifyVkContractCompleted" type="checkbox" />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                      <button class="btn btn-cyan" onclick="saveNotifySettings()">💾 Сохранить настройки</button>
+                      <button class="btn btn-dark" onclick="loadNotifySettings()">↺ Обновить</button>
                     </div>
                   </div>
                 </div>
@@ -3898,37 +4512,55 @@
 
             <div id="tab-contracts" class="tab-panel">
               <div class="contracts-layout">
-                <div class="glass contracts-hero">
-                  <div class="contracts-kicker">Special Contracts</div>
-                  <h2 class="contracts-title">Заказные контракты на особо опасных преступников</h2>
-                  <div class="contracts-text">
-                    В этом разделе будут появляться эксклюзивные задания по поимке особо опасных целей. За выполнение таких контрактов можно будет получать уникальные награды, увеличенные выплаты и редкие предметы.
+                <div class="glass contracts-hero contracts-hero-real">
+                  <div class="contracts-hero-top">
+                    <div>
+                      <div class="contracts-kicker">SPECIAL WEAPONS</div>
+                      <h2 class="contracts-title">Заказные контракты</h2>
+                      <div class="contracts-text">
+                        Бери особые задания, выполняй условия, отправляй доказательства и получай награды. Если контракт взят в работу — он переместится в раздел выполнения.
+                      </div>
+                    </div>
+
+                    <div class="contracts-mini-stat">
+                      <div class="contracts-mini-stat-label">Доступно</div>
+                      <div id="contractsAvailableCount" class="contracts-mini-stat-value">0</div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="contracts-grid">
-                  <div class="glass contract-card">
-                    <div class="contract-card-title">Особые цели</div>
-                    <div class="contract-card-text">
-                      Будут публиковаться преступники повышенной опасности с персональными условиями поимки.
+                <div class="glass section-box">
+                  <div class="section-head" style="margin-bottom:14px;">
+                    <div>
+                      <h2 class="section-title">Контрактный центр</h2>
+                      <div class="section-sub">Следи за доступными заказами, активной работой и историей</div>
                     </div>
-                    <div class="contract-card-meta">Статус: скоро доступно</div>
+
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                      <div id="contractsLoading" class="inline-loading hidden">
+                        <div class="inline-loading-dot"></div>
+                        <span>Загрузка контрактов...</span>
+                      </div>
+                      <button class="btn btn-dark" onclick="loadContractsAll()">↺ Обновить</button>
+                    </div>
                   </div>
 
-                  <div class="glass contract-card">
-                    <div class="contract-card-title">Уникальные награды</div>
-                    <div class="contract-card-text">
-                      За выполнение заказного контракта игрок сможет получить деньги, бонусы, предметы или специальные жетоны.
-                    </div>
-                    <div class="contract-card-meta">Статус: скоро доступно</div>
+                  <div class="contracts-top-tabs">
+                    <button id="contractsSubTabBtn-available" class="contracts-subtab active" onclick="switchContractsSubTab('available')">ДОСТУПНЫЕ</button>
+                    <button id="contractsSubTabBtn-progress" class="contracts-subtab" onclick="switchContractsSubTab('progress')">ВЫПОЛНЯЮТСЯ</button>
+                    <button id="contractsSubTabBtn-history" class="contracts-subtab" onclick="switchContractsSubTab('history')">ИСТОРИЯ</button>
                   </div>
 
-                  <div class="glass contract-card">
-                    <div class="contract-card-title">Контрактная история</div>
-                    <div class="contract-card-text">
-                      Позже здесь появится история выполненных заказов, рейтинг охотников и журнал целей.
-                    </div>
-                    <div class="contract-card-meta">Статус: скоро доступно</div>
+                  <div id="contractsSubTab-available" class="contracts-subpanel active">
+                    <div id="contractsAvailableList" class="contracts-list"></div>
+                  </div>
+
+                  <div id="contractsSubTab-progress" class="contracts-subpanel">
+                    <div id="contractsProgressList" class="contracts-list"></div>
+                  </div>
+
+                  <div id="contractsSubTab-history" class="contracts-subpanel">
+                    <div id="contractsHistoryList" class="contracts-list"></div>
                   </div>
                 </div>
               </div>
@@ -3950,6 +4582,31 @@
                 Игровой профиль
                 <span class="sub">Привязка VK и ника</span>
               </span>
+            </button>
+
+            <button id="railContractsBtn" class="rail-btn" onclick="switchMainTab('contracts')" style="position:relative;">
+              🎯
+              <span class="rail-badge">
+                Заказные контракты
+                <span class="sub">Особые задания</span>
+              </span>
+              <span id="railContractsBadge" class="hidden" style="
+                position:absolute;
+                top:-6px;
+                right:-6px;
+                min-width:22px;
+                height:22px;
+                padding:0 6px;
+                border-radius:999px;
+                background:linear-gradient(135deg,#ff3e9d,#fbbf24);
+                color:#fff;
+                font-size:11px;
+                font-weight:900;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                box-shadow:0 8px 20px rgba(255,62,157,0.22);
+              ">0</span>
             </button>
           </div>
 
@@ -4077,8 +4734,35 @@
         </div>
       </div>
     </div>
+
+    <div id="notificationsModalBg" class="modal-bg hidden">
+      <div class="modal" style="max-width:700px; max-height:90vh; overflow:auto;">
+        <div class="section-head" style="margin-bottom:14px;">
+          <div>
+            <h3 class="confirm-title" style="margin:0;">Уведомления</h3>
+            <div class="confirm-text">Все события аккаунта, контрактов, бонусов и наград</div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-dark" onclick="markAllNotificationsRead()">Прочитать всё</button>
+          </div>
+        </div>
+
+        <div id="notificationsLoading" class="inline-loading hidden" style="margin-bottom:14px;">
+          <div class="inline-loading-dot"></div>
+          <span>Загрузка уведомлений...</span>
+        </div>
+
+        <div id="notificationsList" class="online-list"></div>
+
+        <div class="modal-actions">
+          <button class="btn btn-dark" onclick="closeNotificationsPanel()">Закрыть</button>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
+</html>
+```html
 <script>
   const API_BASE = "https://world-script-api.onrender.com";
   const toastWrap = document.getElementById("toastWrap");
@@ -4088,6 +4772,8 @@
   let currentWsUser = null;
   let currentMainTab = "chest";
   let currentShopView = "inventory";
+  let currentContractsSubTab = "available";
+
   let glitchPhrases = [];
   let glitchTimer = null;
   let vkCodeTimer = null;
@@ -4097,12 +4783,16 @@
   let rightbarInterval = null;
   let chestCountdownInterval = null;
   let bonusCountdownInterval = null;
+
   let isFirstProfileForceOpen = false;
   let firstProfilePromptHandled = false;
   let profileCardVisible = true;
+
   let balance = 0;
   let toOutput = 0;
   let rouletteSpinning = false;
+  let chestOpening = false;
+
   let inventoryItems = [];
   let roulettePrizes = [];
   let bonusHistory = [];
@@ -4111,6 +4801,15 @@
   let lastChestReward = null;
   let currentChestStatus = null;
   let inventorySellSelection = {};
+
+  let contractsAvailableItems = [];
+  let contractsProgressItems = [];
+  let contractsHistoryItems = [];
+
+  let activityFeedItems = [];
+  let notificationsItems = [];
+  let notificationsUnreadCount = 0;
+  let notifySettingsState = null;
 
   // ═══════════════════════════════════════════════════════════
   // UTILITIES
@@ -4135,98 +4834,6 @@
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.toggle("hidden", !show);
-  }
-
-  function getInventoryGroupedByRarity(items) {
-    const groups = {
-      legend: [],
-      epic: [],
-      rare: [],
-      common: []
-    };
-
-    for (const item of (items || [])) {
-      const type = normalizeRarityLabel(item.meta);
-      if (!groups[type]) groups.common.push(item);
-      else groups[type].push(item);
-    }
-
-    return groups;
-  }
-
-  function getInventoryGroupTitle(type) {
-    if (type === "legend") return "Легендарные";
-    if (type === "epic") return "Эпические";
-    if (type === "rare") return "Редкие";
-    return "Обычные";
-  }
-
-  function getInventorySelectionKey(item) {
-    return String(item.object_id || item.id || "");
-  }
-
-  function setInventorySellQty(item, qty) {
-    const key = getInventorySelectionKey(item);
-    if (!key) return;
-
-    const max = Math.max(0, Number(item.count || 0));
-    const safeQty = Math.max(0, Math.min(max, Number(qty || 0)));
-
-    if (safeQty <= 0) {
-      delete inventorySellSelection[key];
-    } else {
-      inventorySellSelection[key] = safeQty;
-    }
-
-    renderInventory();
-  }
-
-  function changeInventorySellQty(item, delta) {
-    const key = getInventorySelectionKey(item);
-    const current = Number(inventorySellSelection[key] || 0);
-    setInventorySellQty(item, current + Number(delta || 0));
-  }
-
-  function toggleInventorySellItem(item, checked) {
-    const max = Math.max(0, Number(item.count || 0));
-    if (checked) {
-      setInventorySellQty(item, Math.max(1, Number(inventorySellSelection[getInventorySelectionKey(item)] || 1)));
-    } else {
-      setInventorySellQty(item, 0);
-    }
-  }
-
-  function clearInventorySellSelection() {
-    inventorySellSelection = {};
-    renderInventory();
-  }
-
-  function getInventorySellSummary() {
-    let totalItems = 0;
-    let totalMoney = 0;
-    let selectedRows = [];
-
-    for (const item of inventoryItems) {
-      const key = getInventorySelectionKey(item);
-      const qty = Number(inventorySellSelection[key] || 0);
-
-      if (qty > 0) {
-        const sellPriceOne = Math.max(1, Math.floor(Number(item.price || 0) * 0.5));
-        totalItems += qty;
-        totalMoney += sellPriceOne * qty;
-        selectedRows.push({
-          item,
-          qty,
-          sellPriceOne
-        });
-      }
-    }
-
-    return {
-      totalItems,
-      totalMoney,
-      selectedRows
-    };
   }
 
   function showToast(message, type = "info", duration = 2600) {
@@ -4314,12 +4921,46 @@
     if (widget) widget.textContent = formatMoney(toOutput);
   }
 
+  function formatDateTime(value) {
+    if (!value) return "—";
+    try {
+      return new Date(value).toLocaleString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    } catch {
+      return "—";
+    }
+  }
+
+  function formatShortDateTime(value) {
+    if (!value) return "";
+    try {
+      return new Date(value).toLocaleString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    } catch {
+      return "";
+    }
+  }
+
+  function getInitials(value) {
+    const text = String(value || "WS").trim().toUpperCase();
+    if (!text) return "WS";
+    return text.slice(0, 2);
+  }
+
   // ═══════════════════════════════════════════════════════════
   // RARITY HELPERS
   // ═══════════════════════════════════════════════════════════
   function normalizeRarityLabel(rarity) {
     const value = String(rarity || "").trim().toLowerCase();
-
     if (value.includes("леген")) return "legend";
     if (value.includes("эпич")) return "epic";
     if (value.includes("ред")) return "rare";
@@ -4404,6 +5045,9 @@
       loadChestStatus();
       loadChestHistory();
     }
+    if (tab === "contracts") {
+      loadContractsAll();
+    }
   }
 
   function switchShopView(view) {
@@ -4417,6 +5061,16 @@
     if (shopBlock) shopBlock.classList.toggle("hidden", view !== "store");
     if (inventoryBtn) inventoryBtn.classList.toggle("active", view === "inventory");
     if (storeBtn) storeBtn.classList.toggle("active", view === "store");
+  }
+
+  function switchContractsSubTab(tab) {
+    currentContractsSubTab = tab;
+    ["available", "progress", "history"].forEach((name) => {
+      const btn = document.getElementById("contractsSubTabBtn-" + name);
+      const panel = document.getElementById("contractsSubTab-" + name);
+      if (btn) btn.classList.toggle("active", name === tab);
+      if (panel) panel.classList.toggle("active", name === tab);
+    });
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -4504,6 +5158,196 @@
   }
 
   // ═══════════════════════════════════════════════════════════
+  // NOTIFICATIONS PANEL
+  // ═══════════════════════════════════════════════════════════
+  function toggleNotificationsPanel() {
+    const bg = document.getElementById("notificationsModalBg");
+    if (!bg) return;
+    if (bg.classList.contains("hidden")) {
+      openNotificationsPanel();
+    } else {
+      closeNotificationsPanel();
+    }
+  }
+
+  function openNotificationsPanel() {
+    const bg = document.getElementById("notificationsModalBg");
+    if (bg) bg.classList.remove("hidden");
+    loadNotifications();
+  }
+
+  function closeNotificationsPanel() {
+    const bg = document.getElementById("notificationsModalBg");
+    if (bg) bg.classList.add("hidden");
+  }
+
+  function updateNotificationsBadge() {
+    const badge = document.getElementById("notificationsUnreadBadge");
+    if (!badge) return;
+
+    if (notificationsUnreadCount > 0) {
+      badge.textContent = String(notificationsUnreadCount);
+      badge.classList.remove("hidden");
+    } else {
+      badge.classList.add("hidden");
+    }
+  }
+
+  function renderNotifications() {
+    const box = document.getElementById("notificationsList");
+    if (!box) return;
+  
+    const visibleItems = (notificationsItems || [])
+      .filter(item => !String(item.type || "").includes("_vk::"))
+      .filter(item => String(item.title || "").trim() !== "VK уведомление отправлено");
+  
+    if (!visibleItems.length) {
+      box.innerHTML = '<div class="contract-empty">Уведомлений пока нет.</div>';
+      return;
+    }
+  
+    box.innerHTML = visibleItems.map(item => `
+      <div class="online-user" style="${!item.is_read ? 'border-color:rgba(73,215,255,0.18);background:rgba(73,215,255,0.05);' : ''}">
+        <div class="online-user-main" style="align-items:flex-start;">
+          <div style="flex:1;min-width:0;">
+            <div class="online-user-name">${escapeHtml(item.title || "Уведомление")}</div>
+            ${item.message ? `<div class="online-user-meta" style="font-size:12px;margin-top:6px;">${escapeHtml(item.message)}</div>` : ""}
+            <div class="online-user-meta" style="margin-top:8px;">${formatDateTime(item.created_at)}</div>
+          </div>
+  
+          ${!item.is_read ? `<button class="btn btn-dark" style="padding:8px 10px;font-size:11px;" onclick="markNotificationRead(${Number(item.id || 0)})">Прочитать</button>` : ""}
+        </div>
+      </div>
+    `).join("");
+  }
+
+  async function loadNotifications() {
+    setInlineLoading("notificationsLoading", true);
+    try {
+      const { res, data } = await wsGet("/api/ws/notifications?limit=40");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+
+      notificationsItems = Array.isArray(data.items) ? data.items : [];
+      notificationsUnreadCount = Number(data.unread_count || 0);
+      updateNotificationsBadge();
+      renderNotifications();
+    } catch (e) {
+      console.log("loadNotifications error:", e.message);
+    } finally {
+      setInlineLoading("notificationsLoading", false);
+    }
+  }
+
+  async function markNotificationRead(id) {
+    try {
+      const { res, data } = await wsPost("/api/ws/notifications/read", {
+        notification_id: Number(id)
+      });
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Не удалось отметить уведомление", "error");
+
+      await loadNotifications();
+    } catch (e) {
+      showToast("Ошибка уведомления: " + e.message, "error");
+    }
+  }
+
+  async function markAllNotificationsRead() {
+    try {
+      const { res, data } = await wsPost("/api/ws/notifications/read-all", {});
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Не удалось отметить уведомления", "error");
+
+      await loadNotifications();
+      showToast("Все уведомления прочитаны", "success");
+    } catch (e) {
+      showToast("Ошибка уведомлений: " + e.message, "error");
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // NOTIFY SETTINGS
+  // ═══════════════════════════════════════════════════════════
+  function applyNotifySettingsToUi(settings = {}) {
+    const map = {
+      notifySiteBonusReady: "notify_site_bonus_ready",
+      notifySiteChestReady: "notify_site_chest_ready",
+      notifySiteRouletteReady: "notify_site_roulette_ready",
+      notifySiteContractAvailable: "notify_site_contract_available",
+      notifySiteContractExpiring: "notify_site_contract_expiring",
+      notifySiteContractExpired: "notify_site_contract_expired",
+
+      notifyVkBonusReady: "notify_vk_bonus_ready",
+      notifyVkChestReady: "notify_vk_chest_ready",
+      notifyVkRouletteReady: "notify_vk_roulette_ready",
+      notifyVkContractAvailable: "notify_vk_contract_available",
+      notifyVkContractExpiring: "notify_vk_contract_expiring",
+      notifyVkContractExpired: "notify_vk_contract_expired",
+      notifyVkContractTaken: "notify_vk_contract_taken",
+      notifyVkContractCompleted: "notify_vk_contract_completed"
+    };
+
+    Object.entries(map).forEach(([elId, key]) => {
+      const el = document.getElementById(elId);
+      if (el) el.checked = !!settings[key];
+    });
+  }
+
+  function collectNotifySettingsFromUi() {
+    return {
+      notify_site_bonus_ready: !!document.getElementById("notifySiteBonusReady")?.checked,
+      notify_site_chest_ready: !!document.getElementById("notifySiteChestReady")?.checked,
+      notify_site_roulette_ready: !!document.getElementById("notifySiteRouletteReady")?.checked,
+      notify_site_contract_available: !!document.getElementById("notifySiteContractAvailable")?.checked,
+      notify_site_contract_expiring: !!document.getElementById("notifySiteContractExpiring")?.checked,
+      notify_site_contract_expired: !!document.getElementById("notifySiteContractExpired")?.checked,
+
+      notify_vk_bonus_ready: !!document.getElementById("notifyVkBonusReady")?.checked,
+      notify_vk_chest_ready: !!document.getElementById("notifyVkChestReady")?.checked,
+      notify_vk_roulette_ready: !!document.getElementById("notifyVkRouletteReady")?.checked,
+      notify_vk_contract_available: !!document.getElementById("notifyVkContractAvailable")?.checked,
+      notify_vk_contract_expiring: !!document.getElementById("notifyVkContractExpiring")?.checked,
+      notify_vk_contract_expired: !!document.getElementById("notifyVkContractExpired")?.checked,
+      notify_vk_contract_taken: !!document.getElementById("notifyVkContractTaken")?.checked,
+      notify_vk_contract_completed: !!document.getElementById("notifyVkContractCompleted")?.checked
+    };
+  }
+
+  async function loadNotifySettings() {
+    setInlineLoading("notifySettingsLoading", true);
+    try {
+      const { res, data } = await wsGet("/api/ws/notify/settings");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+
+      notifySettingsState = data.item || {};
+      applyNotifySettingsToUi(notifySettingsState);
+    } catch (e) {
+      console.log("loadNotifySettings error:", e.message);
+    } finally {
+      setInlineLoading("notifySettingsLoading", false);
+    }
+  }
+
+  async function saveNotifySettings() {
+    setInlineLoading("notifySettingsLoading", true);
+    try {
+      const payload = collectNotifySettingsFromUi();
+      const { res, data } = await wsPost("/api/ws/notify/settings/update", payload);
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Ошибка сохранения уведомлений", "error");
+
+      notifySettingsState = data.item || payload;
+      showToast("Настройки уведомлений сохранены", "success");
+    } catch (e) {
+      showToast("Ошибка сохранения: " + e.message, "error");
+    } finally {
+      setInlineLoading("notifySettingsLoading", false);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
   // PUBLIC DATA & RIGHTBAR WIDGETS
   // ═══════════════════════════════════════════════════════════
   async function loadPublicWsData() {
@@ -4553,15 +5397,21 @@
       return;
     }
 
-    list.innerHTML = safeUsers.slice(0, 10).map(user => `
-      <div class="online-user">
-        <div class="online-user-main">
-          <span class="online-user-name">${escapeHtml(user.nick || user.name || "Игрок")}</span>
+    list.innerHTML = safeUsers.slice(0, 10).map(user => {
+      const displayName = user.nick || user.name || "Игрок";
+      const initials = getInitials(displayName);
+
+      return `
+        <div class="site-online-user">
+          <div class="site-online-avatar">${escapeHtml(initials)}</div>
+          <div>
+            <div class="online-user-name">${escapeHtml(displayName)}</div>
+            ${user.server_name || user.server ? `<div class="online-user-meta">Сервер: ${escapeHtml(user.server_name || user.server)}</div>` : ""}
+          </div>
           <span class="online-dot"></span>
         </div>
-        ${user.server_name || user.server ? `<div class="online-user-meta">Сервер: ${escapeHtml(user.server_name || user.server)}</div>` : ""}
-      </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   function renderSiteOnlineList(users) {
@@ -4580,15 +5430,79 @@
       return;
     }
 
-    list.innerHTML = safeUsers.slice(0, 10).map(user => `
-      <div class="online-user">
-        <div class="online-user-main">
-          <span class="online-user-name">${escapeHtml(user.login || user.nickname || user.name || "Пользователь")}</span>
+    list.innerHTML = safeUsers.slice(0, 10).map(user => {
+      const displayName = user.login || user.nickname || user.name || "Пользователь";
+      const sub = user.game_nick || user.nickname || "";
+      const avatarUrl = user.avatar_url || "";
+      const initials = getInitials(displayName);
+
+      return `
+        <div class="site-online-user">
+          <div class="site-online-avatar">
+            ${avatarUrl
+              ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(displayName)}" />`
+              : escapeHtml(initials)}
+          </div>
+          <div>
+            <div class="online-user-name">${escapeHtml(displayName)}</div>
+            ${sub ? `<div class="online-user-meta">${escapeHtml(sub)}</div>` : ""}
+          </div>
           <span class="online-dot"></span>
         </div>
-        ${(user.game_nick || user.nickname) ? `<div class="online-user-meta">${escapeHtml(user.game_nick || user.nickname)}</div>` : ""}
-      </div>
-    `).join("");
+      `;
+    }).join("");
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // ACTIVITY FEED
+  // ═══════════════════════════════════════════════════════════
+  function renderActivityFeed(items) {
+    const box = document.getElementById("activityFeedList");
+    if (!box) return;
+
+    if (!items.length) {
+      box.innerHTML = '<div class="muted">История действий пока пуста.</div>';
+      return;
+    }
+
+    box.innerHTML = items.map(item => {
+      const login = item.login || item.nickname || "Пользователь";
+      const actionText = item.action_text || item.actionType || "Событие";
+      const avatarUrl = item.avatar_url || "";
+      const initials = getInitials(login);
+
+      return `
+        <div class="activity-feed-item">
+          <div class="activity-feed-avatar">
+            ${avatarUrl
+              ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(login)}" />`
+              : escapeHtml(initials)}
+          </div>
+
+          <div>
+            <div class="activity-feed-name">${escapeHtml(login)}</div>
+            <div class="activity-feed-action">${escapeHtml(actionText)}</div>
+            <div class="activity-feed-date">${formatShortDateTime(item.created_at)}</div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  async function loadActivityFeed() {
+    setInlineLoading("activityFeedLoading", true);
+    try {
+      const { res, data } = await wsGet("/api/ws/activity-feed?limit=30");
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+
+      activityFeedItems = Array.isArray(data.items) ? data.items : [];
+      renderActivityFeed(activityFeedItems);
+    } catch (e) {
+      console.log("loadActivityFeed error:", e.message);
+    } finally {
+      setInlineLoading("activityFeedLoading", false);
+    }
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -4773,6 +5687,7 @@
     currentWsUser = null;
     currentMainTab = "chest";
     currentShopView = "inventory";
+    currentContractsSubTab = "available";
     profileCardVisible = true;
     isFirstProfileForceOpen = false;
     firstProfilePromptHandled = false;
@@ -4782,6 +5697,13 @@
     roulettePrizes = [];
     bonusHistory = [];
     shopItems = [];
+    contractsAvailableItems = [];
+    contractsProgressItems = [];
+    contractsHistoryItems = [];
+    activityFeedItems = [];
+    notificationsItems = [];
+    notificationsUnreadCount = 0;
+    notifySettingsState = null;
     adminTempUserId = 0;
     currentChestStatus = null;
     lastChestReward = null;
@@ -4804,6 +5726,8 @@
     closePrizeViewModal();
     closeUnlinkConfirmModal();
     closeAdminVkModal();
+    closeNotificationsPanel();
+    closeContractDetailsModal();
     showGuestView();
     loadPublicWsData();
     showToast("Выход выполнен", "info");
@@ -5023,6 +5947,91 @@
   // ═══════════════════════════════════════════════════════════
   // SHOP & INVENTORY
   // ═══════════════════════════════════════════════════════════
+  function getInventoryGroupedByRarity(items) {
+    const groups = { legend: [], epic: [], rare: [], common: [] };
+    for (const item of (items || [])) {
+      const type = normalizeRarityLabel(item.meta);
+      if (!groups[type]) groups.common.push(item);
+      else groups[type].push(item);
+    }
+    return groups;
+  }
+
+  function getInventoryGroupTitle(type) {
+    if (type === "legend") return "Легендарные";
+    if (type === "epic") return "Эпические";
+    if (type === "rare") return "Редкие";
+    return "Обычные";
+  }
+
+  function getInventorySelectionKey(item) {
+    return String(item.object_id || item.id || "");
+  }
+
+  function setInventorySellQty(item, qty) {
+    const key = getInventorySelectionKey(item);
+    if (!key) return;
+
+    const max = Math.max(0, Number(item.count || 0));
+    const safeQty = Math.max(0, Math.min(max, Number(qty || 0)));
+
+    if (safeQty <= 0) {
+      delete inventorySellSelection[key];
+    } else {
+      inventorySellSelection[key] = safeQty;
+    }
+
+    renderInventory();
+  }
+
+  function changeInventorySellQty(item, delta) {
+    const key = getInventorySelectionKey(item);
+    const current = Number(inventorySellSelection[key] || 0);
+    setInventorySellQty(item, current + Number(delta || 0));
+  }
+
+  function toggleInventorySellItem(item, checked) {
+    const max = Math.max(0, Number(item.count || 0));
+    if (checked) {
+      setInventorySellQty(item, Math.max(1, Number(inventorySellSelection[getInventorySelectionKey(item)] || 1)));
+    } else {
+      setInventorySellQty(item, 0);
+    }
+  }
+
+  function clearInventorySellSelection() {
+    inventorySellSelection = {};
+    renderInventory();
+  }
+
+  function getInventorySellSummary() {
+    let totalItems = 0;
+    let totalMoney = 0;
+    let selectedRows = [];
+
+    for (const item of inventoryItems) {
+      const key = getInventorySelectionKey(item);
+      const qty = Number(inventorySellSelection[key] || 0);
+
+      if (qty > 0) {
+        const sellPriceOne = Math.max(1, Math.floor(Number(item.price || 0) * 0.5));
+        totalItems += qty;
+        totalMoney += sellPriceOne * qty;
+        selectedRows.push({
+          item,
+          qty,
+          sellPriceOne
+        });
+      }
+    }
+
+    return {
+      totalItems,
+      totalMoney,
+      selectedRows
+    };
+  }
+
   function renderShop() {
     const box = document.getElementById("shopGrid");
     if (!box) return;
@@ -5097,11 +6106,11 @@
                     <input
                       type="checkbox"
                       ${isChecked ? "checked" : ""}
-                      onchange="toggleInventorySellItem(${JSON.stringify({
+                      onchange='toggleInventorySellItem(${JSON.stringify({
                         object_id: Number(item.object_id),
                         id: item.id,
                         count: maxQty
-                      }).replace(/"/g, '&quot;')}, this.checked)"
+                      })}, this.checked)'
                     />
                   </div>
 
@@ -5126,11 +6135,11 @@
                   </div>
 
                   <div class="inventory-sell-controls">
-                    <button class="qty-btn" onclick="changeInventorySellQty(${JSON.stringify({
+                    <button class="qty-btn" onclick='changeInventorySellQty(${JSON.stringify({
                       object_id: Number(item.object_id),
                       id: item.id,
                       count: maxQty
-                    }).replace(/"/g, '&quot;')}, -1)">−</button>
+                    })}, -1)'>−</button>
 
                     <input
                       class="qty-input"
@@ -5138,18 +6147,18 @@
                       min="0"
                       max="${maxQty}"
                       value="${selectedQty}"
-                      onchange="setInventorySellQty(${JSON.stringify({
+                      onchange='setInventorySellQty(${JSON.stringify({
                         object_id: Number(item.object_id),
                         id: item.id,
                         count: maxQty
-                      }).replace(/"/g, '&quot;')}, this.value)"
+                      })}, this.value)'
                     />
 
-                    <button class="qty-btn" onclick="changeInventorySellQty(${JSON.stringify({
+                    <button class="qty-btn" onclick='changeInventorySellQty(${JSON.stringify({
                       object_id: Number(item.object_id),
                       id: item.id,
                       count: maxQty
-                    }).replace(/"/g, '&quot;')}, 1)">+</button>
+                    })}, 1)'>+</button>
                   </div>
 
                   <div class="inventory-sell-total">
@@ -5193,24 +6202,6 @@
     return inventoryItems.find(x => Number(x.object_id) === Number(objectId)) || null;
   }
 
-  function setInventorySellQtyByObjectId(objectId, qty) {
-    const item = findInventoryItemByObjectId(objectId);
-    if (!item) return;
-    setInventorySellQty(item, qty);
-  }
-
-  function changeInventorySellQtyByObjectId(objectId, delta) {
-    const item = findInventoryItemByObjectId(objectId);
-    if (!item) return;
-    changeInventorySellQty(item, delta);
-  }
-
-  function toggleInventorySellItemByObjectId(objectId, checked) {
-    const item = findInventoryItemByObjectId(objectId);
-    if (!item) return;
-    toggleInventorySellItem(item, checked);
-  }
-
   async function sellSingleQuantity(objectId, qty, btnEl) {
     const count = Math.max(1, Number(qty || 1));
 
@@ -5219,12 +6210,7 @@
       setInlineLoading("inventoryLoading", true);
 
       const { res, data } = await wsPost("/api/ws/shop/sell-many", {
-        items: [
-          {
-            object_id: Number(objectId),
-            count
-          }
-        ]
+        items: [{ object_id: Number(objectId), count }]
       });
 
       if (res.status === 401) return logoutWs();
@@ -5571,7 +6557,9 @@
       }
 
       showToast(`Приз получен: ${prize.title}`, "success", 4200);
-      loadRightbarWidgets();
+      await loadRightbarWidgets();
+      await loadNotifications();
+      await loadActivityFeed();
     } catch {
       showToast("Ошибка рулетки", "error");
     } finally {
@@ -5801,6 +6789,8 @@
 
         await loadBonusStatus();
         await loadRightbarWidgets();
+        await loadNotifications();
+        await loadActivityFeed();
       }, 500);
     } catch {
       clearInterval(interval);
@@ -6144,8 +7134,6 @@
     }).join("");
   }
 
-  let chestOpening = false;
-
   async function openDailyChest() {
     if (chestOpening) return;
     chestOpening = true;
@@ -6236,6 +7224,8 @@
 
       showToast(`Сундук открыт: ${lastChestReward?.title || "награда получена"}`, "success", 3600);
       await loadRightbarWidgets();
+      await loadNotifications();
+      await loadActivityFeed();
 
     } catch (e) {
       showToast("Ошибка открытия сундука", "error");
@@ -6247,11 +7237,461 @@
   }
 
   // ═══════════════════════════════════════════════════════════
-  // CONTRACTS TAB
+  // CONTRACTS
   // ═══════════════════════════════════════════════════════════
-  function loadContractsStub() {
-    // Заглушка под будущую механику
-    return true;
+  function getContractStatusText(status) {
+    const val = String(status || "").trim().toLowerCase();
+    if (val === "available") return "Доступен";
+    if (val === "in_progress") return "Выполняется";
+    if (val === "completed") return "Завершён";
+    if (val === "expired") return "Истёк";
+    if (val === "cancelled") return "Отменён";
+    if (val === "scheduled") return "Запланирован";
+    return "Черновик";
+  }
+
+  function getContractDifficultyStars(difficulty) {
+    const count = Math.max(1, Math.min(5, Number(difficulty || 1)));
+    let html = "";
+    for (let i = 1; i <= 5; i++) html += i <= count ? "★" : "☆";
+    return html;
+  }
+
+  function getContractTimerClass(state) {
+    const s = String(state || "normal").toLowerCase();
+    if (s === "danger") return "danger";
+    if (s === "warning") return "warning";
+    if (s === "expired") return "expired";
+    return "normal";
+  }
+
+  function formatSecondsLeft(seconds) {
+    const sec = Math.max(0, Number(seconds || 0));
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `${h}ч ${m}м ${s}с`;
+  }
+
+  function updateContractsBadges() {
+    const count = Number(contractsAvailableItems.length || 0);
+    const tabBadge = document.getElementById("contractsTabBadge");
+    const railBadge = document.getElementById("railContractsBadge");
+    const tabBtn = document.getElementById("tabBtn-contracts");
+
+    if (count > 0) {
+      if (tabBadge) {
+        tabBadge.textContent = String(count);
+        tabBadge.classList.remove("hidden");
+      }
+      if (railBadge) {
+        railBadge.textContent = String(count);
+        railBadge.classList.remove("hidden");
+      }
+      if (tabBtn) tabBtn.classList.add("has-badge");
+    } else {
+      if (tabBadge) tabBadge.classList.add("hidden");
+      if (railBadge) railBadge.classList.add("hidden");
+      if (tabBtn) tabBtn.classList.remove("has-badge");
+    }
+  }
+
+  function renderContractCard(item, mode = "available") {
+    const title = String(item?.title || "Без названия");
+    const subtitle = String(item?.subtitle || "");
+    const description = String(item?.description || "");
+    const requirements = String(item?.requirements_text || "");
+    const badge = String(item?.badge_text || "");
+    const rewardText = String(item?.reward_text || "");
+    const rewardBalance = Number(item?.reward_balance || 0);
+    const rewardOutput = Number(item?.reward_output || 0);
+    const avatarUrl = String(item?.avatar_url || "");
+    const status = String(item?.status || "draft");
+    const timerState = String(item?.timer_state || "normal");
+    const isMine = !!item?.is_mine;
+    const submittedAt = item?.submitted_at || null;
+
+    return `
+      <div class="contract-entry">
+        <div class="contract-entry-top">
+          <div class="contract-entry-left">
+            <div class="contract-avatar">
+              ${avatarUrl
+                ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(title)}" />`
+                : "🎯"}
+            </div>
+
+            <div class="contract-main">
+              <div class="contract-badge-line">
+                <span class="contract-badge status-${escapeHtml(status)}">${escapeHtml(getContractStatusText(status))}</span>
+                ${badge ? `<span class="contract-badge" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#fff;">${escapeHtml(badge)}</span>` : ""}
+                <span class="contract-difficulty-stars">${getContractDifficultyStars(item?.difficulty)}</span>
+              </div>
+
+              <div class="contract-entry-title">${escapeHtml(title)}</div>
+              ${subtitle ? `<div class="contract-entry-subtitle">${escapeHtml(subtitle)}</div>` : ""}
+            </div>
+          </div>
+
+          <div class="contract-reward-box">
+            <div class="contract-reward-label">Награда</div>
+            <div class="contract-reward-main">${formatMoney(rewardBalance)}</div>
+            <div class="contract-reward-sub">${rewardOutput > 0 ? `+ ${formatMoney(rewardOutput)} к выводу` : "Без выплаты к выводу"}</div>
+            ${rewardText ? `<div class="muted">${escapeHtml(rewardText)}</div>` : ""}
+          </div>
+        </div>
+
+        <div class="contract-entry-body">
+          ${description ? `
+            <div class="contract-text-block">
+              <div class="contract-text-title">Описание</div>
+              <div class="contract-text-content">${escapeHtml(description)}</div>
+            </div>
+          ` : ""}
+
+          ${requirements ? `
+            <div class="contract-text-block">
+              <div class="contract-text-title">Условия выполнения</div>
+              <div class="contract-text-content">${escapeHtml(requirements)}</div>
+            </div>
+          ` : ""}
+
+          <div class="contract-meta-row">
+            <div class="contract-meta-chip">
+              <strong>Создан:</strong> ${formatDateTime(item?.created_at)}
+            </div>
+
+            ${item?.expires_at ? `
+              <div class="contract-meta-chip">
+                <strong>Истекает:</strong> ${formatDateTime(item.expires_at)}
+              </div>
+            ` : ""}
+
+            ${item?.seconds_left != null ? `
+              <div class="contract-meta-chip">
+                <strong>Таймер:</strong>
+                <span class="contract-timer ${getContractTimerClass(timerState)}">${formatSecondsLeft(item.seconds_left)}</span>
+              </div>
+            ` : ""}
+
+            ${item?.taken_at ? `
+              <div class="contract-meta-chip">
+                <strong>Взят:</strong> ${formatDateTime(item.taken_at)}
+              </div>
+            ` : ""}
+
+            ${submittedAt ? `
+              <div class="contract-meta-chip">
+                <strong>Доказательства отправлены:</strong> ${formatDateTime(submittedAt)}
+              </div>
+            ` : ""}
+          </div>
+
+          <div class="contract-actions">
+            ${mode === "available" ? `
+              <button class="btn btn-pink" onclick="takeContract(${Number(item.id)}, this)">🎯 Взять контракт</button>
+              <button class="btn btn-dark" onclick="viewContractDetails(${Number(item.id)})">📄 Подробнее</button>
+            ` : ""}
+
+            ${mode === "progress" ? `
+              <button class="btn btn-dark" onclick="toggleContractProofBox(${Number(item.id)})">📤 Отправить доказательства</button>
+              <button class="btn btn-dark" onclick="viewContractDetails(${Number(item.id)})">📄 История / детали</button>
+            ` : ""}
+
+            ${mode === "history" ? `
+              <button class="btn btn-dark" onclick="viewContractDetails(${Number(item.id)})">📄 Открыть</button>
+            ` : ""}
+          </div>
+
+          ${mode === "progress" ? `
+            <div id="contractProofBox-${Number(item.id)}" class="contract-proof-box hidden">
+              <textarea id="contractProofText-${Number(item.id)}" class="field" placeholder="Опиши доказательства выполнения..."></textarea>
+              <input id="contractProofImage-${Number(item.id)}" class="field" placeholder="Ссылка на изображение (необязательно)" />
+              <textarea id="contractProofLinks-${Number(item.id)}" class="field" placeholder="Ссылки, по одной на строку (необязательно)"></textarea>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn btn-green" onclick="submitContractProof(${Number(item.id)}, this)">✅ Отправить</button>
+                <button class="btn btn-dark" onclick="toggleContractProofBox(${Number(item.id)})">Скрыть</button>
+              </div>
+            </div>
+          ` : ""}
+
+          ${mode === "progress" && isMine && submittedAt ? `
+            <div class="contract-text-block">
+              <div class="contract-text-title">Статус отчёта</div>
+              <div class="contract-text-content">Доказательства уже отправлены. Ожидай проверки администратора.</div>
+            </div>
+          ` : ""}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderContractsAvailable() {
+    const box = document.getElementById("contractsAvailableList");
+    const count = document.getElementById("contractsAvailableCount");
+    if (count) count.textContent = String(contractsAvailableItems.length);
+    if (!box) return;
+
+    updateContractsBadges();
+
+    if (!contractsAvailableItems.length) {
+      box.innerHTML = `<div class="contract-empty">Сейчас нет доступных контрактов. Загляни позже.</div>`;
+      return;
+    }
+
+    box.innerHTML = contractsAvailableItems.map(item => renderContractCard(item, "available")).join("");
+  }
+
+  function renderContractsProgress() {
+    const box = document.getElementById("contractsProgressList");
+    if (!box) return;
+
+    if (!contractsProgressItems.length) {
+      box.innerHTML = `<div class="contract-empty">У тебя сейчас нет активных контрактов.</div>`;
+      return;
+    }
+
+    box.innerHTML = contractsProgressItems.map(item => renderContractCard(item, "progress")).join("");
+  }
+
+  function renderContractsHistory() {
+    const box = document.getElementById("contractsHistoryList");
+    if (!box) return;
+
+    if (!contractsHistoryItems.length) {
+      box.innerHTML = `<div class="contract-empty">История контрактов пока пуста.</div>`;
+      return;
+    }
+
+    box.innerHTML = contractsHistoryItems.map(item => renderContractCard(item, "history")).join("");
+  }
+
+  async function loadContractsAvailable() {
+    const { res, data } = await wsGet("/api/ws/contracts/available");
+    if (res.status === 401) return logoutWs();
+    if (!data.ok) throw new Error(data.error || "Ошибка загрузки доступных контрактов");
+
+    contractsAvailableItems = Array.isArray(data.items) ? data.items : [];
+    renderContractsAvailable();
+  }
+
+  async function loadMyContracts() {
+    const { res, data } = await wsGet("/api/ws/contracts/my");
+    if (res.status === 401) return logoutWs();
+    if (!data.ok) throw new Error(data.error || "Ошибка загрузки моих контрактов");
+
+    contractsProgressItems = Array.isArray(data.in_progress) ? data.in_progress : [];
+    contractsHistoryItems = [
+      ...(Array.isArray(data.completed) ? data.completed : []),
+      ...(Array.isArray(data.expired) ? data.expired : []),
+      ...(Array.isArray(data.cancelled) ? data.cancelled : [])
+    ];
+
+    renderContractsProgress();
+    renderContractsHistory();
+  }
+
+  async function loadContractsAll() {
+    setInlineLoading("contractsLoading", true);
+    try {
+      await Promise.all([
+        loadContractsAvailable(),
+        loadMyContracts()
+      ]);
+    } catch (e) {
+      showToast(e.message || "Ошибка загрузки контрактов", "error");
+    } finally {
+      setInlineLoading("contractsLoading", false);
+    }
+  }
+
+  async function takeContract(contractId, btnEl) {
+    try {
+      if (btnEl) btnEl.disabled = true;
+
+      const { res, data } = await wsPost("/api/ws/contracts/take", {
+        contract_id: Number(contractId)
+      });
+
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) {
+        showToast(data.error || "Не удалось взять контракт", "error");
+        return;
+      }
+
+      showToast("Контракт взят в работу", "success");
+      switchContractsSubTab("progress");
+      await loadContractsAll();
+      await loadNotifications();
+      await loadActivityFeed();
+    } catch (e) {
+      showToast(e.message || "Ошибка взятия контракта", "error");
+    } finally {
+      if (btnEl) btnEl.disabled = false;
+    }
+  }
+
+  function toggleContractProofBox(contractId) {
+    const box = document.getElementById("contractProofBox-" + Number(contractId));
+    if (box) box.classList.toggle("hidden");
+  }
+
+  async function submitContractProof(contractId, btnEl) {
+    const textEl = document.getElementById("contractProofText-" + Number(contractId));
+    const imageEl = document.getElementById("contractProofImage-" + Number(contractId));
+    const linksEl = document.getElementById("contractProofLinks-" + Number(contractId));
+
+    const proofText = String(textEl?.value || "").trim();
+    const proofImageUrl = String(imageEl?.value || "").trim();
+    const proofLinks = String(linksEl?.value || "")
+      .split("\n")
+      .map(x => x.trim())
+      .filter(Boolean);
+
+    try {
+      if (btnEl) btnEl.disabled = true;
+
+      const { res, data } = await wsPost("/api/ws/contracts/submit-proof", {
+        contract_id: Number(contractId),
+        proof_text: proofText,
+        proof_image_url: proofImageUrl,
+        proof_links: proofLinks
+      });
+
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) {
+        showToast(data.error || "Не удалось отправить доказательства", "error");
+        return;
+      }
+
+      showToast("Доказательства отправлены", "success");
+
+      if (textEl) textEl.value = "";
+      if (imageEl) imageEl.value = "";
+      if (linksEl) linksEl.value = "";
+
+      await loadContractsAll();
+      await loadNotifications();
+      await loadActivityFeed();
+    } catch (e) {
+      showToast(e.message || "Ошибка отправки доказательств", "error");
+    } finally {
+      if (btnEl) btnEl.disabled = false;
+    }
+  }
+
+  function openContractDetailsModal(html) {
+    let bg = document.getElementById("contractDetailsModalBg");
+
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "contractDetailsModalBg";
+      bg.className = "modal-bg";
+      bg.innerHTML = `
+        <div class="modal" style="max-width:900px; max-height:90vh; overflow:auto;">
+          <div id="contractDetailsModalContent"></div>
+          <div class="modal-actions">
+            <button class="btn btn-dark" onclick="closeContractDetailsModal()">Закрыть</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(bg);
+
+      bg.addEventListener("click", (e) => {
+        if (e.target.id === "contractDetailsModalBg") closeContractDetailsModal();
+      });
+    }
+
+    const content = document.getElementById("contractDetailsModalContent");
+    if (content) content.innerHTML = html || "";
+    bg.classList.remove("hidden");
+  }
+
+  function closeContractDetailsModal() {
+    const bg = document.getElementById("contractDetailsModalBg");
+    if (bg) bg.classList.add("hidden");
+  }
+
+  async function viewContractDetails(contractId) {
+    try {
+      const { res, data } = await wsGet("/api/ws/contracts/" + Number(contractId));
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) {
+        showToast(data.error || "Не удалось загрузить детали контракта", "error");
+        return;
+      }
+
+      const item = data.item || {};
+      const proofs = Array.isArray(data.proofs) ? data.proofs : [];
+      const history = Array.isArray(data.history) ? data.history : [];
+
+      const html = `
+        <div style="display:grid; gap:16px;">
+          <div>
+            <h3 class="confirm-title" style="margin-bottom:8px;">${escapeHtml(item.title || "Контракт")}</h3>
+            <div class="confirm-text">${escapeHtml(item.subtitle || "")}</div>
+          </div>
+
+          <div class="contract-text-block">
+            <div class="contract-text-title">Описание</div>
+            <div class="contract-text-content">${escapeHtml(item.description || "—")}</div>
+          </div>
+
+          <div class="contract-text-block">
+            <div class="contract-text-title">Условия</div>
+            <div class="contract-text-content">${escapeHtml(item.requirements_text || "—")}</div>
+          </div>
+
+          <div class="contract-meta-row">
+            <div class="contract-meta-chip"><strong>Статус:</strong> ${escapeHtml(getContractStatusText(item.status))}</div>
+            <div class="contract-meta-chip"><strong>Награда:</strong> ${formatMoney(item.reward_balance || 0)}</div>
+            <div class="contract-meta-chip"><strong>К выводу:</strong> ${formatMoney(item.reward_output || 0)}</div>
+            <div class="contract-meta-chip"><strong>Сложность:</strong> ${Number(item.difficulty || 1)} / 5</div>
+          </div>
+
+          <div class="contract-text-block">
+            <div class="contract-text-title">Отправленные доказательства</div>
+            ${
+              proofs.length
+                ? proofs.map(proof => `
+                    <div style="padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+                      <div class="muted" style="margin-bottom:6px;">${formatDateTime(proof.created_at)}</div>
+                      ${proof.proof_text ? `<div class="contract-text-content" style="margin-bottom:8px;">${escapeHtml(proof.proof_text)}</div>` : ""}
+                      ${proof.proof_image_url ? `<div class="contract-proof-link-item">Изображение: <a href="${escapeHtml(proof.proof_image_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(proof.proof_image_url)}</a></div>` : ""}
+                      ${Array.isArray(proof.proof_links) && proof.proof_links.length ? `
+                        <div class="contract-proof-links-list" style="margin-top:8px;">
+                          ${proof.proof_links.map(link => `<div class="contract-proof-link-item"><a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link)}</a></div>`).join("")}
+                        </div>
+                      ` : ""}
+                    </div>
+                  `).join("")
+                : `<div class="muted">Доказательства ещё не отправлялись.</div>`
+            }
+          </div>
+
+          <div class="contract-text-block">
+            <div class="contract-text-title">История контракта</div>
+            <div class="contract-history-list">
+              ${
+                history.length
+                  ? history.map(row => `
+                      <div class="contract-history-item">
+                        <div class="contract-history-type">${escapeHtml(row.action_type || "action")}</div>
+                        <div class="contract-history-text">${escapeHtml(row.action_text || "")}</div>
+                        <div class="contract-history-date">${formatDateTime(row.created_at)}</div>
+                      </div>
+                    `).join("")
+                  : `<div class="muted">История пуста.</div>`
+              }
+            </div>
+          </div>
+        </div>
+      `;
+
+      openContractDetailsModal(html);
+    } catch (e) {
+      showToast(e.message || "Ошибка загрузки контракта", "error");
+    }
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -6291,6 +7731,8 @@
 
         renderWsUser(currentWsUser);
         showToast("Аватарка обновлена", "success");
+        await sitePing();
+        await loadRightbarWidgets();
       } catch {
         showToast("Ошибка загрузки аватарки", "error");
       }
@@ -6345,6 +7787,10 @@
       loadRouletteLimits(),
       loadBonusStatus(),
       loadRightbarWidgets(),
+      loadActivityFeed(),
+      loadNotifications(),
+      loadNotifySettings(),
+      loadContractsAll(),
       sitePing()
     ]);
 
@@ -6357,9 +7803,13 @@
     if (rightbarInterval) clearInterval(rightbarInterval);
     rightbarInterval = setInterval(async () => {
       await loadRightbarWidgets();
+      await loadActivityFeed();
+      await loadNotifications();
+
       if (currentMainTab === "roulette") await loadRouletteLimits();
       if (currentMainTab === "chest") await loadChestStatus();
       if (currentMainTab === "bonus") await loadBonusStatus();
+      if (currentMainTab === "contracts") await loadContractsAll();
     }, 15000);
 
     setGlobalSectionLoading(false);
@@ -6378,6 +7828,9 @@
     renderBonusHistory();
     renderChestHistory([]);
     renderChestReward(null);
+    renderActivityFeed([]);
+    renderNotifications();
+    updateNotificationsBadge();
     await loadPublicWsData();
 
     const avatarInput = document.getElementById("avatarInput");
@@ -6425,11 +7878,17 @@
     if (e.target.id === "adminVkModalBg") closeAdminVkModal();
   });
 
+  document.getElementById("notificationsModalBg")?.addEventListener("click", (e) => {
+    if (e.target.id === "notificationsModalBg") closeNotificationsPanel();
+  });
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closePrizeViewModal();
       closeUnlinkConfirmModal();
       closeAdminVkModal();
+      closeNotificationsPanel();
+      closeContractDetailsModal();
     }
   });
 
@@ -6453,9 +7912,8 @@
       }).catch(() => {});
     }
   });
+
   init();
-  </script>
+</script>
 </body>
 </html>
-
-
