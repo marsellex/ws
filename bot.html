@@ -1,449 +1,1204 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cyber SaaS • World Script</title>
+  <title>World Script • Cyber SaaS</title>
   <link rel="icon" href="./favicon1.ico" type="image/x-icon" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
   <style>
-    :root{
-      --bg0:#05060c;
-      --bg1:#070a14;
-      --panel: rgba(15, 20, 36, .78);
-      --panel2: rgba(10, 14, 26, .90);
-      --border: rgba(255,255,255,.09);
-      --text:#eaf2ff;
-      --muted:#92a2c7;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-      --cyan:#35e7ff;
-      --pink:#ff3ea5;
-      --violet:#9b7bff;
-      --green:#47ff8b;
-      --yellow:#ffd76a;
-      --red:#ff6b6b;
+    * { box-sizing: border-box; }
 
-      --shadow: 0 18px 55px rgba(0,0,0,.55);
-      --r: 18px;
-      --r2: 24px;
+    :root {
+      --bg-body: #050814;
+      --bg-body-2: #0a1020;
+      --panel: rgba(13, 18, 34, 0.82);
+      --panel-2: rgba(9, 14, 28, 0.94);
+      --panel-soft: rgba(255,255,255,0.035);
+      --input-bg: rgba(6, 9, 17, 0.86);
 
-      --grid: rgba(255,255,255,.03);
-      --glowC: rgba(53,231,255,.22);
-      --glowP: rgba(255,62,165,.18);
-      --glowV: rgba(155,123,255,.16);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.14);
+
+      --text: #f4f8ff;
+      --text-secondary: #b6c2da;
+      --text-muted: #7f8ba8;
+
+      --cyan: #49d7ff;
+      --cyan-2: #2b90ff;
+      --pink: #ff3e9d;
+      --pink-2: #cf267a;
+      --violet: #8d5cff;
+      --green: #48e57b;
+      --green-2: #1dbf62;
+      --gold: #f59e0b;
+      --gold-2: #f6c857;
+      --red: #ff6b6b;
+      --red-2: #ee4444;
+
+      --success: #98ffc0;
+      --warning: #ffe08a;
+      --danger: #ff9a9a;
+      --info: #95eeff;
+
+      --shadow: 0 18px 60px rgba(0,0,0,0.40);
+      --shadow-lg: 0 26px 80px rgba(0,0,0,0.52);
+
+      --radius: 20px;
+      --radius-lg: 28px;
+      --radius-sm: 14px;
+
+      --font: "Inter", sans-serif;
     }
 
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-    body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--text);
-      min-height:100vh;
-      background:
-        radial-gradient(1200px 700px at 20% 10%, rgba(53,231,255,.10), transparent 60%),
-        radial-gradient(1000px 600px at 80% 20%, rgba(255,62,165,.08), transparent 60%),
-        radial-gradient(1000px 700px at 60% 90%, rgba(155,123,255,.08), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      overflow-x:hidden;
-    }
+    html { scroll-behavior: smooth; }
 
-    /* subtle cyber grid */
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background-image:
-        linear-gradient(var(--grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-      background-size: 54px 54px;
-      mask-image: radial-gradient(circle at 40% 20%, black 0%, transparent 70%);
-      opacity:.9;
-    }
-
-    a{ color:inherit; }
-    img{ max-width:100%; display:block; }
-    .hidden{ display:none !important; }
-
-    .page{
-      position:relative;
-      z-index:1;
-      max-width: 1680px;
-      margin:0 auto;
-      padding: 18px;
-    }
-
-    .glass{
-      background: var(--panel);
-      border:1px solid var(--border);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      overflow:hidden;
-      position:relative;
-    }
-    .glass::before{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(135deg, rgba(255,255,255,.08), transparent 20%, transparent 75%, rgba(255,255,255,.03));
-      opacity:.7;
-      pointer-events:none;
-    }
-    .glass > *{ position:relative; z-index:1; }
-
-    .muted{ color:var(--muted); font-size:13px; line-height:1.55; }
-
-    /* toasts */
-    .toast-wrap{
-      position:fixed;
-      top:16px;
-      right:16px;
-      z-index:5000;
-      display:grid;
-      gap:10px;
-      width:min(380px, calc(100vw - 24px));
-    }
-    .toast{
-      border-radius: 16px;
-      padding: 12px 14px;
-      font-size: 13px;
-      font-weight: 900;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow: 0 18px 60px rgba(0,0,0,.55);
-      background: rgba(12,16,28,.92);
-    }
-    .toast.success{ border-color: rgba(71,255,139,.22); color:#b9ffd2; }
-    .toast.error{ border-color: rgba(255,107,107,.22); color:#ffd0d0; }
-    .toast.info{ border-color: rgba(53,231,255,.20); color:#c9fbff; }
-
-    /* buttons / inputs */
-    .btn{
-      border:0;
-      cursor:pointer;
-      border-radius: 14px;
-      padding: 11px 14px;
-      font-size:13px;
-      font-weight: 900;
-      color:#fff;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      transition: transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      white-space:nowrap;
-      text-decoration:none;
-    }
-    .btn:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); }
-    .btn:active{ transform:none; }
-    .btn:disabled{ opacity:.55; cursor:default; transform:none; }
-
-    .btn-cyan{
-      background: linear-gradient(135deg, rgba(53,231,255,.20), rgba(53,231,255,.10));
-      border-color: rgba(53,231,255,.22);
-      box-shadow: 0 0 0 1px rgba(53,231,255,.06), 0 16px 50px rgba(53,231,255,.10);
-    }
-    .btn-pink{
-      background: linear-gradient(135deg, rgba(255,62,165,.22), rgba(255,62,165,.10));
-      border-color: rgba(255,62,165,.22);
-      box-shadow: 0 0 0 1px rgba(255,62,165,.06), 0 16px 50px rgba(255,62,165,.10);
-    }
-    .btn-green{
-      background: linear-gradient(135deg, rgba(71,255,139,.20), rgba(71,255,139,.10));
-      border-color: rgba(71,255,139,.22);
-      box-shadow: 0 0 0 1px rgba(71,255,139,.06), 0 16px 50px rgba(71,255,139,.10);
-    }
-    .btn-red{
-      background: linear-gradient(135deg, rgba(255,107,107,.22), rgba(255,107,107,.10));
-      border-color: rgba(255,107,107,.22);
-      box-shadow: 0 0 0 1px rgba(255,107,107,.06), 0 16px 50px rgba(255,107,107,.08);
-    }
-    .btn-dark{ background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); color: var(--text); }
-
-    .field{
-      width:100%;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.25);
+    body {
+      margin: 0;
       color: var(--text);
-      outline:none;
-      font-size: 13px;
-      transition: box-shadow .18s ease, border-color .18s ease;
-    }
-    .field::placeholder{ color: rgba(146,162,199,.8); }
-    .field:focus{
-      border-color: rgba(53,231,255,.28);
-      box-shadow: 0 0 0 3px rgba(53,231,255,.10);
+      font-family: var(--font);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255,62,157,0.08), transparent 32%),
+        radial-gradient(circle at top right, rgba(73,215,255,0.08), transparent 28%),
+        radial-gradient(circle at bottom center, rgba(141,92,255,0.08), transparent 35%),
+        linear-gradient(180deg, var(--bg-body), var(--bg-body-2));
+      overflow-x: hidden;
     }
 
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      font-size: 12px;
+    .hidden { display: none !important; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .bg-animated {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 56px 56px;
+      opacity: .7;
+    }
+
+    .bg-orbs {
+      position: absolute;
+      inset: 0;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .45;
+    }
+
+    .bg-orb:nth-child(1) {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(255,62,157,0.28), transparent 70%);
+      top: 8%;
+      left: 2%;
+    }
+
+    .bg-orb:nth-child(2) {
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(73,215,255,0.24), transparent 70%);
+      top: 58%;
+      right: 6%;
+    }
+
+    .bg-orb:nth-child(3) {
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(141,92,255,0.22), transparent 70%);
+      bottom: 16%;
+      left: 30%;
+    }
+
+    .bg-orb:nth-child(4) {
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(72,229,123,0.16), transparent 70%);
+      top: 42%;
+      left: 60%;
+    }
+
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: .025;
+      mix-blend-mode: overlay;
+    }
+
+    .bg-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.42) 100%);
+    }
+
+    .toast-wrap {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 3000;
+      display: grid;
+      gap: 10px;
+      width: min(380px, calc(100vw - 24px));
+    }
+
+    .toast {
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.45;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      background: rgba(12,18,30,0.95);
+    }
+
+    .toast.success {
+      color: var(--success);
+      border-color: rgba(72,229,123,0.18);
+    }
+
+    .toast.error {
+      color: var(--danger);
+      border-color: rgba(255,107,107,0.18);
+    }
+
+    .toast.info {
+      color: var(--info);
+      border-color: rgba(73,215,255,0.18);
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1760px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .glass {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        140deg,
+        rgba(255,255,255,0.07),
+        transparent 22%,
+        transparent 76%,
+        rgba(255,255,255,0.025)
+      );
+      pointer-events: none;
+      opacity: .75;
+    }
+
+    .glass > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: .18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn:disabled { opacity: .55; cursor: default; transform: none; }
+
+    .btn-pink {
+      background: linear-gradient(135deg, var(--pink), var(--pink-2));
+      box-shadow: 0 10px 30px rgba(255,62,157,0.24);
+    }
+
+    .btn-cyan {
+      background: linear-gradient(135deg, var(--cyan), var(--cyan-2));
+      box-shadow: 0 10px 30px rgba(73,215,255,0.22);
+    }
+
+    .btn-green {
+      background: linear-gradient(135deg, var(--green), var(--green-2));
+      box-shadow: 0 10px 30px rgba(72,229,123,0.22);
+    }
+
+    .btn-red {
+      background: linear-gradient(135deg, var(--red), var(--red-2));
+      box-shadow: 0 10px 30px rgba(255,107,107,0.22);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      box-shadow: 0 10px 30px rgba(245,158,11,0.24);
+      color: #1a1305;
+    }
+
+    .btn-dark {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .btn-dark:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .btn-lg {
+      padding: 16px 24px;
+      font-size: 15px;
       font-weight: 900;
     }
-    .pill.ok{ border-color: rgba(71,255,139,.22); color:#b9ffd2; background: rgba(71,255,139,.08); }
-    .pill.warn{ border-color: rgba(255,215,106,.20); color:#ffe3a6; background: rgba(255,215,106,.08); }
 
-    /* auth */
-    .guest-wrap{ min-height: calc(100vh - 36px); display:grid; place-items:center; }
-    .auth-shell{ width:min(1100px,100%); display:grid; grid-template-columns: 1.25fr .75fr; gap:16px; }
-    .auth-hero{ padding:24px; min-height: 520px; display:flex; flex-direction:column; justify-content:space-between; }
-    .auth-kicker{
-      display:inline-flex;
+    .field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      font-family: var(--font);
+    }
+
+    .field::placeholder { color: #74809e; }
+    .field:focus {
+      border-color: rgba(73,215,255,0.22);
+      box-shadow: 0 0 0 3px rgba(73,215,255,0.08);
+    }
+
+    .guest-wrap {
+      min-height: calc(100vh - 40px);
+      display: grid;
+      place-items: center;
+    }
+
+    .auth-shell {
+      width: min(100%, 1180px);
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+    }
+
+    .auth-hero {
+      padding: 30px;
+      min-height: 580px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .auth-kicker {
+      display: inline-flex;
+      width: fit-content;
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 11px;
-      letter-spacing:.12em;
-      text-transform: uppercase;
       font-weight: 900;
-      color:#bdf7ff;
-      border:1px solid rgba(53,231,255,.20);
-      background: rgba(53,231,255,.08);
-      width:fit-content;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #8de7ff;
+      background: rgba(73,215,255,0.08);
+      border: 1px solid rgba(73,215,255,0.16);
+      margin-bottom: 16px;
     }
-    .auth-title{
-      margin: 14px 0 10px;
-      font-size: clamp(34px, 4.6vw, 64px);
+
+    .auth-title {
+      font-size: clamp(36px, 5vw, 68px);
+      font-weight: 900;
       line-height: .95;
       letter-spacing: -.06em;
-      font-weight: 950;
+      margin: 0 0 14px;
     }
-    .accent{
-      background: linear-gradient(135deg, #fff, rgba(53,231,255,.95) 45%, rgba(255,62,165,.95));
-      -webkit-background-clip:text;
-      background-clip:text;
-      -webkit-text-fill-color:transparent;
+
+    .accent {
+      background: linear-gradient(135deg, #fff, #8ae7ff 45%, #ff87c1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .auth-text{ color: var(--muted); font-size: 14px; line-height:1.75; max-width: 680px; }
 
-    .auth-panel{ padding: 22px; min-height: 520px; display:flex; flex-direction:column; justify-content:center; }
-    .auth-panel-title{ margin:0 0 6px; font-size: 26px; font-weight: 950; letter-spacing: -.04em; }
-    .auth-panel-sub{ color: var(--muted); font-size: 13px; line-height:1.6; margin-bottom: 14px; }
+    .auth-text {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.75;
+      max-width: 700px;
+    }
 
-    .auth-tabs{ display:flex; gap:8px; margin-bottom:12px; }
-    .auth-tab-btn{
-      flex:1;
+    .auth-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .auth-feature {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .auth-feature-title {
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .auth-panel {
+      padding: 24px;
+      min-height: 580px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-panel-title {
+      margin: 0 0 8px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+
+    .auth-panel-sub {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
       border-radius: 14px;
       padding: 12px 14px;
       font-size: 13px;
-      font-weight: 900;
-      cursor:pointer;
-      color: var(--muted);
-      background: rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.10);
-      transition:.2s ease;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: var(--font);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      border: 1px solid rgba(255,255,255,0.08);
     }
-    .auth-tab-btn.active{
-      color:#fff;
-      border-color: rgba(53,231,255,.25);
-      background: linear-gradient(135deg, rgba(53,231,255,.14), rgba(255,62,165,.10));
-      box-shadow: 0 0 0 1px rgba(53,231,255,.06);
+
+    .auth-tab-btn.active {
+      color: white;
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+      border-color: rgba(255,255,255,0.12);
     }
-    .auth-form{ display:none; }
-    .auth-form.active{ display:block; }
-    .form-grid{ display:grid; gap:10px; }
-    .auth-actions{ margin-top: 12px; display:grid; gap:10px; }
-    .auth-msg{ min-height: 18px; margin-top: 10px; font-size: 12px; font-weight: 900; }
-    .auth-msg.error{ color:#ffd0d0; }
-    .auth-msg.success{ color:#b9ffd2; }
 
-    /* app */
-    .app-shell{ display:grid; gap:16px; }
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+    .form-grid { display: grid; gap: 10px; }
+    .auth-actions { display: grid; gap: 10px; margin-top: 12px; }
+    .auth-msg { min-height: 18px; font-size: 12px; font-weight: 800; margin-top: 8px; }
+    .auth-msg.error { color: var(--danger); }
+    .auth-msg.success { color: var(--success); }
 
-    .topbar{
-      padding: 16px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+    .app-shell { display: grid; gap: 18px; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
     }
-    .brand{ display:flex; align-items:center; gap:12px; min-width:0; }
-    .brand-logo{
-      width:46px; height:46px;
-      border-radius: 16px;
-      display:grid; place-items:center;
-      font-weight: 950;
-      letter-spacing:.08em;
-      border:1px solid rgba(53,231,255,.18);
-      background: radial-gradient(circle at 30% 30%, rgba(53,231,255,.20), transparent 60%),
-                  radial-gradient(circle at 70% 70%, rgba(255,62,165,.16), transparent 60%),
-                  rgba(255,255,255,.04);
-      box-shadow: 0 0 0 1px rgba(53,231,255,.06), 0 18px 60px rgba(0,0,0,.45);
-      flex-shrink:0;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
     }
-    .brand-title{ font-size: 18px; font-weight: 950; letter-spacing: -.02em; }
 
-    .topbar-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
-
-    .online-inline{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      font-size: 13px;
-      font-weight: 900;
-      color: #dbe8ff;
-    }
-    .online-dot{ width:9px; height:9px; border-radius:50%; background: var(--green); box-shadow: 0 0 12px rgba(71,255,139,.55); }
-
-    .account-box{
-      display:flex; align-items:center; gap:12px;
-      padding: 10px 12px;
+    .brand-logo {
+      width: 52px;
+      height: 52px;
       border-radius: 18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      cursor:pointer;
-      min-width: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 900;
+      background: linear-gradient(135deg, rgba(255,62,157,0.22), rgba(73,215,255,0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 8px 28px rgba(255,62,157,0.16);
+      flex-shrink: 0;
     }
-    .avatar-wrap{
-      width:46px; height:46px; border-radius: 14px; overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      display:grid; place-items:center;
-      flex-shrink:0;
+
+    .brand-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.04em;
     }
-    .avatar-img{ width:100%; height:100%; object-fit:cover; }
-    .avatar-fallback{ font-weight: 950; letter-spacing:-.02em; }
-    .account-meta{ min-width:0; display:grid; gap:2px; }
-    .account-login{ font-weight: 950; font-size: 14px; }
-    .account-sub{ display:flex; gap:8px; flex-wrap:wrap; color: var(--muted); font-size: 12px; }
-    .user-role{
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing:.08em;
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .online-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .online-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(72,229,123,0.75);
+      flex-shrink: 0;
+    }
+
+    .account-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .avatar-wrap {
+      width: 54px;
+      height: 54px;
+      min-width: 54px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-fallback {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .account-meta {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .account-login {
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .account-sub {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .account-gamenick {
+      color: #d9f4ff;
+      font-weight: 700;
+    }
+
+    .user-role {
       padding: 6px 10px;
       border-radius: 999px;
-      border:1px solid rgba(53,231,255,.18);
-      background: rgba(53,231,255,.08);
-      color:#bdf7ff;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .06em;
       text-transform: uppercase;
-    }
-    .user-role.admin{
-      border-color: rgba(255,62,165,.22);
-      background: rgba(255,62,165,.10);
-      color:#ffd1e9;
+      border: 1px solid rgba(73,215,255,0.16);
+      color: #8eeaff;
+      background: rgba(73,215,255,0.08);
     }
 
-    /* layout */
-    .dashboard-layout{
-      display:grid;
+    .user-role.admin {
+      background: linear-gradient(135deg, rgba(255,62,157,0.16), rgba(141,92,255,0.14));
+      border-color: rgba(255,62,157,0.22);
+      color: #ffc7e4;
+    }
+
+    .dashboard-layout {
+      display: grid;
       grid-template-columns: 320px 1fr 320px;
-      gap: 16px;
-      align-items:start;
+      gap: 18px;
+      align-items: start;
     }
-    .left-column,.center-column,.right-column{ min-width:0; display:grid; gap:16px; }
 
-    /* tabs */
-    .section-tabs{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
+    .left-column,
+    .center-column,
+    .right-column {
+      min-width: 0;
+      display: grid;
+      gap: 18px;
     }
-    .tabs-main{ display:flex; gap:10px; flex-wrap:wrap; }
-    .section-tab{
-      cursor:pointer;
-      border-radius: 14px;
-      padding: 11px 14px;
-      font-weight: 950;
+
+    .widget-box,
+    .section-box {
+      padding: 20px;
+    }
+
+    .widget-title {
+      font-size: 15px;
+      font-weight: 900;
+      margin: 0 0 12px;
+      letter-spacing: -.02em;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      margin: 0;
+    }
+
+    .section-sub {
       font-size: 13px;
-      color: #cfe0ff;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.55;
+    }
+
+    .section-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .section-tab {
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-weight: 800;
+      font-size: 14px;
+      padding: 12px 18px;
+      border-radius: 16px;
       background: rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.10);
-      transition:.2s ease;
-    }
-    .section-tab:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.18); }
-    .section-tab.active{
-      border-color: rgba(53,231,255,.25);
-      background: linear-gradient(135deg, rgba(53,231,255,.14), rgba(155,123,255,.10));
-      box-shadow: 0 0 0 1px rgba(53,231,255,.06);
-      color:#fff;
+      border: 1px solid rgba(255,255,255,.08);
+      font-family: var(--font);
+      transition: .2s ease;
+      position: relative;
     }
 
-    .tab-panel{ display:none; }
-    .tab-panel.active{ display:block; }
+    .section-tab:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.14);
+      color: #fff;
+      background: rgba(255,255,255,.06);
+    }
 
-    .section-box{ padding: 18px; }
+    .section-tab.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(255,62,157,0.20), rgba(73,215,255,0.18));
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 8px 28px rgba(255,62,157,0.12), 0 0 0 1px rgba(73,215,255,0.06);
+    }
 
-    .section-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 16px;
+    }
+
+    .hero-banner {
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(73,215,255,0.14), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(255,62,157,0.12), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+        rgba(8,12,24,0.86);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #8de7ff;
+      background: rgba(73,215,255,0.08);
+      border: 1px solid rgba(73,215,255,0.16);
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: clamp(30px, 3vw, 46px);
+      font-weight: 900;
+      line-height: .98;
+      letter-spacing: -.05em;
+      margin: 0 0 10px;
+    }
+
+    .hero-text {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 14px;
+      max-width: 720px;
+    }
+
+    .hero-summary {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .stat-card {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+      color: #fff;
+      word-break: break-word;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .quick-card {
+      position: relative;
+      min-height: 180px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+        rgba(10,16,28,0.82);
+      overflow: hidden;
+      cursor: pointer;
+      transition: .22s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .quick-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+
+    .quick-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 85% 10%, rgba(255,255,255,0.08), transparent 30%);
+      pointer-events: none;
+    }
+
+    .quick-card.chest {
+      box-shadow: 0 0 0 1px rgba(246,200,87,0.06), 0 18px 40px rgba(245,158,11,0.08);
+    }
+
+    .quick-card.roulette {
+      box-shadow: 0 0 0 1px rgba(255,62,157,0.06), 0 18px 40px rgba(255,62,157,0.08);
+    }
+
+    .quick-card.bonus {
+      box-shadow: 0 0 0 1px rgba(72,229,123,0.06), 0 18px 40px rgba(72,229,123,0.08);
+    }
+
+    .quick-card.contracts {
+      box-shadow: 0 0 0 1px rgba(141,92,255,0.06), 0 18px 40px rgba(141,92,255,0.08);
+    }
+
+    .quick-card.shop {
+      box-shadow: 0 0 0 1px rgba(73,215,255,0.06), 0 18px 40px rgba(73,215,255,0.08);
+    }
+
+    .quick-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .quick-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    .quick-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .quick-link {
+      margin-top: 14px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #fff;
+      opacity: .9;
+    }
+
+    .profile-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .profile-pill.ok {
+      color: var(--success);
+      border-color: rgba(72,229,123,0.18);
+      background: rgba(72,229,123,0.08);
+    }
+
+    .profile-pill.warn {
+      color: var(--warning);
+      border-color: rgba(251,191,36,0.18);
+      background: rgba(251,191,36,0.08);
+    }
+
+    .profile-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .profile-meta-card {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .profile-meta-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-weight: 800;
+    }
+
+    .profile-meta-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .profile-link-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .profile-link-body {
+      margin-top: 16px;
+    }
+
+    .link-code-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .link-code-card {
+      padding: 22px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
+        rgba(8,12,22,0.7);
+    }
+
+    .link-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       margin-bottom: 14px;
     }
-    .section-title{ margin:0; font-weight: 950; letter-spacing:-.03em; font-size: 20px; }
-    .section-sub{ margin-top:4px; color: var(--muted); font-size: 13px; line-height:1.55; }
 
-    /* lists */
-    .list{ display:grid; gap:10px; }
-    .list-item{
+    .link-card-icon {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
       border-radius: 14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      padding: 12px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      border: 1px solid rgba(255,255,255,0.10);
     }
 
-    /* right widgets */
-    .widget{ padding: 16px; }
-    .widget-title{ margin:0 0 10px; font-size: 14px; font-weight: 950; letter-spacing:-.02em; }
-    .stat{
-      padding: 14px;
+    .vk-icon {
+      background: linear-gradient(135deg, rgba(73,133,255,0.20), rgba(73,215,255,0.12));
+    }
+
+    .nick-icon {
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.14));
+    }
+
+    .link-code-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 4px;
+      letter-spacing: -.02em;
+    }
+
+    .link-code-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .link-code-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 16px 0;
+    }
+
+    .link-code-value-wrap {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .link-code-value-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .link-code-value {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: .10em;
+      line-height: 1.2;
+      color: #9cefff;
+      word-break: break-word;
+    }
+
+    .link-code-value.empty {
+      color: var(--text-muted);
+      font-size: 15px;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+
+    .link-code-meta {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.65;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .list-box {
+      display: grid;
+      gap: 10px;
+    }
+
+    .list-item {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
       border-radius: 14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
     }
-    .stat-label{ color: var(--muted); font-size: 11px; text-transform:uppercase; letter-spacing:.12em; font-weight: 900; margin-bottom: 8px; }
-    .stat-value{ font-size: 26px; font-weight: 950; letter-spacing:-.02em; }
 
-    /* modals */
-    .modal-bg{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.74);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 6000;
-      display:grid;
-      place-items:center;
-      padding: 18px;
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .shop-toggle-wrap {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
     }
-    .modal{
-      width:min(760px, 100%);
-      border-radius: 22px;
-      border:1px solid rgba(255,255,255,.12);
-      background: var(--panel2);
-      box-shadow: 0 30px 90px rgba(0,0,0,.65);
+
+    .shop-toggle-btn {
+      cursor: pointer;
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      transition: .2s ease;
+      font-family: var(--font);
+    }
+
+    .shop-toggle-btn.active {
+      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .shop-grid,
+    .inventory-list,
+    .contracts-list,
+    .bonus-history-list,
+    .online-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .placeholder-box {
+      min-height: 300px;
+      display: grid;
+      place-items: center;
+    }
+
+    .placeholder-inner {
+      text-align: center;
+      max-width: 420px;
+    }
+
+    .placeholder-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .placeholder-title {
+      font-size: 28px;
+      font-weight: 900;
+      margin: 0 0 12px;
+      letter-spacing: -.03em;
+    }
+
+    .placeholder-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      display: grid;
+      place-items: center;
       padding: 20px;
-      max-height: 90vh;
-      overflow:auto;
     }
-    .modal-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top: 14px; }
-    .confirm-title{ margin:0 0 10px; font-size: 20px; font-weight: 950; letter-spacing:-.03em; }
-    .confirm-text{ color: var(--muted); font-size: 14px; line-height:1.7; }
 
-    /* responsive */
-    @media (max-width: 1200px){
-      .dashboard-layout{ grid-template-columns: 1fr; }
-      .auth-shell{ grid-template-columns: 1fr; }
-      .account-box{ min-width: 0; width: 100%; }
-      .topbar{ align-items:flex-start; }
-      .topbar-right{ width:100%; justify-content:flex-start; }
+    .modal {
+      background: var(--panel-2);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 28px;
+      max-width: 760px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .confirm-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin: 0 0 12px;
+      letter-spacing: -.03em;
+    }
+
+    .confirm-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1440px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-grid {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .auth-shell,
+      .hero-grid,
+      .profile-meta-grid,
+      .link-code-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 14px; }
+
+      .topbar {
+        padding: 16px;
+        align-items: flex-start;
+      }
+
+      .topbar-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .account-box {
+        width: 100%;
+      }
+
+      .section-tab {
+        width: 100%;
+        text-align: center;
+      }
+
+      .quick-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal {
+        padding: 20px;
+      }
     }
   </style>
 </head>
-
 <body>
+  <div class="bg-animated" aria-hidden="true">
+    <div class="bg-grid"></div>
+
+    <div class="bg-orbs">
+      <div class="bg-orb"></div>
+      <div class="bg-orb"></div>
+      <div class="bg-orb"></div>
+      <div class="bg-orb"></div>
+    </div>
+
+    <div class="bg-noise"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
   <div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
 
   <div class="page">
@@ -452,23 +1207,46 @@
       <div class="auth-shell">
         <div class="glass auth-hero">
           <div>
-            <div class="auth-kicker">CYBER SAAS</div>
+            <div class="auth-kicker">Cyber SaaS Platform</div>
+
             <h1 class="auth-title">
               Добро пожаловать в <span class="accent">World Script</span>
             </h1>
+
             <div id="glitchPhraseText" class="auth-text">
               Мастерская предметов, сундуки, рулетка, бонус и многое другое!
             </div>
           </div>
-          <div class="muted">
-            Авторизация • Профиль • Магазин • Рулетка • Контракты
+
+          <div class="auth-feature-grid">
+            <div class="auth-feature">
+              <div class="auth-feature-title">Ежедневные награды</div>
+              <div class="muted">Сундук и бонус с таймерами и сериями.</div>
+            </div>
+
+            <div class="auth-feature">
+              <div class="auth-feature-title">Игровой профиль</div>
+              <div class="muted">Привязка VK и игрового никнейма.</div>
+            </div>
+
+            <div class="auth-feature">
+              <div class="auth-feature-title">Рулетка и предметы</div>
+              <div class="muted">Призы, магазин, инвентарь и продажа.</div>
+            </div>
+
+            <div class="auth-feature">
+              <div class="auth-feature-title">Контракты</div>
+              <div class="muted">Особые задания с доказательствами и историей.</div>
+            </div>
           </div>
         </div>
 
         <div class="glass auth-panel">
           <div class="auth-panel-head">
-            <h2 class="auth-panel-title">Вход</h2>
-            <div class="auth-panel-sub">Войди или создай аккаунт.</div>
+            <h2 class="auth-panel-title">Вход в систему</h2>
+            <div class="auth-panel-sub">
+              Используй аккаунт World Script или создай новый профиль.
+            </div>
           </div>
 
           <div class="auth-tabs" role="tablist" aria-label="Авторизация">
@@ -481,9 +1259,11 @@
               <input id="loginInput" class="field" placeholder="Логин" autocomplete="username" />
               <input id="passwordInput" class="field" type="password" placeholder="Пароль" autocomplete="current-password" />
             </div>
+
             <div class="auth-actions">
-              <button id="loginSubmitBtn" class="btn btn-pink" type="button" onclick="loginWs()">Войти</button>
+              <button id="loginSubmitBtn" class="btn btn-pink" type="button" onclick="loginWs()">🔐 Войти</button>
             </div>
+
             <div id="loginMsg" class="auth-msg" aria-live="polite"></div>
           </div>
 
@@ -492,9 +1272,11 @@
               <input id="regLoginInput" class="field" placeholder="Логин" autocomplete="username" />
               <input id="regPasswordInput" class="field" type="password" placeholder="Пароль" autocomplete="new-password" />
             </div>
+
             <div class="auth-actions">
-              <button id="registerSubmitBtn" class="btn btn-cyan" type="button" onclick="registerWs()">Создать аккаунт</button>
+              <button id="registerSubmitBtn" class="btn btn-cyan" type="button" onclick="registerWs()">✨ Создать аккаунт</button>
             </div>
+
             <div id="registerMsg" class="auth-msg" aria-live="polite"></div>
           </div>
         </div>
@@ -527,18 +1309,26 @@
               style="position:relative;"
               aria-label="Открыть уведомления"
             >
-              Уведомления
+              🔔 Уведомления
               <span
                 id="notificationsUnreadBadge"
                 class="hidden"
                 style="
-                  position:absolute; top:-6px; right:-6px;
-                  min-width:22px; height:22px; padding:0 6px;
+                  position:absolute;
+                  top:-6px;
+                  right:-6px;
+                  min-width:22px;
+                  height:22px;
+                  padding:0 6px;
                   border-radius:999px;
-                  background:linear-gradient(135deg, var(--pink), var(--violet));
-                  color:#fff; font-size:11px; font-weight:950;
-                  display:flex; align-items:center; justify-content:center;
-                  box-shadow: 0 0 0 1px rgba(255,62,165,.10), 0 16px 50px rgba(255,62,165,.10);
+                  background:linear-gradient(135deg,#ff3e9d,#ff6b6b);
+                  color:#fff;
+                  font-size:11px;
+                  font-weight:900;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  box-shadow:0 8px 20px rgba(255,62,157,0.22);
                 "
               >0</span>
             </button>
@@ -554,184 +1344,307 @@
               <div class="account-meta">
                 <div id="accountLoginText" class="account-login">user</div>
                 <div class="account-sub">
-                  <span id="accountGameNickText">Игровой ник</span>
+                  <span id="accountGameNickText" class="account-gamenick">Игровой ник</span>
                   <span id="userRoleText" class="user-role user">ПОЛЬЗОВАТЕЛЬ</span>
                 </div>
               </div>
             </div>
 
-            <button class="btn btn-dark" type="button" onclick="logoutWs()">Выйти</button>
+            <button class="btn btn-dark" type="button" onclick="logoutWs()">🚪 Выйти</button>
           </div>
         </header>
 
+        <!-- MAIN LAYOUT -->
         <div class="dashboard-layout">
           <!-- LEFT -->
           <aside class="left-column">
-            <div class="glass widget">
-              <div class="section-head" style="margin-bottom:10px;">
+            <div class="glass widget-box">
+              <div class="section-head" style="margin-bottom:12px;">
                 <div>
                   <h3 class="widget-title" style="margin:0;">История действий</h3>
                   <div class="section-sub">Последняя активность пользователей</div>
                 </div>
-                <!-- УБРАНО авто-«Загрузка…» (оставь, если сделаешь ручную кнопку обновления) -->
               </div>
 
-              <div id="activityFeedList" class="list"></div>
+              <div id="activityFeedList" class="online-list"></div>
             </div>
           </aside>
 
           <!-- CENTER -->
           <main class="center-column">
-            <!-- TABS -->
-            <div class="section-tabs">
-              <div class="tabs-main">
-                <button id="tabBtn-chest" class="section-tab active" type="button" onclick="switchMainTab('chest')">Сундук</button>
-                <button id="tabBtn-shop" class="section-tab" type="button" onclick="switchMainTab('shop')">Магазин</button>
-                <button id="tabBtn-roulette" class="section-tab" type="button" onclick="switchMainTab('roulette')">Рулетка</button>
-                <button id="tabBtn-bonus" class="section-tab" type="button" onclick="switchMainTab('bonus')">Бонус</button>
-                <button id="tabBtn-contracts" class="section-tab" type="button" onclick="switchMainTab('contracts')" style="position:relative;">
-                  Контракты
-                  <span id="contractsTabBadge" class="hidden" style="
-                    position:absolute; top:-8px; right:-8px;
-                    min-width:24px; height:24px; padding:0 7px;
-                    border-radius:999px;
-                    background:linear-gradient(135deg, var(--yellow), var(--pink));
-                    color:#12101b; font-size:11px; font-weight:950;
-                    display:flex; align-items:center; justify-content:center;
-                    box-shadow: 0 0 0 1px rgba(255,215,106,.10), 0 16px 50px rgba(255,215,106,.10);
-                  ">0</span>
+            <!-- HERO -->
+            <section class="hero-grid">
+              <div class="glass hero-banner">
+                <div class="hero-kicker">Control Center</div>
+                <h1 class="hero-title">Управляй наградами, предметами и контрактами в одном месте</h1>
+                <div class="hero-text">
+                  Всё самое важное вынесено в большие интерактивные блоки. Пользователь сразу видит,
+                  куда нажать: открыть сундук, активировать бонус, крутить рулетку или перейти к контрактам.
+                </div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;">
+                  <button class="btn btn-cyan" type="button" onclick="showProfileCard(true)">🧩 Открыть профиль</button>
+                  <button class="btn btn-dark" type="button" onclick="loadProfileFull(); loadLinkCodesStatus(); loadRightbarWidgets(); loadNotifications(); loadActivityFeed();">↺ Синхронизировать</button>
+                </div>
+              </div>
+
+              <div class="hero-summary">
+                <div class="glass stat-card">
+                  <div class="stat-label">Текущий баланс</div>
+                  <div id="widgetBalanceValue" class="stat-value">$0</div>
+                </div>
+
+                <div class="glass stat-card">
+                  <div class="stat-label">Доступно к выводу</div>
+                  <div id="widgetOutputValue" class="stat-value">$0</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- QUICK ACTION BLOCKS -->
+            <section class="glass section-box">
+              <div class="section-head">
+                <div>
+                  <h2 class="section-title">Быстрый доступ</h2>
+                  <div class="section-sub">Крупные блоки для быстрого перехода к нужному разделу</div>
+                </div>
+              </div>
+
+              <div class="quick-grid">
+                <div class="quick-card chest" onclick="switchMainTab('chest')">
+                  <div>
+                    <div class="quick-icon">🎁</div>
+                    <div class="quick-title">Дневной сундук</div>
+                    <div class="quick-text">Проверить статус сундука, серию наград и открыть новую награду.</div>
+                  </div>
+                  <div class="quick-link">Открыть раздел →</div>
+                </div>
+
+                <div class="quick-card roulette" onclick="switchMainTab('roulette')">
+                  <div>
+                    <div class="quick-icon">🎰</div>
+                    <div class="quick-title">Рулетка</div>
+                    <div class="quick-text">Прокруты, призы, комбо-награды и история выпадений.</div>
+                  </div>
+                  <div class="quick-link">Открыть раздел →</div>
+                </div>
+
+                <div class="quick-card bonus" onclick="switchMainTab('bonus')">
+                  <div>
+                    <div class="quick-icon">💸</div>
+                    <div class="quick-title">Ежедневный бонус</div>
+                    <div class="quick-text">Активируй бонус, проверь таймер и посмотри историю начислений.</div>
+                  </div>
+                  <div class="quick-link">Открыть раздел →</div>
+                </div>
+
+                <div class="quick-card contracts" onclick="switchMainTab('contracts')">
+                  <div>
+                    <div class="quick-icon">🎯</div>
+                    <div class="quick-title">Контракты</div>
+                    <div class="quick-text">Доступные задания, выполнение, доказательства и история.</div>
+                  </div>
+                  <div class="quick-link">Открыть раздел →</div>
+                </div>
+
+                <div class="quick-card shop" onclick="switchMainTab('shop')">
+                  <div>
+                    <div class="quick-icon">🛒</div>
+                    <div class="quick-title">Магазин</div>
+                    <div class="quick-text">Покупка предметов, инвентарь и продажа выбранных вещей.</div>
+                  </div>
+                  <div class="quick-link">Открыть раздел →</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- TAB BUTTONS -->
+            <section class="glass section-box">
+              <div class="section-head" style="margin-bottom:12px;">
+                <div>
+                  <h2 class="section-title">Разделы панели</h2>
+                  <div class="section-sub">Классическая навигация по вкладкам</div>
+                </div>
+              </div>
+
+              <div class="section-tabs">
+                <button id="tabBtn-chest" class="section-tab active" type="button" onclick="switchMainTab('chest')">🎁 Сундук</button>
+                <button id="tabBtn-shop" class="section-tab" type="button" onclick="switchMainTab('shop')">🛒 Магазин</button>
+                <button id="tabBtn-workshop" class="section-tab" type="button" onclick="switchMainTab('workshop')">🛠 Мастерская</button>
+                <button id="tabBtn-roulette" class="section-tab" type="button" onclick="switchMainTab('roulette')">🎰 Рулетка</button>
+                <button id="tabBtn-bonus" class="section-tab" type="button" onclick="switchMainTab('bonus')">💸 Бонус</button>
+
+                <button
+                  id="tabBtn-contracts"
+                  class="section-tab"
+                  type="button"
+                  onclick="switchMainTab('contracts')"
+                  style="position:relative;"
+                >
+                  🎯 Контракты
+                  <span
+                    id="contractsTabBadge"
+                    class="hidden"
+                    style="
+                      position:absolute;
+                      top:-8px;
+                      right:-8px;
+                      min-width:24px;
+                      height:24px;
+                      padding:0 7px;
+                      border-radius:999px;
+                      background:linear-gradient(135deg,#fbbf24,#ff3e9d);
+                      color:#fff;
+                      font-size:11px;
+                      font-weight:900;
+                      display:flex;
+                      align-items:center;
+                      justify-content:center;
+                      box-shadow:0 8px 20px rgba(255,62,157,0.25);
+                    "
+                  >0</span>
                 </button>
               </div>
-            </div>
+            </section>
 
             <!-- PROFILE CARD -->
             <section id="profileFloatingCard" class="glass section-box">
               <div class="section-head">
                 <div>
                   <h2 class="section-title">Игровой профиль</h2>
-                  <div class="section-sub">Привязка VK / никнейма и настройки уведомлений</div>
+                  <div class="section-sub">Привязка аккаунта, VK и игрового никнейма</div>
                 </div>
 
-                <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                  <!-- РУЧНОЙ индикатор (подключи в JS по желанию) -->
-                  <span id="manualProfileLoading" class="pill warn hidden">Обновляем…</span>
+                <button class="btn btn-dark" type="button" onclick="hideProfileCardCompletely()">Скрыть</button>
+              </div>
 
-                  <button class="btn btn-dark" type="button" onclick="hideProfileCardCompletely()">Скрыть</button>
+              <div id="gameLinkStatusPill" class="profile-pill warn">⚠ Не привязан</div>
+
+              <div class="profile-meta-grid">
+                <div class="profile-meta-card">
+                  <div class="profile-meta-label">Игровой ник</div>
+                  <div id="gameNickText" class="profile-meta-value">—</div>
+                </div>
+
+                <div class="profile-meta-card">
+                  <div class="profile-meta-label">VK ID</div>
+                  <div id="gameVkIdText" class="profile-meta-value">—</div>
+                </div>
+
+                <div class="profile-meta-card">
+                  <div class="profile-meta-label">Статус</div>
+                  <div id="gameProfileStateText" class="profile-meta-value">Ожидание привязки</div>
                 </div>
               </div>
 
-              <div id="gameLinkStatusPill" class="pill warn">⚠ Не привязан</div>
-
-              <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top:14px;">
-                <div class="list-item">
-                  <div class="muted" style="font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:11px;">Игровой ник</div>
-                  <div id="gameNickText" style="margin-top:6px; font-weight:950;">—</div>
-                </div>
-                <div class="list-item">
-                  <div class="muted" style="font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:11px;">VK ID</div>
-                  <div id="gameVkIdText" style="margin-top:6px; font-weight:950;">—</div>
-                </div>
-                <div class="list-item">
-                  <div class="muted" style="font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:11px;">Статус</div>
-                  <div id="gameProfileStateText" style="margin-top:6px; font-weight:950;">Ожидание привязки</div>
-                </div>
+              <div class="profile-link-actions">
+                <button class="btn btn-cyan" type="button" onclick="loadProfileFull(); loadLinkCodesStatus(); loadRightbarWidgets();">↺ Обновить</button>
+                <button class="btn btn-red" type="button" onclick="openUnlinkConfirmModal()">✖ Отвязать профиль</button>
               </div>
 
-              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
-                <button class="btn btn-cyan" type="button" onclick="loadProfileFull(); loadLinkCodesStatus(); loadRightbarWidgets();">Обновить</button>
-                <button class="btn btn-red" type="button" onclick="openUnlinkConfirmModal()">Отвязать профиль</button>
-              </div>
-
-              <div id="profileLinkBody" style="margin-top:16px;">
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+              <div id="profileLinkBody" class="profile-link-body">
+                <div class="link-code-grid">
                   <!-- VK -->
-                  <div class="glass" style="padding:16px; border-radius:18px;">
-                    <div style="font-weight:950; margin-bottom:6px;">Привязка VK</div>
-                    <div class="muted">Сгенерируй код и отправь его в ЛС группы.</div>
-
-                    <div class="list-item" style="margin-top:12px; text-align:center;">
-                      <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px;">VK код</div>
-                      <div id="vkCodeValue" style="margin-top:8px; font-size:20px; font-weight:950; letter-spacing:.12em;">Нет активного кода</div>
+                  <div class="link-code-card">
+                    <div class="link-card-header">
+                      <div class="link-card-icon vk-icon">🔗</div>
+                      <div>
+                        <div class="link-code-title">Привязка VK</div>
+                        <div class="link-code-sub">Отправь код в личные сообщения группы</div>
+                      </div>
                     </div>
 
-                    <div id="vkCodeMeta" class="muted" style="margin-top:10px;">Сгенерируй код, чтобы начать привязку VK.</div>
+                    <div class="link-code-divider"></div>
 
-                    <div style="margin-top:12px;">
-                      <button class="btn btn-cyan" type="button" style="width:100%;" onclick="generateVkCode()">Сгенерировать VK-код</button>
+                    <div class="link-code-value-wrap">
+                      <div class="link-code-value-label">Код VK</div>
+                      <div id="vkCodeValue" class="link-code-value empty">Нет активного кода</div>
                     </div>
 
-                    <div class="muted" style="margin-top:10px;">
-                      Отправь код: <b id="vkCodeInline">—</b><br/>
-                      Ссылка: <a href="https://vk.com/im/convo/-222804759?entrypoint=list_all" target="_blank" rel="noopener noreferrer">vk.com / absroleplay1script</a>
+                    <div id="vkCodeMeta" class="link-code-meta">
+                      Сгенерируй код, чтобы начать привязку VK.
+                    </div>
+
+                    <button class="btn btn-cyan btn-lg" style="width:100%;" type="button" onclick="generateVkCode()">Сгенерировать VK-код</button>
+
+                    <div class="muted" style="margin-top:14px;">
+                      Отправь этот код в ЛС группы:
+                      <a href="https://vk.com/im/convo/-222804759?entrypoint=list_all" target="_blank" rel="noopener noreferrer">vk.com / absroleplay1script</a><br>
+                      Код: <b id="vkCodeInline">—</b>
                     </div>
                   </div>
 
                   <!-- NICK -->
-                  <div class="glass" style="padding:16px; border-radius:18px;">
-                    <div style="font-weight:950; margin-bottom:6px;">Привязка никнейма</div>
-                    <div class="muted">Сгенерируй код и отправь боту в игре.</div>
-
-                    <div class="list-item" style="margin-top:12px; text-align:center;">
-                      <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px;">Nick код</div>
-                      <div id="nickCodeValue" style="margin-top:8px; font-size:20px; font-weight:950; letter-spacing:.12em;">Нет активного кода</div>
+                  <div class="link-code-card">
+                    <div class="link-card-header">
+                      <div class="link-card-icon nick-icon">🪪</div>
+                      <div>
+                        <div class="link-code-title">Привязка никнейма</div>
+                        <div class="link-code-sub">Отправь код игровому боту через СМС</div>
+                      </div>
                     </div>
 
-                    <div id="nickCodeMeta" class="muted" style="margin-top:10px;">Сгенерируй код, чтобы начать привязку никнейма.</div>
+                    <div class="link-code-divider"></div>
 
-                    <div style="margin-top:12px;">
-                      <button class="btn btn-pink" type="button" style="width:100%;" onclick="generateNickCode()">Сгенерировать код ника</button>
+                    <div class="link-code-value-wrap">
+                      <div class="link-code-value-label">Код ника</div>
+                      <div id="nickCodeValue" class="link-code-value empty">Нет активного кода</div>
                     </div>
 
-                    <div class="muted" style="margin-top:10px;">
-                      /смс 817 → <b id="nickCodeInline">—</b><br/>
-                      Бот: <b>Morah Herad</b> должен быть онлайн.
+                    <div id="nickCodeMeta" class="link-code-meta">
+                      Сгенерируй код, чтобы начать привязку никнейма.
+                    </div>
+
+                    <button class="btn btn-pink btn-lg" style="width:100%;" type="button" onclick="generateNickCode()">Сгенерировать код ника</button>
+
+                    <div class="muted" style="margin-top:14px;">
+                      В игре отправь: <b>/смс 817</b> → <b id="nickCodeInline">—</b><br>
+                      Бот: <b>Morah Herad</b>
                     </div>
                   </div>
                 </div>
 
-                <!-- notify settings -->
-                <div class="glass" style="padding:16px; border-radius:18px; margin-top:12px;">
-                  <div class="section-head" style="margin-bottom:10px;">
+                <div class="glass" style="padding:18px; margin-top:18px; border-radius:18px;">
+                  <div class="section-head" style="margin-bottom:12px;">
                     <div>
                       <h3 class="widget-title" style="margin:0;">Настройки уведомлений</h3>
-                      <div class="section-sub">Сайт / VK</div>
-                    </div>
-
-                    <!-- РУЧНОЙ индикатор (подключи в JS по желанию) -->
-                    <span id="manualNotifyLoading" class="pill warn hidden">Сохраняем…</span>
-                  </div>
-
-                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                    <div class="list-item">
-                      <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px; margin-bottom:10px;">На сайте</div>
-                      <div style="display:grid; gap:10px;">
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Бонус готов</span><input id="notifySiteBonusReady" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Сундук доступен</span><input id="notifySiteChestReady" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Рулетка доступна</span><input id="notifySiteRouletteReady" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Появился контракт</span><input id="notifySiteContractAvailable" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт скоро истечёт</span><input id="notifySiteContractExpiring" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт истёк</span><input id="notifySiteContractExpired" type="checkbox"></label>
-                      </div>
-                    </div>
-
-                    <div class="list-item">
-                      <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px; margin-bottom:10px;">Во VK</div>
-                      <div style="display:grid; gap:10px;">
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Бонус готов</span><input id="notifyVkBonusReady" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Сундук доступен</span><input id="notifyVkChestReady" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Рулетка доступна</span><input id="notifyVkRouletteReady" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Новый контракт</span><input id="notifyVkContractAvailable" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт скоро истечёт</span><input id="notifyVkContractExpiring" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт истёк</span><input id="notifyVkContractExpired" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт взят</span><input id="notifyVkContractTaken" type="checkbox"></label>
-                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт принят</span><input id="notifyVkContractCompleted" type="checkbox"></label>
-                      </div>
+                      <div class="section-sub">Какие уведомления присылать на сайте и во VK</div>
                     </div>
                   </div>
 
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
-                    <button class="btn btn-cyan" type="button" onclick="saveNotifySettings()">Сохранить</button>
-                    <button class="btn btn-dark" type="button" onclick="loadNotifySettings()">Обновить</button>
+                  <div style="display:grid; gap:18px;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+                      <div>
+                        <div class="profile-meta-label" style="margin-bottom:10px;">Сайт</div>
+                        <div class="list-box">
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Бонус готов</span><input id="notifySiteBonusReady" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Сундук доступен</span><input id="notifySiteChestReady" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Рулетка доступна</span><input id="notifySiteRouletteReady" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Появился контракт</span><input id="notifySiteContractAvailable" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Контракт скоро истечёт</span><input id="notifySiteContractExpiring" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Контракт истёк</span><input id="notifySiteContractExpired" type="checkbox"></label>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="profile-meta-label" style="margin-bottom:10px;">VK</div>
+                        <div class="list-box">
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Бонус готов</span><input id="notifyVkBonusReady" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Сундук доступен</span><input id="notifyVkChestReady" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Рулетка доступна</span><input id="notifyVkRouletteReady" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Доступен новый контракт</span><input id="notifyVkContractAvailable" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Контракт скоро истечёт</span><input id="notifyVkContractExpiring" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Контракт истёк</span><input id="notifyVkContractExpired" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Контракт взят в работу</span><input id="notifyVkContractTaken" type="checkbox"></label>
+                          <label class="list-item" style="display:flex;align-items:center;justify-content:space-between;"><span>Контракт принят</span><input id="notifyVkContractCompleted" type="checkbox"></label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                      <button class="btn btn-cyan" type="button" onclick="saveNotifySettings()">💾 Сохранить настройки</button>
+                      <button class="btn btn-dark" type="button" onclick="loadNotifySettings()">↺ Обновить</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -743,33 +1656,34 @@
                 <div class="section-head">
                   <div>
                     <h2 class="section-title">Дневной сундук</h2>
-                    <div class="section-sub">Открывай каждый день, чтобы держать серию.</div>
+                    <div class="section-sub">Открывай сундук каждый день и поддерживай серию наград</div>
                   </div>
-                  <div id="chestStatusPill" class="pill warn">⏳ Ожидание данных</div>
+
+                  <div id="chestStatusPill" class="profile-pill warn">⏳ Ожидание данных</div>
                 </div>
 
                 <div class="list-item">
-                  <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px;">Серия</div>
-                  <div id="chestCurrentDayText" style="margin-top:6px; font-weight:950; font-size:22px;">0 дней</div>
-                  <div id="chestTimerText" class="muted" style="margin-top:8px;">Загружаем данные…</div>
+                  <div class="profile-meta-label">Текущая серия</div>
+                  <div id="chestCurrentDayText" class="profile-meta-value" style="font-size:26px;">0 дней</div>
+                  <div id="chestTimerText" class="muted">Загружаем данные...</div>
 
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
-                    <button id="openChestBtn" class="btn btn-cyan" type="button" onclick="openDailyChest()">Открыть сундук</button>
-                    <button class="btn btn-dark" type="button" onclick="loadChestStatus(); loadChestHistory();">Обновить</button>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+                    <button id="openChestBtn" class="btn btn-gold btn-lg" type="button" onclick="openDailyChest()">🎁 Открыть сундук</button>
+                    <button class="btn btn-dark" type="button" onclick="loadChestStatus(); loadChestHistory();">↺ Обновить</button>
                   </div>
                 </div>
 
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px;">
-                  <div class="glass" style="padding:16px; border-radius:18px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+                  <div class="glass" style="padding:18px; border-radius:18px;">
                     <div class="widget-title">Последняя награда</div>
                     <div id="chestLastRewardBox" class="list-item">
                       <div class="muted">Открой сундук, чтобы получить награду</div>
                     </div>
                   </div>
 
-                  <div class="glass" style="padding:16px; border-radius:18px;">
+                  <div class="glass" style="padding:18px; border-radius:18px;">
                     <div class="widget-title">История сундука</div>
-                    <div id="chestHistoryList" class="list"></div>
+                    <div id="chestHistoryList" class="bonus-history-list"></div>
                   </div>
                 </div>
               </div>
@@ -780,27 +1694,44 @@
               <div class="glass section-box">
                 <div class="section-head">
                   <div>
-                    <h2 class="section-title">Магазин</h2>
-                    <div class="section-sub">Инвентарь и покупка предметов.</div>
+                    <h2 class="section-title">Магазин и предметы</h2>
+                    <div class="section-sub">Переключайся между своим инвентарём и магазином предметов</div>
                   </div>
-                  <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button class="btn btn-dark" type="button" onclick="loadProfileFull(); loadWsObjects();">Обновить</button>
+
+                  <button class="btn btn-dark" type="button" onclick="loadProfileFull(); loadWsObjects();">↺ Обновить</button>
+                </div>
+
+                <div class="shop-toggle-wrap">
+                  <button id="shopViewInventoryBtn" class="shop-toggle-btn active" type="button" onclick="switchShopView('inventory')">🎒 Свои предметы</button>
+                  <button id="shopViewStoreBtn" class="shop-toggle-btn" type="button" onclick="switchShopView('store')">🛒 Магазин предметов</button>
+                </div>
+
+                <div id="inventoryBlock" class="glass" style="padding:18px; border-radius:18px;">
+                  <div class="widget-title">Свой инвентарь</div>
+                  <div id="inventoryList" class="inventory-list"></div>
+                </div>
+
+                <div id="shopBlock" class="glass hidden" style="padding:18px; border-radius:18px;">
+                  <div class="widget-title">Магазин предметов</div>
+                  <div id="shopGrid" class="shop-grid"></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- TAB: WORKSHOP -->
+            <section id="tab-workshop" class="tab-panel">
+              <div class="glass section-box">
+                <div class="placeholder-box">
+                  <div class="placeholder-inner">
+                    <div class="placeholder-icon">🛠</div>
+                    <h2 class="placeholder-title">Мастерская</h2>
+                    <div class="placeholder-text">
+                      Раздел находится в разработке. Здесь будет крафт предметов, переработка ресурсов и сбор уникальных вещей.
+                    </div>
+                    <button class="btn btn-cyan" type="button" onclick="showToast('Раздел Мастерская скоро будет доступен', 'info')">
+                      Скоро откроется
+                    </button>
                   </div>
-                </div>
-
-                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
-                  <button id="shopViewInventoryBtn" class="section-tab active" type="button" onclick="switchShopView('inventory')">Инвентарь</button>
-                  <button id="shopViewStoreBtn" class="section-tab" type="button" onclick="switchShopView('store')">Магазин</button>
-                </div>
-
-                <div id="inventoryBlock" class="glass" style="padding:16px; border-radius:18px;">
-                  <div class="widget-title">Твой инвентарь</div>
-                  <div id="inventoryList" class="list"></div>
-                </div>
-
-                <div id="shopBlock" class="glass hidden" style="padding:16px; border-radius:18px;">
-                  <div class="widget-title">Витрина</div>
-                  <div id="shopGrid" class="list"></div>
                 </div>
               </div>
             </section>
@@ -811,23 +1742,23 @@
                 <div class="section-head">
                   <div>
                     <h2 class="section-title">Рулетка</h2>
-                    <div class="section-sub">Прокруты: <b><span id="rouletteLeftText">0</span> / <span id="rouletteMaxText">10</span></b></div>
+                    <div class="section-sub">
+                      Прокрутов: <b><span id="rouletteLeftText">0</span> / <span id="rouletteMaxText">10</span></b>
+                    </div>
                   </div>
 
-                  <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button class="btn btn-dark" type="button" onclick="loadRouletteLimits(); loadRoulettePrizes();">Обновить</button>
-                  </div>
+                  <button class="btn btn-dark" type="button" onclick="loadRouletteLimits(); loadRoulettePrizes();">↺ Обновить</button>
                 </div>
 
-                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
-                  <button class="btn btn-pink" id="spinButton" type="button" onclick="spinRoulette()">Крутить</button>
+                <div style="display:flex; justify-content:flex-start; margin-bottom:16px;">
+                  <button class="btn btn-pink btn-lg" id="spinButton" type="button" onclick="spinRoulette()">🎰 Крутить</button>
                 </div>
 
-                <div class="list-item" style="overflow:hidden;">
-                  <div id="rouletteStrip" style="display:flex; gap:14px; overflow:auto; padding: 6px 4px;"></div>
+                <div class="glass" style="padding:16px; border-radius:18px;">
+                  <div id="rouletteStrip" style="display:flex; gap:16px; overflow-x:auto; padding-bottom:6px;"></div>
                 </div>
 
-                <div id="rouletteResult" class="list-item" style="margin-top:12px;">
+                <div id="rouletteResult" class="list-item" style="margin-top:16px;">
                   Нажми «Крутить», чтобы испытать удачу.
                 </div>
               </div>
@@ -839,26 +1770,26 @@
                 <div class="section-head">
                   <div>
                     <h2 class="section-title">Ежедневный бонус</h2>
-                    <div class="section-sub">Таймер: <b id="bonusBigTimer">—</b></div>
+                    <div class="section-sub">Большая награда раз в сутки</div>
                   </div>
-                  <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button class="btn btn-dark" type="button" onclick="loadBonusStatus()">Обновить</button>
+
+                  <button class="btn btn-dark" type="button" onclick="loadBonusStatus()">↺ Обновить</button>
+                </div>
+
+                <div class="glass" style="padding:20px; border-radius:20px;">
+                  <div class="profile-meta-label">Награда</div>
+                  <div id="bonusAmount" class="profile-meta-value" style="font-size:40px; margin-top:6px;">$0</div>
+                  <div id="bonusMeta" class="muted" style="margin-top:10px;">Ожидание активации бонуса</div>
+                  <div id="bonusBigTimer" class="profile-meta-value" style="font-size:18px; margin-top:12px;">Загружаем таймер...</div>
+
+                  <div style="margin-top:16px;">
+                    <button id="activateBonusBtn" class="btn btn-green btn-lg" type="button" onclick="activateBonus()">💸 Активировать</button>
                   </div>
                 </div>
 
-                <div class="list-item">
-                  <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px;">Награда</div>
-                  <div id="bonusAmount" style="margin-top:8px; font-size:28px; font-weight:950;">$0</div>
-                  <div id="bonusMeta" class="muted" style="margin-top:8px;">Ожидание активации бонуса</div>
-
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
-                    <button id="activateBonusBtn" class="btn btn-green" type="button" onclick="activateBonus()">Активировать</button>
-                  </div>
-                </div>
-
-                <div class="glass" style="padding:16px; border-radius:18px; margin-top:12px;">
+                <div class="glass" style="padding:18px; border-radius:18px; margin-top:16px;">
                   <div class="widget-title">История бонусов</div>
-                  <div id="bonusHistoryList" class="list"></div>
+                  <div id="bonusHistoryList" class="bonus-history-list"></div>
                 </div>
               </div>
             </section>
@@ -869,34 +1800,32 @@
                 <div class="section-head">
                   <div>
                     <h2 class="section-title">Контрактный центр</h2>
-                    <div class="section-sub">Доступные / выполняются / история</div>
+                    <div class="section-sub">Следи за доступными заказами, активной работой и историей</div>
                   </div>
 
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                    <!-- РУЧНОЙ индикатор (подключи в JS по желанию) -->
-                    <span id="manualContractsLoading" class="pill warn hidden">Загрузка…</span>
-
-                    <button class="btn btn-dark" type="button" onclick="loadContractsAll()">Обновить</button>
-                  </div>
+                  <button class="btn btn-dark" type="button" onclick="loadContractsAll()">↺ Обновить</button>
                 </div>
 
-                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
-                  <button id="contractsSubTabBtn-available" class="section-tab active" type="button" onclick="switchContractsSubTab('available')">Доступные</button>
-                  <button id="contractsSubTabBtn-progress" class="section-tab" type="button" onclick="switchContractsSubTab('progress')">В работе</button>
-                  <button id="contractsSubTabBtn-history" class="section-tab" type="button" onclick="switchContractsSubTab('history')">История</button>
+                <div class="shop-toggle-wrap">
+                  <button id="contractsSubTabBtn-available" class="shop-toggle-btn active" type="button" onclick="switchContractsSubTab('available')">ДОСТУПНЫЕ</button>
+                  <button id="contractsSubTabBtn-progress" class="shop-toggle-btn" type="button" onclick="switchContractsSubTab('progress')">ВЫПОЛНЯЮТСЯ</button>
+                  <button id="contractsSubTabBtn-history" class="shop-toggle-btn" type="button" onclick="switchContractsSubTab('history')">ИСТОРИЯ</button>
+                </div>
+
+                <div style="margin-bottom:12px;" class="muted">
+                  Доступно контрактов: <b id="contractsAvailableCount">0</b>
                 </div>
 
                 <div id="contractsSubTab-available" class="tab-panel active">
-                  <div class="muted" style="margin-bottom:10px;">Доступно: <b id="contractsAvailableCount">0</b></div>
-                  <div id="contractsAvailableList" class="list"></div>
+                  <div id="contractsAvailableList" class="contracts-list"></div>
                 </div>
 
                 <div id="contractsSubTab-progress" class="tab-panel">
-                  <div id="contractsProgressList" class="list"></div>
+                  <div id="contractsProgressList" class="contracts-list"></div>
                 </div>
 
                 <div id="contractsSubTab-history" class="tab-panel">
-                  <div id="contractsHistoryList" class="list"></div>
+                  <div id="contractsHistoryList" class="contracts-list"></div>
                 </div>
               </div>
             </section>
@@ -904,42 +1833,30 @@
 
           <!-- RIGHT -->
           <aside class="right-column">
-            <div id="balanceWidget" class="glass widget">
-              <h3 class="widget-title">Баланс</h3>
-              <div class="stat">
-                <div class="stat-label">Текущий</div>
-                <div id="widgetBalanceValue" class="stat-value">$0</div>
-              </div>
-            </div>
-
-            <div id="outputWidget" class="glass widget">
-              <h3 class="widget-title">К выводу</h3>
-              <div class="stat">
-                <div class="stat-label">Доступно</div>
-                <div id="widgetOutputValue" class="stat-value">$0</div>
-              </div>
-            </div>
-
-            <div class="glass widget">
-              <div class="section-head" style="margin-bottom:10px;">
+            <div class="glass widget-box">
+              <div class="section-head" style="margin-bottom:12px;">
                 <div>
                   <h3 class="widget-title" style="margin:0;">PS ONLINE</h3>
                   <div class="section-sub">Игроки из биндера онлайн</div>
                 </div>
-                <span class="pill ok">● <span id="psOnlineCountText">0</span></span>
+
+                <div class="profile-pill ok">● <span id="psOnlineCountText">0</span></div>
               </div>
-              <div id="psOnlineList" class="list"></div>
+
+              <div id="psOnlineList" class="online-list"></div>
             </div>
 
-            <div class="glass widget">
-              <div class="section-head" style="margin-bottom:10px;">
+            <div class="glass widget-box">
+              <div class="section-head" style="margin-bottom:12px;">
                 <div>
                   <h3 class="widget-title" style="margin:0;">Онлайн на сайте</h3>
                   <div class="section-sub">Текущие пользователи</div>
                 </div>
-                <span class="pill ok">● <span id="siteOnlineCountPill">0</span></span>
+
+                <div class="profile-pill ok">● <span id="siteOnlineCountPill">0</span></div>
               </div>
-              <div id="siteOnlineList" class="list"></div>
+
+              <div id="siteOnlineList" class="online-list"></div>
             </div>
           </aside>
         </div>
@@ -949,16 +1866,12 @@
     <!-- PRIZE MODAL -->
     <div id="prizeViewModalBg" class="modal-bg hidden">
       <div class="modal">
-        <h3 class="confirm-title" style="color: var(--yellow);">Приз получен</h3>
-        <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
-          <div class="glass" style="width:96px; height:96px; border-radius:18px; display:grid; place-items:center;">
-            <img id="prizeViewImage" class="hidden" alt="prize" style="width:86px; height:86px; object-fit:cover; border-radius:14px;" />
-            <div id="prizeViewNoImage" style="font-size:34px;">🎁</div>
-          </div>
-          <div style="min-width:0;">
-            <div id="prizeViewTitle" style="font-weight:950; line-height:1.45;"></div>
-            <div class="muted" style="margin-top:6px;">Приз уже сохранён в профиле.</div>
-          </div>
+        <h3 class="confirm-title">Ты получил приз</h3>
+
+        <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+          <img id="prizeViewImage" class="hidden" alt="prize" style="width:90px;height:90px;border-radius:16px;object-fit:cover;" />
+          <div id="prizeViewNoImage" style="font-size:56px;">🎁</div>
+          <div id="prizeViewTitle" class="confirm-text" style="font-size:16px;"></div>
         </div>
 
         <div class="modal-actions">
@@ -972,6 +1885,7 @@
       <div class="modal">
         <h3 class="confirm-title">Отвязать профиль?</h3>
         <div class="confirm-text">
+          Ты действительно хочешь отвязать игровой профиль от сайта World Script?
           После отвязки привязанный никнейм и VK ID будут очищены.
         </div>
         <div class="modal-actions">
@@ -984,36 +1898,39 @@
     <!-- ADMIN VK MODAL -->
     <div id="adminVkModalBg" class="modal-bg hidden">
       <div class="modal">
-        <h3 class="confirm-title">Подтверждение входа (admin)</h3>
+        <h3 class="confirm-title">Подтверждение входа</h3>
+
         <div class="confirm-text">
-          Получи код в ЛС группы (команда <b>!кодвк</b>) и введи его ниже.
+          Для защиты админ-аккаунта получи код подтверждения через VK.
         </div>
 
-        <div style="margin-top:12px;">
-          <input id="adminVkCodeInput" class="field" placeholder="Код из VK" />
+        <div style="margin-top:14px;">
+          <input id="adminVkCodeInput" class="field" placeholder="Введите код из VK" />
         </div>
 
         <div id="adminVkMsg" class="auth-msg" style="margin-top:10px;"></div>
 
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closeAdminVkModal()">Отмена</button>
-          <button id="adminVkSubmitBtn" class="btn btn-cyan" type="button" onclick="confirmAdminVkLogin()">Подтвердить</button>
+          <button id="adminVkSubmitBtn" class="btn btn-cyan" type="button" onclick="confirmAdminVkLogin()">Подтвердить вход</button>
         </div>
       </div>
     </div>
 
     <!-- NOTIFICATIONS MODAL -->
     <div id="notificationsModalBg" class="modal-bg hidden">
-      <div class="modal">
-        <div class="section-head" style="margin-bottom:12px;">
-          <h3 class="confirm-title" style="margin:0;">Уведомления</h3>
-          <button class="btn btn-dark" type="button" onclick="markAllNotificationsRead()">Прочитать всё</button>
+      <div class="modal" style="max-width:760px; max-height:90vh; overflow:auto;">
+        <div class="section-head" style="margin-bottom:14px;">
+          <div>
+            <h3 class="confirm-title" style="margin:0;">Уведомления</h3>
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-dark" type="button" onclick="markAllNotificationsRead()">Прочитать всё</button>
+          </div>
         </div>
 
-        <!-- Это «Загрузка…» оставлено, т.к. пользователь открыл модал вручную -->
-        <div id="notificationsLoading" class="pill warn hidden" style="margin-bottom:12px;">Загрузка…</div>
-
-        <div id="notificationsList" class="list"></div>
+        <div id="notificationsList" class="online-list"></div>
 
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closeNotificationsPanel()">Закрыть</button>
