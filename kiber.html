@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAPPERS NEON CORE v2.0</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        :root {
+            --neon-cyan: #00f7ff;
+            --neon-pink: #ff00aa;
+            --neon-purple: #9d00ff;
+            --neon-red: #ff0033;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            overflow: hidden;
+            background: #0a001f;
+            color: white;
+            font-family: 'Press Start 2P', system-ui;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* ЖИВОЙ КИБЕР-ФОН 2.0 */
+        canvas#cyber-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,247,255,0.09) 2px, rgba(0,247,255,0.09) 4px);
+            pointer-events: none;
+            z-index: 2;
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan { 0% { background-position: 0 0; } 100% { background-position: 0 100vh; } }
+
+        /* ГЛОБАЛЬНЫЙ ГЛИТЧ ОВЕРЛЕЙ */
+        #glitch-flash {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(157, 0, 255, 0.15);
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            animation: fullGlitch 0.6s ease-out;
+            display: none;
+        }
+
+        @keyframes fullGlitch {
+            0%   { opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 20%, 0 20%); }
+            20%  { clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); }
+            40%  { clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%); }
+            60%  { opacity: 0.9; }
+            100% { opacity: 0; }
+        }
+
+        .content {
+            position: relative;
+            z-index: 3;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 5%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 3.8rem;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+
+        .title::before,
+        .title::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        .title::before { color: var(--neon-cyan); animation: glitch-1 0.7s infinite linear alternate-reverse; }
+        .title::after  { color: var(--neon-pink);  animation: glitch-2 1.1s infinite linear alternate-reverse; }
+
+        @keyframes glitch-1 { 0%{transform:translate(3px,1px)} 100%{transform:translate(-3px,-2px)} }
+        @keyframes glitch-2 { 0%{transform:translate(-2px,2px)} 100%{transform:translate(3px,-1px)} }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .neon-btn {
+            position: relative;
+            padding: 28px 70px;
+            font-size: 1.65rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            color: white;
+            background: rgba(10, 0, 31, 0.65);
+            border: 4px solid var(--neon-cyan);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 
+                0 0 20px var(--neon-cyan),
+                0 0 40px var(--neon-cyan),
+                0 0 80px var(--neon-cyan),
+                inset 0 0 30px rgba(0,247,255,0.6);
+            min-width: 380px;
+            overflow: hidden;
+        }
+
+        .neon-btn:hover {
+            transform: scale(1.18) translateY(-12px);
+            box-shadow: 
+                0 0 40px var(--neon-cyan),
+                0 0 80px var(--neon-cyan),
+                0 0 140px var(--neon-pink),
+                0 0 180px var(--neon-red),
+                inset 0 0 50px rgba(255,0,170,0.9);
+            border-color: var(--neon-pink);
+        }
+
+        .neon-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 40%; height: 300%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+            transform: skewX(-25deg);
+            animation: shine 4s linear infinite;
+            opacity: 0;
+        }
+        .neon-btn:hover::before { opacity: 1; animation-duration: 0.9s; }
+
+        @keyframes shine { 0%{transform:translateX(-150%) skewX(-25deg)} 100%{transform:translateX(350%) skewX(-25deg)} }
+
+        /* ЦВЕТА КНОПОК */
+        .btn-quests { border-color: var(--neon-cyan); }
+        .btn-guide  { border-color: var(--neon-purple); }
+        .btn-ref    { border-color: var(--neon-pink); }
+
+        /* РАЗДЕЛЫ ПОД КНОПКАМИ */
+        .sections-wrapper {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            background: rgba(10, 0, 31, 0.4);
+            border: 2px solid rgba(157, 0, 255, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 60px rgba(157,0,255,0.4);
+        }
+
+        .section {
+            display: none;
+            animation: sectionPop 0.6s cubic-bezier(0.23,1,0.32,1);
+        }
+        .section.active { display: block; }
+
+        @keyframes sectionPop {
+            0%   { opacity: 0; transform: scale(0.92) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .terminal {
+            background: #000;
+            color: #00ff9d;
+            padding: 20px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            border: 1px solid #00ff9d;
+            box-shadow: inset 0 0 30px #00ff9d;
+            white-space: pre-wrap;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85rem;
+            opacity: 0.7;
+            letter-spacing: 4px;
+            z-index: 5;
+            text-align: center;
+        }
+
+        .glow-pulse { animation: pulse-glow 2.5s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+    <canvas id="cyber-bg"></canvas>
+    <div class="overlay"></div>
+    <div id="glitch-flash"></div>
+
+    <div class="content">
+        <div class="header">
+            <h1 class="title glow-pulse" data-text="LAPPERS NEON CORE">LAPPERS NEON CORE</h1>
+            <p style="margin-top:10px; font-size:1.2rem; opacity:0.9; letter-spacing:6px;">
+                v2.0 • ЖИВОЙ КИБЕР • ЗВУК • РАЗДЕЛЫ • ГЛИТЧ
+            </p>
+        </div>
+
+        <!-- НАВИГАЦИЯ -->
+        <div class="nav-buttons">
+            <button onclick="activateSection('quests')" class="neon-btn btn-quests">КВЕСТЫ</button>
+            <button onclick="activateSection('guide')"  class="neon-btn btn-guide">РУКОВОДСТВО</button>
+            <button onclick="activateSection('ref')"    class="neon-btn btn-ref">СПРАВОЧНИК</button>
+        </div>
+
+        <!-- РАЗДЕЛЫ ПОД КНОПКАМИ -->
+        <div class="sections-wrapper">
+            
+            <!-- КВЕСТЫ -->
+            <div id="quests" class="section">
+                <h2>🚀 АКТИВНЫЕ КВЕСТЫ</h2>
+                <div class="terminal">
+                    [LAPPERS] → Генерирую миссии...<br>
+                    • ХАКНИ СИСТЕМУ RIGA-NET (прогресс 42%)<br>
+                    • СОБЕРИ 100 НЕОНОВЫХ ФРАГМЕНТОВ<br>
+                    • УНИЧТОЖЬ ГЛИТЧ-ВИРУС v0.9<br>
+                    • РАЗБЛОКИРУЙ СЕКРЕТНЫЙ УРОВЕНЬ "DIMON MODE"<br><br>
+                    Выбери квест и жми «НАЧАТЬ ХАК» 🔥
+                </div>
+            </div>
+
+            <!-- РУКОВОДСТВО -->
+            <div id="guide" class="section">
+                <h2>📖 РУКОВОДСТВО ХАКЕРА</h2>
+                <div class="terminal">
+                    1. НАВЕДИ МЫШКУ → услышишь НЕОНОВЫЙ ЗВУК<br>
+                    2. КЛИК → запустится ГЛИТЧ + СЕКЦИЯ<br>
+                    3. ФОН ЖИВОЙ → частицы реагируют на тебя<br>
+                    4. LAPPERS RULE: чем больше кликаешь — тем ярче свечение<br><br>
+                    Ты уже в матрице, брат. Продолжай в том же духе!
+                </div>
+            </div>
+
+            <!-- СПРАВОЧНИК -->
+            <div id="ref" class="section">
+                <h2>📟 КИБЕР-СПРАВОЧНИК</h2>
+                <div class="terminal">
+                    NEON CORE — живая система LAPPERS<br>
+                    ГЛИТЧ — красивый баг, который мы любим<br>
+                    НЕОНОВЫЙ ЗВУК — звук будущего<br>
+                    КВЕСТЫ — твои ежедневные эпик-миссии<br>
+                    ДИМОН МОД — когда всё становится ИМБА<br><br>
+                    Версия 2.0 специально для тебя, ЛАППЕРС!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        LAPPERS CYBER v2.0 • РИГА • 2026 • ЗВУК ВКЛЮЧЁН • ГЛИТЧ ГОТОВ
+    </div>
+
+    <script>
+        // ====================== АУДИО КОНТЕКСТ ======================
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        // НЕОНОВЫЙ ЗВУК НА ХОВЕР
+        function playHover() {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880 + Math.random() * 300, audioCtx.currentTime);
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(2200, audioCtx.currentTime);
+            gain.gain.value = 0.25;
+            
+            osc.connect(filter).connect(gain).connect(audioCtx.destination);
+            osc.start();
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.15);
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // ИМБА КЛИК ЗВУК (бас + зап)
+        function playClick() {
+            initAudio();
+            
+            // Бас
+            const bass = audioCtx.createOscillator();
+            bass.type = 'sawtooth';
+            bass.frequency.setValueAtTime(120, audioCtx.currentTime);
+            const bassGain = audioCtx.createGain();
+            bassGain.gain.value = 0.6;
+            bass.connect(bassGain).connect(audioCtx.destination);
+            bass.start();
+            bassGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+            bass.stop(audioCtx.currentTime + 0.7);
+
+            // Зап + шум
+            const zap = audioCtx.createOscillator();
+            zap.type = 'square';
+            zap.frequency.setValueAtTime(1800, audioCtx.currentTime);
+            const zapGain = audioCtx.createGain();
+            zapGain.gain.value = 0.4;
+            zap.connect(zapGain).connect(audioCtx.destination);
+            zap.start();
+            zapGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.12);
+            zap.stop(audioCtx.currentTime + 0.2);
+
+            // Лёгкий шум
+            const noise = audioCtx.createBufferSource();
+            const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.3, audioCtx.sampleRate);
+            const output = buffer.getChannelData(0);
+            for (let i = 0; i < buffer.length; i++) output[i] = Math.random() * 2 - 1;
+            noise.buffer = buffer;
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.value = 0.15;
+            noise.connect(noiseGain).connect(audioCtx.destination);
+            noise.start();
+        }
+
+        // ====================== ГЛИТЧ ======================
+        function triggerGlitch() {
+            const flash = document.getElementById('glitch-flash');
+            flash.style.display = 'block';
+            flash.style.animation = 'none';
+            void flash.offsetWidth; // force reflow
+            flash.style.animation = 'fullGlitch 0.6s ease-out';
+            setTimeout(() => { flash.style.display = 'none'; }, 700);
+        }
+
+        // ====================== ПЕРЕКЛЮЧЕНИЕ РАЗДЕЛОВ ======================
+        function activateSection(section) {
+            playClick();
+            triggerGlitch();
+
+            // Убираем active у всех
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            // Включаем нужный
+            const target = document.getElementById(section);
+            if (target) target.classList.add('active');
+        }
+
+        // ====================== ЖИВОЙ ФОН (ещё круче) ======================
+        const canvas = document.getElementById('cyber-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let width, height;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 4 + 1.2;
+                this.speedX = Math.random() * 1.8 - 0.9;
+                this.speedY = Math.random() * 1.8 - 0.9;
+                this.color = Math.random() > 0.6 ? '#00f7ff' : '#ff00aa';
+                this.life = 100;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life--;
+                if (this.life <= 0 || this.x < 0 || this.x > width || this.y < 0 || this.y > height) this.reset();
+            }
+            draw() {
+                ctx.shadowBlur = 22;
+                ctx.shadowColor = this.color;
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.floor(Math.min(width * height / 6500, 220));
+            for (let i = 0; i < count; i++) particles.push(new Particle());
+        }
+
+        function connect() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.hypot(dx, dy);
+                    if (dist < 145) {
+                        ctx.strokeStyle = `rgba(157,0,255,${1 - dist/145})`;
+                        ctx.lineWidth = 1.1;
+                        ctx.shadowBlur = 12;
+                        ctx.shadowColor = '#9d00ff';
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10,0,31,0.15)';
+            ctx.fillRect(0, 0, width, height);
+
+            particles.forEach(p => { p.update(); p.draw(); });
+            connect();
+            requestAnimationFrame(animate);
+        }
+
+        // ====================== ЗАПУСК ВСЕГО ======================
+        window.addEventListener('load', () => {
+            resize();
+            initParticles();
+            animate();
+
+            // Наведение на кнопки → звук
+            document.querySelectorAll('.neon-btn').forEach(btn => {
+                btn.addEventListener('mouseenter', playHover);
+            });
+
+            console.log('%cLAPPERS NEON CORE v2.0 ЗАГРУЖЕН • ЗВУК + ГЛИТЧ + РАЗДЕЛЫ = ИМБА', 'color:#ff00aa; font-size:15px; font-family:monospace');
+        });
+
+        window.addEventListener('resize', () => {
+            resize();
+            initParticles();
+        });
+    </script>
+</body>
+</html>
