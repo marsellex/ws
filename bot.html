@@ -3897,19 +3897,339 @@ input[type="checkbox"] {
     scroll-behavior: auto !important;
   }
 }
+
+/* TOPBAR STATS */
+.topbar-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.stat-pill-icon {
+  font-size: 14px;
+}
+
+.stat-pill-label {
+  color: var(--text-muted);
+}
+
+.stat-pill-dot {
+  color: var(--cyan);
+  font-size: 8px;
+}
+
+.stat-pill-dot.green {
+  color: var(--green);
+  text-shadow: 0 0 8px rgba(72,229,123,0.6);
+}
+
+.stat-pill-value {
+  color: #fff;
+  font-weight: 900;
+}
+
+.stat-pill-value.green {
+  color: var(--green);
+  text-shadow: 0 0 12px rgba(72,229,123,0.4);
+}
+
+.stat-pill-timer {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stat-pill-balance,
+.stat-pill-output {
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+
+.stat-pill-output {
+  background: rgba(72,229,123,0.08);
+  border-color: rgba(72,229,123,0.16);
+}
+
+/* NOTIFY BUTTON BADGE */
+.topbar-notify-btn {
+  position: relative;
+}
+
+.notify-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff3e9d, #ff6b6b);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255,62,157,0.4);
+  pointer-events: none;
+}
+
+/* CONTRACTS TAB BADGE */
+.contracts-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fbbf24, #ff3e9d);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255,62,157,0.35);
+  pointer-events: none;
+}
+
+/* RAIL CONTRACTS BADGE */
+.rail-contracts-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff3e9d, #fbbf24);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255,62,157,0.35);
+  pointer-events: none;
+}
+
+/* ACTIVITY FEED COMPACT */
+.widget-activity {
+  max-height: 420px;
+  overflow: hidden;
+}
+
+.widget-header {
+  margin-bottom: 12px;
+}
+
+.activity-feed-list {
+  display: grid;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.activity-feed-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.activity-feed-list::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.02);
+  border-radius: 4px;
+}
+
+.activity-feed-list::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+.activity-item {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: .2s ease;
+}
+
+.activity-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.activity-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.activity-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.activity-content {
+  min-width: 0;
+}
+
+.activity-login {
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.activity-action {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* NOTIFY SETTINGS */
+.notify-settings-box {
+  padding: 18px;
+  margin-top: 18px;
+  border-radius: 18px;
+}
+
+.notify-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.notify-check:hover {
+  color: #fff;
+}
+
+.notify-check input {
+  accent-color: var(--cyan);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* DASHBOARD LAYOUT UPDATE */
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 80px;
+  gap: 18px;
+  align-items: start;
+}
+
+.left-column {
+  position: sticky;
+  top: 22px;
+}
+
+.mini-rail {
+  position: sticky;
+  top: 22px;
+  display: grid;
+  gap: 10px;
+}
+
+.rail-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  font-size: 26px;
+}
+
+.rail-badge {
+  display: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr 80px;
+  }
+  
+  .left-column {
+    display: none;
+  }
+  
+  .topbar-stats {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .mini-rail {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+    background: rgba(10,16,28,0.95);
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+  }
+  
+  .rail-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+}
+      
 </style>
-  </head>
+</head>
 <body>
   <div class="bg-animated" aria-hidden="true">
     <div class="bg-grid"></div>
-
     <div class="bg-orbs">
       <div class="bg-orb"></div>
       <div class="bg-orb"></div>
       <div class="bg-orb"></div>
       <div class="bg-orb"></div>
     </div>
-
     <div class="bg-particles">
       <div class="bg-particle"></div>
       <div class="bg-particle"></div>
@@ -3932,7 +4252,6 @@ input[type="checkbox"] {
       <div class="bg-particle"></div>
       <div class="bg-particle"></div>
     </div>
-
     <div class="bg-noise"></div>
     <div class="bg-vignette"></div>
   </div>
@@ -3946,11 +4265,9 @@ input[type="checkbox"] {
         <div class="glass auth-hero">
           <div>
             <div class="auth-kicker">World Script Access</div>
-
             <h1 class="auth-title">
               Добро пожаловать в <span class="accent">World Script</span>
             </h1>
-
             <div id="glitchPhraseText" class="auth-text">
               Мастерская предметов, сундуки, рулетка, бонус и многое другое!
             </div>
@@ -3966,23 +4283,8 @@ input[type="checkbox"] {
           </div>
 
           <div class="auth-tabs" role="tablist" aria-label="Авторизация">
-            <button
-              id="authLoginBtn"
-              class="auth-tab-btn active"
-              type="button"
-              onclick="switchAuthTab('login')"
-            >
-              Вход
-            </button>
-
-            <button
-              id="authRegisterBtn"
-              class="auth-tab-btn"
-              type="button"
-              onclick="switchAuthTab('register')"
-            >
-              Регистрация
-            </button>
+            <button id="authLoginBtn" class="auth-tab-btn active" type="button" onclick="switchAuthTab('login')">Вход</button>
+            <button id="authRegisterBtn" class="auth-tab-btn" type="button" onclick="switchAuthTab('register')">Регистрация</button>
           </div>
 
           <div id="authLoginForm" class="auth-form active">
@@ -3990,11 +4292,9 @@ input[type="checkbox"] {
               <input id="loginInput" class="field" placeholder="Логин" autocomplete="username" />
               <input id="passwordInput" class="field" type="password" placeholder="Пароль" autocomplete="current-password" />
             </div>
-
             <div class="auth-actions">
               <button id="loginSubmitBtn" class="btn btn-pink" type="button" onclick="loginWs()">🔐 Войти</button>
             </div>
-
             <div id="loginMsg" class="auth-msg" aria-live="polite"></div>
           </div>
 
@@ -4003,11 +4303,9 @@ input[type="checkbox"] {
               <input id="regLoginInput" class="field" placeholder="Логин" autocomplete="username" />
               <input id="regPasswordInput" class="field" type="password" placeholder="Пароль" autocomplete="new-password" />
             </div>
-
             <div class="auth-actions">
               <button id="registerSubmitBtn" class="btn btn-cyan" type="button" onclick="registerWs()">✨ Создать аккаунт</button>
             </div>
-
             <div id="registerMsg" class="auth-msg" aria-live="polite"></div>
           </div>
         </div>
@@ -4021,64 +4319,57 @@ input[type="checkbox"] {
         <header class="topbar glass">
           <div class="brand">
             <div class="brand-logo">WS</div>
-
             <div class="brand-text">
               <div class="brand-title" id="brandTitle">World Script</div>
             </div>
           </div>
 
+          <!-- STATS PILLS -->
+          <div class="topbar-stats">
+            <div class="stat-pill">
+              <span class="stat-pill-icon">🚔</span>
+              <span class="stat-pill-label">Онлайн PS</span>
+              <span class="stat-pill-dot">●</span>
+              <span id="psOnlineCountText" class="stat-pill-value">0</span>
+            </div>
+
+            <div class="stat-pill">
+              <span class="stat-pill-icon">📈</span>
+              <span class="stat-pill-label">На сайте</span>
+              <span class="stat-pill-dot">●</span>
+              <span id="siteOnlineCountText" class="stat-pill-value">0</span>
+            </div>
+
+            <div class="stat-pill stat-pill-balance">
+              <span class="stat-pill-icon">🛠</span>
+              <span class="stat-pill-label">Игровой баланс</span>
+              <span class="stat-pill-dot">●</span>
+              <span id="widgetBalanceValue" class="stat-pill-value">$0</span>
+              <span id="balanceWithdrawTimer" class="stat-pill-timer">(до вывода: —)</span>
+            </div>
+
+            <div class="stat-pill stat-pill-output">
+              <span class="stat-pill-icon">💰</span>
+              <span class="stat-pill-label">К выводу</span>
+              <span class="stat-pill-dot green">●</span>
+              <span id="widgetOutputValue" class="stat-pill-value green">$0</span>
+              <span id="outputClaimTimer" class="stat-pill-timer">(можно забрать через: —)</span>
+            </div>
+          </div>
+
           <div class="topbar-right">
-            <div class="online-inline" title="Текущее количество пользователей на сайте">
-              <span class="online-dot"></span>
-              На сайте: <span id="siteOnlineCountText">0</span>
-            </div>
-
-            <div id="globalSectionLoader" class="section-loader hidden" aria-live="polite">
-              <div class="section-loader-spinner"></div>
-              <div id="globalSectionLoaderText" class="section-loader-text">Загрузка раздела...</div>
-            </div>
-
-            <button
-              class="btn btn-dark"
-              id="notificationsToggleBtn"
-              type="button"
-              onclick="toggleNotificationsPanel()"
-              style="position:relative;"
-              aria-label="Открыть уведомления"
-            >
+            <button class="btn btn-dark topbar-notify-btn" id="notificationsToggleBtn" type="button" onclick="toggleNotificationsPanel()" aria-label="Открыть уведомления">
               🔔
-              <span
-                id="notificationsUnreadBadge"
-                class="hidden"
-                style="
-                  position:absolute;
-                  top:-6px;
-                  right:-6px;
-                  min-width:22px;
-                  height:22px;
-                  padding:0 6px;
-                  border-radius:999px;
-                  background:linear-gradient(135deg,#ff3e9d,#ff6b6b);
-                  color:#fff;
-                  font-size:11px;
-                  font-weight:900;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  box-shadow:0 8px 20px rgba(255,62,157,0.22);
-                "
-              >0</span>
+              <span id="notificationsUnreadBadge" class="notify-badge hidden">0</span>
             </button>
 
             <div class="account-box" id="accountBox" onclick="showProfileCard(true)">
               <label class="avatar-wrap" for="avatarInput">
                 <img id="avatarImage" class="avatar-img hidden" alt="avatar" />
                 <div id="avatarFallback" class="avatar-fallback">WS</div>
-                <div class="avatar-overlay">Открыть<br>профиль</div>
+                <div class="avatar-overlay">Профиль</div>
               </label>
-
               <input id="avatarInput" type="file" accept="image/*" class="hidden" />
-
               <div class="account-meta">
                 <div id="accountLoginText" class="account-login">user</div>
                 <div class="account-sub">
@@ -4094,26 +4385,17 @@ input[type="checkbox"] {
 
         <!-- DASHBOARD -->
         <div class="dashboard-layout">
-          <!-- LEFT -->
+          <!-- LEFT COLUMN - Activity Feed -->
           <aside class="left-column">
-            <div class="glass widget-box">
-              <div class="section-head" style="margin-bottom:12px;">
-                <div>
-                  <h3 class="widget-title" style="margin:0;">История действий</h3>
-                  <div class="section-sub" style="margin-top:4px;">Последняя активность пользователей</div>
-                </div>
-
-                <div id="activityFeedLoading" class="inline-loading hidden">
-                  <div class="inline-loading-dot"></div>
-                  <span>Загрузка...</span>
-                </div>
+            <div class="glass widget-box widget-activity">
+              <div class="widget-header">
+                <h3 class="widget-title">📋 История действий</h3>
               </div>
-
-              <div id="activityFeedList" class="online-list"></div>
+              <div id="activityFeedList" class="activity-feed-list"></div>
             </div>
           </aside>
 
-          <!-- CENTER -->
+          <!-- CENTER COLUMN -->
           <main class="center-column">
             <!-- TABS -->
             <div class="section-tabs-wrap">
@@ -4124,64 +4406,33 @@ input[type="checkbox"] {
                     🎁 Дневной сундук
                     <span class="tab-indicator">◆</span>
                   </button>
-
                   <button id="tabBtn-shop" class="section-tab" type="button" onclick="switchMainTab('shop')">
                     <span class="tab-glow"></span>
                     🛒 Магазин
                     <span class="tab-indicator">◆</span>
                   </button>
-
                   <button id="tabBtn-workshop" class="section-tab" type="button" onclick="switchMainTab('workshop')">
                     <span class="tab-glow"></span>
                     🛠 Мастерская
                     <span class="tab-indicator">◆</span>
                   </button>
-
                   <button id="tabBtn-roulette" class="section-tab" type="button" onclick="switchMainTab('roulette')">
                     <span class="tab-glow"></span>
                     🎰 Рулетка
                     <span class="tab-indicator">◆</span>
                   </button>
-
                   <button id="tabBtn-bonus" class="section-tab" type="button" onclick="switchMainTab('bonus')">
                     <span class="tab-glow"></span>
                     💸 Бонус
                     <span class="tab-indicator">◆</span>
                   </button>
                 </div>
-
                 <div class="section-tabs-right">
-                  <button
-                    id="tabBtn-contracts"
-                    class="section-tab contracts"
-                    type="button"
-                    onclick="switchMainTab('contracts')"
-                    style="position:relative;"
-                  >
+                  <button id="tabBtn-contracts" class="section-tab contracts" type="button" onclick="switchMainTab('contracts')">
                     <span class="tab-glow"></span>
-                    🎯 Заказные контракты
+                    🎯 Контракты
                     <span class="tab-indicator">◆</span>
-                    <span
-                      id="contractsTabBadge"
-                      class="hidden"
-                      style="
-                        position:absolute;
-                        top:-8px;
-                        right:-8px;
-                        min-width:24px;
-                        height:24px;
-                        padding:0 7px;
-                        border-radius:999px;
-                        background:linear-gradient(135deg,#fbbf24,#ff3e9d);
-                        color:#fff;
-                        font-size:11px;
-                        font-weight:900;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        box-shadow:0 8px 20px rgba(255,62,157,0.25);
-                      "
-                    >0</span>
+                    <span id="contractsTabBadge" class="contracts-badge hidden">0</span>
                   </button>
                 </div>
               </div>
@@ -4194,10 +4445,7 @@ input[type="checkbox"] {
                   <h2 class="section-title">Игровой профиль</h2>
                   <div class="section-sub">Управление привязкой никнейма, VK ID и уведомлениями</div>
                 </div>
-
-                <button id="profileToggleBtn" class="profile-toggle-btn" type="button" onclick="hideProfileCardCompletely()">
-                  Скрыть
-                </button>
+                <button id="profileToggleBtn" class="profile-toggle-btn" type="button" onclick="hideProfileCardCompletely()">Скрыть</button>
               </div>
 
               <div id="gameLinkStatusPill" class="profile-pill warn">⚠ Не привязан</div>
@@ -4207,12 +4455,10 @@ input[type="checkbox"] {
                   <div class="profile-meta-label">Игровой ник</div>
                   <div id="gameNickText" class="profile-meta-value">—</div>
                 </div>
-
                 <div class="profile-meta-card">
                   <div class="profile-meta-label">VK ID</div>
                   <div id="gameVkIdText" class="profile-meta-value">—</div>
                 </div>
-
                 <div class="profile-meta-card">
                   <div class="profile-meta-label">Статус</div>
                   <div id="gameProfileStateText" class="profile-meta-value">Ожидание привязки</div>
@@ -4226,7 +4472,7 @@ input[type="checkbox"] {
 
               <div id="profileLinkBody" class="profile-link-body">
                 <div class="link-code-grid">
-                  <!-- VK -->
+                  <!-- VK LINK -->
                   <div class="link-code-card">
                     <div class="link-card-header">
                       <div class="link-card-icon vk-icon">🔗</div>
@@ -4235,325 +4481,336 @@ input[type="checkbox"] {
                         <div class="link-code-sub">Привяжи свой VK ID через личные сообщения группы</div>
                       </div>
                     </div>
-
                     <div class="link-code-divider"></div>
-
                     <div class="link-code-value-wrap">
                       <div class="link-code-value-label">Твой код привязки VK</div>
                       <div id="vkCodeValue" class="link-code-value empty">Нет активного кода</div>
                     </div>
-
-                    <div id="vkCodeMeta" class="link-code-meta">
-                      Сгенерируй код, чтобы начать привязку VK.
-                    </div>
-
+                    <div id="vkCodeMeta" class="link-code-meta">Сгенерируй код, чтобы начать привязку VK.</div>
                     <div class="link-gen-btn-wrap">
                       <button class="btn btn-cyan btn-lg" type="button" onclick="generateVkCode()">🔗 Сгенерировать код VK</button>
                     </div>
-
                     <div class="link-code-steps">
                       <div class="link-steps-title">📋 Как привязать VK</div>
-
                       <div class="link-step">
                         <div class="link-step-bullet vk-bullet">1</div>
-                        <div>Нажми кнопку <span class="link-highlight">«Сгенерировать код VK»</span> выше — появится уникальный код</div>
+                        <div>Нажми кнопку <span class="link-highlight">«Сгенерировать код VK»</span></div>
                       </div>
-
                       <div class="link-step">
                         <div class="link-step-bullet vk-bullet">2</div>
-                        <div>
-                          Перейди в <span class="link-highlight">личные сообщения</span> группы VK:
-                          <a class="link-accent-vk" href="https://vk.com/im/convo/-222804759?entrypoint=list_all" target="_blank" rel="noopener noreferrer">
-                            vk.com / absroleplay1script
-                          </a>
-                        </div>
+                        <div>Перейди в ЛС группы: <a class="link-accent-vk" href="https://vk.com/im/convo/-222804759" target="_blank">vk.com/absroleplay1script</a></div>
                       </div>
-
                       <div class="link-step">
                         <div class="link-step-bullet vk-bullet">3</div>
-                        <div>Отправь пустым сообщением сгенерированный код: <span id="vkCodeInline" class="link-accent">—</span></div>
+                        <div>Отправь код: <span id="vkCodeInline" class="link-accent">—</span></div>
                       </div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet vk-bullet">4</div>
-                        <div>Дождись подтверждения — твой <span class="link-accent-vk">VK ID</span> будет автоматически привязан к профилю</div>
-                      </div>
-                    </div>
-
-                    <div class="link-important info">
-                      ℹ️ Код действует ограниченное время. Если истёк — сгенерируй новый.
                     </div>
                   </div>
 
-                  <!-- NICK -->
+                  <!-- NICK LINK -->
                   <div class="link-code-card">
                     <div class="link-card-header">
                       <div class="link-card-icon nick-icon">🪪</div>
                       <div class="link-card-header-text">
                         <div class="link-code-title">Привязка никнейма</div>
-                        <div class="link-code-sub">Привяжи игровой никнейм через СМС боту в игре</div>
+                        <div class="link-code-sub">Привяжи игровой никнейм через СМС боту</div>
                       </div>
                     </div>
-
                     <div class="link-code-divider"></div>
-
                     <div class="link-code-value-wrap">
                       <div class="link-code-value-label">Твой код привязки ника</div>
                       <div id="nickCodeValue" class="link-code-value empty">Нет активного кода</div>
                     </div>
-
-                    <div id="nickCodeMeta" class="link-code-meta">
-                      Сгенерируй код, чтобы начать привязку никнейма.
-                    </div>
-
+                    <div id="nickCodeMeta" class="link-code-meta">Сгенерируй код, чтобы начать привязку.</div>
                     <div class="link-gen-btn-wrap">
                       <button class="btn btn-pink btn-lg" type="button" onclick="generateNickCode()">🪪 Сгенерировать код ника</button>
                     </div>
-
                     <div class="link-code-steps">
                       <div class="link-steps-title">📋 Как привязать никнейм</div>
-
                       <div class="link-step">
                         <div class="link-step-bullet nick-bullet">1</div>
-                        <div>Нажми кнопку <span class="link-highlight">«Сгенерировать код ника»</span> выше — появится уникальный код</div>
+                        <div>Нажми <span class="link-highlight">«Сгенерировать код ника»</span></div>
                       </div>
-
                       <div class="link-step">
                         <div class="link-step-bullet nick-bullet">2</div>
-                        <div>Зайди в игру и проверь, что бот <span class="link-accent-pink">Morah Herad</span> находится <span class="link-highlight">в сети</span></div>
+                        <div>В игре отправь СМС на <span class="link-highlight">/смс 817</span></div>
                       </div>
-
                       <div class="link-step">
                         <div class="link-step-bullet nick-bullet">3</div>
-                        <div>
-                          Отправь боту SMS на номер <span class="link-highlight">/смс 817</span> с текстом — сгенерированным кодом:
-                          <span id="nickCodeInline" class="link-accent">—</span>
-                        </div>
+                        <div>Текст СМС — код: <span id="nickCodeInline" class="link-accent">—</span></div>
                       </div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet nick-bullet">4</div>
-                        <div>Дождись ответного СМС от бота — твой <span class="link-accent-pink">игровой никнейм</span> будет привязан к профилю</div>
-                      </div>
-                    </div>
-
-                    <div class="link-important warn">
-                      ⚠️ Бот должен быть онлайн. Если бот оффлайн — попробуй позже.
                     </div>
                   </div>
                 </div>
 
                 <!-- NOTIFY SETTINGS -->
-                <div class="glass" style="padding:18px; margin-top:18px; border-radius:18px;">
+                <div class="glass notify-settings-box">
                   <div class="section-head" style="margin-bottom:12px;">
                     <div>
                       <h3 class="widget-title" style="margin:0;">Настройки уведомлений</h3>
-                      <div class="section-sub" style="margin-top:4px;">Какие уведомления присылать на сайте и во VK</div>
-                    </div>
-
-                    <div id="notifySettingsLoading" class="inline-loading hidden">
-                      <div class="inline-loading-dot"></div>
-                      <span>Сохраняем...</span>
+                      <div class="section-sub" style="margin-top:4px;">Какие уведомления присылать</div>
                     </div>
                   </div>
-
                   <div style="display:grid; gap:18px;">
                     <div>
-                      <div class="profile-meta-label" style="margin-bottom:10px;">Уведомления на сайте</div>
-
-                      <div style="display:grid; gap:10px;">
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Бонус готов</span>
-                          <input id="notifySiteBonusReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Сундук доступен</span>
-                          <input id="notifySiteChestReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Рулетка доступна</span>
-                          <input id="notifySiteRouletteReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Появился контракт</span>
-                          <input id="notifySiteContractAvailable" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт скоро истечёт</span>
-                          <input id="notifySiteContractExpiring" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт истёк</span>
-                          <input id="notifySiteContractExpired" type="checkbox" />
-                        </label>
+                      <div class="profile-meta-label" style="margin-bottom:10px;">На сайте</div>
+                      <div style="display:grid; gap:8px;">
+                        <label class="notify-check"><span>Бонус готов</span><input id="notifySiteBonusReady" type="checkbox" /></label>
+                        <label class="notify-check"><span>Сундук доступен</span><input id="notifySiteChestReady" type="checkbox" /></label>
+                        <label class="notify-check"><span>Рулетка доступна</span><input id="notifySiteRouletteReady" type="checkbox" /></label>
+                        <label class="notify-check"><span>Появился контракт</span><input id="notifySiteContractAvailable" type="checkbox" /></label>
+                        <label class="notify-check"><span>Контракт скоро истечёт</span><input id="notifySiteContractExpiring" type="checkbox" /></label>
+                        <label class="notify-check"><span>Контракт истёк</span><input id="notifySiteContractExpired" type="checkbox" /></label>
                       </div>
                     </div>
-
                     <div>
-                      <div class="profile-meta-label" style="margin-bottom:10px;">Уведомления во VK</div>
-
-                      <div style="display:grid; gap:10px;">
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Бонус готов</span>
-                          <input id="notifyVkBonusReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Сундук доступен</span>
-                          <input id="notifyVkChestReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Рулетка доступна</span>
-                          <input id="notifyVkRouletteReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Доступен новый контракт</span>
-                          <input id="notifyVkContractAvailable" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт скоро истечёт</span>
-                          <input id="notifyVkContractExpiring" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт истёк</span>
-                          <input id="notifyVkContractExpired" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт взят в работу</span>
-                          <input id="notifyVkContractTaken" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт принят</span>
-                          <input id="notifyVkContractCompleted" type="checkbox" />
-                        </label>
+                      <div class="profile-meta-label" style="margin-bottom:10px;">Во VK</div>
+                      <div style="display:grid; gap:8px;">
+                        <label class="notify-check"><span>Бонус готов</span><input id="notifyVkBonusReady" type="checkbox" /></label>
+                        <label class="notify-check"><span>Сундук доступен</span><input id="notifyVkChestReady" type="checkbox" /></label>
+                        <label class="notify-check"><span>Рулетка доступна</span><input id="notifyVkRouletteReady" type="checkbox" /></label>
+                        <label class="notify-check"><span>Доступен контракт</span><input id="notifyVkContractAvailable" type="checkbox" /></label>
+                        <label class="notify-check"><span>Контракт скоро истечёт</span><input id="notifyVkContractExpiring" type="checkbox" /></label>
+                        <label class="notify-check"><span>Контракт истёк</span><input id="notifyVkContractExpired" type="checkbox" /></label>
+                        <label class="notify-check"><span>Контракт взят</span><input id="notifyVkContractTaken" type="checkbox" /></label>
+                        <label class="notify-check"><span>Контракт принят</span><input id="notifyVkContractCompleted" type="checkbox" /></label>
                       </div>
                     </div>
-
                     <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                      <button class="btn btn-cyan" type="button" onclick="saveNotifySettings()">💾 Сохранить настройки</button>
+                      <button class="btn btn-cyan" type="button" onclick="saveNotifySettings()">💾 Сохранить</button>
                       <button class="btn btn-dark" type="button" onclick="loadNotifySettings()">↺ Обновить</button>
                     </div>
                   </div>
                 </div>
               </div>
             </section>
+
+            <!-- TAB PANELS -->
+            <!-- CHEST TAB -->
+            <div id="tab-chest" class="tab-panel active">
+              <div class="chest-layout">
+                <div class="glass chest-main-card">
+                  <div class="chest-main-stage">
+                    <div class="chest-aura"></div>
+                    <div id="chestBurst" class="chest-burst"></div>
+                    <div id="chestParticles" class="chest-particles">
+                      <div class="chest-particle p1"></div>
+                      <div class="chest-particle p2"></div>
+                      <div class="chest-particle p3"></div>
+                      <div class="chest-particle p4"></div>
+                      <div class="chest-particle p5"></div>
+                      <div class="chest-particle p6"></div>
+                      <div class="chest-particle p7"></div>
+                      <div class="chest-particle p8"></div>
+                    </div>
+                    <div id="chestBoxWrap" class="chest-box-wrap">
+                      <div class="chest-lid"></div>
+                      <div class="chest-body"></div>
+                      <div class="chest-lock">🔒</div>
+                      <div class="chest-front-glow"></div>
+                    </div>
+                    <div class="chest-stage-floor"></div>
+                  </div>
+                  <div class="chest-main-content">
+                    <div class="chest-current-line">
+                      <div class="chest-current-label">ТЕКУЩАЯ СЕРИЯ</div>
+                      <div id="chestCurrentDayText" class="chest-current-day">0 дней</div>
+                    </div>
+                    <div id="chestStatusPill" class="profile-pill warn">⏳ Загрузка...</div>
+                    <div id="chestTimerText" class="chest-timer-text">Загрузка статуса сундука...</div>
+                    <div class="chest-action-wrap">
+                      <button id="openChestBtn" class="btn btn-gold btn-lg" type="button" onclick="openDailyChest()" disabled>🎁 Открыть сундук</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="glass chest-side-card">
+                  <div class="chest-scale-head">
+                    <h3 class="widget-title">Шкала прогресса</h3>
+                  </div>
+                  <div class="chest-scale-wrap">
+                    <div class="chest-scale-thermo">
+                      <div id="chestScaleFill" class="chest-scale-fill" style="height:0%;"></div>
+                      <div class="chest-scale-mark m1"><span class="mark-dot"></span><span class="mark-text">1</span></div>
+                      <div class="chest-scale-mark m3"><span class="mark-dot"></span><span class="mark-text">3</span></div>
+                      <div class="chest-scale-mark m5"><span class="mark-dot"></span><span class="mark-text">5</span></div>
+                      <div class="chest-scale-mark m7"><span class="mark-dot"></span><span class="mark-text">7</span></div>
+                    </div>
+                    <div class="chest-scale-legend">
+                      <div class="chest-legend-row"><span class="legend-day">День 1</span><span class="legend-desc">Обычная награда</span></div>
+                      <div class="chest-legend-row"><span class="legend-day">День 3</span><span class="legend-desc">Редкая награда</span></div>
+                      <div class="chest-legend-row"><span class="legend-day">День 5</span><span class="legend-desc">Эпическая награда</span></div>
+                      <div class="chest-legend-row"><span class="legend-day">День 7</span><span class="legend-desc">Легендарная награда</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chest-bottom-grid">
+                <div class="glass chest-reward-card">
+                  <h3 class="widget-title">Последняя награда</h3>
+                  <div id="chestLastRewardBox" class="chest-last-reward-box">
+                    <div class="muted">Открой сундук, чтобы получить награду</div>
+                  </div>
+                </div>
+                <div class="glass chest-history-card">
+                  <h3 class="widget-title">История сундука</h3>
+                  <div id="chestHistoryList" class="bonus-history-list"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SHOP TAB -->
+            <div id="tab-shop" class="tab-panel">
+              <div class="glass section-box">
+                <div class="section-head">
+                  <div>
+                    <h2 class="section-title">🛒 Магазин и инвентарь</h2>
+                    <div class="section-sub">Покупай предметы или продавай из инвентаря</div>
+                  </div>
+                </div>
+
+                <div class="shop-toggle-wrap">
+                  <button id="shopViewInventoryBtn" class="shop-toggle-btn active" type="button" onclick="switchShopView('inventory')">📦 Мой инвентарь</button>
+                  <button id="shopViewStoreBtn" class="shop-toggle-btn" type="button" onclick="switchShopView('store')">🛍 Каталог</button>
+                </div>
+
+                <div id="inventoryBlock" class="inventory-box">
+                  <div id="inventoryList" class="inventory-list"></div>
+                </div>
+
+                <div id="shopBlock" class="shop-layout hidden">
+                  <div id="shopGrid" class="shop-grid"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WORKSHOP TAB -->
+            <div id="tab-workshop" class="tab-panel">
+              <div class="glass section-box placeholder-box">
+                <div class="placeholder-inner">
+                  <div class="placeholder-icon">🛠</div>
+                  <h3 class="placeholder-title">Мастерская</h3>
+                  <p class="placeholder-text">Раздел мастерской находится в разработке. Скоро здесь появится крафт предметов и улучшения.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ROULETTE TAB -->
+            <div id="tab-roulette" class="tab-panel">
+              <div class="glass roulette-main">
+                <div class="roulette-clean-head">
+                  <div class="roulette-limit-big">
+                    <div class="roulette-limit-big-label">ОСТАЛОСЬ ПРОКРУТОВ</div>
+                    <div class="roulette-limit-big-value"><span id="rouletteLeftText">0</span> / <span id="rouletteMaxText">10</span></div>
+                  </div>
+                </div>
+
+                <div class="roulette-big-btn-wrap">
+                  <button id="spinButton" class="btn btn-gold roulette-big-btn" type="button" onclick="spinRoulette()" disabled>🎰 КРУТИТЬ РУЛЕТКУ</button>
+                </div>
+
+                <div class="roulette-strip-shell">
+                  <div class="roulette-center-beam"></div>
+                  <div class="roulette-center-marker"></div>
+                  <div class="roulette-viewport">
+                    <div id="rouletteStrip" class="roulette-strip"></div>
+                  </div>
+                </div>
+
+                <div id="rouletteResult" class="roulette-status-box">Крути рулетку, чтобы получить приз!</div>
+              </div>
+            </div>
+
+            <!-- BONUS TAB -->
+            <div id="tab-bonus" class="tab-panel">
+              <div class="bonus-layout">
+                <div class="glass bonus-main">
+                  <div class="bonus-center">
+                    <div class="bonus-kicker">Ежечасный бонус</div>
+                    <h2 class="bonus-title">Получи случайную сумму денег</h2>
+                    <div id="bonusAmountBox" class="bonus-amount-box">
+                      <div class="bonus-amount-label">СУММА БОНУСА</div>
+                      <div id="bonusAmount" class="bonus-amount">$0</div>
+                    </div>
+                    <div id="bonusMeta" class="bonus-meta">Загрузка статуса бонуса...</div>
+                    <div id="bonusBigTimer" class="bonus-big-timer">—</div>
+                    <div class="bonus-actions">
+                      <button id="activateBonusBtn" class="btn btn-green bonus-activate-btn" type="button" onclick="activateBonus()" disabled>💸 АКТИВИРОВАТЬ БОНУС</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="glass bonus-history">
+                  <h3 class="widget-title">История бонусов</h3>
+                  <div id="bonusHistoryList" class="bonus-history-list"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONTRACTS TAB -->
+            <div id="tab-contracts" class="tab-panel">
+              <div class="glass contracts-hero contracts-hero-real">
+                <div class="contracts-hero-top">
+                  <div>
+                    <div class="contracts-kicker">Заказные контракты</div>
+                    <h2 class="contracts-title">Выполняй задания и получай награды</h2>
+                    <div class="contracts-text">Бери контракты, выполняй условия, отправляй доказательства и получай вознаграждение.</div>
+                  </div>
+                  <div class="contracts-mini-stat">
+                    <div class="contracts-mini-stat-label">Доступно контрактов</div>
+                    <div id="contractsAvailableCount" class="contracts-mini-stat-value">0</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="contracts-top-tabs">
+                <button id="contractsSubTabBtn-available" class="contracts-subtab active" type="button" onclick="switchContractsSubTab('available')">📋 Доступные</button>
+                <button id="contractsSubTabBtn-progress" class="contracts-subtab" type="button" onclick="switchContractsSubTab('progress')">⏳ В работе</button>
+                <button id="contractsSubTabBtn-history" class="contracts-subtab" type="button" onclick="switchContractsSubTab('history')">📜 История</button>
+              </div>
+
+              <div id="contractsSubTab-available" class="contracts-subpanel active">
+                <div id="contractsAvailableList" class="contracts-list"></div>
+              </div>
+
+              <div id="contractsSubTab-progress" class="contracts-subpanel">
+                <div id="contractsProgressList" class="contracts-list"></div>
+              </div>
+
+              <div id="contractsSubTab-history" class="contracts-subpanel">
+                <div id="contractsHistoryList" class="contracts-list"></div>
+              </div>
+            </div>
           </main>
 
           <!-- MINI RAIL -->
           <aside class="mini-rail">
             <button id="railChestBtn" class="rail-btn chest" type="button" onclick="switchMainTab('chest')">
               🎁
-              <span class="rail-badge">
-                Дневной сундук
-                <span class="sub">Ежедневная награда</span>
-              </span>
+              <span class="rail-badge">Дневной сундук</span>
             </button>
-
             <button id="railProfileBtn" class="rail-btn active" type="button" onclick="showProfileCard()">
               🧩
-              <span class="rail-badge">
-                Игровой профиль
-                <span class="sub">Привязка VK и ника</span>
-              </span>
+              <span class="rail-badge">Профиль</span>
             </button>
-
-            <button id="railContractsBtn" class="rail-btn" type="button" onclick="switchMainTab('contracts')" style="position:relative;">
+            <button id="railContractsBtn" class="rail-btn" type="button" onclick="switchMainTab('contracts')">
               🎯
-              <span class="rail-badge">
-                Заказные контракты
-                <span class="sub">Особые задания</span>
-              </span>
-
-              <span
-                id="railContractsBadge"
-                class="hidden"
-                style="
-                  position:absolute;
-                  top:-6px;
-                  right:-6px;
-                  min-width:22px;
-                  height:22px;
-                  padding:0 6px;
-                  border-radius:999px;
-                  background:linear-gradient(135deg,#ff3e9d,#fbbf24);
-                  color:#fff;
-                  font-size:11px;
-                  font-weight:900;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  box-shadow:0 8px 20px rgba(255,62,157,0.22);
-                "
-              >0</span>
+              <span class="rail-badge">Контракты</span>
+              <span id="railContractsBadge" class="rail-contracts-badge hidden">0</span>
             </button>
-          </aside>
-
-          <!-- RIGHT -->
-          <aside class="right-column">
-            <div id="balanceWidget" class="glass widget-box">
-              <h3 class="widget-title">Игровой баланс</h3>
-              <div class="stat-card">
-                <div class="stat-label">Текущий баланс</div>
-                <div id="widgetBalanceValue" class="stat-value stat-balance">$0</div>
-              </div>
-            </div>
-
-            <div id="outputWidget" class="glass widget-box">
-              <h3 class="widget-title">Доступно к выводу</h3>
-              <div class="stat-card">
-                <div class="stat-label">Сумма к выводу</div>
-                <div id="widgetOutputValue" class="stat-value stat-output">$0</div>
-              </div>
-            </div>
-
-            <div class="glass widget-box">
-              <div class="section-head" style="margin-bottom:12px;">
-                <div>
-                  <h3 class="widget-title" style="margin:0;">PS ONLINE</h3>
-                  <div class="section-sub" style="margin-top:4px;">Игроки из биндера онлайн</div>
-                </div>
-
-                <div class="profile-pill ok">● <span id="psOnlineCountText">0</span></div>
-              </div>
-
-              <div id="psOnlineList" class="online-list"></div>
-            </div>
-
-            <div class="glass widget-box">
-              <div class="section-head" style="margin-bottom:12px;">
-                <div>
-                  <h3 class="widget-title" style="margin:0;">Онлайн на сайте</h3>
-                  <div class="section-sub" style="margin-top:4px;">Текущие пользователи</div>
-                </div>
-
-                <div class="profile-pill ok">● <span id="siteOnlineCountPill">0</span></div>
-              </div>
-
-              <div id="siteOnlineList" class="online-list"></div>
-            </div>
           </aside>
         </div>
       </div>
     </section>
 
+    <!-- MODALS -->
     <!-- PRIZE MODAL -->
     <div id="prizeViewModalBg" class="modal-bg hidden">
       <div class="modal prize-win-modal">
         <div class="prize-win-scene">
           <div class="gun gun-left">🔫</div>
           <div class="gun gun-right">🔫</div>
-
           <div class="shells">
             <span class="shell s1">✦</span>
             <span class="shell s2">✦</span>
@@ -4561,19 +4818,15 @@ input[type="checkbox"] {
             <span class="shell s4">✦</span>
             <span class="shell s5">✦</span>
           </div>
-
           <div class="prize-glow"></div>
           <div class="prize-flash"></div>
-
           <div class="prize-center-wrap">
             <img id="prizeViewImage" class="prize-win-image hidden" alt="prize" />
             <div id="prizeViewNoImage" class="prize-win-noimage">🎁</div>
           </div>
         </div>
-
         <h3 class="prize-win-title">ТЫ ВЫИГРАЛ ПРИЗ</h3>
         <p id="prizeViewTitle" class="prize-win-name"></p>
-
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closePrizeViewModal()">✖ Закрыть</button>
         </div>
@@ -4584,12 +4837,7 @@ input[type="checkbox"] {
     <div id="unlinkConfirmModalBg" class="modal-bg hidden">
       <div class="modal">
         <h3 class="confirm-title">Отвязать профиль?</h3>
-
-        <div class="confirm-text">
-          Ты действительно хочешь отвязать игровой профиль от сайта World Script?
-          После отвязки привязанный никнейм и VK ID будут очищены.
-        </div>
-
+        <div class="confirm-text">Ты действительно хочешь отвязать игровой профиль? Привязанный никнейм и VK ID будут очищены.</div>
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closeUnlinkConfirmModal()">Отмена</button>
           <button class="btn btn-red" type="button" onclick="confirmUnlinkGameProfile()">Да, отвязать</button>
@@ -4598,48 +4846,26 @@ input[type="checkbox"] {
     </div>
 
     <!-- ADMIN VK MODAL -->
-    <div id="adminVkModalBg" class="modal-bg hidden admin-code-modal">
+    <div id="adminVkModalBg" class="modal-bg hidden">
       <div class="modal">
         <h3 class="confirm-title">Подтверждение входа</h3>
-
-        <div class="confirm-text">
-          Для защиты админ-аккаунта нужно вручную получить код подтверждения через VK.
-        </div>
-
+        <div class="confirm-text">Для защиты админ-аккаунта получи код через VK.</div>
         <div class="glass" style="padding:16px; margin-top:14px; border-radius:18px;">
-          <div style="font-size:13px; font-weight:800; color:#dff8ff; margin-bottom:10px;">
-            Как получить код:
-          </div>
-
-          <div style="display:grid; gap:10px; color:var(--text-secondary); font-size:14px; line-height:1.65;">
-            <div>1. Перейди в личные сообщения группы World Script</div>
-
-            <div>
-              2. Открой ссылку:
-              <a
-                href="https://vk.com/im/convo/-222804759?entrypoint=list_all"
-                target="_blank"
-                rel="noopener noreferrer"
-                style="color:#8ab4ff; font-weight:900; text-decoration:none;"
-              >
-                vk.com / absroleplay1script
-              </a>
-            </div>
-
-            <div>3. Напиши команду: <span style="color:#ffe08a; font-weight:900;">!кодвк</span></div>
-            <div>4. Введи полученный код в поле ниже</div>
+          <div style="font-size:13px; font-weight:800; color:#dff8ff; margin-bottom:10px;">Как получить код:</div>
+          <div style="display:grid; gap:8px; color:var(--text-secondary); font-size:13px;">
+            <div>1. Перейди в ЛС группы World Script</div>
+            <div>2. <a href="https://vk.com/im/convo/-222804759" target="_blank" style="color:#8ab4ff;">vk.com/absroleplay1script</a></div>
+            <div>3. Напиши: <span style="color:#ffe08a;font-weight:900;">!кодвк</span></div>
+            <div>4. Введи код ниже</div>
           </div>
         </div>
-
         <div style="margin-top:14px;">
           <input id="adminVkCodeInput" class="field" placeholder="Введите код из VK" />
         </div>
-
         <div id="adminVkMsg" class="auth-msg" style="margin-top:10px;"></div>
-
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closeAdminVkModal()">Отмена</button>
-          <button id="adminVkSubmitBtn" class="btn btn-cyan" type="button" onclick="confirmAdminVkLogin()">Подтвердить вход</button>
+          <button id="adminVkSubmitBtn" class="btn btn-cyan" type="button" onclick="confirmAdminVkLogin()">Подтвердить</button>
         </div>
       </div>
     </div>
@@ -4648,22 +4874,10 @@ input[type="checkbox"] {
     <div id="notificationsModalBg" class="modal-bg hidden">
       <div class="modal" style="max-width:700px; max-height:90vh; overflow:auto;">
         <div class="section-head" style="margin-bottom:14px;">
-          <div>
-            <h3 class="confirm-title" style="margin:0;">Уведомления</h3>
-          </div>
-
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-dark" type="button" onclick="markAllNotificationsRead()">Прочитать всё</button>
-          </div>
+          <h3 class="confirm-title" style="margin:0;">Уведомления</h3>
+          <button class="btn btn-dark" type="button" onclick="markAllNotificationsRead()">Прочитать всё</button>
         </div>
-
-        <div id="notificationsLoading" class="inline-loading hidden" style="margin-bottom:14px;">
-          <div class="inline-loading-dot"></div>
-          <span>Загрузка уведомлений...</span>
-        </div>
-
         <div id="notificationsList" class="online-list"></div>
-
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closeNotificationsPanel()">Закрыть</button>
         </div>
@@ -5511,40 +5725,38 @@ input[type="checkbox"] {
   // ACTIVITY FEED
   // ═══════════════════════════════════════════════════════════
   function renderActivityFeed(items) {
-    const box = document.getElementById("activityFeedList");
-    if (!box) return;
-
-    const safeItems = safeArray(items);
-
-    if (!safeItems.length) {
-      box.innerHTML = '<div class="muted">История действий пока пуста.</div>';
-      return;
+      const box = document.getElementById("activityFeedList");
+      if (!box) return;
+    
+      const safeItems = safeArray(items);
+    
+      if (!safeItems.length) {
+        box.innerHTML = '<div class="muted" style="padding:12px;text-align:center;">История пуста</div>';
+        return;
+      }
+    
+      box.innerHTML = safeItems.slice(0, 15).map(item => {
+        const login = item.login || item.nickname || "Пользователь";
+        const actionText = item.action_text || item.actionType || "Событие";
+        const avatarUrl = item.avatar_url || "";
+        const initials = getInitials(login);
+    
+        return `
+          <div class="activity-item">
+            <div class="activity-avatar">
+              ${avatarUrl
+                ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(login)}" />`
+                : escapeHtml(initials)
+              }
+            </div>
+            <div class="activity-content">
+              <div class="activity-login">${escapeHtml(login)}</div>
+              <div class="activity-action">${escapeHtml(actionText)}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
-
-    box.innerHTML = safeItems.map(item => {
-      const login = item.login || item.nickname || "Пользователь";
-      const actionText = item.action_text || item.actionType || "Событие";
-      const avatarUrl = item.avatar_url || "";
-      const initials = getInitials(login);
-
-      return `
-        <div class="activity-feed-item">
-          <div class="activity-feed-avatar">
-            ${avatarUrl
-              ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(login)}" />`
-              : escapeHtml(initials)
-            }
-          </div>
-
-          <div>
-            <div class="activity-feed-name">${escapeHtml(login)}</div>
-            <div class="activity-feed-action">${escapeHtml(actionText)}</div>
-            <div class="activity-feed-date">${formatShortDateTime(item.created_at)}</div>
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
 
   async function loadActivityFeed() {
     setInlineLoading("activityFeedLoading", true);
@@ -5923,8 +6135,8 @@ input[type="checkbox"] {
   }
 
   async function loadProfileFull() {
-    setGlobalSectionLoading(true, "Загружаем профиль...");
-    setInlineLoading("inventoryLoading", true);
+    //setGlobalSectionLoading(true, "Загружаем профиль...");
+    //setInlineLoading("inventoryLoading", true);
 
     try {
       const { res, data } = await wsGet("/api/ws/profile-full");
@@ -7896,7 +8108,7 @@ input[type="checkbox"] {
   // BOOTSTRAP
   // ═══════════════════════════════════════════════════════════
   async function bootstrapAuthorized() {
-    setGlobalSectionLoading(true, "Подготовка сайта...");
+    //setGlobalSectionLoading(true, "Подготовка сайта...");
 
     try {
       const { res, data } = await wsGet("/api/ws/me");
