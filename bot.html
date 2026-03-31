@@ -6151,6 +6151,8 @@ input[type="checkbox"] {
     lastChestReward = null;
     inventorySellSelection = {};
 
+    stopOutputCooldownTimer();
+
     stopAllIntervals();
     clearLinkCodeTimers();
 
@@ -6271,6 +6273,61 @@ input[type="checkbox"] {
     };
   }
 
+  function formatOutputCooldown(secondsLeft) {
+    const sec = Math.max(0, safeNumber(secondsLeft));
+    const d = Math.floor(sec / 86400);
+    const h = Math.floor((sec % 86400) / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+  
+    if (d > 0) return `${d}д ${h}ч ${m}м`;
+    if (h > 0) return `${h}ч ${m}м ${s}с`;
+    if (m > 0) return `${m}м ${s}с`;
+    return `${s}с`;
+  }
+  
+  let outputCooldownInterval = null;
+  
+  function stopOutputCooldownTimer() {
+    if (outputCooldownInterval) {
+      clearInterval(outputCooldownInterval);
+      outputCooldownInterval = null;
+    }
+  }
+
+  function startOutputCooldownTimer(availableAt) {
+    const outputClaimTimer = document.getElementById("outputClaimTimer");
+    if (!outputClaimTimer) return;
+  
+    stopOutputCooldownTimer();
+  
+    if (!availableAt) {
+      outputClaimTimer.textContent = "(можно забрать сейчас)";
+      return;
+    }
+  
+    const targetTs = new Date(availableAt).getTime();
+    if (!Number.isFinite(targetTs)) {
+      outputClaimTimer.textContent = "(можно забрать сейчас)";
+      return;
+    }
+  
+    const tick = () => {
+      const diff = Math.floor((targetTs - Date.now()) / 1000);
+  
+      if (diff <= 0) {
+        outputClaimTimer.textContent = "(можно забрать сейчас)";
+        stopOutputCooldownTimer();
+        return;
+      }
+  
+      outputClaimTimer.textContent = "(можно забрать через: " + formatOutputCooldown(diff) + ")";
+    };
+  
+    tick();
+    outputCooldownInterval = setInterval(tick, 1000);
+  }
+
   function normalizeInventoryRow(row) {
     const object = row.object || row.ws_object || {};
 
@@ -6330,6 +6387,7 @@ input[type="checkbox"] {
 
       balance = safeNumber(data?.binder?.game_balance ?? data?.balance ?? 0);
       toOutput = safeNumber(data?.binder?.to_output ?? data?.to_output ?? 0);
+      startOutputCooldownTimer(data?.binder?.output_available_at || null);
 
       inventoryItems = safeArray(data.inventory).map(normalizeInventoryRow);
 
