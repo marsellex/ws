@@ -1,3943 +1,449 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>World Script</title>
+  <title>Cyber SaaS • World Script</title>
   <link rel="icon" href="./favicon1.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-  
-    * { box-sizing: border-box; }
-  
-    :root {
-      --bg-body: #060912;
-      --bg-body-2: #0b1020;
-      --bg-card: rgba(16, 23, 38, 0.78);
-      --bg-card-2: rgba(10, 16, 28, 0.92);
-      --bg-card-3: rgba(255,255,255,0.035);
-      --bg-input: rgba(7, 10, 18, 0.86);
-  
-      --border: rgba(255,255,255,0.08);
-      --border-soft: rgba(255,255,255,0.05);
-      --border-strong: rgba(255,255,255,0.12);
-  
-      --text: #f4f8ff;
-      --text-secondary: #b6c2da;
-      --text-muted: #7f8ba8;
-  
-      --pink: #ff3e9d;
-      --pink-2: #cf267a;
-      --cyan: #49d7ff;
-      --cyan-2: #2b90ff;
-      --violet: #8d5cff;
-      --green: #48e57b;
-      --green-2: #1dbf62;
-      --yellow: #fbbf24;
-      --gold: #f59e0b;
-      --gold-2: #f6c857;
-      --red: #ff6b6b;
-      --red-2: #ee4444;
-  
-      --success: #98ffc0;
-      --warning: #ffe08a;
-      --danger: #ff9a9a;
-      --info: #95eeff;
-  
-      --shadow: 0 12px 40px rgba(0,0,0,0.34);
-      --shadow-lg: 0 22px 70px rgba(0,0,0,0.46);
-      --shadow-soft: 0 8px 24px rgba(0,0,0,0.18);
-  
-      --radius: 18px;
-      --radius-lg: 24px;
-      --radius-sm: 14px;
-  
-      --font: "Inter", sans-serif;
+    :root{
+      --bg0:#05060c;
+      --bg1:#070a14;
+      --panel: rgba(15, 20, 36, .78);
+      --panel2: rgba(10, 14, 26, .90);
+      --border: rgba(255,255,255,.09);
+      --text:#eaf2ff;
+      --muted:#92a2c7;
+
+      --cyan:#35e7ff;
+      --pink:#ff3ea5;
+      --violet:#9b7bff;
+      --green:#47ff8b;
+      --yellow:#ffd76a;
+      --red:#ff6b6b;
+
+      --shadow: 0 18px 55px rgba(0,0,0,.55);
+      --r: 18px;
+      --r2: 24px;
+
+      --grid: rgba(255,255,255,.03);
+      --glowC: rgba(53,231,255,.22);
+      --glowP: rgba(255,62,165,.18);
+      --glowV: rgba(155,123,255,.16);
     }
-  
-    html { scroll-behavior: smooth; }
-  
-    body {
-      margin: 0;
-      color: var(--text);
-      font-family: var(--font);
-      min-height: 100vh;
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--text);
+      min-height:100vh;
       background:
-        radial-gradient(circle at top left, rgba(255,62,157,0.08), transparent 30%),
-        radial-gradient(circle at top right, rgba(73,215,255,0.08), transparent 28%),
-        linear-gradient(180deg, var(--bg-body), var(--bg-body-2));
-      overflow-x: hidden;
+        radial-gradient(1200px 700px at 20% 10%, rgba(53,231,255,.10), transparent 60%),
+        radial-gradient(1000px 600px at 80% 20%, rgba(255,62,165,.08), transparent 60%),
+        radial-gradient(1000px 700px at 60% 90%, rgba(155,123,255,.08), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
     }
-  
-    .hidden { display: none !important; }
-  
-    .muted {
-      color: var(--text-muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-  
-    a {
-      color: inherit;
-    }
-  
-    img {
-      max-width: 100%;
-    }
-  
-    /* BACKGROUND */
-    .bg-animated {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-  
-    .bg-animated::before {
-      content: "";
-      position: absolute;
-      inset: -35%;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(255,62,157,0.14), transparent 40%),
-        radial-gradient(circle at 80% 30%, rgba(73,215,255,0.12), transparent 35%),
-        radial-gradient(circle at 50% 70%, rgba(141,92,255,0.12), transparent 40%),
-        radial-gradient(circle at 30% 80%, rgba(74,222,128,0.08), transparent 30%),
-        radial-gradient(circle at 70% 90%, rgba(251,191,36,0.08), transparent 30%);
-      animation: bgRotate 60s linear infinite;
-      will-change: transform;
-    }
-  
-    @keyframes bgRotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-  
-    .bg-grid {
-      position: absolute;
-      inset: 0;
+
+    /* subtle cyber grid */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
       background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 56px 56px;
-      animation: gridMove 20s linear infinite;
-      will-change: transform;
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: radial-gradient(circle at 40% 20%, black 0%, transparent 70%);
+      opacity:.9;
     }
-  
-    @keyframes gridMove {
-      from { transform: translate3d(0,0,0); }
-      to { transform: translate3d(56px,56px,0); }
+
+    a{ color:inherit; }
+    img{ max-width:100%; display:block; }
+    .hidden{ display:none !important; }
+
+    .page{
+      position:relative;
+      z-index:1;
+      max-width: 1680px;
+      margin:0 auto;
+      padding: 18px;
     }
-  
-    .bg-orbs {
-      position: absolute;
-      inset: 0;
-    }
-  
-    .bg-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: .5;
-      animation: orbFloat 20s ease-in-out infinite;
-      will-change: transform;
-    }
-  
-    .bg-orb:nth-child(1) {
-      width: 420px;
-      height: 420px;
-      background: radial-gradient(circle, rgba(255,62,157,0.3), transparent 70%);
-      top: 10%;
-      left: 4%;
-      animation-delay: 0s;
-      animation-duration: 25s;
-    }
-  
-    .bg-orb:nth-child(2) {
-      width: 360px;
-      height: 360px;
-      background: radial-gradient(circle, rgba(73,215,255,0.24), transparent 70%);
-      top: 62%;
-      right: 8%;
-      animation-delay: -5s;
-      animation-duration: 30s;
-    }
-  
-    .bg-orb:nth-child(3) {
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(141,92,255,0.22), transparent 70%);
-      bottom: 18%;
-      left: 30%;
-      animation-delay: -10s;
-      animation-duration: 22s;
-    }
-  
-    .bg-orb:nth-child(4) {
-      width: 250px;
-      height: 250px;
-      background: radial-gradient(circle, rgba(74,222,128,0.18), transparent 70%);
-      top: 40%;
-      left: 60%;
-      animation-delay: -7s;
-      animation-duration: 28s;
-    }
-  
-    @keyframes orbFloat {
-      0%,100% { transform: translate3d(0,0,0) scale(1); }
-      25% { transform: translate3d(30px,-40px,0) scale(1.1); }
-      50% { transform: translate3d(-20px,20px,0) scale(.95); }
-      75% { transform: translate3d(40px,30px,0) scale(1.05); }
-    }
-  
-    .bg-particles {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-  
-    .bg-particle {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 3px;
-      height: 3px;
-      background: rgba(255,255,255,.9);
-      border-radius: 50%;
-      opacity: 0;
-      animation: particleFloat 15s ease-in-out infinite;
-      will-change: transform, opacity;
-      box-shadow: 0 0 8px rgba(255,255,255,.35);
-    }
-  
-    .bg-particle:nth-child(1) { left: 10%; animation-delay: 0s; }
-    .bg-particle:nth-child(2) { left: 20%; animation-delay: -2s; }
-    .bg-particle:nth-child(3) { left: 30%; animation-delay: -4s; }
-    .bg-particle:nth-child(4) { left: 40%; animation-delay: -6s; }
-    .bg-particle:nth-child(5) { left: 50%; animation-delay: -8s; }
-    .bg-particle:nth-child(6) { left: 60%; animation-delay: -10s; }
-    .bg-particle:nth-child(7) { left: 70%; animation-delay: -12s; }
-    .bg-particle:nth-child(8) { left: 80%; animation-delay: -1s; }
-    .bg-particle:nth-child(9) { left: 90%; animation-delay: -3s; }
-    .bg-particle:nth-child(10) { left: 15%; animation-delay: -5s; }
-    .bg-particle:nth-child(11) { left: 25%; animation-delay: -7s; }
-    .bg-particle:nth-child(12) { left: 35%; animation-delay: -9s; }
-    .bg-particle:nth-child(13) { left: 45%; animation-delay: -11s; }
-    .bg-particle:nth-child(14) { left: 55%; animation-delay: -13s; }
-    .bg-particle:nth-child(15) { left: 65%; animation-delay: -14s; }
-    .bg-particle:nth-child(16) { left: 75%; animation-delay: -4.5s; }
-    .bg-particle:nth-child(17) { left: 85%; animation-delay: -6.5s; }
-    .bg-particle:nth-child(18) { left: 95%; animation-delay: -8.5s; }
-    .bg-particle:nth-child(19) { left: 5%; animation-delay: -10.5s; }
-    .bg-particle:nth-child(20) { left: 12%; animation-delay: -12.5s; }
-  
-    @keyframes particleFloat {
-      0% { opacity: 0; transform: translate3d(0,10px,0) scale(.8); }
-      10% { opacity: .55; }
-      90% { opacity: .55; }
-      100% { opacity: 0; transform: translate3d(100px,-100vh,0) scale(1.1); }
-    }
-  
-    .bg-noise {
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: .025;
-      mix-blend-mode: overlay;
-    }
-  
-    .bg-vignette {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.42) 100%);
-    }
-  
-    /* LAYOUT */
-    .page {
-      position: relative;
-      z-index: 1;
-      max-width: 1860px;
-      margin: 0 auto;
-      padding: 22px;
-    }
-  
-    .glass {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+
+    .glass{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--r);
       box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      position: relative;
-      overflow: hidden;
-      transition:
-        transform .25s cubic-bezier(.22,.68,0,1),
-        border-color .25s ease,
-        box-shadow .25s ease,
-        background .25s ease;
-    }
-  
-    .glass::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        140deg,
-        rgba(255,255,255,0.07),
-        transparent 22%,
-        transparent 76%,
-        rgba(255,255,255,0.025)
-      );
-      opacity: .7;
-      pointer-events: none;
-    }
-  
-    .glass > * {
-      position: relative;
-      z-index: 1;
-    }
-  
-    .glass:hover {
-      transform: translateY(-2px);
-      border-color: rgba(73,215,255,0.18);
-      box-shadow: 0 18px 60px rgba(0,0,0,0.38), 0 0 0 1px rgba(73,215,255,0.04);
-    }
-  
-    .topbar.glass:hover {
-      transform: none;
-    }
-  
-    /* TOASTS */
-    .toast-wrap {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      z-index: 3000;
-      display: grid;
-      gap: 10px;
-      width: min(380px, calc(100vw - 24px));
-    }
-  
-    .toast {
-      border-radius: 16px;
-      padding: 14px 16px;
-      font-size: 13px;
-      font-weight: 800;
-      line-height: 1.45;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid rgba(255,255,255,0.08);
       backdrop-filter: blur(16px);
-      animation: toastIn .24s ease;
+      -webkit-backdrop-filter: blur(16px);
+      overflow:hidden;
+      position:relative;
     }
-  
-    .toast.success {
-      background: rgba(72,229,123,0.14);
-      color: var(--success);
-      border-color: rgba(72,229,123,0.18);
+    .glass::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(135deg, rgba(255,255,255,.08), transparent 20%, transparent 75%, rgba(255,255,255,.03));
+      opacity:.7;
+      pointer-events:none;
     }
-  
-    .toast.error {
-      background: rgba(255,107,107,0.14);
-      color: var(--danger);
-      border-color: rgba(255,107,107,0.18);
+    .glass > *{ position:relative; z-index:1; }
+
+    .muted{ color:var(--muted); font-size:13px; line-height:1.55; }
+
+    /* toasts */
+    .toast-wrap{
+      position:fixed;
+      top:16px;
+      right:16px;
+      z-index:5000;
+      display:grid;
+      gap:10px;
+      width:min(380px, calc(100vw - 24px));
     }
-  
-    .toast.info {
-      background: rgba(73,215,255,0.14);
-      color: var(--info);
-      border-color: rgba(73,215,255,0.18);
-    }
-  
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(18px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-  
-    /* BUTTONS */
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 11px 16px;
-      font-size: 13px;
-      font-weight: 800;
-      color: white;
-      cursor: pointer;
-      font-family: var(--font);
-      transition:
-        transform .18s ease,
-        opacity .18s ease,
-        box-shadow .18s ease,
-        background .18s ease,
-        border-color .18s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      position: relative;
-      overflow: hidden;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-  
-    .btn:hover { transform: translateY(-2px); }
-    .btn:active { transform: translateY(0); }
-    .btn:disabled {
-      opacity: .55;
-      cursor: default;
-      transform: none !important;
-      filter: grayscale(.08);
-    }
-  
-    .btn::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -130%;
-      width: 65%;
-      height: 100%;
-      transform: skewX(-24deg);
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-    }
-  
-    .btn:hover::after { animation: btnShine .75s ease; }
-  
-    @keyframes btnShine {
-      from { left: -130%; }
-      to { left: 150%; }
-    }
-  
-    .btn-pink {
-      background: linear-gradient(135deg, var(--pink), var(--pink-2));
-      box-shadow: 0 10px 30px rgba(255,62,157,0.24);
-    }
-  
-    .btn-cyan {
-      background: linear-gradient(135deg, var(--cyan), var(--cyan-2));
-      box-shadow: 0 10px 30px rgba(73,215,255,0.22);
-    }
-  
-    .btn-green {
-      background: linear-gradient(135deg, var(--green), var(--green-2));
-      box-shadow: 0 10px 30px rgba(72,229,123,0.22);
-    }
-  
-    .btn-red {
-      background: linear-gradient(135deg, var(--red), var(--red-2));
-      box-shadow: 0 10px 30px rgba(255,107,107,0.22);
-    }
-  
-    .btn-gold {
-      background: linear-gradient(135deg, var(--gold-2), var(--gold));
-      box-shadow: 0 10px 30px rgba(245,158,11,0.24);
-      color: #1a1305;
-    }
-  
-    .btn-dark {
-      color: var(--text-secondary);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: none;
-    }
-  
-    .btn-dark:hover {
-      color: #fff;
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(255,255,255,0.12);
-    }
-  
-    .btn-lg {
-      padding: 15px 24px;
-      font-size: 15px;
-      font-weight: 900;
+    .toast{
       border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 900;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      background: rgba(12,16,28,.92);
     }
-  
-    /* INPUTS */
-    .field {
-      width: 100%;
+    .toast.success{ border-color: rgba(71,255,139,.22); color:#b9ffd2; }
+    .toast.error{ border-color: rgba(255,107,107,.22); color:#ffd0d0; }
+    .toast.info{ border-color: rgba(53,231,255,.20); color:#c9fbff; }
+
+    /* buttons / inputs */
+    .btn{
+      border:0;
+      cursor:pointer;
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-size:13px;
+      font-weight: 900;
+      color:#fff;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      white-space:nowrap;
+      text-decoration:none;
+    }
+    .btn:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); }
+    .btn:active{ transform:none; }
+    .btn:disabled{ opacity:.55; cursor:default; transform:none; }
+
+    .btn-cyan{
+      background: linear-gradient(135deg, rgba(53,231,255,.20), rgba(53,231,255,.10));
+      border-color: rgba(53,231,255,.22);
+      box-shadow: 0 0 0 1px rgba(53,231,255,.06), 0 16px 50px rgba(53,231,255,.10);
+    }
+    .btn-pink{
+      background: linear-gradient(135deg, rgba(255,62,165,.22), rgba(255,62,165,.10));
+      border-color: rgba(255,62,165,.22);
+      box-shadow: 0 0 0 1px rgba(255,62,165,.06), 0 16px 50px rgba(255,62,165,.10);
+    }
+    .btn-green{
+      background: linear-gradient(135deg, rgba(71,255,139,.20), rgba(71,255,139,.10));
+      border-color: rgba(71,255,139,.22);
+      box-shadow: 0 0 0 1px rgba(71,255,139,.06), 0 16px 50px rgba(71,255,139,.10);
+    }
+    .btn-red{
+      background: linear-gradient(135deg, rgba(255,107,107,.22), rgba(255,107,107,.10));
+      border-color: rgba(255,107,107,.22);
+      box-shadow: 0 0 0 1px rgba(255,107,107,.06), 0 16px 50px rgba(255,107,107,.08);
+    }
+    .btn-dark{ background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.10); color: var(--text); }
+
+    .field{
+      width:100%;
       padding: 12px 14px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: var(--bg-input);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
       color: var(--text);
+      outline:none;
       font-size: 13px;
-      outline: none;
-      transition: .18s ease;
-      font-family: var(--font);
+      transition: box-shadow .18s ease, border-color .18s ease;
     }
-  
-    .field::placeholder {
-      color: #74809e;
+    .field::placeholder{ color: rgba(146,162,199,.8); }
+    .field:focus{
+      border-color: rgba(53,231,255,.28);
+      box-shadow: 0 0 0 3px rgba(53,231,255,.10);
     }
-  
-    .field:focus {
-      border-color: rgba(73,215,255,0.22);
-      box-shadow: 0 0 0 3px rgba(73,215,255,0.08);
-    }
-  
-    textarea.field {
-      resize: vertical;
-    }
-  
-    input[type="checkbox"] {
-      accent-color: var(--cyan);
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-  
-    /* LOADERS */
-    .section-loader {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-    }
-  
-    .section-loader.hidden { display: none !important; }
-  
-    .section-loader-spinner {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.12);
-      border-top-color: var(--cyan);
-      border-right-color: var(--pink);
-      animation: sectionSpin .9s linear infinite;
-      box-shadow: 0 0 14px rgba(73,215,255,0.22);
-    }
-  
-    .section-loader-text {
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
       font-size: 12px;
-      font-weight: 800;
-      color: #dff6ff;
-      white-space: nowrap;
+      font-weight: 900;
     }
-  
-    @keyframes sectionSpin {
-      to { transform: rotate(360deg); }
-    }
-  
-    .inline-loading {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--text-muted);
-      font-weight: 800;
-    }
-  
-    .inline-loading.hidden { display: none !important; }
-  
-    .inline-loading-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 10px rgba(73,215,255,0.5);
-      animation: inlinePulse 1.2s ease-in-out infinite;
-    }
-  
-    @keyframes inlinePulse {
-      0%,100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.45); opacity: .6; }
-    }
-  
-    /* AUTH */
-    .guest-wrap {
-      min-height: calc(100vh - 44px);
-      display: grid;
-      place-items: center;
-    }
-  
-    .auth-shell {
-      width: min(100%, 1080px);
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-  
-    .auth-hero {
-      padding: 28px;
-      min-height: 560px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-  
-    .auth-kicker {
-      display: inline-flex;
-      width: fit-content;
+    .pill.ok{ border-color: rgba(71,255,139,.22); color:#b9ffd2; background: rgba(71,255,139,.08); }
+    .pill.warn{ border-color: rgba(255,215,106,.20); color:#ffe3a6; background: rgba(255,215,106,.08); }
+
+    /* auth */
+    .guest-wrap{ min-height: calc(100vh - 36px); display:grid; place-items:center; }
+    .auth-shell{ width:min(1100px,100%); display:grid; grid-template-columns: 1.25fr .75fr; gap:16px; }
+    .auth-hero{ padding:24px; min-height: 520px; display:flex; flex-direction:column; justify-content:space-between; }
+    .auth-kicker{
+      display:inline-flex;
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .08em;
+      letter-spacing:.12em;
       text-transform: uppercase;
-      color: #8de7ff;
-      background: rgba(73,215,255,0.08);
-      border: 1px solid rgba(73,215,255,0.16);
-      margin-bottom: 16px;
-    }
-  
-    .auth-title {
-      font-size: clamp(34px, 5vw, 66px);
       font-weight: 900;
+      color:#bdf7ff;
+      border:1px solid rgba(53,231,255,.20);
+      background: rgba(53,231,255,.08);
+      width:fit-content;
+    }
+    .auth-title{
+      margin: 14px 0 10px;
+      font-size: clamp(34px, 4.6vw, 64px);
       line-height: .95;
       letter-spacing: -.06em;
-      margin: 0 0 14px;
+      font-weight: 950;
     }
-  
-    .auth-title .accent {
-      background: linear-gradient(135deg, #fff, #8ae7ff 45%, #ff87c1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .accent{
+      background: linear-gradient(135deg, #fff, rgba(53,231,255,.95) 45%, rgba(255,62,165,.95));
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
     }
-  
-    .auth-text {
-      color: var(--text-secondary);
-      font-size: 15px;
-      line-height: 1.75;
-      max-width: 680px;
-    }
-  
-    .auth-panel {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 560px;
-    }
-  
-    .auth-panel-head { margin-bottom: 18px; }
-  
-    .auth-panel-title {
-      font-size: 28px;
-      font-weight: 900;
-      margin: 0 0 8px;
-      letter-spacing: -.04em;
-    }
-  
-    .auth-panel-sub {
-      color: var(--text-muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-  
-    .auth-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-  
-    .auth-tab-btn {
-      flex: 1;
+    .auth-text{ color: var(--muted); font-size: 14px; line-height:1.75; max-width: 680px; }
+
+    .auth-panel{ padding: 22px; min-height: 520px; display:flex; flex-direction:column; justify-content:center; }
+    .auth-panel-title{ margin:0 0 6px; font-size: 26px; font-weight: 950; letter-spacing: -.04em; }
+    .auth-panel-sub{ color: var(--muted); font-size: 13px; line-height:1.6; margin-bottom: 14px; }
+
+    .auth-tabs{ display:flex; gap:8px; margin-bottom:12px; }
+    .auth-tab-btn{
+      flex:1;
       border-radius: 14px;
       padding: 12px 14px;
       font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      font-family: var(--font);
-      background: rgba(255,255,255,0.04);
-      color: var(--text-secondary);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: .2s ease;
-    }
-  
-    .auth-tab-btn:hover {
-      color: #fff;
-      border-color: rgba(255,255,255,0.12);
-    }
-  
-    .auth-tab-btn.active {
-      color: white;
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
-      border-color: rgba(255,255,255,0.12);
-    }
-  
-    .auth-form { display: none; }
-  
-    .auth-form.active {
-      display: block;
-      animation: fadeUp .24s ease;
-    }
-  
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  
-    .form-grid { display: grid; gap: 10px; }
-  
-    .auth-actions {
-      display: grid;
-      gap: 10px;
-      margin-top: 12px;
-    }
-  
-    .auth-actions .btn {
-      min-height: 46px;
-    }
-  
-    .auth-msg {
-      min-height: 18px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-top: 8px;
-    }
-  
-    .auth-msg.error { color: var(--danger); }
-    .auth-msg.success { color: var(--success); }
-  
-    /* APP */
-    .app-shell {
-      display: grid;
-      gap: 18px;
-    }
-  
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 18px 22px;
-    }
-  
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      min-width: 0;
-    }
-  
-    .brand-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
       font-weight: 900;
-      background: linear-gradient(135deg, rgba(255,62,157,0.22), rgba(73,215,255,0.18));
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 8px 28px rgba(255,62,157,0.16);
-      flex-shrink: 0;
-    }
-  
-    .brand-text { min-width: 0; }
-  
-    .brand-title {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: -.04em;
-      margin-bottom: 4px;
-    }
-  
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-  
-    .online-inline {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      font-size: 13px;
-      font-weight: 800;
-    }
-  
-    .online-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px rgba(72,229,123,0.75);
-      animation: pulseDot 2s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-  
-    @keyframes pulseDot {
-      0%,100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: .7; }
-    }
-  
-    .account-box {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 14px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
-        rgba(255,255,255,0.02);
-      min-width: 0;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-      cursor: pointer;
-      transition:
-        transform .22s ease,
-        border-color .22s ease,
-        box-shadow .22s ease,
-        background .22s ease;
-    }
-  
-    .account-box:hover,
-    .account-box:focus-visible {
-      transform: translateY(-2px);
-      border-color: rgba(73,215,255,0.16);
-      box-shadow: 0 14px 34px rgba(0,0,0,0.22), 0 0 0 1px rgba(73,215,255,0.04);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03)),
-        rgba(255,255,255,0.03);
-      outline: none;
-    }
-  
-    .avatar-wrap {
-      position: relative;
-      width: 60px;
-      height: 60px;
-      min-width: 60px;
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: .22s ease;
-      box-shadow: 0 8px 28px rgba(73,215,255,0.12);
-      flex-shrink: 0;
-    }
-  
-    .account-box:hover .avatar-wrap {
-      box-shadow: 0 12px 34px rgba(73,215,255,0.18);
-      border-color: rgba(73,215,255,0.18);
-    }
-  
-    .avatar-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  
-    .avatar-fallback {
-      font-size: 22px;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: -.04em;
-    }
-  
-    .avatar-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.56);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: #dff8ff;
-      opacity: 0;
-      transition: .2s ease;
-      text-align: center;
-      padding: 6px;
-    }
-  
-    .account-box:hover .avatar-overlay { opacity: 1; }
-  
-    .account-meta {
-      display: grid;
-      gap: 5px;
-      min-width: 0;
-    }
-  
-    .account-login {
-      font-size: 15px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.2;
-      word-break: break-word;
-      letter-spacing: -.02em;
-    }
-  
-    .account-sub {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      color: var(--text-muted);
-      font-size: 12px;
-      min-width: 0;
-    }
-  
-    .account-gamenick {
-      color: #d9f4ff;
-      font-weight: 700;
-      font-size: 12px;
-    }
-  
-    .user-role {
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      border: 1px solid rgba(73,215,255,0.16);
-      color: #8eeaff;
-      background: rgba(73,215,255,0.08);
-    }
-  
-    .user-role.admin {
-      background: linear-gradient(135deg, rgba(255,62,157,0.16), rgba(141,92,255,0.14));
-      border-color: rgba(255,62,157,0.22);
-      color: #ffc7e4;
-      box-shadow: 0 0 18px rgba(255,62,157,0.10);
-    }
-  
-    .user-role.user {
-      background: rgba(73,215,255,0.08);
-      border-color: rgba(73,215,255,0.16);
-      color: #8eeaff;
-    }
-  
-    /* DASHBOARD */
-    .dashboard-layout {
-      display: grid;
-      grid-template-columns: 300px 1fr 92px 320px;
-      gap: 18px;
-      align-items: start;
-    }
-  
-    .left-column,
-    .center-column,
-    .mini-rail,
-    .right-column {
-      min-width: 0;
-    }
-  
-    .left-column {
-      display: grid;
-      gap: 18px;
-      align-content: start;
-      position: sticky;
-      top: 22px;
-    }
-  
-    .center-column {
-      display: grid;
-      gap: 18px;
-    }
-  
-    .mini-rail {
-      display: grid;
-      gap: 12px;
-      align-content: start;
-      position: sticky;
-      top: 22px;
-    }
-  
-    .right-column {
-      display: grid;
-      gap: 18px;
-      align-content: start;
-      position: sticky;
-      top: 22px;
-    }
-  
-    .widget-box {
-      padding: 18px;
-    }
-  
-    .widget-title {
-      font-size: 15px;
-      font-weight: 900;
-      margin: 0 0 12px;
-      letter-spacing: -.02em;
-    }
-  
-    /* MINI RAIL */
-    .rail-btn {
-      position: relative;
-      width: 92px;
-      height: 92px;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      cursor: pointer;
-      transition: .22s ease;
-      overflow: visible;
-    }
-  
-    .rail-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.06);
-    }
-  
-    .rail-btn.active {
-      background: linear-gradient(135deg, rgba(255,62,157,0.16), rgba(73,215,255,0.14));
-      border-color: rgba(255,255,255,0.14);
-      box-shadow: 0 8px 26px rgba(73,215,255,0.12);
-    }
-  
-    .rail-btn.chest {
-      background: linear-gradient(135deg, rgba(246,200,87,0.22), rgba(245,158,11,0.16));
-      border-color: rgba(246,200,87,0.24);
-      box-shadow: 0 10px 28px rgba(245,158,11,0.16);
-      color: #fff3cf;
-    }
-  
-    .rail-badge {
-      position: absolute;
-      right: -10px;
-      top: 50%;
-      transform: translateY(-50%);
-      white-space: nowrap;
-      padding: 12px 16px;
-      border-radius: 16px;
-      background: rgba(12,18,30,0.96);
-      border: 1px solid rgba(255,255,255,0.10);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .02em;
-      box-shadow: var(--shadow-lg);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: .2s ease;
-      margin-right: -8px;
-      z-index: 20;
-    }
-  
-    .rail-btn:hover .rail-badge {
-      opacity: 1;
-      visibility: visible;
-      margin-right: -18px;
-    }
-  
-    .rail-badge .sub {
-      display: block;
-      margin-top: 4px;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 700;
-    }
-  
-    /* TABS */
-    .section-tabs-wrap { margin-bottom: 4px; }
-  
-    .section-tabs {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-  
-    .section-tabs-main,
-    .section-tabs-right {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-  
-    .section-tabs-right {
-      margin-left: auto;
-    }
-  
-    .section-tab {
-      position: relative;
-      cursor: pointer;
-      color: var(--text-secondary);
-      font-weight: 800;
-      font-size: 14px;
-      padding: 13px 20px;
-      border-radius: 16px;
+      cursor:pointer;
+      color: var(--muted);
       background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
-      font-family: var(--font);
-      transition: all .22s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      overflow: hidden;
+      border:1px solid rgba(255,255,255,.10);
+      transition:.2s ease;
     }
-  
-    .section-tab:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,.14);
-      color: #fff;
-      background: rgba(255,255,255,.06);
+    .auth-tab-btn.active{
+      color:#fff;
+      border-color: rgba(53,231,255,.25);
+      background: linear-gradient(135deg, rgba(53,231,255,.14), rgba(255,62,165,.10));
+      box-shadow: 0 0 0 1px rgba(53,231,255,.06);
     }
-  
-    .section-tab.active {
-      color: #fff;
-      background: linear-gradient(135deg, rgba(255,62,157,0.20), rgba(73,215,255,0.18));
-      border-color: rgba(255,255,255,0.14);
-      box-shadow: 0 8px 28px rgba(255,62,157,0.12), 0 0 0 1px rgba(73,215,255,0.06);
-    }
-  
-    .section-tab.chest.active {
-      background: linear-gradient(135deg, rgba(246,200,87,0.22), rgba(245,158,11,0.18));
-      color: #fff9de;
-      box-shadow: 0 8px 28px rgba(245,158,11,0.16), 0 0 0 1px rgba(246,200,87,0.08);
-    }
-  
-    .section-tab.contracts {
-      background: linear-gradient(135deg, rgba(255,62,157,0.10), rgba(141,92,255,0.10));
-      border-color: rgba(255,62,157,0.12);
-      color: #ffb7db;
-    }
-  
-    .section-tab.contracts:hover {
-      background: linear-gradient(135deg, rgba(255,62,157,0.16), rgba(141,92,255,0.14));
-      border-color: rgba(255,62,157,0.18);
-      color: #ffd6ec;
-    }
-  
-    .section-tab.contracts.active {
-      background: linear-gradient(135deg, rgba(255,62,157,0.22), rgba(141,92,255,0.18));
-      border-color: rgba(255,62,157,0.24);
-      color: #fff0f8;
-      box-shadow: 0 8px 28px rgba(255,62,157,0.16);
-    }
-  
-    .section-tab.has-badge {
-      animation: contractPulse 1.5s ease-in-out infinite;
-    }
-  
-    @keyframes contractPulse {
-      0%,100% { box-shadow: 0 0 0 rgba(255,62,157,0); }
-      50% { box-shadow: 0 0 24px rgba(255,62,157,0.20); }
-    }
-  
-    .tab-glow {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      background: radial-gradient(circle at 50% 120%, rgba(73,215,255,0.18), transparent 60%);
-      transition: opacity .3s ease;
-      pointer-events: none;
-    }
-  
-    .section-tab.active .tab-glow { opacity: 1; }
-  
-    .tab-indicator {
-      font-size: 8px;
-      opacity: 0;
-      color: var(--cyan);
-      transition: opacity .2s ease;
-    }
-  
-    .section-tab.active .tab-indicator { opacity: 1; }
-  
-    .tab-panel { display: none; }
-  
-    .tab-panel.active {
-      display: block;
-      animation: fadeUp .28s ease;
-    }
-  
-    /* COMMON SECTION */
-    .section-box { padding: 22px; }
-  
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-  
-    .section-title {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: -.03em;
-      margin: 0;
-    }
-  
-    .section-sub {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 4px;
-      line-height: 1.55;
-    }
-  
-    /* PROFILE */
-    .profile-floating-card {
-      padding: 20px;
-      transition: .28s ease;
-    }
-  
-    .profile-floating-card.is-hidden {
-      display: none !important;
-    }
-  
-    .profile-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-    }
-  
-    .profile-pill.ok {
-      color: var(--success);
-      border-color: rgba(72,229,123,0.18);
-      background: rgba(72,229,123,0.08);
-    }
-  
-    .profile-pill.warn {
-      color: var(--warning);
-      border-color: rgba(251,191,36,0.18);
-      background: rgba(251,191,36,0.08);
-    }
-  
-    .profile-meta-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 16px;
-    }
-  
-    .profile-meta-card {
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-  
-    .profile-meta-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      font-weight: 800;
-    }
-  
-    .profile-meta-value {
-      font-size: 15px;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.5;
-      word-break: break-word;
-    }
-  
-    .profile-link-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-  
-    .profile-toggle-btn {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: #fff;
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: .2s ease;
-      font-family: var(--font);
-    }
-  
-    .profile-toggle-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.12);
-    }
-  
-    .profile-link-body {
-      overflow: hidden;
-      transition: max-height .35s ease, opacity .25s ease, margin-top .25s ease;
-      max-height: 3600px;
-      opacity: 1;
-      margin-top: 14px;
-    }
-  
-    .profile-link-body.collapsed {
-      max-height: 0;
-      opacity: 0;
-      margin-top: 0;
-      pointer-events: none;
-    }
-  
-    .link-code-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 12px;
-    }
-  
-    .link-code-card {
-      padding: 22px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
-        rgba(8,12,22,0.7);
-      position: relative;
-      overflow: hidden;
-    }
-  
-    .link-code-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 80% 10%, rgba(73,215,255,0.06), transparent 40%);
-      pointer-events: none;
-    }
-  
-    .link-card-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-  
-    .link-card-icon {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-  
-    .link-card-icon.vk-icon {
-      background: linear-gradient(135deg, rgba(73,133,255,0.20), rgba(73,215,255,0.12));
-      border-color: rgba(73,133,255,0.18);
-    }
-  
-    .link-card-icon.nick-icon {
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.14));
-      border-color: rgba(255,62,157,0.16);
-    }
-  
-    .link-card-header-text { min-width: 0; }
-  
-    .link-code-title {
-      font-size: 18px;
-      font-weight: 900;
-      margin-bottom: 4px;
-      letter-spacing: -.02em;
-    }
-  
-    .link-code-sub {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-  
-    .link-code-divider {
-      height: 1px;
-      background: rgba(255,255,255,0.06);
-      margin: 16px 0;
-    }
-  
-    .link-code-value-wrap {
+    .auth-form{ display:none; }
+    .auth-form.active{ display:block; }
+    .form-grid{ display:grid; gap:10px; }
+    .auth-actions{ margin-top: 12px; display:grid; gap:10px; }
+    .auth-msg{ min-height: 18px; margin-top: 10px; font-size: 12px; font-weight: 900; }
+    .auth-msg.error{ color:#ffd0d0; }
+    .auth-msg.success{ color:#b9ffd2; }
+
+    /* app */
+    .app-shell{ display:grid; gap:16px; }
+
+    .topbar{
       padding: 16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{ display:flex; align-items:center; gap:12px; min-width:0; }
+    .brand-logo{
+      width:46px; height:46px;
       border-radius: 16px;
-      background: rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 14px;
-      text-align: center;
+      display:grid; place-items:center;
+      font-weight: 950;
+      letter-spacing:.08em;
+      border:1px solid rgba(53,231,255,.18);
+      background: radial-gradient(circle at 30% 30%, rgba(53,231,255,.20), transparent 60%),
+                  radial-gradient(circle at 70% 70%, rgba(255,62,165,.16), transparent 60%),
+                  rgba(255,255,255,.04);
+      box-shadow: 0 0 0 1px rgba(53,231,255,.06), 0 18px 60px rgba(0,0,0,.45);
+      flex-shrink:0;
     }
-  
-    .link-code-value-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--text-muted);
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-  
-    .link-code-value {
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: .10em;
-      line-height: 1.2;
-      color: #9cefff;
-      word-break: break-word;
-    }
-  
-    .link-code-value.empty {
-      color: var(--text-muted);
-      font-size: 15px;
-      letter-spacing: 0;
-      font-weight: 700;
-    }
-  
-    .link-code-meta {
-      color: var(--text-muted);
-      font-size: 13px;
-      line-height: 1.65;
-      margin-bottom: 14px;
-      text-align: center;
-    }
-  
-    .link-code-meta .timer {
-      color: var(--warning);
-      font-weight: 800;
-    }
-  
-    .link-gen-btn-wrap { margin-bottom: 18px; }
-  
-    .link-gen-btn-wrap .btn {
-      width: 100%;
-      padding: 14px 20px;
-      font-size: 15px;
-      font-weight: 800;
-      border-radius: 16px;
-    }
-  
-    .link-code-steps { display: grid; gap: 10px; }
-  
-    .link-steps-title {
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-  
-    .link-step {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      font-size: 14px;
-    }
-  
-    .link-step-bullet {
-      width: 28px;
-      height: 28px;
-      min-width: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 900;
-      margin-top: 1px;
-    }
-  
-    .link-step-bullet.vk-bullet {
-      background: rgba(73,133,255,0.12);
-      border: 1px solid rgba(73,133,255,0.20);
-      color: #8ab4ff;
-    }
-  
-    .link-step-bullet.nick-bullet {
-      background: rgba(255,62,157,0.10);
-      border: 1px solid rgba(255,62,157,0.18);
-      color: #ff8ec4;
-    }
-  
-    .link-highlight {
-      color: #ffffff;
-      font-weight: 800;
-    }
-  
-    .link-accent {
-      color: #9cefff;
-      font-weight: 900;
-    }
-  
-    .link-accent-vk {
-      color: #8ab4ff;
-      font-weight: 900;
-      text-decoration: none;
-    }
-  
-    .link-accent-pink {
-      color: #ff8ec4;
-      font-weight: 900;
-    }
-  
-    .link-important {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-top: 12px;
-      line-height: 1.5;
-    }
-  
-    .link-important.info {
-      background: rgba(73,215,255,0.08);
-      border: 1px solid rgba(73,215,255,0.14);
-      color: #8eeaff;
-    }
-  
-    .link-important.warn {
-      background: rgba(251,191,36,0.08);
-      border: 1px solid rgba(251,191,36,0.14);
-      color: var(--warning);
-    }
-  
-    /* LISTS / ONLINE */
-    .online-list {
-      display: grid;
-      gap: 10px;
-    }
-  
-    .online-user {
-      display: grid;
-      gap: 4px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      transition: .2s ease;
-    }
-  
-    .online-user:hover {
-      background: rgba(255,255,255,0.045);
-    }
-  
-    .online-user-main {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-  
-    .online-user-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.35;
-      word-break: break-word;
-    }
-  
-    .online-user-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-  
-    .activity-feed-item {
-      display: grid;
-      grid-template-columns: 44px 1fr;
-      gap: 12px;
-      align-items: start;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      transition: .2s ease;
-    }
-  
-    .activity-feed-item:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.05);
-    }
-  
-    .activity-feed-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
-      border: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 15px;
-      color: #fff;
-    }
-  
-    .activity-feed-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  
-    .activity-feed-name {
+    .brand-title{ font-size: 18px; font-weight: 950; letter-spacing: -.02em; }
+
+    .topbar-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+
+    .online-inline{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
       font-size: 13px;
       font-weight: 900;
-      color: #fff;
-      line-height: 1.3;
-      margin-bottom: 3px;
-      word-break: break-word;
+      color: #dbe8ff;
     }
-  
-    .activity-feed-action {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.55;
-      margin-bottom: 4px;
+    .online-dot{ width:9px; height:9px; border-radius:50%; background: var(--green); box-shadow: 0 0 12px rgba(71,255,139,.55); }
+
+    .account-box{
+      display:flex; align-items:center; gap:12px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      min-width: 240px;
     }
-  
-    .activity-feed-date {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-  
-    .site-online-user {
-      display: grid;
-      grid-template-columns: 38px 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      transition: .2s ease;
-    }
-  
-    .site-online-user:hover {
-      background: rgba(255,255,255,0.045);
-    }
-  
-    .site-online-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
-      border: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 900;
-      color: #fff;
-    }
-  
-    .site-online-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  
-    /* STATS */
-    .stat-card {
-      padding: 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-  
-    .stat-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--text-muted);
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-  
-    .stat-value {
-      font-size: 26px;
-      font-weight: 900;
-      line-height: 1;
-      color: #fff;
-      word-break: break-word;
-    }
-  
-    .stat-balance { color: #95eeff; }
-    .stat-output { color: #ffe08a; }
-  
-    /* SHOP */
-    .shop-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-  
-    .shop-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-    }
-  
-    .shop-toggle-wrap {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-  
-    .shop-toggle-btn {
-      cursor: pointer;
-      color: #fff;
-      font-weight: 800;
-      font-size: 13px;
-      padding: 10px 14px;
-      border-radius: 14px;
+    .avatar-wrap{
+      width:46px; height:46px; border-radius: 14px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.08);
-      transition: .2s ease;
-      font-family: var(--font);
+      display:grid; place-items:center;
+      flex-shrink:0;
     }
-  
-    .shop-toggle-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,.12);
-    }
-  
-    .shop-toggle-btn.active {
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(73,215,255,0.16));
-      border-color: rgba(255,255,255,0.12);
-    }
-  
-    .item-card {
-      position: relative;
-      min-height: 300px;
-      border-radius: 22px;
-      padding: 18px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
-        rgba(10,16,28,0.82);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      transition:
-        transform .28s cubic-bezier(.22,.68,0,1),
-        border-color .28s ease,
-        box-shadow .28s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-  
-    .item-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(73,215,255,0.16);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(73,215,255,0.05);
-    }
-  
-    .item-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 85% 15%, rgba(255,255,255,0.08), transparent 25%),
-        linear-gradient(135deg, rgba(255,255,255,0.05), transparent 22%, transparent 70%, rgba(255,255,255,0.03));
-      pointer-events: none;
-    }
-  
-    .item-rarity {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .avatar-img{ width:100%; height:100%; object-fit:cover; }
+    .avatar-fallback{ font-weight: 950; letter-spacing:-.02em; }
+    .account-meta{ min-width:0; display:grid; gap:2px; }
+    .account-login{ font-weight: 950; font-size: 14px; }
+    .account-sub{ display:flex; gap:8px; flex-wrap:wrap; color: var(--muted); font-size: 12px; }
+    .user-role{
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing:.08em;
       padding: 6px 10px;
       border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .06em;
+      border:1px solid rgba(53,231,255,.18);
+      background: rgba(53,231,255,.08);
+      color:#bdf7ff;
       text-transform: uppercase;
-      margin-bottom: 12px;
-      width: fit-content;
     }
-  
-    .rarity-epic, .item-rarity.rarity-epic {
-      background: rgba(255,180,0,0.16);
-      border: 1px solid rgba(255,180,0,0.22);
-      color: #ffd56a;
-      box-shadow: 0 0 18px rgba(255,180,0,0.10);
+    .user-role.admin{
+      border-color: rgba(255,62,165,.22);
+      background: rgba(255,62,165,.10);
+      color:#ffd1e9;
     }
-  
-    .rarity-rare, .item-rarity.rarity-rare {
-      background: rgba(73,215,255,0.14);
-      border: 1px solid rgba(73,215,255,0.22);
-      color: #97ecff;
-      box-shadow: 0 0 18px rgba(73,215,255,0.10);
+
+    /* layout */
+    .dashboard-layout{
+      display:grid;
+      grid-template-columns: 320px 1fr 320px;
+      gap: 16px;
+      align-items:start;
     }
-  
-    .rarity-common, .item-rarity.rarity-common {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.10);
-      color: #e4e9f5;
+    .left-column,.center-column,.right-column{ min-width:0; display:grid; gap:16px; }
+
+    /* tabs */
+    .section-tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
     }
-  
-    .rarity-legend, .item-rarity.rarity-legend {
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.16));
-      border: 1px solid rgba(255,62,157,0.25);
-      color: #ffb8e0;
-      box-shadow: 0 0 22px rgba(141,92,255,0.14);
-    }
-  
-    .item-card.rarity-common {
-      box-shadow: 0 12px 34px rgba(0,0,0,0.30);
-    }
-  
-    .item-card.rarity-rare {
-      border-color: rgba(73,215,255,0.18);
-      box-shadow:
-        0 12px 34px rgba(0,0,0,0.30),
-        0 0 0 1px rgba(73,215,255,0.05),
-        0 0 24px rgba(73,215,255,0.08);
-    }
-  
-    .item-card.rarity-epic {
-      border-color: rgba(245,158,11,0.20);
-      box-shadow:
-        0 12px 34px rgba(0,0,0,0.30),
-        0 0 0 1px rgba(245,158,11,0.06),
-        0 0 24px rgba(245,158,11,0.10);
-    }
-  
-    .item-card.rarity-legend {
-      border-color: rgba(255,62,157,0.24);
-      box-shadow:
-        0 12px 34px rgba(0,0,0,0.30),
-        0 0 0 1px rgba(255,62,157,0.08),
-        0 0 28px rgba(141,92,255,0.14);
-    }
-  
-    .item-icon-wrap {
-      width: 110px;
-      height: 110px;
-      border-radius: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 52px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      margin-bottom: 16px;
-      overflow: hidden;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-    }
-  
-    .item-icon-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  
-    .item-title {
-      font-size: 20px;
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 10px;
-    }
-  
-    .item-desc {
-      color: var(--text-secondary);
-      font-size: 13px;
-      line-height: 1.6;
-      min-height: 44px;
-      margin-bottom: 16px;
-    }
-  
-    .item-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-  
-    .item-price {
-      font-size: 18px;
-      font-weight: 900;
-      color: #ffe08a;
-    }
-  
-    /* INVENTORY */
-    .inventory-box {
-      padding: 18px;
-      min-height: 100%;
-      margin-top: 18px;
-    }
-  
-    .inventory-list { display: grid; gap: 12px; }
-  
-    .inventory-group { margin-bottom: 22px; }
-  
-    .inventory-group-head { margin-bottom: 12px; }
-  
-    .inventory-group-title {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
+    .tabs-main{ display:flex; gap:10px; flex-wrap:wrap; }
+    .section-tab{
+      cursor:pointer;
       border-radius: 14px;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: -.02em;
+      padding: 11px 14px;
+      font-weight: 950;
+      font-size: 13px;
+      color: #cfe0ff;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+      transition:.2s ease;
     }
-  
-    .inventory-group-count {
-      display: inline-flex;
-      min-width: 24px;
-      height: 24px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      color: white;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 0 8px;
+    .section-tab:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.18); }
+    .section-tab.active{
+      border-color: rgba(53,231,255,.25);
+      background: linear-gradient(135deg, rgba(53,231,255,.14), rgba(155,123,255,.10));
+      box-shadow: 0 0 0 1px rgba(53,231,255,.06);
+      color:#fff;
     }
-  
-    .inventory-group-list {
-      display: grid;
-      gap: 12px;
+
+    .tab-panel{ display:none; }
+    .tab-panel.active{ display:block; }
+
+    .section-box{ padding: 18px; }
+
+    .section-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom: 14px;
     }
-  
-    .inventory-item {
-      display: grid;
-      grid-template-columns: 52px 1fr auto auto;
-      gap: 12px;
-      align-items: center;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      transition: .2s ease;
-    }
-  
-    .inventory-item:hover {
-      background: rgba(255,255,255,0.05);
-      transform: translateY(-2px);
-    }
-  
-    .inventory-item-advanced {
-      grid-template-columns: auto 52px 1fr auto auto;
-      gap: 14px;
-      align-items: center;
-    }
-  
-    .inventory-item-check input {
-      width: 18px;
-      height: 18px;
-      accent-color: #49d7ff;
-      cursor: pointer;
-    }
-  
-    .inventory-item-icon {
-      width: 52px;
-      height: 52px;
+    .section-title{ margin:0; font-weight: 950; letter-spacing:-.03em; font-size: 20px; }
+    .section-sub{ margin-top:4px; color: var(--muted); font-size: 13px; line-height:1.55; }
+
+    /* lists */
+    .list{ display:grid; gap:10px; }
+    .list-item{
       border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      overflow: hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding: 12px 12px;
     }
-  
-    .inventory-item-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  
-    .inventory-item-main {
-      min-width: 0;
-    }
-  
-    .inventory-item-title-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 4px;
-    }
-  
-    .inventory-item-title {
-      font-size: 14px;
-      font-weight: 800;
-      margin-bottom: 3px;
-    }
-  
-    .inventory-item-meta {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-  
-    .inventory-item-submeta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-  
-    .inventory-count {
-      min-width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 900;
-      background: rgba(73,215,255,0.08);
-      border: 1px solid rgba(73,215,255,0.16);
-      color: #8feaff;
-    }
-  
-    .inventory-sell-one {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-  
-    .inventory-sell-controls {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-  
-    .qty-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.05);
-      color: #fff;
-      font-size: 18px;
-      font-weight: 900;
-      cursor: pointer;
-      transition: .2s ease;
-    }
-  
-    .qty-btn:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.08);
-    }
-  
-    .qty-input {
-      width: 62px;
-      height: 34px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(8,11,20,0.7);
-      color: #fff;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 800;
-      outline: none;
-    }
-  
-    .inventory-sell-total {
-      display: grid;
-      justify-items: end;
-      gap: 8px;
-    }
-  
-    .inventory-selected-sum {
-      font-size: 14px;
-      font-weight: 900;
-      color: var(--success);
-    }
-  
-    .inventory-bulk-panel {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-      padding: 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-  
-    .inventory-bulk-title {
-      font-size: 15px;
-      font-weight: 900;
-      margin-bottom: 4px;
-    }
-  
-    .inventory-bulk-meta {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-  
-    .inventory-bulk-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-  
-    /* ROULETTE */
-    .roulette-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      align-items: start;
-      margin-top: 18px;
-    }
-  
-    .roulette-main { padding: 22px; }
-  
-    .roulette-clean-head {
-      display: grid;
-      justify-items: center;
-      gap: 12px;
-      text-align: center;
-      margin-bottom: 18px;
-    }
-  
-    .roulette-limit-big {
-      display: grid;
-      gap: 8px;
-      justify-items: center;
-      margin-bottom: 10px;
-    }
-  
-    .roulette-limit-big-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: var(--text-muted);
-      font-weight: 800;
-    }
-  
-    .roulette-limit-big-value {
-      font-size: clamp(42px, 5vw, 64px);
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -.04em;
-      color: #fff3cf;
-      text-shadow: 0 0 18px rgba(245,158,11,0.14);
-    }
-  
-    .roulette-big-btn-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 18px;
-    }
-  
-    .roulette-big-btn {
-      min-width: 220px;
-      padding: 16px 28px;
-      font-size: 18px;
-      font-weight: 900;
-      border-radius: 18px;
-      letter-spacing: .06em;
-    }
-  
-    .roulette-strip-shell {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      border-radius: 24px;
-      padding: 20px 0;
-      margin-bottom: 18px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
-        radial-gradient(circle at 50% 50%, rgba(73,215,255,0.08), transparent 45%);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), var(--shadow);
-    }
-  
-    .roulette-strip-shell::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 120px;
-      background: linear-gradient(to right, rgba(7,11,20,0.98), rgba(7,11,20,0.65), transparent);
-      z-index: 4;
-      pointer-events: none;
-    }
-  
-    .roulette-strip-shell::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 120px;
-      background: linear-gradient(to left, rgba(7,11,20,0.98), rgba(7,11,20,0.65), transparent);
-      z-index: 4;
-      pointer-events: none;
-    }
-  
-    .roulette-center-beam {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 4px;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(73,215,255,0.6), rgba(73,215,255,1), rgba(73,215,255,0.6), transparent);
-      box-shadow: 0 0 16px rgba(73,215,255,0.7), 0 0 48px rgba(73,215,255,0.25);
-      z-index: 6;
-      pointer-events: none;
-    }
-  
-    .roulette-center-marker {
-      position: absolute;
-      left: 50%;
-      bottom: 8px;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-bottom: 16px solid #49d7ff;
-      filter: drop-shadow(0 0 10px rgba(73,215,255,0.8));
-      z-index: 7;
-      pointer-events: none;
-    }
-  
-    .roulette-viewport {
-      overflow: hidden;
-      padding: 8px 18px;
-    }
-  
-    .roulette-strip {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      width: max-content;
-      min-height: 210px;
-      transform: translate3d(0,0,0);
-      will-change: transform;
-    }
-  
-    .roulette-card {
-      width: 170px;
-      min-width: 170px;
-      max-width: 170px;
-      height: 190px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+
+    /* right widgets */
+    .widget{ padding: 16px; }
+    .widget-title{ margin:0 0 10px; font-size: 14px; font-weight: 950; letter-spacing:-.02em; }
+    .stat{
       padding: 14px;
-      position: relative;
-      overflow: hidden;
-      flex-shrink: 0;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.22);
-      transition: .25s ease;
-    }
-  
-    .roulette-card:hover {
-      transform: translateY(-5px) scale(1.03);
-      border-color: rgba(255,255,255,0.14);
-    }
-  
-    .roulette-card.rarity-rare {
-      border-color: rgba(73,215,255,0.18);
-      box-shadow: 0 10px 26px rgba(0,0,0,0.24), 0 0 18px rgba(73,215,255,0.08);
-    }
-  
-    .roulette-card.rarity-epic {
-      border-color: rgba(245,158,11,0.18);
-      box-shadow: 0 10px 26px rgba(0,0,0,0.24), 0 0 18px rgba(245,158,11,0.10);
-    }
-  
-    .roulette-card.rarity-legend {
-      border-color: rgba(255,62,157,0.22);
-      box-shadow: 0 10px 26px rgba(0,0,0,0.24), 0 0 22px rgba(141,92,255,0.14);
-    }
-  
-    .roulette-card-img-wrap {
-      width: 110px;
-      height: 92px;
-      min-height: 92px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 16px;
-      background: rgba(0,0,0,0.22);
-      border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 12px;
-      overflow: hidden;
-    }
-  
-    .roulette-card-img-wrap img {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      display: block;
-    }
-  
-    .roulette-card-noimg { font-size: 36px; }
-  
-    .roulette-card-title {
-      font-size: 14px;
-      font-weight: 800;
-      text-align: center;
-      line-height: 1.25;
-      margin-bottom: 8px;
-      color: #fff;
-      width: 100%;
-    }
-  
-    .roulette-card-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-align: center;
-      width: 100%;
-    }
-  
-    .roulette-status-box {
-      min-height: 54px;
-      border-radius: 16px;
-      padding: 14px 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text-secondary);
-      font-size: 13px;
-      line-height: 1.5;
-      text-align: center;
-    }
-  
-    /* BONUS */
-    .bonus-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-  
-    .bonus-main {
-      padding: 28px;
-      min-height: 420px;
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: hidden;
-      text-align: center;
-    }
-  
-    .bonus-main::after {
-      content: "";
-      position: absolute;
-      inset: auto -20% -35% auto;
-      width: 420px;
-      height: 420px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(72,229,123,0.16), transparent 65%);
-      pointer-events: none;
-    }
-  
-    .bonus-center {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      justify-items: center;
-      gap: 18px;
-      width: 100%;
-    }
-  
-    .bonus-kicker {
-      display: inline-flex;
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: #94ffbb;
-      background: rgba(72,229,123,0.08);
-      border: 1px solid rgba(72,229,123,0.16);
-    }
-  
-    .bonus-title {
-      font-size: clamp(28px, 4vw, 48px);
-      font-weight: 900;
-      line-height: .95;
-      letter-spacing: -.05em;
-      margin: 0;
-      max-width: 720px;
-    }
-  
-    .bonus-amount-box {
-      min-width: 320px;
-      padding: 26px 28px;
-      border-radius: 26px;
-      background: linear-gradient(135deg, rgba(72,229,123,0.12), rgba(255,255,255,0.03));
-      border: 1px solid rgba(72,229,123,0.16);
-      box-shadow: 0 14px 34px rgba(72,229,123,0.12);
-      position: relative;
-      overflow: hidden;
-    }
-  
-    .bonus-amount-box::before {
-      content: "";
-      position: absolute;
-      top: -120%;
-      left: -40%;
-      width: 50%;
-      height: 300%;
-      transform: rotate(24deg);
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
-      opacity: 0;
-    }
-  
-    .bonus-amount-box.shine::before {
-      opacity: 1;
-      animation: bonusShine .95s ease;
-    }
-  
-    @keyframes bonusShine {
-      from { left: -50%; opacity: 0; }
-      20% { opacity: 1; }
-      to { left: 130%; opacity: 0; }
-    }
-  
-    .bonus-amount-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: var(--text-muted);
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-  
-    .bonus-amount {
-      font-size: clamp(40px, 6vw, 72px);
-      font-weight: 900;
-      letter-spacing: -.05em;
-      line-height: 1;
-      color: #d8ffe6;
-      text-shadow: 0 0 18px rgba(72,229,123,0.18);
-    }
-  
-    .bonus-amount.roll {
-      animation: bonusPulse .18s ease infinite alternate;
-    }
-  
-    @keyframes bonusPulse {
-      from { transform: scale(1); filter: drop-shadow(0 0 0 rgba(72,229,123,0)); }
-      to { transform: scale(1.03); filter: drop-shadow(0 0 16px rgba(72,229,123,0.22)); }
-    }
-  
-    .bonus-meta {
-      color: #c8d6c8;
-      font-size: 15px;
-      margin-top: 10px;
-      font-weight: 700;
-    }
-  
-    .bonus-big-timer {
-      font-size: 18px;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: .02em;
-    }
-  
-    .bonus-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-  
-    .bonus-activate-btn {
-      min-width: 220px;
-      padding: 16px 28px;
-      font-size: 18px;
-      font-weight: 900;
-      border-radius: 18px;
-      letter-spacing: .05em;
-    }
-  
-    .bonus-history { padding: 18px; }
-  
-    .bonus-history-list {
-      display: grid;
-      gap: 10px;
-    }
-  
-    .bonus-history-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 12px 14px;
       border-radius: 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      font-size: 13px;
-      transition: .2s ease;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
     }
-  
-    .bonus-history-item:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.05);
-    }
-  
-    .bonus-history-left {
-      display: grid;
-      gap: 4px;
-    }
-  
-    .bonus-history-title { font-weight: 800; }
-  
-    .bonus-history-date {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-  
-    .bonus-history-value {
-      color: var(--success);
-      font-weight: 900;
-      white-space: nowrap;
-    }
-  
-    /* CHEST */
-    .chest-shell { position: relative; }
-  
-    .chest-layout {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-  
-    .chest-main-card {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow: visible;
-    }
-  
-    .chest-side-card { padding: 24px; }
-  
-    .chest-main-stage {
-      position: relative;
-      width: 100%;
-      height: 240px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      overflow: visible;
-    }
-  
-    .chest-aura {
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(246,200,87,0.18), transparent 70%);
-      animation: chestAuraPulse 3s ease-in-out infinite;
-      pointer-events: none;
-      filter: blur(4px);
-    }
-  
-    @keyframes chestAuraPulse {
-      0%,100% { transform: scale(1); opacity: .5; }
-      50% { transform: scale(1.24); opacity: .9; }
-    }
-  
-    .chest-burst {
-      position: absolute;
-      width: 360px;
-      height: 360px;
-      pointer-events: none;
-      opacity: 0;
-      border-radius: 50%;
-    }
-  
-    .chest-burst.play {
-      animation: chestBurst 1s ease-out;
-    }
-  
-    @keyframes chestBurst {
-      0% {
-        opacity: 1;
-        transform: scale(.45);
-        background: radial-gradient(circle, rgba(255,215,0,.95), rgba(255,196,0,.28), transparent 62%);
-      }
-      100% {
-        opacity: 0;
-        transform: scale(1.95);
-        background: radial-gradient(circle, rgba(255,215,0,0), transparent 62%);
-      }
-    }
-  
-    .chest-particles {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-  
-    .chest-particle {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #fff1a8 0%, #ffd166 60%, transparent 100%);
-      opacity: 0;
-      filter: blur(.2px);
-    }
-  
-    .chest-particles.play .chest-particle {
-      animation: chestParticleBurst .9s ease-out forwards;
-    }
-  
-    .chest-particle.p1 { left: 48%; top: 44%; animation-delay: .00s; --tx:-90px; --ty:-120px; }
-    .chest-particle.p2 { left: 52%; top: 42%; animation-delay: .05s; --tx:95px; --ty:-118px; }
-    .chest-particle.p3 { left: 46%; top: 48%; animation-delay: .08s; --tx:-120px; --ty:-20px; }
-    .chest-particle.p4 { left: 54%; top: 46%; animation-delay: .10s; --tx:120px; --ty:-10px; }
-    .chest-particle.p5 { left: 50%; top: 40%; animation-delay: .12s; --tx:0px; --ty:-150px; }
-    .chest-particle.p6 { left: 49%; top: 50%; animation-delay: .14s; --tx:-70px; --ty:40px; }
-    .chest-particle.p7 { left: 53%; top: 50%; animation-delay: .16s; --tx:70px; --ty:42px; }
-    .chest-particle.p8 { left: 47%; top: 41%; animation-delay: .18s; --tx:-30px; --ty:-105px; }
-  
-    @keyframes chestParticleBurst {
-      0% { opacity: 0; transform: translate(0,0) scale(.3); }
-      10% { opacity: 1; }
-      100% { opacity: 0; transform: translate(var(--tx,0), var(--ty,-80px)) scale(1.3); }
-    }
-  
-    .chest-box-wrap {
-      position: relative;
-      width: 140px;
-      height: 118px;
-      cursor: pointer;
-      transition: transform .3s ease;
-      perspective: 700px;
-      transform-style: preserve-3d;
-    }
-  
-    .chest-box-wrap:hover { transform: scale(1.05); }
-  
-    .chest-box-wrap.shake {
-      animation: chestShake .55s ease;
-    }
-  
-    @keyframes chestShake {
-      0%,100% { transform: translateX(0) rotate(0); }
-      20% { transform: translateX(-6px) rotate(-3deg); }
-      40% { transform: translateX(6px) rotate(3deg); }
-      60% { transform: translateX(-5px) rotate(-2deg); }
-      80% { transform: translateX(5px) rotate(2deg); }
-    }
-  
-    .chest-body {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 118px;
-      height: 72px;
-      background: linear-gradient(135deg, #8B4513, #654321);
-      border-radius: 8px 8px 14px 14px;
-      border: 3px solid #5a3510;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.46);
-    }
-  
-    .chest-body::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 22px;
-      height: 22px;
-      background: linear-gradient(135deg, #ffd700, #ffaa00);
-      border-radius: 4px;
-      border: 2px solid #cc8800;
-      box-shadow: 0 0 12px rgba(255,215,0,0.55);
-    }
-  
-    .chest-lid {
-      position: absolute;
-      bottom: 66px;
-      left: 50%;
-      transform: translateX(-50%) rotateX(0deg);
-      width: 126px;
-      height: 40px;
-      background: linear-gradient(135deg, #9a5c2e, #7a4420);
-      border-radius: 14px 14px 5px 5px;
-      border: 3px solid #5a3510;
-      transform-origin: bottom center;
-      transition: transform .5s ease;
-      z-index: 2;
-      backface-visibility: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.24);
-    }
-  
-    .chest-box-wrap.opened .chest-lid {
-      transform: translateX(-50%) rotateX(-125deg);
-    }
-  
-    .chest-lock {
-      position: absolute;
-      bottom: 58px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 22px;
-      z-index: 3;
-      transition: opacity .3s ease, transform .3s ease;
-      filter: drop-shadow(0 0 6px rgba(255,215,0,0.25));
-    }
-  
-    .chest-box-wrap.opened .chest-lock {
-      opacity: 0;
-      transform: translateX(-50%) translateY(-8px) scale(.7);
-    }
-  
-    .chest-front-glow {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 72px;
-      height: 48px;
-      background: radial-gradient(ellipse, rgba(255,215,0,0.72), transparent 70%);
-      opacity: 0;
-      transition: opacity .5s ease;
-      pointer-events: none;
-      filter: blur(8px);
-    }
-  
-    .chest-box-wrap.opened .chest-front-glow {
-      opacity: 1;
-      animation: chestGlow 1s ease-in-out infinite alternate;
-    }
-  
-    @keyframes chestGlow {
-      from { opacity: .65; transform: translateX(-50%) scale(1); }
-      to { opacity: 1; transform: translateX(-50%) scale(1.12); }
-    }
-  
-    .chest-stage-floor {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 190px;
-      height: 28px;
-      background: radial-gradient(ellipse, rgba(0,0,0,0.42), transparent 70%);
-    }
-  
-    .chest-main-content {
-      text-align: center;
-      width: 100%;
-    }
-  
-    .chest-current-line {
-      margin-bottom: 12px;
-    }
-  
-    .chest-current-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--text-muted);
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-  
-    .chest-current-day {
-      font-size: 48px;
-      font-weight: 900;
-      color: #fff3cf;
-      text-shadow: 0 0 20px rgba(245,158,11,0.3);
-      line-height: 1;
-    }
-  
-    .chest-timer-text {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-    }
-  
-    .chest-action-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-  
-    .chest-scale-head { margin-bottom: 16px; }
-  
-    .chest-scale-wrap {
-      display: grid;
-      grid-template-columns: 52px 1fr;
-      gap: 16px;
-      align-items: stretch;
-    }
-  
-    .chest-scale-thermo {
-      position: relative;
-      width: 52px;
-      height: 200px;
-      background: rgba(0,0,0,0.3);
-      border-radius: 26px;
-      border: 2px solid rgba(255,255,255,0.1);
-      overflow: visible;
-    }
-  
-    .chest-scale-fill {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 0%;
-      background: linear-gradient(to top, #f59e0b, #fbbf24, #fcd34d);
-      border-radius: 0 0 24px 24px;
-      transition: height .5s ease;
-      box-shadow: 0 0 20px rgba(245,158,11,0.4);
-    }
-  
-    .chest-scale-mark {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      z-index: 2;
-    }
-  
-    .chest-scale-mark .mark-dot {
-      width: 10px;
-      height: 10px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.5);
-    }
-  
-    .chest-scale-mark .mark-text {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--text-muted);
-    }
-  
-    .chest-scale-mark.m1 { bottom: calc(14.28% - 10px); }
-    .chest-scale-mark.m3 { bottom: calc(42.85% - 10px); }
-    .chest-scale-mark.m5 { bottom: calc(71.42% - 10px); }
-    .chest-scale-mark.m7 { bottom: calc(100% - 20px); }
-  
-    .chest-scale-legend {
-      display: grid;
-      gap: 10px;
-      align-content: center;
-    }
-  
-    .chest-legend-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      background: rgba(255,255,255,0.03);
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-  
-    .legend-day {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--warning);
-    }
-  
-    .legend-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-  
-    .chest-bottom-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-  
-    .chest-reward-card,
-    .chest-history-card {
+    .stat-label{ color: var(--muted); font-size: 11px; text-transform:uppercase; letter-spacing:.12em; font-weight: 900; margin-bottom: 8px; }
+    .stat-value{ font-size: 26px; font-weight: 950; letter-spacing:-.02em; }
+
+    /* modals */
+    .modal-bg{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.74);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 6000;
+      display:grid;
+      place-items:center;
       padding: 18px;
     }
-  
-    .chest-last-reward-box {
-      padding: 16px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-  
-    .chest-last-reward-box.rarity-rare {
-      box-shadow: 0 0 20px rgba(73,215,255,0.10);
-      border-color: rgba(73,215,255,0.18);
-    }
-  
-    .chest-last-reward-box.rarity-epic {
-      box-shadow: 0 0 20px rgba(245,158,11,0.12);
-      border-color: rgba(245,158,11,0.18);
-    }
-  
-    .chest-last-reward-box.rarity-legend {
-      box-shadow: 0 0 26px rgba(141,92,255,0.16);
-      border-color: rgba(255,62,157,0.22);
-    }
-  
-    .chest-reward-rarity {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 10px;
-    }
-  
-    .chest-rarity-common {
-      background: rgba(255,255,255,0.08);
-      color: #e4e9f5;
-    }
-  
-    .chest-rarity-rare {
-      background: rgba(73,215,255,0.15);
-      color: #8feaff;
-      box-shadow: 0 0 16px rgba(73,215,255,0.10);
-    }
-  
-    .chest-rarity-epic {
-      background: rgba(245,158,11,0.15);
-      color: #ffd56a;
-      box-shadow: 0 0 16px rgba(245,158,11,0.10);
-    }
-  
-    .chest-rarity-legend {
-      background: linear-gradient(135deg, rgba(255,62,157,0.2), rgba(141,92,255,0.18));
-      color: #ffb8e0;
-      box-shadow: 0 0 20px rgba(141,92,255,0.12);
-    }
-  
-    .chest-reward-title {
-      font-size: 18px;
-      font-weight: 900;
-      margin-bottom: 6px;
-    }
-  
-    .chest-reward-meta {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-  
-    /* CONTRACTS */
-    .contracts-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-  
-    .contracts-hero {
-      padding: 24px;
-      min-height: 280px;
-      display: grid;
-      align-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-  
-    .contracts-hero::after {
-      content: "";
-      position: absolute;
-      right: -80px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,62,157,0.16), transparent 70%);
-      pointer-events: none;
-      filter: blur(12px);
-    }
-  
-    .contracts-hero-real {
-      min-height: 220px;
-    }
-  
-    .contracts-hero-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-  
-    .contracts-kicker {
-      display: inline-flex;
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: #ffb7db;
-      background: rgba(255,62,157,0.08);
-      border: 1px solid rgba(255,62,157,0.16);
-      margin-bottom: 14px;
-    }
-  
-    .contracts-title {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 900;
-      letter-spacing: -.05em;
-      line-height: .98;
-      margin: 0 0 14px;
-      max-width: 720px;
-    }
-  
-    .contracts-text {
-      color: var(--text-secondary);
-      font-size: 15px;
-      line-height: 1.7;
-      max-width: 760px;
-    }
-  
-    .contracts-mini-stat {
-      min-width: 180px;
-      padding: 18px 20px;
+    .modal{
+      width:min(760px, 100%);
       border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.04);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    }
-  
-    .contracts-mini-stat-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .10em;
-      color: var(--text-muted);
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-  
-    .contracts-mini-stat-value {
-      font-size: 42px;
-      font-weight: 900;
-      line-height: 1;
-      color: #fff;
-    }
-  
-    .contracts-top-tabs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-  
-    .contracts-subtab {
-      cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--text-secondary);
-      font-weight: 800;
-      font-size: 13px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-family: var(--font);
-      transition: .2s ease;
-    }
-  
-    .contracts-subtab:hover {
-      transform: translateY(-2px);
-      color: #fff;
-      border-color: rgba(255,255,255,0.12);
-    }
-  
-    .contracts-subtab.active {
-      color: #fff;
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.16));
-      border-color: rgba(255,62,157,0.20);
-      box-shadow: 0 10px 26px rgba(255,62,157,0.12);
-    }
-  
-    .contracts-subpanel { display: none; }
-  
-    .contracts-subpanel.active {
-      display: block;
-      animation: fadeUp .24s ease;
-    }
-  
-    .contracts-list {
-      display: grid;
-      gap: 14px;
-    }
-  
-    .contract-entry {
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
-        rgba(10,16,28,0.82);
-      padding: 18px;
-      transition: .22s ease;
-    }
-  
-    .contract-entry:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255,62,157,0.16);
-      box-shadow: 0 14px 34px rgba(255,62,157,0.10);
-    }
-  
-    .contract-entry-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-  
-    .contract-entry-left {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      min-width: 0;
-      flex: 1;
-    }
-  
-    .contract-avatar {
-      width: 72px;
-      height: 72px;
-      min-width: 72px;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: linear-gradient(135deg, rgba(255,62,157,0.18), rgba(141,92,255,0.14));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      font-weight: 900;
-      color: #fff;
-    }
-  
-    .contract-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  
-    .contract-main { min-width: 0; }
-  
-    .contract-badge-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-  
-    .contract-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-  
-    .contract-badge.status-available {
-      background: rgba(73,215,255,0.10);
-      border: 1px solid rgba(73,215,255,0.18);
-      color: #97ecff;
-    }
-  
-    .contract-badge.status-in_progress {
-      background: rgba(251,191,36,0.10);
-      border: 1px solid rgba(251,191,36,0.18);
-      color: var(--warning);
-    }
-  
-    .contract-badge.status-completed {
-      background: rgba(72,229,123,0.10);
-      border: 1px solid rgba(72,229,123,0.18);
-      color: var(--success);
-    }
-  
-    .contract-badge.status-expired,
-    .contract-badge.status-cancelled {
-      background: rgba(255,107,107,0.10);
-      border: 1px solid rgba(255,107,107,0.18);
-      color: var(--danger);
-    }
-  
-    .contract-difficulty-stars {
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
-      color: #ffcc66;
-      font-size: 16px;
-    }
-  
-    .contract-entry-title {
-      font-size: 22px;
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -.03em;
-      margin-bottom: 6px;
-      word-break: break-word;
-    }
-  
-    .contract-entry-subtitle {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 8px;
-    }
-  
-    .contract-reward-box {
-      min-width: 220px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      display: grid;
-      gap: 8px;
-    }
-  
-    .contract-reward-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--text-muted);
-      font-weight: 800;
-    }
-  
-    .contract-reward-main {
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--warning);
-      line-height: 1.1;
-    }
-  
-    .contract-reward-sub {
-      font-size: 13px;
-      color: #95eeff;
-      font-weight: 800;
-    }
-  
-    .contract-entry-body {
-      display: grid;
-      gap: 14px;
-    }
-  
-    .contract-text-block {
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-  
-    .contract-text-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--text-muted);
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-  
-    .contract-text-content {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #e8efff;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-  
-    .contract-meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-  
-    .contract-meta-chip {
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-  
-    .contract-meta-chip strong {
-      color: #fff;
-    }
-  
-    .contract-timer {
-      font-weight: 900;
-    }
-  
-    .contract-timer.normal { color: #dfe7ff; }
-    .contract-timer.warning { color: var(--warning); }
-    .contract-timer.danger { color: #ffb36b; }
-    .contract-timer.expired { color: #ff8f8f; }
-  
-    .contract-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-  
-    .contract-proof-box {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-  
-    .contract-proof-box textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-  
-    .contract-proof-links-list {
-      display: grid;
-      gap: 6px;
-    }
-  
-    .contract-proof-link-item {
-      font-size: 12px;
-      color: #9cefff;
-      word-break: break-all;
-    }
-  
-    .contract-history-list {
-      display: grid;
-      gap: 10px;
-    }
-  
-    .contract-history-item {
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-  
-    .contract-history-type {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--text-muted);
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-  
-    .contract-history-text {
-      font-size: 13px;
-      color: #eef4ff;
-      line-height: 1.6;
-      margin-bottom: 6px;
-    }
-  
-    .contract-history-date {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-  
-    .contract-empty {
-      padding: 24px;
-      border-radius: 18px;
-      border: 1px dashed rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.02);
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-  
-    /* PLACEHOLDER */
-    .placeholder-box {
-      min-height: 400px;
-      display: grid;
-      place-items: center;
-    }
-  
-    .placeholder-inner {
-      text-align: center;
-      max-width: 400px;
-    }
-  
-    .placeholder-icon {
-      font-size: 64px;
-      margin-bottom: 20px;
-      animation: placeholderFloat 3s ease-in-out infinite;
-    }
-  
-    @keyframes placeholderFloat {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-  
-    .placeholder-title {
-      font-size: 28px;
-      font-weight: 900;
-      margin: 0 0 12px;
-      letter-spacing: -.03em;
-    }
-  
-    .placeholder-text {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-  
-    /* MODALS */
-    .modal-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(8px);
-      display: grid;
-      place-items: center;
+      border:1px solid rgba(255,255,255,.12);
+      background: var(--panel2);
+      box-shadow: 0 30px 90px rgba(0,0,0,.65);
       padding: 20px;
-      animation: modalBgIn .3s ease;
+      max-height: 90vh;
+      overflow:auto;
     }
-  
-    .modal-bg.hidden { display: none; }
-  
-    @keyframes modalBgIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  
-    .modal {
-      background: var(--bg-card-2);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 24px;
-      padding: 28px;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: var(--shadow-lg);
-      animation: modalIn .3s ease;
-    }
-  
-    @keyframes modalIn {
-      from { opacity: 0; transform: scale(.95) translateY(10px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-  
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-  
-    .confirm-title {
-      font-size: 22px;
-      font-weight: 900;
-      margin: 0 0 12px;
-      letter-spacing: -.03em;
-    }
-  
-    .confirm-text {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-  
-    /* PRIZE MODAL */
-    .prize-win-modal {
-      max-width: 420px;
-      text-align: center;
-      overflow: hidden;
-    }
-  
-    .prize-win-scene {
-      position: relative;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-  
-    .prize-glow {
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,215,0,0.3), transparent 70%);
-      animation: prizeGlow 2s ease-in-out infinite;
-    }
-  
-    @keyframes prizeGlow {
-      0%,100% { transform: scale(1); opacity: .5; }
-      50% { transform: scale(1.3); opacity: .8; }
-    }
-  
-    .prize-flash {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle, rgba(255,255,255,0.4), transparent 50%);
-      opacity: 0;
-    }
-  
-    .modal-bg.scene-start .prize-flash {
-      animation: prizeFlash .5s ease-out;
-    }
-  
-    @keyframes prizeFlash {
-      0% { opacity: 1; transform: scale(.5); }
-      100% { opacity: 0; transform: scale(2); }
-    }
-  
-    .prize-center-wrap {
-      position: relative;
-      z-index: 2;
-      width: 120px;
-      height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 24px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-      border: 2px solid rgba(255,255,255,0.15);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    }
-  
-    .modal-bg.scene-start .prize-center-wrap {
-      animation: prizePopIn .6s cubic-bezier(.34,1.56,.64,1);
-    }
-  
-    @keyframes prizePopIn {
-      0% { transform: scale(0) rotate(-10deg); opacity: 0; }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; }
-    }
-  
-    .prize-win-image {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 16px;
-    }
-  
-    .prize-win-noimage { font-size: 48px; }
-  
-    .gun {
-      position: absolute;
-      font-size: 32px;
-      opacity: 0;
-    }
-  
-    .gun-left {
-      left: 20px;
-      transform: scaleX(-1);
-    }
-  
-    .gun-right { right: 20px; }
-  
-    @keyframes gunAppear {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  
-    @keyframes gunAppearLeft {
-      from { opacity: 0; transform: scaleX(-1) translateY(20px); }
-      to { opacity: 1; transform: scaleX(-1) translateY(0); }
-    }
-  
-    @keyframes gunShake {
-      0%,100% { transform: translateY(0) rotate(0); }
-      50% { transform: translateY(-5px) rotate(5deg); }
-    }
-  
-    @keyframes gunShakeLeft {
-      0%,100% { transform: scaleX(-1) translateY(0) rotate(0); }
-      50% { transform: scaleX(-1) translateY(-5px) rotate(-5deg); }
-    }
-  
-    .modal-bg.scene-start .gun-right {
-      animation: gunAppear .3s ease forwards, gunShake .1s ease .5s 3;
-    }
-  
-    .modal-bg.scene-start .gun-left {
-      animation: gunAppearLeft .3s ease forwards, gunShakeLeft .1s ease .4s 3;
-    }
-  
-    .shells {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-  
-    .shell {
-      position: absolute;
-      font-size: 16px;
-      color: #ffd700;
-      opacity: 0;
-    }
-  
-    .modal-bg.scene-start .shell {
-      animation: shellBurst 1s ease-out forwards;
-    }
-  
-    .shell.s1 { left: 30%; top: 30%; animation-delay: .3s; }
-    .shell.s2 { left: 70%; top: 25%; animation-delay: .35s; }
-    .shell.s3 { left: 20%; top: 60%; animation-delay: .4s; }
-    .shell.s4 { left: 80%; top: 55%; animation-delay: .45s; }
-    .shell.s5 { left: 50%; top: 20%; animation-delay: .5s; }
-  
-    @keyframes shellBurst {
-      0% { opacity: 1; transform: scale(0) translateY(0); }
-      50% { opacity: 1; transform: scale(1.5) translateY(-30px); }
-      100% { opacity: 0; transform: scale(.5) translateY(-60px); }
-    }
-  
-    .prize-win-title {
-      font-size: 24px;
-      font-weight: 900;
-      color: #ffd700;
-      margin: 0 0 8px;
-      letter-spacing: -.03em;
-      text-shadow: 0 0 20px rgba(255,215,0,0.3);
-    }
-  
-    .prize-win-name {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin: 0;
-      line-height: 1.6;
-      word-break: break-word;
-    }
-  
-    /* RESPONSIVE */
-    @media (max-width: 1680px) {
-      .dashboard-layout {
-        grid-template-columns: 1fr 92px 320px;
-      }
-  
-      .left-column {
-        grid-column: 1 / -1;
-        position: static;
-      }
-    }
-  
-    @media (max-width: 1420px) {
-      .dashboard-layout {
-        grid-template-columns: 1fr;
-      }
-  
-      .mini-rail,
-      .right-column,
-      .left-column {
-        position: static;
-      }
-  
-      .mini-rail {
-        grid-template-columns: repeat(3, 1fr);
-      }
-  
-      .rail-btn {
-        width: 100%;
-      }
-  
-      .rail-badge {
-        right: auto;
-        left: 50%;
-        top: auto;
-        bottom: -10px;
-        transform: translateX(-50%);
-        margin-right: 0;
-        margin-bottom: -8px;
-      }
-  
-      .rail-btn:hover .rail-badge {
-        margin-right: 0;
-        margin-bottom: -18px;
-      }
-    }
-  
-    @media (max-width: 1200px) {
-      .auth-shell,
-      .profile-meta-grid,
-      .link-code-grid,
-      .chest-layout,
-      .chest-bottom-grid {
-        grid-template-columns: 1fr;
-      }
-  
-      .shop-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  
-    @media (max-width: 900px) {
-      .contract-entry-top {
-        grid-template-columns: 1fr;
-      }
-  
-      .contract-entry-left {
-        align-items: flex-start;
-      }
-  
-      .contract-reward-box {
-        width: 100%;
-        min-width: 0;
-      }
-    }
-  
-    @media (max-width: 760px) {
-      .page { padding: 14px; }
-  
-      .topbar {
-        padding: 16px;
-        align-items: flex-start;
-      }
-  
-      .brand-title { font-size: 20px; }
-  
-      .section-tabs {
-        gap: 10px;
-      }
-  
-      .section-tabs-main,
-      .section-tabs-right {
-        width: 100%;
-      }
-  
-      .section-tabs-right {
-        justify-content: flex-start;
-        margin-left: 0;
-      }
-  
-      .section-tab {
-        padding: 11px 14px;
-        font-size: 13px;
-        width: 100%;
-        justify-content: center;
-      }
-  
-      .roulette-card {
-        width: 144px;
-        min-width: 144px;
-        max-width: 144px;
-        height: 178px;
-      }
-  
-      .roulette-card-img-wrap {
-        width: 92px;
-        height: 78px;
-        min-height: 78px;
-      }
-  
-      .roulette-card-img-wrap img {
-        width: 76px;
-        height: 76px;
-      }
-  
-      .roulette-strip-shell::before,
-      .roulette-strip-shell::after {
-        width: 70px;
-      }
-  
-      .section-box,
-      .roulette-main,
-      .inventory-box,
-      .bonus-main,
-      .bonus-history,
-      .auth-panel,
-      .auth-hero,
-      .profile-floating-card,
-      .widget-box,
-      .chest-main-card,
-      .chest-side-card,
-      .chest-reward-card,
-      .chest-history-card,
-      .contracts-hero {
-        padding: 16px;
-      }
-  
-      .link-code-card {
-        padding: 16px;
-      }
-  
-      .link-card-icon {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-        font-size: 20px;
-      }
-  
-      .link-code-title { font-size: 16px; }
-      .link-code-value { font-size: 22px; }
-  
-      .account-box {
-        width: 100%;
-      }
-  
-      .topbar-right {
-        width: 100%;
-        justify-content: flex-start;
-      }
-  
-      .mini-rail {
-        grid-template-columns: 1fr;
-      }
-  
-      .inventory-item,
-      .inventory-item-advanced {
-        grid-template-columns: 1fr;
-        justify-items: stretch;
-      }
-  
-      .inventory-sell-total {
-        justify-items: start;
-      }
-  
-      .inventory-sell-controls {
-        flex-wrap: wrap;
-      }
-  
-      .chest-box-wrap {
-        transform: scale(.9);
-      }
-  
-      .chest-current-day {
-        font-size: 38px;
-      }
-  
-      .bonus-amount-box {
-        min-width: auto;
-        width: 100%;
-      }
-  
-      .modal {
-        padding: 20px;
-        margin: 10px;
-      }
-  
-      .site-online-user {
-        grid-template-columns: 38px 1fr;
-      }
-  
-      .bonus-history-item,
-      .chest-legend-row,
-      .online-user-main,
-      .item-footer {
-        align-items: flex-start;
-      }
-  
-      .bonus-history-item,
-      .item-footer {
-        flex-direction: column;
-      }
-    }
-  
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
+    .modal-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top: 14px; }
+    .confirm-title{ margin:0 0 10px; font-size: 20px; font-weight: 950; letter-spacing:-.03em; }
+    .confirm-text{ color: var(--muted); font-size: 14px; line-height:1.7; }
+
+    /* responsive */
+    @media (max-width: 1200px){
+      .dashboard-layout{ grid-template-columns: 1fr; }
+      .auth-shell{ grid-template-columns: 1fr; }
+      .account-box{ min-width: 0; width: 100%; }
+      .topbar{ align-items:flex-start; }
+      .topbar-right{ width:100%; justify-content:flex-start; }
     }
   </style>
 </head>
+
 <body>
-  <div class="bg-animated" aria-hidden="true">
-    <div class="bg-grid"></div>
-
-    <div class="bg-orbs">
-      <div class="bg-orb"></div>
-      <div class="bg-orb"></div>
-      <div class="bg-orb"></div>
-      <div class="bg-orb"></div>
-    </div>
-
-    <div class="bg-particles">
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-      <div class="bg-particle"></div>
-    </div>
-
-    <div class="bg-noise"></div>
-    <div class="bg-vignette"></div>
-  </div>
-
   <div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
 
   <div class="page">
@@ -3946,45 +452,28 @@
       <div class="auth-shell">
         <div class="glass auth-hero">
           <div>
-            <div class="auth-kicker">World Script Access</div>
-
+            <div class="auth-kicker">CYBER SAAS</div>
             <h1 class="auth-title">
               Добро пожаловать в <span class="accent">World Script</span>
             </h1>
-
             <div id="glitchPhraseText" class="auth-text">
               Мастерская предметов, сундуки, рулетка, бонус и многое другое!
             </div>
           </div>
-
+          <div class="muted">
+            Авторизация • Профиль • Магазин • Рулетка • Контракты
+          </div>
         </div>
 
         <div class="glass auth-panel">
           <div class="auth-panel-head">
-            <h2 class="auth-panel-title">Вход в систему</h2>
-            <div class="auth-panel-sub">
-              Используй существующий аккаунт World Script или создай новый профиль.
-            </div>
+            <h2 class="auth-panel-title">Вход</h2>
+            <div class="auth-panel-sub">Войди или создай аккаунт.</div>
           </div>
 
           <div class="auth-tabs" role="tablist" aria-label="Авторизация">
-            <button
-              id="authLoginBtn"
-              class="auth-tab-btn active"
-              type="button"
-              onclick="switchAuthTab('login')"
-            >
-              Вход
-            </button>
-
-            <button
-              id="authRegisterBtn"
-              class="auth-tab-btn"
-              type="button"
-              onclick="switchAuthTab('register')"
-            >
-              Регистрация
-            </button>
+            <button id="authLoginBtn" class="auth-tab-btn active" type="button" onclick="switchAuthTab('login')">Вход</button>
+            <button id="authRegisterBtn" class="auth-tab-btn" type="button" onclick="switchAuthTab('register')">Регистрация</button>
           </div>
 
           <div id="authLoginForm" class="auth-form active">
@@ -3992,11 +481,9 @@
               <input id="loginInput" class="field" placeholder="Логин" autocomplete="username" />
               <input id="passwordInput" class="field" type="password" placeholder="Пароль" autocomplete="current-password" />
             </div>
-
             <div class="auth-actions">
-              <button id="loginSubmitBtn" class="btn btn-pink" type="button" onclick="loginWs()">🔐 Войти</button>
+              <button id="loginSubmitBtn" class="btn btn-pink" type="button" onclick="loginWs()">Войти</button>
             </div>
-
             <div id="loginMsg" class="auth-msg" aria-live="polite"></div>
           </div>
 
@@ -4005,11 +492,9 @@
               <input id="regLoginInput" class="field" placeholder="Логин" autocomplete="username" />
               <input id="regPasswordInput" class="field" type="password" placeholder="Пароль" autocomplete="new-password" />
             </div>
-
             <div class="auth-actions">
-              <button id="registerSubmitBtn" class="btn btn-cyan" type="button" onclick="registerWs()">✨ Создать аккаунт</button>
+              <button id="registerSubmitBtn" class="btn btn-cyan" type="button" onclick="registerWs()">Создать аккаунт</button>
             </div>
-
             <div id="registerMsg" class="auth-msg" aria-live="polite"></div>
           </div>
         </div>
@@ -4023,7 +508,6 @@
         <header class="topbar glass">
           <div class="brand">
             <div class="brand-logo">WS</div>
-
             <div class="brand-text">
               <div class="brand-title" id="brandTitle">World Script</div>
             </div>
@@ -4035,11 +519,6 @@
               На сайте: <span id="siteOnlineCountText">0</span>
             </div>
 
-            <div id="globalSectionLoader" class="section-loader hidden" aria-live="polite">
-              <div class="section-loader-spinner"></div>
-              <div id="globalSectionLoaderText" class="section-loader-text">Загрузка раздела...</div>
-            </div>
-
             <button
               class="btn btn-dark"
               id="notificationsToggleBtn"
@@ -4048,26 +527,18 @@
               style="position:relative;"
               aria-label="Открыть уведомления"
             >
-              🔔
+              Уведомления
               <span
                 id="notificationsUnreadBadge"
                 class="hidden"
                 style="
-                  position:absolute;
-                  top:-6px;
-                  right:-6px;
-                  min-width:22px;
-                  height:22px;
-                  padding:0 6px;
+                  position:absolute; top:-6px; right:-6px;
+                  min-width:22px; height:22px; padding:0 6px;
                   border-radius:999px;
-                  background:linear-gradient(135deg,#ff3e9d,#ff6b6b);
-                  color:#fff;
-                  font-size:11px;
-                  font-weight:900;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  box-shadow:0 8px 20px rgba(255,62,157,0.22);
+                  background:linear-gradient(135deg, var(--pink), var(--violet));
+                  color:#fff; font-size:11px; font-weight:950;
+                  display:flex; align-items:center; justify-content:center;
+                  box-shadow: 0 0 0 1px rgba(255,62,165,.10), 0 16px 50px rgba(255,62,165,.10);
                 "
               >0</span>
             </button>
@@ -4076,7 +547,6 @@
               <label class="avatar-wrap" for="avatarInput">
                 <img id="avatarImage" class="avatar-img hidden" alt="avatar" />
                 <div id="avatarFallback" class="avatar-fallback">WS</div>
-                <div class="avatar-overlay">Открыть<br>профиль</div>
               </label>
 
               <input id="avatarInput" type="file" accept="image/*" class="hidden" />
@@ -4084,368 +554,184 @@
               <div class="account-meta">
                 <div id="accountLoginText" class="account-login">user</div>
                 <div class="account-sub">
-                  <span id="accountGameNickText" class="account-gamenick">Игровой ник</span>
+                  <span id="accountGameNickText">Игровой ник</span>
                   <span id="userRoleText" class="user-role user">ПОЛЬЗОВАТЕЛЬ</span>
                 </div>
               </div>
             </div>
 
-            <button class="btn btn-dark" type="button" onclick="logoutWs()">🚪 Выйти</button>
+            <button class="btn btn-dark" type="button" onclick="logoutWs()">Выйти</button>
           </div>
         </header>
 
-        <!-- DASHBOARD -->
         <div class="dashboard-layout">
           <!-- LEFT -->
           <aside class="left-column">
-            <div class="glass widget-box">
-              <div class="section-head" style="margin-bottom:12px;">
+            <div class="glass widget">
+              <div class="section-head" style="margin-bottom:10px;">
                 <div>
                   <h3 class="widget-title" style="margin:0;">История действий</h3>
-                  <div class="section-sub" style="margin-top:4px;">Последняя активность пользователей</div>
+                  <div class="section-sub">Последняя активность пользователей</div>
                 </div>
-
-                <div id="activityFeedLoading" class="inline-loading hidden">
-                  <div class="inline-loading-dot"></div>
-                  <span>Загрузка...</span>
-                </div>
+                <!-- УБРАНО авто-«Загрузка…» (оставь, если сделаешь ручную кнопку обновления) -->
               </div>
 
-              <div id="activityFeedList" class="online-list"></div>
+              <div id="activityFeedList" class="list"></div>
             </div>
           </aside>
 
           <!-- CENTER -->
           <main class="center-column">
             <!-- TABS -->
-            <div class="section-tabs-wrap">
-              <div class="section-tabs">
-                <div class="section-tabs-main">
-                  <button id="tabBtn-chest" class="section-tab chest active" type="button" onclick="switchMainTab('chest')">
-                    <span class="tab-glow"></span>
-                    🎁 Дневной сундук
-                    <span class="tab-indicator">◆</span>
-                  </button>
-
-                  <button id="tabBtn-shop" class="section-tab" type="button" onclick="switchMainTab('shop')">
-                    <span class="tab-glow"></span>
-                    🛒 Магазин
-                    <span class="tab-indicator">◆</span>
-                  </button>
-
-                  <button id="tabBtn-workshop" class="section-tab" type="button" onclick="switchMainTab('workshop')">
-                    <span class="tab-glow"></span>
-                    🛠 Мастерская
-                    <span class="tab-indicator">◆</span>
-                  </button>
-
-                  <button id="tabBtn-roulette" class="section-tab" type="button" onclick="switchMainTab('roulette')">
-                    <span class="tab-glow"></span>
-                    🎰 Рулетка
-                    <span class="tab-indicator">◆</span>
-                  </button>
-
-                  <button id="tabBtn-bonus" class="section-tab" type="button" onclick="switchMainTab('bonus')">
-                    <span class="tab-glow"></span>
-                    💸 Бонус
-                    <span class="tab-indicator">◆</span>
-                  </button>
-                </div>
-
-                <div class="section-tabs-right">
-                  <button
-                    id="tabBtn-contracts"
-                    class="section-tab contracts"
-                    type="button"
-                    onclick="switchMainTab('contracts')"
-                    style="position:relative;"
-                  >
-                    <span class="tab-glow"></span>
-                    🎯 Заказные контракты
-                    <span class="tab-indicator">◆</span>
-                    <span
-                      id="contractsTabBadge"
-                      class="hidden"
-                      style="
-                        position:absolute;
-                        top:-8px;
-                        right:-8px;
-                        min-width:24px;
-                        height:24px;
-                        padding:0 7px;
-                        border-radius:999px;
-                        background:linear-gradient(135deg,#fbbf24,#ff3e9d);
-                        color:#fff;
-                        font-size:11px;
-                        font-weight:900;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        box-shadow:0 8px 20px rgba(255,62,157,0.25);
-                      "
-                    >0</span>
-                  </button>
-                </div>
+            <div class="section-tabs">
+              <div class="tabs-main">
+                <button id="tabBtn-chest" class="section-tab active" type="button" onclick="switchMainTab('chest')">Сундук</button>
+                <button id="tabBtn-shop" class="section-tab" type="button" onclick="switchMainTab('shop')">Магазин</button>
+                <button id="tabBtn-roulette" class="section-tab" type="button" onclick="switchMainTab('roulette')">Рулетка</button>
+                <button id="tabBtn-bonus" class="section-tab" type="button" onclick="switchMainTab('bonus')">Бонус</button>
+                <button id="tabBtn-contracts" class="section-tab" type="button" onclick="switchMainTab('contracts')" style="position:relative;">
+                  Контракты
+                  <span id="contractsTabBadge" class="hidden" style="
+                    position:absolute; top:-8px; right:-8px;
+                    min-width:24px; height:24px; padding:0 7px;
+                    border-radius:999px;
+                    background:linear-gradient(135deg, var(--yellow), var(--pink));
+                    color:#12101b; font-size:11px; font-weight:950;
+                    display:flex; align-items:center; justify-content:center;
+                    box-shadow: 0 0 0 1px rgba(255,215,106,.10), 0 16px 50px rgba(255,215,106,.10);
+                  ">0</span>
+                </button>
               </div>
             </div>
 
             <!-- PROFILE CARD -->
-            <section id="profileFloatingCard" class="glass profile-floating-card">
+            <section id="profileFloatingCard" class="glass section-box">
               <div class="section-head">
                 <div>
                   <h2 class="section-title">Игровой профиль</h2>
-                  <div class="section-sub">Управление привязкой никнейма, VK ID и уведомлениями</div>
+                  <div class="section-sub">Привязка VK / никнейма и настройки уведомлений</div>
                 </div>
 
-                <button id="profileToggleBtn" class="profile-toggle-btn" type="button" onclick="hideProfileCardCompletely()">
-                  Скрыть
-                </button>
-              </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <!-- РУЧНОЙ индикатор (подключи в JS по желанию) -->
+                  <span id="manualProfileLoading" class="pill warn hidden">Обновляем…</span>
 
-              <div id="gameLinkStatusPill" class="profile-pill warn">⚠ Не привязан</div>
-
-              <div class="profile-meta-grid">
-                <div class="profile-meta-card">
-                  <div class="profile-meta-label">Игровой ник</div>
-                  <div id="gameNickText" class="profile-meta-value">—</div>
-                </div>
-
-                <div class="profile-meta-card">
-                  <div class="profile-meta-label">VK ID</div>
-                  <div id="gameVkIdText" class="profile-meta-value">—</div>
-                </div>
-
-                <div class="profile-meta-card">
-                  <div class="profile-meta-label">Статус</div>
-                  <div id="gameProfileStateText" class="profile-meta-value">Ожидание привязки</div>
+                  <button class="btn btn-dark" type="button" onclick="hideProfileCardCompletely()">Скрыть</button>
                 </div>
               </div>
 
-              <div class="profile-link-actions">
-                <button class="btn btn-dark" type="button" onclick="loadProfileFull(); loadLinkCodesStatus(); loadRightbarWidgets();">↺ Обновить</button>
-                <button class="btn btn-dark" type="button" onclick="openUnlinkConfirmModal()">✖ Отвязать профиль</button>
+              <div id="gameLinkStatusPill" class="pill warn">⚠ Не привязан</div>
+
+              <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top:14px;">
+                <div class="list-item">
+                  <div class="muted" style="font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:11px;">Игровой ник</div>
+                  <div id="gameNickText" style="margin-top:6px; font-weight:950;">—</div>
+                </div>
+                <div class="list-item">
+                  <div class="muted" style="font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:11px;">VK ID</div>
+                  <div id="gameVkIdText" style="margin-top:6px; font-weight:950;">—</div>
+                </div>
+                <div class="list-item">
+                  <div class="muted" style="font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:11px;">Статус</div>
+                  <div id="gameProfileStateText" style="margin-top:6px; font-weight:950;">Ожидание привязки</div>
+                </div>
               </div>
 
-              <div id="profileLinkBody" class="profile-link-body">
-                <div class="link-code-grid">
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+                <button class="btn btn-cyan" type="button" onclick="loadProfileFull(); loadLinkCodesStatus(); loadRightbarWidgets();">Обновить</button>
+                <button class="btn btn-red" type="button" onclick="openUnlinkConfirmModal()">Отвязать профиль</button>
+              </div>
+
+              <div id="profileLinkBody" style="margin-top:16px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                   <!-- VK -->
-                  <div class="link-code-card">
-                    <div class="link-card-header">
-                      <div class="link-card-icon vk-icon">🔗</div>
-                      <div class="link-card-header-text">
-                        <div class="link-code-title">Привязка VK</div>
-                        <div class="link-code-sub">Привяжи свой VK ID через личные сообщения группы</div>
-                      </div>
+                  <div class="glass" style="padding:16px; border-radius:18px;">
+                    <div style="font-weight:950; margin-bottom:6px;">Привязка VK</div>
+                    <div class="muted">Сгенерируй код и отправь его в ЛС группы.</div>
+
+                    <div class="list-item" style="margin-top:12px; text-align:center;">
+                      <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px;">VK код</div>
+                      <div id="vkCodeValue" style="margin-top:8px; font-size:20px; font-weight:950; letter-spacing:.12em;">Нет активного кода</div>
                     </div>
 
-                    <div class="link-code-divider"></div>
+                    <div id="vkCodeMeta" class="muted" style="margin-top:10px;">Сгенерируй код, чтобы начать привязку VK.</div>
 
-                    <div class="link-code-value-wrap">
-                      <div class="link-code-value-label">Твой код привязки VK</div>
-                      <div id="vkCodeValue" class="link-code-value empty">Нет активного кода</div>
+                    <div style="margin-top:12px;">
+                      <button class="btn btn-cyan" type="button" style="width:100%;" onclick="generateVkCode()">Сгенерировать VK-код</button>
                     </div>
 
-                    <div id="vkCodeMeta" class="link-code-meta">
-                      Сгенерируй код, чтобы начать привязку VK.
-                    </div>
-
-                    <div class="link-gen-btn-wrap">
-                      <button class="btn btn-cyan btn-lg" type="button" onclick="generateVkCode()">🔗 Сгенерировать код VK</button>
-                    </div>
-
-                    <div class="link-code-steps">
-                      <div class="link-steps-title">📋 Как привязать VK</div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet vk-bullet">1</div>
-                        <div>Нажми кнопку <span class="link-highlight">«Сгенерировать код VK»</span> выше — появится уникальный код</div>
-                      </div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet vk-bullet">2</div>
-                        <div>
-                          Перейди в <span class="link-highlight">личные сообщения</span> группы VK:
-                          <a class="link-accent-vk" href="https://vk.com/im/convo/-222804759?entrypoint=list_all" target="_blank" rel="noopener noreferrer">
-                            vk.com / absroleplay1script
-                          </a>
-                        </div>
-                      </div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet vk-bullet">3</div>
-                        <div>Отправь пустым сообщением сгенерированный код: <span id="vkCodeInline" class="link-accent">—</span></div>
-                      </div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet vk-bullet">4</div>
-                        <div>Дождись подтверждения — твой <span class="link-accent-vk">VK ID</span> будет автоматически привязан к профилю</div>
-                      </div>
-                    </div>
-
-                    <div class="link-important info">
-                      ℹ️ Код действует ограниченное время. Если истёк — сгенерируй новый.
+                    <div class="muted" style="margin-top:10px;">
+                      Отправь код: <b id="vkCodeInline">—</b><br/>
+                      Ссылка: <a href="https://vk.com/im/convo/-222804759?entrypoint=list_all" target="_blank" rel="noopener noreferrer">vk.com / absroleplay1script</a>
                     </div>
                   </div>
 
                   <!-- NICK -->
-                  <div class="link-code-card">
-                    <div class="link-card-header">
-                      <div class="link-card-icon nick-icon">🪪</div>
-                      <div class="link-card-header-text">
-                        <div class="link-code-title">Привязка никнейма</div>
-                        <div class="link-code-sub">Привяжи игровой никнейм через СМС боту в игре</div>
-                      </div>
+                  <div class="glass" style="padding:16px; border-radius:18px;">
+                    <div style="font-weight:950; margin-bottom:6px;">Привязка никнейма</div>
+                    <div class="muted">Сгенерируй код и отправь боту в игре.</div>
+
+                    <div class="list-item" style="margin-top:12px; text-align:center;">
+                      <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px;">Nick код</div>
+                      <div id="nickCodeValue" style="margin-top:8px; font-size:20px; font-weight:950; letter-spacing:.12em;">Нет активного кода</div>
                     </div>
 
-                    <div class="link-code-divider"></div>
+                    <div id="nickCodeMeta" class="muted" style="margin-top:10px;">Сгенерируй код, чтобы начать привязку никнейма.</div>
 
-                    <div class="link-code-value-wrap">
-                      <div class="link-code-value-label">Твой код привязки ника</div>
-                      <div id="nickCodeValue" class="link-code-value empty">Нет активного кода</div>
+                    <div style="margin-top:12px;">
+                      <button class="btn btn-pink" type="button" style="width:100%;" onclick="generateNickCode()">Сгенерировать код ника</button>
                     </div>
 
-                    <div id="nickCodeMeta" class="link-code-meta">
-                      Сгенерируй код, чтобы начать привязку никнейма.
-                    </div>
-
-                    <div class="link-gen-btn-wrap">
-                      <button class="btn btn-pink btn-lg" type="button" onclick="generateNickCode()">🪪 Сгенерировать код ника</button>
-                    </div>
-
-                    <div class="link-code-steps">
-                      <div class="link-steps-title">📋 Как привязать никнейм</div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet nick-bullet">1</div>
-                        <div>Нажми кнопку <span class="link-highlight">«Сгенерировать код ника»</span> выше — появится уникальный код</div>
-                      </div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet nick-bullet">2</div>
-                        <div>Зайди в игру и проверь, что бот <span class="link-accent-pink">Morah Herad</span> находится <span class="link-highlight">в сети</span></div>
-                      </div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet nick-bullet">3</div>
-                        <div>
-                          Отправь боту SMS на номер <span class="link-highlight">/смс 817</span> с текстом — сгенерированным кодом:
-                          <span id="nickCodeInline" class="link-accent">—</span>
-                        </div>
-                      </div>
-
-                      <div class="link-step">
-                        <div class="link-step-bullet nick-bullet">4</div>
-                        <div>Дождись ответного СМС от бота — твой <span class="link-accent-pink">игровой никнейм</span> будет привязан к профилю</div>
-                      </div>
-                    </div>
-
-                    <div class="link-important warn">
-                      ⚠️ Бот должен быть онлайн. Если бот оффлайн — попробуй позже.
+                    <div class="muted" style="margin-top:10px;">
+                      /смс 817 → <b id="nickCodeInline">—</b><br/>
+                      Бот: <b>Morah Herad</b> должен быть онлайн.
                     </div>
                   </div>
                 </div>
 
-                <!-- NOTIFY SETTINGS -->
-                <div class="glass" style="padding:18px; margin-top:18px; border-radius:18px;">
-                  <div class="section-head" style="margin-bottom:12px;">
+                <!-- notify settings -->
+                <div class="glass" style="padding:16px; border-radius:18px; margin-top:12px;">
+                  <div class="section-head" style="margin-bottom:10px;">
                     <div>
                       <h3 class="widget-title" style="margin:0;">Настройки уведомлений</h3>
-                      <div class="section-sub" style="margin-top:4px;">Какие уведомления присылать на сайте и во VK</div>
+                      <div class="section-sub">Сайт / VK</div>
                     </div>
 
-                    <div id="notifySettingsLoading" class="inline-loading hidden">
-                      <div class="inline-loading-dot"></div>
-                      <span>Сохраняем...</span>
+                    <!-- РУЧНОЙ индикатор (подключи в JS по желанию) -->
+                    <span id="manualNotifyLoading" class="pill warn hidden">Сохраняем…</span>
+                  </div>
+
+                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                    <div class="list-item">
+                      <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px; margin-bottom:10px;">На сайте</div>
+                      <div style="display:grid; gap:10px;">
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Бонус готов</span><input id="notifySiteBonusReady" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Сундук доступен</span><input id="notifySiteChestReady" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Рулетка доступна</span><input id="notifySiteRouletteReady" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Появился контракт</span><input id="notifySiteContractAvailable" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт скоро истечёт</span><input id="notifySiteContractExpiring" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт истёк</span><input id="notifySiteContractExpired" type="checkbox"></label>
+                      </div>
+                    </div>
+
+                    <div class="list-item">
+                      <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px; margin-bottom:10px;">Во VK</div>
+                      <div style="display:grid; gap:10px;">
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Бонус готов</span><input id="notifyVkBonusReady" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Сундук доступен</span><input id="notifyVkChestReady" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Рулетка доступна</span><input id="notifyVkRouletteReady" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Новый контракт</span><input id="notifyVkContractAvailable" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт скоро истечёт</span><input id="notifyVkContractExpiring" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт истёк</span><input id="notifyVkContractExpired" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт взят</span><input id="notifyVkContractTaken" type="checkbox"></label>
+                        <label style="display:flex; justify-content:space-between; gap:10px; align-items:center;"><span>Контракт принят</span><input id="notifyVkContractCompleted" type="checkbox"></label>
+                      </div>
                     </div>
                   </div>
 
-                  <div style="display:grid; gap:18px;">
-                    <div>
-                      <div class="profile-meta-label" style="margin-bottom:10px;">Уведомления на сайте</div>
-
-                      <div style="display:grid; gap:10px;">
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Бонус готов</span>
-                          <input id="notifySiteBonusReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Сундук доступен</span>
-                          <input id="notifySiteChestReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Рулетка доступна</span>
-                          <input id="notifySiteRouletteReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Появился контракт</span>
-                          <input id="notifySiteContractAvailable" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт скоро истечёт</span>
-                          <input id="notifySiteContractExpiring" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт истёк</span>
-                          <input id="notifySiteContractExpired" type="checkbox" />
-                        </label>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div class="profile-meta-label" style="margin-bottom:10px;">Уведомления во VK</div>
-
-                      <div style="display:grid; gap:10px;">
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Бонус готов</span>
-                          <input id="notifyVkBonusReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Сундук доступен</span>
-                          <input id="notifyVkChestReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Рулетка доступна</span>
-                          <input id="notifyVkRouletteReady" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Доступен новый контракт</span>
-                          <input id="notifyVkContractAvailable" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт скоро истечёт</span>
-                          <input id="notifyVkContractExpiring" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт истёк</span>
-                          <input id="notifyVkContractExpired" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт взят в работу</span>
-                          <input id="notifyVkContractTaken" type="checkbox" />
-                        </label>
-
-                        <label style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                          <span>Контракт принят</span>
-                          <input id="notifyVkContractCompleted" type="checkbox" />
-                        </label>
-                      </div>
-                    </div>
-
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                      <button class="btn btn-cyan" type="button" onclick="saveNotifySettings()">💾 Сохранить настройки</button>
-                      <button class="btn btn-dark" type="button" onclick="loadNotifySettings()">↺ Обновить</button>
-                    </div>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                    <button class="btn btn-cyan" type="button" onclick="saveNotifySettings()">Сохранить</button>
+                    <button class="btn btn-dark" type="button" onclick="loadNotifySettings()">Обновить</button>
                   </div>
                 </div>
               </div>
@@ -4453,141 +739,37 @@
 
             <!-- TAB: CHEST -->
             <section id="tab-chest" class="tab-panel active">
-              <div class="glass section-box chest-shell">
+              <div class="glass section-box">
                 <div class="section-head">
                   <div>
                     <h2 class="section-title">Дневной сундук</h2>
-                    <div class="section-sub">Открывай сундук каждый день и поддерживай серию наград</div>
+                    <div class="section-sub">Открывай каждый день, чтобы держать серию.</div>
                   </div>
+                  <div id="chestStatusPill" class="pill warn">⏳ Ожидание данных</div>
+                </div>
 
-                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                    <div id="chestInlineLoading" class="inline-loading hidden">
-                      <div class="inline-loading-dot"></div>
-                      <span>Обновляем сундук...</span>
-                    </div>
+                <div class="list-item">
+                  <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px;">Серия</div>
+                  <div id="chestCurrentDayText" style="margin-top:6px; font-weight:950; font-size:22px;">0 дней</div>
+                  <div id="chestTimerText" class="muted" style="margin-top:8px;">Загружаем данные…</div>
 
-                    <div id="chestStatusPill" class="profile-pill warn">⏳ Ожидание данных</div>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                    <button id="openChestBtn" class="btn btn-cyan" type="button" onclick="openDailyChest()">Открыть сундук</button>
+                    <button class="btn btn-dark" type="button" onclick="loadChestStatus(); loadChestHistory();">Обновить</button>
                   </div>
                 </div>
 
-                <div class="chest-layout">
-                  <div class="glass chest-main-card">
-                    <div class="chest-main-stage">
-                      <div id="chestAura" class="chest-aura"></div>
-                      <div id="chestBurst" class="chest-burst"></div>
-
-                      <div id="chestParticles" class="chest-particles">
-                        <span class="chest-particle p1"></span>
-                        <span class="chest-particle p2"></span>
-                        <span class="chest-particle p3"></span>
-                        <span class="chest-particle p4"></span>
-                        <span class="chest-particle p5"></span>
-                        <span class="chest-particle p6"></span>
-                        <span class="chest-particle p7"></span>
-                        <span class="chest-particle p8"></span>
-                      </div>
-
-                      <div id="chestBoxWrap" class="chest-box-wrap">
-                        <div class="chest-lock">🔒</div>
-                        <div class="chest-lid"></div>
-                        <div class="chest-body"></div>
-                        <div class="chest-front-glow"></div>
-                      </div>
-
-                      <div class="chest-stage-floor"></div>
-                    </div>
-
-                    <div class="chest-main-content">
-                      <div class="chest-current-line">
-                        <div class="chest-current-label">Текущая серия</div>
-                        <div id="chestCurrentDayText" class="chest-current-day">0 дней</div>
-                      </div>
-
-                      <div id="chestTimerText" class="chest-timer-text">Загружаем данные...</div>
-
-                      <div class="chest-action-wrap">
-                        <button id="openChestBtn" class="btn btn-gold btn-lg" type="button" onclick="openDailyChest()">🎁 Открыть сундук</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="glass chest-side-card">
-                    <div class="chest-scale-head">
-                      <div class="widget-title" style="margin-bottom:4px;">Шкала серии</div>
-                      <div class="section-sub">Если пропустишь день — серия сбросится</div>
-                    </div>
-
-                    <div class="chest-scale-wrap">
-                      <div class="chest-scale-thermo">
-                        <div id="chestScaleFill" class="chest-scale-fill"></div>
-
-                        <div class="chest-scale-mark m1">
-                          <span class="mark-dot"></span>
-                          <span class="mark-text">1</span>
-                        </div>
-
-                        <div class="chest-scale-mark m3">
-                          <span class="mark-dot"></span>
-                          <span class="mark-text">3</span>
-                        </div>
-
-                        <div class="chest-scale-mark m5">
-                          <span class="mark-dot"></span>
-                          <span class="mark-text">5</span>
-                        </div>
-
-                        <div class="chest-scale-mark m7">
-                          <span class="mark-dot"></span>
-                          <span class="mark-text">7</span>
-                        </div>
-                      </div>
-
-                      <div class="chest-scale-legend">
-                        <div class="chest-legend-row">
-                          <span class="legend-day">1 день</span>
-                          <span class="legend-desc">Базовый сундук</span>
-                        </div>
-
-                        <div class="chest-legend-row">
-                          <span class="legend-day">3 день</span>
-                          <span class="legend-desc">Повышенный шанс</span>
-                        </div>
-
-                        <div class="chest-legend-row">
-                          <span class="legend-day">5 день</span>
-                          <span class="legend-desc">Редкая награда</span>
-                        </div>
-
-                        <div class="chest-legend-row">
-                          <span class="legend-day">7 день</span>
-                          <span class="legend-desc">Большой сундук</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="chest-bottom-grid">
-                  <div class="glass chest-reward-card">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px;">
+                  <div class="glass" style="padding:16px; border-radius:18px;">
                     <div class="widget-title">Последняя награда</div>
-                    <div id="chestLastRewardBox" class="chest-last-reward-box">
+                    <div id="chestLastRewardBox" class="list-item">
                       <div class="muted">Открой сундук, чтобы получить награду</div>
                     </div>
                   </div>
 
-                  <div class="glass chest-history-card">
-                    <div class="section-head" style="margin-bottom:12px;">
-                      <div>
-                        <div class="widget-title" style="margin:0;">История сундука</div>
-                      </div>
-
-                      <div id="chestHistoryLoading" class="inline-loading hidden">
-                        <div class="inline-loading-dot"></div>
-                        <span>Загрузка...</span>
-                      </div>
-                    </div>
-
-                    <div id="chestHistoryList" class="bonus-history-list"></div>
+                  <div class="glass" style="padding:16px; border-radius:18px;">
+                    <div class="widget-title">История сундука</div>
+                    <div id="chestHistoryList" class="list"></div>
                   </div>
                 </div>
               </div>
@@ -4598,318 +780,166 @@
               <div class="glass section-box">
                 <div class="section-head">
                   <div>
-                    <h2 class="section-title">Магазин и предметы</h2>
-                    <div class="section-sub">Переключайся между своим инвентарём и магазином предметов</div>
+                    <h2 class="section-title">Магазин</h2>
+                    <div class="section-sub">Инвентарь и покупка предметов.</div>
                   </div>
-
-                  <div id="shopLoading" class="inline-loading hidden">
-                    <div class="inline-loading-dot"></div>
-                    <span>Загружаем предметы...</span>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn btn-dark" type="button" onclick="loadProfileFull(); loadWsObjects();">Обновить</button>
                   </div>
                 </div>
 
-                <div class="shop-toggle-wrap">
-                  <button id="shopViewInventoryBtn" class="shop-toggle-btn active" type="button" onclick="switchShopView('inventory')">
-                    🎒 Свои предметы
-                  </button>
-
-                  <button id="shopViewStoreBtn" class="shop-toggle-btn" type="button" onclick="switchShopView('store')">
-                    🛒 Магазин предметов
-                  </button>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+                  <button id="shopViewInventoryBtn" class="section-tab active" type="button" onclick="switchShopView('inventory')">Инвентарь</button>
+                  <button id="shopViewStoreBtn" class="section-tab" type="button" onclick="switchShopView('store')">Магазин</button>
                 </div>
 
-                <div class="shop-layout">
-                  <div id="inventoryBlock" class="glass inventory-box" style="margin-top:0;">
-                    <div class="section-head">
-                      <div>
-                        <h2 class="section-title">Свой инвентарь</h2>
-                        <div class="section-sub">Предметы пользователя</div>
-                      </div>
-
-                      <div id="inventoryLoading" class="inline-loading hidden">
-                        <div class="inline-loading-dot"></div>
-                        <span>Обновляем инвентарь...</span>
-                      </div>
-                    </div>
-
-                    <div id="inventoryList" class="inventory-list"></div>
-                  </div>
-
-                  <div id="shopBlock" class="glass section-box hidden" style="margin-top:0;">
-                    <div class="section-head">
-                      <div>
-                        <h2 class="section-title">Магазин предметов</h2>
-                        <div class="section-sub">Доступные предметы для покупки</div>
-                      </div>
-                    </div>
-
-                    <div id="shopGrid" class="shop-grid"></div>
-                  </div>
+                <div id="inventoryBlock" class="glass" style="padding:16px; border-radius:18px;">
+                  <div class="widget-title">Твой инвентарь</div>
+                  <div id="inventoryList" class="list"></div>
                 </div>
-              </div>
-            </section>
 
-            <!-- TAB: WORKSHOP -->
-            <section id="tab-workshop" class="tab-panel">
-              <div class="glass section-box">
-                <div class="placeholder-box">
-                  <div class="placeholder-inner">
-                    <div class="placeholder-icon">🛠</div>
-                    <h2 class="placeholder-title">Мастерская</h2>
-                    <div class="placeholder-text">
-                      Раздел находится в разработке. Здесь будет крафт предметов, переработка ресурсов и сбор уникальных игровых вещей.
-                    </div>
-
-                    <div>
-                      <button class="btn btn-cyan" type="button" onclick="showToast('Раздел Мастерская скоро будет доступен', 'info')">
-                        Скоро откроется
-                      </button>
-                    </div>
-                  </div>
+                <div id="shopBlock" class="glass hidden" style="padding:16px; border-radius:18px;">
+                  <div class="widget-title">Витрина</div>
+                  <div id="shopGrid" class="list"></div>
                 </div>
               </div>
             </section>
 
             <!-- TAB: ROULETTE -->
             <section id="tab-roulette" class="tab-panel">
-              <div class="roulette-layout">
-                <div class="glass roulette-main">
-                  <div class="roulette-clean-head">
-                    <div class="roulette-limit-big">
-                      <div class="roulette-limit-big-label">Прокрутов</div>
-                      <div class="roulette-limit-big-value">
-                        <span id="rouletteLeftText">0</span> / <span id="rouletteMaxText">10</span>
-                      </div>
-                    </div>
-
-                    <div id="rouletteLoading" class="inline-loading hidden">
-                      <div class="inline-loading-dot"></div>
-                      <span>Обновляем рулетку...</span>
-                    </div>
+              <div class="glass section-box">
+                <div class="section-head">
+                  <div>
+                    <h2 class="section-title">Рулетка</h2>
+                    <div class="section-sub">Прокруты: <b><span id="rouletteLeftText">0</span> / <span id="rouletteMaxText">10</span></b></div>
                   </div>
 
-                  <div class="roulette-big-btn-wrap">
-                    <button class="btn btn-pink roulette-big-btn" id="spinButton" type="button" onclick="spinRoulette()">
-                      КРУТИТЬ
-                    </button>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn btn-dark" type="button" onclick="loadRouletteLimits(); loadRoulettePrizes();">Обновить</button>
                   </div>
+                </div>
 
-                  <div class="roulette-strip-shell">
-                    <div class="roulette-center-beam"></div>
-                    <div class="roulette-center-marker"></div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+                  <button class="btn btn-pink" id="spinButton" type="button" onclick="spinRoulette()">Крутить</button>
+                </div>
 
-                    <div class="roulette-viewport">
-                      <div id="rouletteStrip" class="roulette-strip"></div>
-                    </div>
-                  </div>
+                <div class="list-item" style="overflow:hidden;">
+                  <div id="rouletteStrip" style="display:flex; gap:14px; overflow:auto; padding: 6px 4px;"></div>
+                </div>
 
-                  <div id="rouletteResult" class="roulette-status-box">
-                    Нажми «Крутить», чтобы испытать удачу.
-                  </div>
+                <div id="rouletteResult" class="list-item" style="margin-top:12px;">
+                  Нажми «Крутить», чтобы испытать удачу.
                 </div>
               </div>
             </section>
 
             <!-- TAB: BONUS -->
             <section id="tab-bonus" class="tab-panel">
-              <div class="bonus-layout">
-                <div class="glass bonus-main">
-                  <div class="bonus-center">
-                    <div class="bonus-kicker">Daily Bonus</div>
-                    <h2 class="bonus-title">Ежедневный бонус</h2>
-
-                    <div id="bonusAmountBox" class="bonus-amount-box">
-                      <div class="bonus-amount-label">Награда</div>
-                      <div id="bonusAmount" class="bonus-amount">$0</div>
-                      <div id="bonusMeta" class="bonus-meta">Ожидание активации бонуса</div>
-                    </div>
-
-                    <div id="bonusBigTimer" class="bonus-big-timer">Загружаем таймер...</div>
-
-                    <div class="bonus-actions">
-                      <button id="activateBonusBtn" class="btn btn-green bonus-activate-btn" type="button" onclick="activateBonus()">
-                        АКТИВИРОВАТЬ
-                      </button>
-                    </div>
+              <div class="glass section-box">
+                <div class="section-head">
+                  <div>
+                    <h2 class="section-title">Ежедневный бонус</h2>
+                    <div class="section-sub">Таймер: <b id="bonusBigTimer">—</b></div>
+                  </div>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn btn-dark" type="button" onclick="loadBonusStatus()">Обновить</button>
                   </div>
                 </div>
 
-                <div class="glass bonus-history">
-                  <div class="section-head">
-                    <div>
-                      <h2 class="section-title">История бонусов</h2>
-                      <div class="section-sub">Последние активированные награды</div>
-                    </div>
+                <div class="list-item">
+                  <div class="muted" style="font-weight:900; text-transform:uppercase; letter-spacing:.10em; font-size:11px;">Награда</div>
+                  <div id="bonusAmount" style="margin-top:8px; font-size:28px; font-weight:950;">$0</div>
+                  <div id="bonusMeta" class="muted" style="margin-top:8px;">Ожидание активации бонуса</div>
 
-                    <div id="bonusLoading" class="inline-loading hidden">
-                      <div class="inline-loading-dot"></div>
-                      <span>Обновляем бонус...</span>
-                    </div>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                    <button id="activateBonusBtn" class="btn btn-green" type="button" onclick="activateBonus()">Активировать</button>
                   </div>
+                </div>
 
-                  <div id="bonusHistoryList" class="bonus-history-list"></div>
+                <div class="glass" style="padding:16px; border-radius:18px; margin-top:12px;">
+                  <div class="widget-title">История бонусов</div>
+                  <div id="bonusHistoryList" class="list"></div>
                 </div>
               </div>
             </section>
 
             <!-- TAB: CONTRACTS -->
             <section id="tab-contracts" class="tab-panel">
-              <div class="contracts-layout">
-                <div class="glass contracts-hero contracts-hero-real">
-                  <div class="contracts-hero-top">
-                    <div>
-                      <div class="contracts-kicker">SPECIAL WEAPONS</div>
-                      <h2 class="contracts-title">Заказные контракты</h2>
-                      <div class="contracts-text">
-                        Бери особые задания, выполняй условия, отправляй доказательства и получай награды. Если контракт взят в работу — он переместится в раздел выполнения.
-                      </div>
-                    </div>
+              <div class="glass section-box">
+                <div class="section-head">
+                  <div>
+                    <h2 class="section-title">Контрактный центр</h2>
+                    <div class="section-sub">Доступные / выполняются / история</div>
+                  </div>
 
-                    <div class="contracts-mini-stat">
-                      <div class="contracts-mini-stat-label">Доступно</div>
-                      <div id="contractsAvailableCount" class="contracts-mini-stat-value">0</div>
-                    </div>
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                    <!-- РУЧНОЙ индикатор (подключи в JS по желанию) -->
+                    <span id="manualContractsLoading" class="pill warn hidden">Загрузка…</span>
+
+                    <button class="btn btn-dark" type="button" onclick="loadContractsAll()">Обновить</button>
                   </div>
                 </div>
 
-                <div class="glass section-box">
-                  <div class="section-head" style="margin-bottom:14px;">
-                    <div>
-                      <h2 class="section-title">Контрактный центр</h2>
-                      <div class="section-sub">Следи за доступными заказами, активной работой и историей</div>
-                    </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+                  <button id="contractsSubTabBtn-available" class="section-tab active" type="button" onclick="switchContractsSubTab('available')">Доступные</button>
+                  <button id="contractsSubTabBtn-progress" class="section-tab" type="button" onclick="switchContractsSubTab('progress')">В работе</button>
+                  <button id="contractsSubTabBtn-history" class="section-tab" type="button" onclick="switchContractsSubTab('history')">История</button>
+                </div>
 
-                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                      <div id="contractsLoading" class="inline-loading hidden">
-                        <div class="inline-loading-dot"></div>
-                        <span>Загрузка контрактов...</span>
-                      </div>
+                <div id="contractsSubTab-available" class="tab-panel active">
+                  <div class="muted" style="margin-bottom:10px;">Доступно: <b id="contractsAvailableCount">0</b></div>
+                  <div id="contractsAvailableList" class="list"></div>
+                </div>
 
-                      <button class="btn btn-dark" type="button" onclick="loadContractsAll()">↺ Обновить</button>
-                    </div>
-                  </div>
+                <div id="contractsSubTab-progress" class="tab-panel">
+                  <div id="contractsProgressList" class="list"></div>
+                </div>
 
-                  <div class="contracts-top-tabs">
-                    <button id="contractsSubTabBtn-available" class="contracts-subtab active" type="button" onclick="switchContractsSubTab('available')">
-                      ДОСТУПНЫЕ
-                    </button>
-
-                    <button id="contractsSubTabBtn-progress" class="contracts-subtab" type="button" onclick="switchContractsSubTab('progress')">
-                      ВЫПОЛНЯЮТСЯ
-                    </button>
-
-                    <button id="contractsSubTabBtn-history" class="contracts-subtab" type="button" onclick="switchContractsSubTab('history')">
-                      ИСТОРИЯ
-                    </button>
-                  </div>
-
-                  <div id="contractsSubTab-available" class="contracts-subpanel active">
-                    <div id="contractsAvailableList" class="contracts-list"></div>
-                  </div>
-
-                  <div id="contractsSubTab-progress" class="contracts-subpanel">
-                    <div id="contractsProgressList" class="contracts-list"></div>
-                  </div>
-
-                  <div id="contractsSubTab-history" class="contracts-subpanel">
-                    <div id="contractsHistoryList" class="contracts-list"></div>
-                  </div>
+                <div id="contractsSubTab-history" class="tab-panel">
+                  <div id="contractsHistoryList" class="list"></div>
                 </div>
               </div>
             </section>
           </main>
 
-          <!-- MINI RAIL -->
-          <aside class="mini-rail">
-            <button id="railChestBtn" class="rail-btn chest" type="button" onclick="switchMainTab('chest')">
-              🎁
-              <span class="rail-badge">
-                Дневной сундук
-                <span class="sub">Ежедневная награда</span>
-              </span>
-            </button>
-
-            <button id="railProfileBtn" class="rail-btn active" type="button" onclick="showProfileCard()">
-              🧩
-              <span class="rail-badge">
-                Игровой профиль
-                <span class="sub">Привязка VK и ника</span>
-              </span>
-            </button>
-
-            <button id="railContractsBtn" class="rail-btn" type="button" onclick="switchMainTab('contracts')" style="position:relative;">
-              🎯
-              <span class="rail-badge">
-                Заказные контракты
-                <span class="sub">Особые задания</span>
-              </span>
-
-              <span
-                id="railContractsBadge"
-                class="hidden"
-                style="
-                  position:absolute;
-                  top:-6px;
-                  right:-6px;
-                  min-width:22px;
-                  height:22px;
-                  padding:0 6px;
-                  border-radius:999px;
-                  background:linear-gradient(135deg,#ff3e9d,#fbbf24);
-                  color:#fff;
-                  font-size:11px;
-                  font-weight:900;
-                  display:flex;
-                  align-items:center;
-                  justify-content:center;
-                  box-shadow:0 8px 20px rgba(255,62,157,0.22);
-                "
-              >0</span>
-            </button>
-          </aside>
-
           <!-- RIGHT -->
           <aside class="right-column">
-            <div id="balanceWidget" class="glass widget-box">
-              <h3 class="widget-title">Игровой баланс</h3>
-              <div class="stat-card">
-                <div class="stat-label">Текущий баланс</div>
-                <div id="widgetBalanceValue" class="stat-value stat-balance">$0</div>
+            <div id="balanceWidget" class="glass widget">
+              <h3 class="widget-title">Баланс</h3>
+              <div class="stat">
+                <div class="stat-label">Текущий</div>
+                <div id="widgetBalanceValue" class="stat-value">$0</div>
               </div>
             </div>
 
-            <div id="outputWidget" class="glass widget-box">
-              <h3 class="widget-title">Доступно к выводу</h3>
-              <div class="stat-card">
-                <div class="stat-label">Сумма к выводу</div>
-                <div id="widgetOutputValue" class="stat-value stat-output">$0</div>
+            <div id="outputWidget" class="glass widget">
+              <h3 class="widget-title">К выводу</h3>
+              <div class="stat">
+                <div class="stat-label">Доступно</div>
+                <div id="widgetOutputValue" class="stat-value">$0</div>
               </div>
             </div>
 
-            <div class="glass widget-box">
-              <div class="section-head" style="margin-bottom:12px;">
+            <div class="glass widget">
+              <div class="section-head" style="margin-bottom:10px;">
                 <div>
                   <h3 class="widget-title" style="margin:0;">PS ONLINE</h3>
-                  <div class="section-sub" style="margin-top:4px;">Игроки из биндера онлайн</div>
+                  <div class="section-sub">Игроки из биндера онлайн</div>
                 </div>
-
-                <div class="profile-pill ok">● <span id="psOnlineCountText">0</span></div>
+                <span class="pill ok">● <span id="psOnlineCountText">0</span></span>
               </div>
-
-              <div id="psOnlineList" class="online-list"></div>
+              <div id="psOnlineList" class="list"></div>
             </div>
 
-            <div class="glass widget-box">
-              <div class="section-head" style="margin-bottom:12px;">
+            <div class="glass widget">
+              <div class="section-head" style="margin-bottom:10px;">
                 <div>
                   <h3 class="widget-title" style="margin:0;">Онлайн на сайте</h3>
-                  <div class="section-sub" style="margin-top:4px;">Текущие пользователи</div>
+                  <div class="section-sub">Текущие пользователи</div>
                 </div>
-
-                <div class="profile-pill ok">● <span id="siteOnlineCountPill">0</span></div>
+                <span class="pill ok">● <span id="siteOnlineCountPill">0</span></span>
               </div>
-
-              <div id="siteOnlineList" class="online-list"></div>
+              <div id="siteOnlineList" class="list"></div>
             </div>
           </aside>
         </div>
@@ -4918,33 +948,21 @@
 
     <!-- PRIZE MODAL -->
     <div id="prizeViewModalBg" class="modal-bg hidden">
-      <div class="modal prize-win-modal">
-        <div class="prize-win-scene">
-          <div class="gun gun-left">🔫</div>
-          <div class="gun gun-right">🔫</div>
-
-          <div class="shells">
-            <span class="shell s1">✦</span>
-            <span class="shell s2">✦</span>
-            <span class="shell s3">✦</span>
-            <span class="shell s4">✦</span>
-            <span class="shell s5">✦</span>
+      <div class="modal">
+        <h3 class="confirm-title" style="color: var(--yellow);">Приз получен</h3>
+        <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+          <div class="glass" style="width:96px; height:96px; border-radius:18px; display:grid; place-items:center;">
+            <img id="prizeViewImage" class="hidden" alt="prize" style="width:86px; height:86px; object-fit:cover; border-radius:14px;" />
+            <div id="prizeViewNoImage" style="font-size:34px;">🎁</div>
           </div>
-
-          <div class="prize-glow"></div>
-          <div class="prize-flash"></div>
-
-          <div class="prize-center-wrap">
-            <img id="prizeViewImage" class="prize-win-image hidden" alt="prize" />
-            <div id="prizeViewNoImage" class="prize-win-noimage">🎁</div>
+          <div style="min-width:0;">
+            <div id="prizeViewTitle" style="font-weight:950; line-height:1.45;"></div>
+            <div class="muted" style="margin-top:6px;">Приз уже сохранён в профиле.</div>
           </div>
         </div>
 
-        <h3 class="prize-win-title">ТЫ ВЫИГРАЛ ПРИЗ</h3>
-        <p id="prizeViewTitle" class="prize-win-name"></p>
-
         <div class="modal-actions">
-          <button class="btn btn-dark" type="button" onclick="closePrizeViewModal()">✖ Закрыть</button>
+          <button class="btn btn-dark" type="button" onclick="closePrizeViewModal()">Закрыть</button>
         </div>
       </div>
     </div>
@@ -4953,12 +971,9 @@
     <div id="unlinkConfirmModalBg" class="modal-bg hidden">
       <div class="modal">
         <h3 class="confirm-title">Отвязать профиль?</h3>
-
         <div class="confirm-text">
-          Ты действительно хочешь отвязать игровой профиль от сайта World Script?
           После отвязки привязанный никнейм и VK ID будут очищены.
         </div>
-
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closeUnlinkConfirmModal()">Отмена</button>
           <button class="btn btn-red" type="button" onclick="confirmUnlinkGameProfile()">Да, отвязать</button>
@@ -4967,71 +982,38 @@
     </div>
 
     <!-- ADMIN VK MODAL -->
-    <div id="adminVkModalBg" class="modal-bg hidden admin-code-modal">
+    <div id="adminVkModalBg" class="modal-bg hidden">
       <div class="modal">
-        <h3 class="confirm-title">Подтверждение входа</h3>
-
+        <h3 class="confirm-title">Подтверждение входа (admin)</h3>
         <div class="confirm-text">
-          Для защиты админ-аккаунта нужно вручную получить код подтверждения через VK.
+          Получи код в ЛС группы (команда <b>!кодвк</b>) и введи его ниже.
         </div>
 
-        <div class="glass" style="padding:16px; margin-top:14px; border-radius:18px;">
-          <div style="font-size:13px; font-weight:800; color:#dff8ff; margin-bottom:10px;">
-            Как получить код:
-          </div>
-
-          <div style="display:grid; gap:10px; color:var(--text-secondary); font-size:14px; line-height:1.65;">
-            <div>1. Перейди в личные сообщения группы World Script</div>
-
-            <div>
-              2. Открой ссылку:
-              <a
-                href="https://vk.com/im/convo/-222804759?entrypoint=list_all"
-                target="_blank"
-                rel="noopener noreferrer"
-                style="color:#8ab4ff; font-weight:900; text-decoration:none;"
-              >
-                vk.com / absroleplay1script
-              </a>
-            </div>
-
-            <div>3. Напиши команду: <span style="color:#ffe08a; font-weight:900;">!кодвк</span></div>
-            <div>4. Введи полученный код в поле ниже</div>
-          </div>
-        </div>
-
-        <div style="margin-top:14px;">
-          <input id="adminVkCodeInput" class="field" placeholder="Введите код из VK" />
+        <div style="margin-top:12px;">
+          <input id="adminVkCodeInput" class="field" placeholder="Код из VK" />
         </div>
 
         <div id="adminVkMsg" class="auth-msg" style="margin-top:10px;"></div>
 
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closeAdminVkModal()">Отмена</button>
-          <button id="adminVkSubmitBtn" class="btn btn-cyan" type="button" onclick="confirmAdminVkLogin()">Подтвердить вход</button>
+          <button id="adminVkSubmitBtn" class="btn btn-cyan" type="button" onclick="confirmAdminVkLogin()">Подтвердить</button>
         </div>
       </div>
     </div>
 
     <!-- NOTIFICATIONS MODAL -->
     <div id="notificationsModalBg" class="modal-bg hidden">
-      <div class="modal" style="max-width:700px; max-height:90vh; overflow:auto;">
-        <div class="section-head" style="margin-bottom:14px;">
-          <div>
-            <h3 class="confirm-title" style="margin:0;">Уведомления</h3>
-          </div>
-
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-dark" type="button" onclick="markAllNotificationsRead()">Прочитать всё</button>
-          </div>
+      <div class="modal">
+        <div class="section-head" style="margin-bottom:12px;">
+          <h3 class="confirm-title" style="margin:0;">Уведомления</h3>
+          <button class="btn btn-dark" type="button" onclick="markAllNotificationsRead()">Прочитать всё</button>
         </div>
 
-        <div id="notificationsLoading" class="inline-loading hidden" style="margin-bottom:14px;">
-          <div class="inline-loading-dot"></div>
-          <span>Загрузка уведомлений...</span>
-        </div>
+        <!-- Это «Загрузка…» оставлено, т.к. пользователь открыл модал вручную -->
+        <div id="notificationsLoading" class="pill warn hidden" style="margin-bottom:12px;">Загрузка…</div>
 
-        <div id="notificationsList" class="online-list"></div>
+        <div id="notificationsList" class="list"></div>
 
         <div class="modal-actions">
           <button class="btn btn-dark" type="button" onclick="closeNotificationsPanel()">Закрыть</button>
