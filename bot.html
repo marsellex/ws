@@ -415,6 +415,43 @@ img {
   box-shadow: 0 10px 30px rgba(73,215,255,0.22);
 }
 
+#tab-roulette,
+.roulette-main,
+.roulette-strip-shell,
+.roulette-viewport {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#tab-roulette {
+  overflow: hidden;
+}
+
+.roulette-main {
+  overflow: hidden;
+}
+
+.roulette-strip-shell {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.roulette-viewport {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.roulette-strip {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: max-content;
+  min-height: 210px;
+  will-change: transform;
+}
+
 .btn-green {
   background: linear-gradient(135deg, var(--green), var(--green-2));
   box-shadow: 0 10px 30px rgba(72,229,123,0.22);
@@ -920,7 +957,7 @@ input[type="checkbox"] {
 /* DASHBOARD */
 .dashboard-layout {
   display: grid;
-  grid-template-columns: 300px 1fr 92px 320px;
+  grid-template-columns: 250px minmax(0, 1fr) 80px;
   gap: 18px;
   align-items: start;
 }
@@ -4217,6 +4254,139 @@ input[type="checkbox"] {
     height: 56px;
     font-size: 22px;
   }
+}
+
+/* === FIX OVERFLOW / STRETCHING === */
+.dashboard-layout,
+.left-column,
+.center-column,
+.mini-rail,
+.right-column,
+.tab-panel,
+.tab-panel.active,
+.section-box,
+.profile-floating-card,
+.profile-link-body,
+.link-code-grid,
+.link-code-card,
+.roulette-main,
+.roulette-strip-shell,
+.roulette-viewport,
+.chest-layout,
+.chest-main-card,
+.chest-side-card,
+.contracts-layout,
+.contracts-hero,
+.shop-layout,
+.inventory-box,
+.bonus-layout,
+.bonus-main {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.center-column,
+.tab-panel,
+.tab-panel.active,
+.profile-floating-card,
+.profile-link-body,
+.roulette-main,
+#tab-roulette,
+#tab-shop,
+#tab-workshop,
+#tab-bonus,
+#tab-chest,
+#tab-contracts {
+  overflow: hidden;
+}
+
+.link-code-grid,
+.profile-meta-grid,
+.chest-layout,
+.chest-bottom-grid,
+.contracts-layout,
+.shop-layout,
+.bonus-layout {
+  width: 100%;
+  max-width: 100%;
+}
+
+.link-code-card,
+.profile-meta-card,
+.contract-entry,
+.item-card,
+.inventory-item,
+.roulette-card,
+.chest-last-reward-box {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.link-code-value,
+.profile-meta-value,
+.account-login,
+.account-gamenick,
+.contract-entry-title,
+.contract-text-content,
+.online-user-name,
+.activity-feed-name,
+.item-title,
+.inventory-item-title,
+.roulette-card-title,
+.chest-reward-title {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.link-gen-btn-wrap .btn,
+.profile-link-actions .btn,
+.contract-actions .btn,
+.auth-actions .btn {
+  max-width: 100%;
+}
+
+.link-code-value-wrap,
+.link-code-meta,
+.link-code-steps,
+.link-step,
+.contract-text-block,
+.contract-meta-row {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.profile-floating-card {
+  width: 100%;
+  max-width: 100%;
+}
+
+.profile-link-body {
+  width: 100%;
+  max-width: 100%;
+}
+
+.link-code-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.link-code-card {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.link-code-value {
+  max-width: 100%;
+  word-break: break-all;
+}
+
+.link-step div:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
       
 </style>
