@@ -9137,29 +9137,6 @@ async function createWsbuildPayment() {
     `).join("");
   }
   
-  async function createPaymentRequest() {
-    showToast("Создание заявки пока подключается на сервере", "info");
-  }
-  
-  async function loadPaymentRequestsHistory() {
-    const box = document.getElementById("paymentRequestsHistoryList");
-    if (box) {
-      box.innerHTML = '<div class="muted">История заявок будет доступна после подключения серверной части.</div>';
-    }
-  }
-  
-  async function loadActivePaymentRequest() {
-    activePaymentRequest = null;
-    renderActivePaymentRequest();
-  }
-  
-  async function markPaymentRequestPaid() {
-    showToast("Функция будет доступна после подключения серверной части заявок", "info");
-  }
-  
-  async function cancelPaymentRequest() {
-    showToast("Функция будет доступна после подключения серверной части заявок", "info");
-  }
 
   // ═══════════════════════════════════════════════════════════
   // EVENT LISTENERS
