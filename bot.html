@@ -4388,6 +4388,184 @@ input[type="checkbox"] {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+
+.section-tab-market {
+  background: linear-gradient(135deg, rgba(246,200,87,0.18), rgba(141,92,255,0.14));
+  border-color: rgba(246,200,87,0.18);
+  color: #fff4c5;
+  box-shadow: 0 8px 24px rgba(245,158,11,0.10);
+}
+
+.section-tab-market:hover {
+  background: linear-gradient(135deg, rgba(246,200,87,0.24), rgba(141,92,255,0.18));
+  border-color: rgba(246,200,87,0.24);
+  color: #fff8de;
+}
+
+.section-tab-market.active {
+  background: linear-gradient(135deg, rgba(246,200,87,0.28), rgba(141,92,255,0.22));
+  border-color: rgba(246,200,87,0.26);
+  color: #fff8de;
+  box-shadow: 0 10px 30px rgba(245,158,11,0.14), 0 0 0 1px rgba(246,200,87,0.08);
+}
+
+.stat-pill-wsbuild {
+  background: linear-gradient(135deg, rgba(246,200,87,0.10), rgba(141,92,255,0.08));
+  border-color: rgba(246,200,87,0.14);
+}
+
+.market-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.market-main-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.market-balance-card,
+.market-buy-card,
+.market-request-card,
+.market-history-card {
+  padding: 20px;
+}
+
+.market-balance-kicker {
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #ffe39a;
+  background: rgba(246,200,87,0.08);
+  border: 1px solid rgba(246,200,87,0.16);
+  margin-bottom: 16px;
+}
+
+.market-balance-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.market-balance-icon {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  background: linear-gradient(135deg, rgba(246,200,87,0.18), rgba(141,92,255,0.12));
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.market-balance-title {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.market-balance-value {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  color: #fff3cf;
+  text-shadow: 0 0 16px rgba(246,200,87,0.18);
+}
+
+.market-packages-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.market-custom-amount {
+  display: grid;
+  gap: 10px;
+  max-width: 340px;
+  margin-top: 16px;
+}
+
+.market-total-card {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  max-width: 340px;
+}
+
+.market-total-value {
+  font-size: 26px;
+  font-weight: 900;
+  color: #ffe08a;
+}
+
+.market-actions-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.market-request-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.market-request-item {
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.market-pay-box {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.market-pay-title {
+  font-size: 14px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.market-pay-line {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.market-code-text {
+  color: #9cefff;
+  font-weight: 900;
+  letter-spacing: .05em;
+}
+
+@media (max-width: 1200px) {
+  .market-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .market-request-grid {
+    grid-template-columns: 1fr;
+  }
+}
       
 </style>
 </head>
@@ -4525,6 +4703,14 @@ input[type="checkbox"] {
               <span id="widgetOutputValue" class="stat-pill-value green">$0</span>
               <span id="outputClaimTimer" class="stat-pill-timer">(можно забрать через: —)</span>
             </div>
+
+            <div class="stat-pill stat-pill-wsbuild">
+              <span class="stat-pill-icon">⚙️</span>
+              <span class="stat-pill-label">Брюлики</span>
+              <span class="stat-pill-dot">●</span>
+              <span id="topbarWsbuildValue" class="stat-pill-value">0</span>
+            </div>
+            
           </div>
 
           <div class="topbar-right">
@@ -4578,7 +4764,12 @@ input[type="checkbox"] {
                   </button>
                   <button id="tabBtn-shop" class="section-tab" type="button" onclick="switchMainTab('shop')">
                     <span class="tab-glow"></span>
-                    🛒 Магазин
+                    🛒 Предметы
+                    <span class="tab-indicator">◆</span>
+                  </button>
+                  <button id="tabBtn-market" class="section-tab section-tab-market" type="button" onclick="switchMainTab('market')">
+                    <span class="tab-glow"></span>
+                    ⚙️ МАГАЗИН
                     <span class="tab-indicator">◆</span>
                   </button>
                   <button id="tabBtn-workshop" class="section-tab" type="button" onclick="switchMainTab('workshop')">
@@ -4855,6 +5046,126 @@ input[type="checkbox"] {
               </div>
             </div>
 
+
+            <div id="tab-market" class="tab-panel">
+              <div class="glass section-box">
+                <div class="section-head">
+                  <div>
+                    <h2 class="section-title">⚙️ Магазин Брюликов</h2>
+                    <div class="section-sub">Покупай WSBuild (Брюлики), создавай заявку и отслеживай историю оплат</div>
+                  </div>
+                </div>
+            
+                <div class="market-layout">
+                  <!-- ЛЕВАЯ КОЛОНКА -->
+                  <div class="market-main-grid">
+                    <!-- Баланс -->
+                    <div class="glass market-balance-card">
+                      <div class="market-balance-kicker">Баланс донат-валюты</div>
+                      <div class="market-balance-row">
+                        <div class="market-balance-icon">⚙️</div>
+                        <div>
+                          <div class="market-balance-title">Мои Брюлики</div>
+                          <div id="marketWsbuildBalance" class="market-balance-value">0</div>
+                        </div>
+                      </div>
+                    </div>
+            
+                    <!-- Покупка -->
+                    <div class="glass market-buy-card">
+                      <div class="widget-title">��окупка Брюликов</div>
+                      <div class="muted" style="margin-bottom:12px;">
+                        Базовая цена: <b>19₽</b> за 1 Брюлик. На пакетах действуют скидки.
+                      </div>
+            
+                      <div class="market-packages-wrap">
+                        <div class="profile-meta-label" style="margin-bottom:10px;">Пакеты</div>
+                        <div id="wsbuildPackagesList" class="market-packages-grid"></div>
+                      </div>
+            
+                      <div class="market-custom-amount">
+                        <label class="profile-meta-label" for="wsbuildAmountInput">Свое количество Брюликов</label>
+                        <input id="wsbuildAmountInput" class="field" type="number" min="1" value="1" oninput="updateWsbuildTotalPreview()" />
+                      </div>
+            
+                      <div class="market-total-card">
+                        <div class="profile-meta-label">Итоговая сумма</div>
+                        <div id="wsbuildTotalText" class="market-total-value">19₽</div>
+                      </div>
+            
+                      <div class="market-actions-row">
+                        <button class="btn btn-gold" type="button" onclick="createPaymentRequest()">⚙️ Создать заявку</button>
+                        <button class="btn btn-dark" type="button" onclick="loadWsbuildPackages()">↺ Обновить пакеты</button>
+                      </div>
+                    </div>
+            
+                    <!-- Активная заявка -->
+                    <div class="glass market-request-card">
+                      <div class="widget-title">Реквизиты для оплаты</div>
+            
+                      <div id="paymentRequestEmpty" class="contract-empty">
+                        У тебя пока нет активной заявки. Создай её выше.
+                      </div>
+            
+                      <div id="paymentRequestBox" class="hidden">
+                        <div class="market-request-grid">
+                          <div class="market-request-item">
+                            <div class="profile-meta-label">Провайдер</div>
+                            <div class="profile-meta-value">ЮMoney / СБП</div>
+                          </div>
+            
+                          <div class="market-request-item">
+                            <div class="profile-meta-label">Сумма</div>
+                            <div id="requestAmountRubText" class="profile-meta-value">—</div>
+                          </div>
+            
+                          <div class="market-request-item">
+                            <div class="profile-meta-label">Брюлики</div>
+                            <div id="requestWsbuildText" class="profile-meta-value">—</div>
+                          </div>
+            
+                          <div class="market-request-item">
+                            <div class="profile-meta-label">Статус</div>
+                            <div id="requestStatusText" class="profile-meta-value">—</div>
+                          </div>
+                        </div>
+            
+                        <div class="market-pay-box">
+                          <div class="market-pay-title">Реквизиты для перевода</div>
+                          <div class="market-pay-line"><b>Получатель:</b> <span id="paymentReceiverText">—</span></div>
+                          <div class="market-pay-line"><b>Телефон / номер:</b> <span id="paymentPhoneText">—</span></div>
+                          <div class="market-pay-line"><b>Комментарий к переводу:</b> <span id="requestCodeText" class="market-code-text">—</span></div>
+                        </div>
+            
+                        <div class="link-important warn" style="margin-top:12px;">
+                          ⚠️ Анализирую оплату только по точному коду. Обязательно укажи комментарий к переводу без ошибок.
+                        </div>
+            
+                        <div class="market-actions-row" style="margin-top:14px;">
+                          <button class="btn btn-green" type="button" onclick="markPaymentRequestPaid()">✅ Я оплатил</button>
+                          <button class="btn btn-dark" type="button" onclick="cancelPaymentRequest()">✖ Отменить заявку</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            
+                  <!-- ПРАВАЯ КОЛОНКА -->
+                  <div class="glass market-history-card">
+                    <div class="section-head" style="margin-bottom:12px;">
+                      <div>
+                        <h3 class="widget-title" style="margin:0;">История заявок</h3>
+                        <div class="section-sub" style="margin-top:4px;">Твои пополнения Брюликов</div>
+                      </div>
+                      <button class="btn btn-dark" type="button" onclick="loadPaymentRequestsHistory()">↺</button>
+                    </div>
+            
+                    <div id="paymentRequestsHistoryList" class="activity-feed-list"></div>
+                  </div>
+                </div>
+              </div>
+          </div>
+            
+
             <!-- WORKSHOP TAB -->
             <div id="tab-workshop" class="tab-panel">
               <div class="glass section-box placeholder-box">
@@ -5054,48 +5365,6 @@ input[type="checkbox"] {
       </div>
     </div>
   </div>
-
-    <div class="glass notify-settings-box" style="margin-top:18px;">
-    <div class="section-head" style="margin-bottom:12px;">
-      <div>
-        <h3 class="widget-title" style="margin:0;">⚙️ Магазин Брюликов (WSBuild)</h3>
-        <div class="section-sub" style="margin-top:4px;">Покупай брюлики со скидками на пакеты!</div>
-      </div>
-    </div>
-  
-    <div style="display:grid; gap:14px;">
-      <div class="profile-meta-grid" style="grid-template-columns:1fr 1fr;">
-        <div class="profile-meta-card">
-          <div class="profile-meta-label">Твой баланс Брюликов</div>
-          <div id="wsbuildBalanceText" class="profile-meta-value">0</div>
-        </div>
-        <div class="profile-meta-card">
-          <div class="profile-meta-label">Номер счёта</div>
-          <div id="wsbuildAccountText" class="profile-meta-value">—</div>
-        </div>
-      </div>
-  
-      <div>
-        <div class="profile-meta-label" style="margin-bottom:10px;">Пакеты</div>
-        <div id="wsbuildPackagesList" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
-      </div>
-  
-      <div style="display:grid; gap:10px; max-width:340px;">
-        <label class="profile-meta-label" for="wsbuildAmountInput">Количество Брюликов</label>
-        <input id="wsbuildAmountInput" class="field" type="number" min="1" value="1" oninput="updateWsbuildTotalPreview()" />
-      </div>
-  
-      <div class="profile-meta-card" style="max-width:340px;">
-        <div class="profile-meta-label">К оплате</div>
-        <div id="wsbuildTotalText" class="profile-meta-value">19₽</div>
-      </div>
-  
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn btn-gold" type="button" onclick="createWsbuildPayment()">⚙️ Купить Брюлики</button>
-        <button class="btn btn-dark" type="button" onclick="loadWsbuildPackages()">↺ Обновить пакеты</button>
-      </div>
-    </div>
-  </div>
   
 <script>
   const API_BASE = "https://world-script-api.onrender.com";
@@ -5145,9 +5414,13 @@ input[type="checkbox"] {
   let notificationsItems = [];
   let notificationsUnreadCount = 0;
   let notifySettingsState = null;
+  
   let wsbuildPackages = [];
   let wsbuildBalance = 0;
   let wsAccountNumber = null;
+  
+  let paymentRequestsHistory = [];
+  let activePaymentRequest = null;
 
   // ═══════════════════════════════════════════════════════════
   // UTILITIES
@@ -5520,10 +5793,75 @@ async function createWsbuildPayment() {
     if (registerForm) registerForm.classList.toggle("active", !isLogin);
   }
 
+  function renderWsbuildInfo() {
+    const topbarEl = document.getElementById("topbarWsbuildValue");
+    const marketBalanceEl = document.getElementById("marketWsbuildBalance");
+  
+    if (topbarEl) topbarEl.textContent = String(wsbuildBalance || 0);
+    if (marketBalanceEl) marketBalanceEl.textContent = String(wsbuildBalance || 0);
+  }
+  
+  function renderWsbuildPackages() {
+    const box = document.getElementById("wsbuildPackagesList");
+    const amountInput = document.getElementById("wsbuildAmountInput");
+  
+    if (!box) return;
+  
+    if (!Array.isArray(wsbuildPackages) || !wsbuildPackages.length) {
+      box.innerHTML = '<div class="muted">Пакеты Брюликов пока недоступны.</div>';
+      return;
+    }
+  
+    box.innerHTML = wsbuildPackages.map(pkg => `
+      <button class="btn btn-dark" type="button" onclick="selectWsbuildPackage(${Number(pkg.amount || 0)}, ${Number(pkg.price_rub || 0)})">
+        ⚙️ ${Number(pkg.amount || 0)} — ${Number(pkg.price_rub || 0)}₽
+      </button>
+    `).join("");
+  
+    if (amountInput && !amountInput.value) amountInput.value = "1";
+    updateWsbuildTotalPreview();
+  }
+  
+  function selectWsbuildPackage(amount, priceRub) {
+    const amountInput = document.getElementById("wsbuildAmountInput");
+    const totalEl = document.getElementById("wsbuildTotalText");
+  
+    if (amountInput) amountInput.value = String(amount || 1);
+    if (totalEl) totalEl.textContent = `${priceRub || 0}₽`;
+  }
+  
+  function calcWsbuildPreviewPrice(amount) {
+    const qty = Math.max(1, parseInt(amount || 1, 10) || 1);
+    const pkg = (wsbuildPackages || []).find(x => Number(x.amount || 0) === qty);
+    if (pkg) return Number(pkg.price_rub || 0);
+    return qty * 19;
+  }
+  
+  function updateWsbuildTotalPreview() {
+    const amountInput = document.getElementById("wsbuildAmountInput");
+    const totalEl = document.getElementById("wsbuildTotalText");
+    if (!amountInput || !totalEl) return;
+  
+    const qty = Math.max(1, parseInt(amountInput.value || "1", 10) || 1);
+    totalEl.textContent = `${calcWsbuildPreviewPrice(qty)}₽`;
+  }
+  
+  async function loadWsbuildPackages() {
+    try {
+      const { data } = await wsGet("/api/ws/wsbuild/packages");
+      if (!data?.ok) return;
+  
+      wsbuildPackages = Array.isArray(data.items) ? data.items : [];
+      renderWsbuildPackages();
+    } catch (e) {
+      console.log("loadWsbuildPackages error:", e.message);
+    }
+  }
+
   function switchMainTab(tab) {
     currentMainTab = tab;
 
-    ["chest", "shop", "workshop", "roulette", "bonus", "contracts"].forEach((name) => {
+    ["chest", "shop", "market", "workshop", "roulette", "bonus", "contracts"].forEach((name) => {
       const btn = document.getElementById("tabBtn-" + name);
       const panel = document.getElementById("tab-" + name);
 
@@ -5537,6 +5875,12 @@ async function createWsbuildPayment() {
       loadChestStatus();
       loadChestHistory();
     }
+    if (tab === "market") {
+      loadWsbuildPackages();
+      loadPaymentRequestsHistory();
+      loadActivePaymentRequest();
+    }
+    
     if (tab === "contracts") loadContractsAll();
   }
 
@@ -6524,6 +6868,11 @@ async function createWsbuildPayment() {
 
       balance = safeNumber(data?.binder?.game_balance ?? data?.balance ?? 0);
       toOutput = safeNumber(data?.binder?.to_output ?? data?.to_output ?? 0);
+
+      wsbuildBalance = safeNumber(data?.binder?.wsbuild_balance ?? 0);
+      wsAccountNumber = data?.binder?.account_number ? safeNumber(data.binder.account_number) : null;
+      renderWsbuildInfo();
+      
       startOutputCooldownTimer(data?.binder?.output_available_at || null);
 
       inventoryItems = safeArray(data.inventory).map(normalizeInventoryRow);
@@ -8520,7 +8869,9 @@ async function createWsbuildPayment() {
         loadNotifySettings(),
         loadContractsAll(),
         sitePing(),
-        loadWsbuildPackages()
+        loadWsbuildPackages(),
+        loadPaymentRequestsHistory(),
+        loadActivePaymentRequest()
       ]);
 
       if (pollInterval) clearInterval(pollInterval);
@@ -8630,6 +8981,81 @@ async function createWsbuildPayment() {
     }
 
     await bootstrapAuthorized();
+  }
+
+  function renderActivePaymentRequest() {
+    const emptyBox = document.getElementById("paymentRequestEmpty");
+    const box = document.getElementById("paymentRequestBox");
+  
+    const amountRubText = document.getElementById("requestAmountRubText");
+    const wsbuildText = document.getElementById("requestWsbuildText");
+    const statusText = document.getElementById("requestStatusText");
+    const codeText = document.getElementById("requestCodeText");
+    const receiverText = document.getElementById("paymentReceiverText");
+    const phoneText = document.getElementById("paymentPhoneText");
+  
+    if (!box || !emptyBox) return;
+  
+    if (!activePaymentRequest) {
+      emptyBox.classList.remove("hidden");
+      box.classList.add("hidden");
+      return;
+    }
+  
+    emptyBox.classList.add("hidden");
+    box.classList.remove("hidden");
+  
+    if (amountRubText) amountRubText.textContent = `${activePaymentRequest.amount_rub || "—"}₽`;
+    if (wsbuildText) wsbuildText.textContent = `${activePaymentRequest.wsbuild_amount || "—"} ⚙️`;
+    if (statusText) statusText.textContent = activePaymentRequest.status_text || activePaymentRequest.status || "—";
+    if (codeText) codeText.textContent = activePaymentRequest.payment_code || "—";
+    if (receiverText) receiverText.textContent = activePaymentRequest.receiver_name || "—";
+    if (phoneText) phoneText.textContent = activePaymentRequest.receiver_phone || "—";
+  }
+  
+  function renderPaymentRequestsHistory() {
+    const box = document.getElementById("paymentRequestsHistoryList");
+    if (!box) return;
+  
+    if (!Array.isArray(paymentRequestsHistory) || !paymentRequestsHistory.length) {
+      box.innerHTML = '<div class="contract-empty">История заявок пока пуста.</div>';
+      return;
+    }
+  
+    box.innerHTML = paymentRequestsHistory.map(item => `
+      <div class="activity-item">
+        <div class="activity-avatar">⚙️</div>
+        <div class="activity-content">
+          <div class="activity-login">${item.wsbuild_amount || 0} Брюликов · ${item.amount_rub || 0}₽</div>
+          <div class="activity-action">Статус: ${item.status_text || item.status || "—"}</div>
+          <div class="activity-action">Код: ${item.payment_code || "—"}</div>
+        </div>
+      </div>
+    `).join("");
+  }
+  
+  async function createPaymentRequest() {
+    showToast("Создание заявки пока подключается на сервере", "info");
+  }
+  
+  async function loadPaymentRequestsHistory() {
+    const box = document.getElementById("paymentRequestsHistoryList");
+    if (box) {
+      box.innerHTML = '<div class="muted">История заявок будет доступна после подключения серверной части.</div>';
+    }
+  }
+  
+  async function loadActivePaymentRequest() {
+    activePaymentRequest = null;
+    renderActivePaymentRequest();
+  }
+  
+  async function markPaymentRequestPaid() {
+    showToast("Функция будет доступна после подключения серверной части заявок", "info");
+  }
+  
+  async function cancelPaymentRequest() {
+    showToast("Функция будет доступна после подключения серверной части заявок", "info");
   }
 
   // ═══════════════════════════════════════════════════════════
