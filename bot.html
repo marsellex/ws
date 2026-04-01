@@ -5477,6 +5477,14 @@
   // ═══════════════════════════════════════════════════════════
   // UTILS
   // ═══════════════════════════════════════════════════════════
+
+  function applyWsbuildBalanceFromBinder(binder = {}) {
+    wsbuildBalance = safeNumber(binder?.wsbuild_balance ?? wsbuildBalance);
+    wsAccountNumber = binder?.account_number ? safeNumber(binder.account_number) : null;
+    renderWsbuildInfo();
+  }
+
+  
   function nowTs() {
     return Date.now();
   }
@@ -6474,20 +6482,21 @@
   async function createPaymentRequest() {
     const amountInput = document.getElementById("wsbuildAmountInput");
     const qty = Math.max(1, parseInt(amountInput?.value || "1", 10) || 1);
-
+  
     try {
       const { res, data } = await wsPost("/api/ws/payment-requests/create", {
         wsbuild_amount: qty
       });
-
+  
       if (res.status === 401) return logoutWs();
       if (!data.ok) return showToast(data.error || "Не удалось создать заявку", "error");
-
+  
       activePaymentRequest = data.item || null;
       renderActivePaymentRequest();
       setCachedData("payment_active", { item: activePaymentRequest });
-
-      await loadPaymentRequestsHistory(true);
+  
+      await refreshAffectedData(["market", "profile", "dashboard"], true);
+  
       showToast(`Заявка создана на ${data.item?.amount_rub || 0}₽`, "success");
     } catch (e) {
       showToast("Ошибка создания заявки: " + e.message, "error");
@@ -6529,20 +6538,21 @@
     if (!activePaymentRequest?.id) {
       return showToast("Нет активной заявки", "info");
     }
-
+  
     try {
       const { res, data } = await wsPost("/api/ws/payment-requests/mark-paid", {
         request_id: Number(activePaymentRequest.id || 0)
       });
-
+  
       if (res.status === 401) return logoutWs();
       if (!data.ok) return showToast(data.error || "Не удалось отправить заявку на проверку", "error");
-
+  
       activePaymentRequest = data.item || null;
       renderActivePaymentRequest();
       setCachedData("payment_active", { item: activePaymentRequest });
-
-      await loadPaymentRequestsHistory(true);
+  
+      await refreshAffectedData(["market", "profile", "dashboard"], true);
+  
       showToast("Заявка отмечена как оплаченная. Ожидай проверки.", "success");
     } catch (e) {
       showToast("Ошибка подтверждения оплаты: " + e.message, "error");
@@ -6553,20 +6563,21 @@
     if (!activePaymentRequest?.id) {
       return showToast("Нет активной заявки", "info");
     }
-
+  
     try {
       const { res, data } = await wsPost("/api/ws/payment-requests/cancel", {
         request_id: Number(activePaymentRequest.id || 0)
       });
-
+  
       if (res.status === 401) return logoutWs();
       if (!data.ok) return showToast(data.error || "Не удалось отменить заявку", "error");
-
+  
       activePaymentRequest = null;
       renderActivePaymentRequest();
       setCachedData("payment_active", { item: null });
-
-      await loadPaymentRequestsHistory(true);
+  
+      await refreshAffectedData(["market", "profile", "dashboard"], true);
+  
       showToast("Заявка отменена", "success");
     } catch (e) {
       showToast("Ошибка отмены заявки: " + e.message, "error");
@@ -6575,14 +6586,20 @@
 
   async function loadMarketBundle(force = false) {
     if (!force && hasLoadedMarketAtLeastOnce && !canRunByCooldown(lastMarketLoadAt, 30000)) return;
-
+  
     await Promise.allSettled([
       loadWsbuildPackages(force),
       loadActivePaymentRequest(force),
       loadPaymentRequestsHistory(force),
-      loadProfileFull(force)
+      loadProfileFull(force),
+      loadDashboardBundle(force)
     ]);
-
+  
+    renderWsbuildInfo();
+    renderActivePaymentRequest();
+    renderPaymentRequestsHistory();
+    renderWsbuildPackages();
+  
     hasLoadedMarketAtLeastOnce = true;
     lastMarketLoadAt = nowTs();
   }
@@ -7340,43 +7357,43 @@
       const cached = getCachedData("profile_full");
       if (cached) return true;
     }
-
+  
     try {
       const { res, data } = await wsGet("/api/ws/profile-full");
-
+  
       if (res.status === 401) {
         await logoutWs();
         return false;
       }
-
+  
       if (!data.ok) {
         showToast(data.error || "Ошибка загрузки профиля", "error");
         return false;
       }
-
+  
       currentWsUser = {
         ...(currentWsUser || {}),
         ...(data.user || {})
       };
-
+  
       renderWsUser(currentWsUser);
-
+  
       balance = safeNumber(data?.binder?.game_balance ?? data?.balance ?? 0);
       toOutput = safeNumber(data?.binder?.to_output ?? data?.to_output ?? 0);
-      wsbuildBalance = safeNumber(data?.binder?.wsbuild_balance ?? 0);
-      wsAccountNumber = data?.binder?.account_number ? safeNumber(data.binder.account_number) : null;
+  
+      applyWsbuildBalanceFromBinder(data?.binder || {});
+  
       inventoryItems = safeArray(data.inventory).map(normalizeInventoryRow);
-
+  
       updateBalance();
       updateToOutput();
-      renderWsbuildInfo();
       renderInventory();
       renderGameProfileInfo(data.user || {}, data.binder || {});
       startOutputCooldownTimer(data?.binder?.output_available_at || null);
-
+  
       setCachedData("profile_full", cloneJson(data));
       lastProfileLoadAt = nowTs();
-
+  
       if (
         currentWsUser &&
         currentWsUser.profile_link_seen === false &&
@@ -7386,7 +7403,7 @@
         isFirstProfileForceOpen = true;
         showProfileCard(true);
       }
-
+  
       buildRatingFromCurrentState();
       return true;
     } catch {
@@ -9482,55 +9499,53 @@
     if (!force && !canRunByCooldown(lastRightbarLoadAt, 30000)) {
       return;
     }
-
+  
     try {
       const { res, data } = await wsGet("/api/ws/dashboard-bundle");
-
+  
       if (res.status === 401) return logoutWs();
       if (!data.ok) return;
-
+  
       currentWsUser = {
         ...(currentWsUser || {}),
         ...(data.user || {})
       };
-
+  
       renderWsUser(currentWsUser);
-
+  
       balance = safeNumber(data?.binder?.game_balance ?? 0);
       toOutput = safeNumber(data?.binder?.to_output ?? 0);
-      wsbuildBalance = safeNumber(data?.binder?.wsbuild_balance ?? 0);
-      wsAccountNumber = data?.binder?.account_number ? safeNumber(data.binder.account_number) : null;
-
+  
+      applyWsbuildBalanceFromBinder(data?.binder || {});
+  
       updateBalance();
       updateToOutput();
-      renderWsbuildInfo();
       startOutputCooldownTimer(data?.binder?.output_available_at || null);
-
+  
       inventoryItems = Array.isArray(data.inventory)
         ? data.inventory.map(normalizeInventoryRow)
         : inventoryItems;
-
+  
       renderInventory();
       renderGameProfileInfo(data.user || {}, data.binder || {});
-
+  
       renderPsOnlineList(data?.ps_online?.items || []);
       renderSiteOnlineList(data?.site_online?.items || []);
-
+  
       notificationsUnreadCount = safeNumber(data.notifications_unread_count || 0);
       updateNotificationsBadge();
-
+  
       activityFeedItems = safeArray(data.activity_feed);
       renderActivityFeed(activityFeedItems);
-
+  
       setCachedData("dashboard_bundle", cloneJson(data));
       lastRightbarLoadAt = nowTs();
-
+  
       buildRatingFromCurrentState();
     } catch (e) {
       console.log("loadDashboardBundle error:", e.message);
     }
   }
-
   // ═══════════════════════════════════════════════════════════
   // BOOTSTRAP
   // ═══════════════════════════════════════════════════════════
