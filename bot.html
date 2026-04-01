@@ -5054,6 +5054,49 @@ input[type="checkbox"] {
       </div>
     </div>
   </div>
+
+    <div class="glass notify-settings-box" style="margin-top:18px;">
+    <div class="section-head" style="margin-bottom:12px;">
+      <div>
+        <h3 class="widget-title" style="margin:0;">⚙️ Магазин Брюликов (WSBuild)</h3>
+        <div class="section-sub" style="margin-top:4px;">Покупай брюлики со скидками на пакеты!</div>
+      </div>
+    </div>
+  
+    <div style="display:grid; gap:14px;">
+      <div class="profile-meta-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="profile-meta-card">
+          <div class="profile-meta-label">Твой баланс Брюликов</div>
+          <div id="wsbuildBalanceText" class="profile-meta-value">0</div>
+        </div>
+        <div class="profile-meta-card">
+          <div class="profile-meta-label">Номер счёта</div>
+          <div id="wsbuildAccountText" class="profile-meta-value">—</div>
+        </div>
+      </div>
+  
+      <div>
+        <div class="profile-meta-label" style="margin-bottom:10px;">Пакеты</div>
+        <div id="wsbuildPackagesList" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+      </div>
+  
+      <div style="display:grid; gap:10px; max-width:340px;">
+        <label class="profile-meta-label" for="wsbuildAmountInput">Количество Брюликов</label>
+        <input id="wsbuildAmountInput" class="field" type="number" min="1" value="1" oninput="updateWsbuildTotalPreview()" />
+      </div>
+  
+      <div class="profile-meta-card" style="max-width:340px;">
+        <div class="profile-meta-label">К оплате</div>
+        <div id="wsbuildTotalText" class="profile-meta-value">19₽</div>
+      </div>
+  
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-gold" type="button" onclick="createWsbuildPayment()">⚙️ Купить Брюлики</button>
+        <button class="btn btn-dark" type="button" onclick="loadWsbuildPackages()">↺ Обновить пакеты</button>
+      </div>
+    </div>
+  </div>
+  
 <script>
   const API_BASE = "https://world-script-api.onrender.com";
 
@@ -5102,6 +5145,9 @@ input[type="checkbox"] {
   let notificationsItems = [];
   let notificationsUnreadCount = 0;
   let notifySettingsState = null;
+  let wsbuildPackages = [];
+  let wsbuildBalance = 0;
+  let wsAccountNumber = null;
 
   // ═══════════════════════════════════════════════════════════
   // UTILITIES
@@ -5162,6 +5208,97 @@ input[type="checkbox"] {
       return "—";
     }
   }
+
+  function renderWsbuildInfo() {
+  const balanceEl = document.getElementById("wsbuildBalanceText");
+  const accountEl = document.getElementById("wsbuildAccountText");
+
+  if (balanceEl) balanceEl.textContent = String(wsbuildBalance || 0);
+  if (accountEl) accountEl.textContent = wsAccountNumber ? String(wsAccountNumber) : "—";
+}
+
+function renderWsbuildPackages() {
+  const box = document.getElementById("wsbuildPackagesList");
+  const totalEl = document.getElementById("wsbuildTotalText");
+  const amountInput = document.getElementById("wsbuildAmountInput");
+
+  if (!box) return;
+
+  if (!Array.isArray(wsbuildPackages) || !wsbuildPackages.length) {
+    box.innerHTML = '<div class="muted">Пакеты брюликов пока недоступны.</div>';
+    return;
+  }
+
+  box.innerHTML = wsbuildPackages.map(pkg => `
+    <button class="btn btn-dark" type="button" onclick="selectWsbuildPackage(${Number(pkg.amount || 0)}, ${Number(pkg.price_rub || 0)})">
+      ⚙️ ${Number(pkg.amount || 0)} — ${Number(pkg.price_rub || 0)}₽
+    </button>
+  `).join("");
+
+  if (amountInput && !amountInput.value) {
+    amountInput.value = "1";
+  }
+
+  updateWsbuildTotalPreview();
+}
+
+function selectWsbuildPackage(amount, priceRub) {
+  const amountInput = document.getElementById("wsbuildAmountInput");
+  const totalEl = document.getElementById("wsbuildTotalText");
+
+  if (amountInput) amountInput.value = String(amount || 1);
+  if (totalEl) totalEl.textContent = `${priceRub || 0}₽`;
+}
+
+function calcWsbuildPreviewPrice(amount) {
+  const qty = Math.max(1, parseInt(amount || 1, 10) || 1);
+  const pkg = (wsbuildPackages || []).find(x => Number(x.amount || 0) === qty);
+  if (pkg) return Number(pkg.price_rub || 0);
+  return qty * 19;
+}
+
+function updateWsbuildTotalPreview() {
+  const amountInput = document.getElementById("wsbuildAmountInput");
+  const totalEl = document.getElementById("wsbuildTotalText");
+  if (!amountInput || !totalEl) return;
+
+  const qty = Math.max(1, parseInt(amountInput.value || "1", 10) || 1);
+  totalEl.textContent = `${calcWsbuildPreviewPrice(qty)}₽`;
+}
+
+async function loadWsbuildPackages() {
+  try {
+    const { data } = await wsGet("/api/ws/wsbuild/packages");
+    if (!data?.ok) return;
+
+    wsbuildPackages = Array.isArray(data.items) ? data.items : [];
+    renderWsbuildPackages();
+  } catch (e) {
+    console.log("loadWsbuildPackages error:", e.message);
+  }
+}
+
+async function createWsbuildPayment() {
+  const amountInput = document.getElementById("wsbuildAmountInput");
+  const qty = Math.max(1, parseInt(amountInput?.value || "1", 10) || 1);
+
+  try {
+    const { res, data } = await wsPost("/api/ws/payments/freekassa/create", {
+      wsbuild_amount: qty
+    });
+
+    if (res.status === 401) return logoutWs();
+    if (!data.ok) return showToast(data.error || "Ошибка создания платежа", "error");
+
+    showToast(`Платёж создан: ${data.amount_rub}₽ за ${data.wsbuild_amount} Брюликов`, "success", 3500);
+
+    if (data.payment_url) {
+      window.open(data.payment_url, "_blank");
+    }
+  } catch (e) {
+    showToast("Ошибка оплаты: " + e.message, "error");
+  }
+}
 
   function formatShortDateTime(value) {
     if (!value) return "";
@@ -6414,6 +6551,11 @@ input[type="checkbox"] {
       setGlobalSectionLoading(false);
       setInlineLoading("inventoryLoading", false);
     }
+
+    wsbuildBalance = safeNumber(data?.binder?.wsbuild_balance ?? 0);
+    wsAccountNumber = data?.binder?.account_number ? safeNumber(data.binder.account_number) : null;
+    renderWsbuildInfo();
+    
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -8377,7 +8519,8 @@ input[type="checkbox"] {
         loadNotifications(),
         loadNotifySettings(),
         loadContractsAll(),
-        sitePing()
+        sitePing(),
+        loadWsbuildPackages()
       ]);
 
       if (pollInterval) clearInterval(pollInterval);
