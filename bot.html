@@ -6085,6 +6085,109 @@ async function createWsbuildPayment() {
     `).join("");
   }
 
+  async function createPaymentRequest() {
+    const amountInput = document.getElementById("wsbuildAmountInput");
+    const qty = Math.max(1, parseInt(amountInput?.value || "1", 10) || 1);
+  
+    try {
+      const { res, data } = await wsPost("/api/ws/payment-requests/create", {
+        wsbuild_amount: qty
+      });
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Не удалось создать заявку", "error");
+  
+      activePaymentRequest = data.item || null;
+      renderActivePaymentRequest();
+      await loadPaymentRequestsHistory();
+  
+      showToast(`Заявка создана на ${data.item?.amount_rub || 0}₽`, "success");
+    } catch (e) {
+      showToast("Ошибка создания заявки: " + e.message, "error");
+    }
+  }
+
+  async function loadPaymentRequestsHistory() {
+    try {
+      const { res, data } = await wsGet("/api/ws/payment-requests/my");
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+  
+      paymentRequestsHistory = Array.isArray(data.items) ? data.items : [];
+      renderPaymentRequestsHistory();
+    } catch (e) {
+      console.log("loadPaymentRequestsHistory error:", e.message);
+    }
+  }
+
+
+
+  async function loadActivePaymentRequest() {
+    try {
+      const { res, data } = await wsGet("/api/ws/payment-requests/active");
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+  
+      activePaymentRequest = data.item || null;
+      renderActivePaymentRequest();
+    } catch (e) {
+      console.log("loadActivePaymentRequest error:", e.message);
+    }
+  }
+
+
+
+  async function markPaymentRequestPaid() {
+    if (!activePaymentRequest?.id) {
+      return showToast("Нет активной заявки", "info");
+    }
+  
+    try {
+      const { res, data } = await wsPost("/api/ws/payment-requests/mark-paid", {
+        request_id: Number(activePaymentRequest.id || 0)
+      });
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Не удалось отправить заявку на проверку", "error");
+  
+      activePaymentRequest = data.item || null;
+      renderActivePaymentRequest();
+      await loadPaymentRequestsHistory();
+  
+      showToast("Заявка отмечена как оплаченная. Ожидай проверки.", "success");
+    } catch (e) {
+      showToast("Ошибка подтверждения оплаты: " + e.message, "error");
+    }
+  }
+
+
+  async function cancelPaymentRequest() {
+    if (!activePaymentRequest?.id) {
+      return showToast("Нет активной заявки", "info");
+    }
+  
+    try {
+      const { res, data } = await wsPost("/api/ws/payment-requests/cancel", {
+        request_id: Number(activePaymentRequest.id || 0)
+      });
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Не удалось отменить заявку", "error");
+  
+      activePaymentRequest = null;
+      renderActivePaymentRequest();
+      await loadPaymentRequestsHistory();
+  
+      showToast("Заявка отменена", "success");
+    } catch (e) {
+      showToast("Ошибка отмены заявки: " + e.message, "error");
+    }
+  }
+  
+  
+
   async function loadNotifications() {
     setInlineLoading("notificationsLoading", true);
 
