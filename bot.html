@@ -5422,9 +5422,35 @@ input[type="checkbox"] {
   let paymentRequestsHistory = [];
   let activePaymentRequest = null;
 
+  let hasLoadedShopObjects = false;
+  let hasLoadedRoulettePrizes = false;
+  let hasLoadedNotifySettings = false;
+  let hasLoadedLinkCodes = false;
+  let hasLoadedContractsAtLeastOnce = false;
+  let hasLoadedNotificationsAtLeastOnce = false;
+  let hasLoadedActivityAtLeastOnce = false;
+  
+  let notificationsUnreadPollTimer = null;
+  let dashboardLightTimer = null;
+  let slowRefreshTimer = null;
+  
+  let lastNotificationsLoadAt = 0;
+  let lastActivityLoadAt = 0;
+  let lastContractsLoadAt = 0;
+  let lastRightbarLoadAt = 0;
+
   // ═══════════════════════════════════════════════════════════
   // UTILITIES
   // ═══════════════════════════════════════════════════════════
+
+  function nowTs() {
+    return Date.now();
+  }
+  
+  function canRunByCooldown(lastTs, ms) {
+    return (nowTs() - Number(lastTs || 0)) >= Number(ms || 0);
+  }
+  
   function escapeHtml(str) {
     return String(str || "")
       .replace(/&/g, "&amp;")
@@ -5699,13 +5725,19 @@ async function createWsbuildPayment() {
     if (rightbarInterval) clearInterval(rightbarInterval);
     if (chestCountdownInterval) clearInterval(chestCountdownInterval);
     if (bonusCountdownInterval) clearInterval(bonusCountdownInterval);
-
+    if (notificationsUnreadPollTimer) clearInterval(notificationsUnreadPollTimer);
+    if (dashboardLightTimer) clearInterval(dashboardLightTimer);
+    if (slowRefreshTimer) clearInterval(slowRefreshTimer);
+  
     glitchTimer = null;
     pollInterval = null;
     sitePresenceInterval = null;
     rightbarInterval = null;
     chestCountdownInterval = null;
     bonusCountdownInterval = null;
+    notificationsUnreadPollTimer = null;
+    dashboardLightTimer = null;
+    slowRefreshTimer = null;
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -5860,28 +5892,40 @@ async function createWsbuildPayment() {
 
   function switchMainTab(tab) {
     currentMainTab = tab;
-
-    ["chest", "shop", "market", "workshop", "roulette", "bonus", "contracts"].forEach((name) => {
+  
+    ["chest", "shop", "workshop", "roulette", "bonus", "contracts"].forEach((name) => {
       const btn = document.getElementById("tabBtn-" + name);
       const panel = document.getElementById("tab-" + name);
-
+  
       if (btn) btn.classList.toggle("active", name === tab);
       if (panel) panel.classList.toggle("active", name === tab);
     });
-
-    if (tab === "roulette") loadRouletteLimits();
-    if (tab === "bonus") loadBonusStatus();
+  
+    if (tab === "shop" && !hasLoadedShopObjects) {
+      hasLoadedShopObjects = true;
+      loadWsObjects();
+    }
+  
+    if (tab === "roulette") {
+      if (!hasLoadedRoulettePrizes) {
+        hasLoadedRoulettePrizes = true;
+        loadRoulettePrizes();
+      }
+      loadRouletteLimits();
+    }
+  
+    if (tab === "bonus") {
+      loadBonusStatus();
+    }
+  
     if (tab === "chest") {
       loadChestStatus();
       loadChestHistory();
     }
-    if (tab === "market") {
-      loadWsbuildPackages();
-      loadPaymentRequestsHistory();
-      loadActivePaymentRequest();
+  
+    if (tab === "contracts") {
+      loadContractsAll(true);
     }
-    
-    if (tab === "contracts") loadContractsAll();
   }
 
   function switchShopView(view) {
@@ -5919,25 +5963,87 @@ async function createWsbuildPayment() {
     const card = document.getElementById("profileFloatingCard");
     const body = document.getElementById("profileLinkBody");
     const railBtn = document.getElementById("railProfileBtn");
-
+  
     if (card) {
       card.classList.remove("is-hidden");
       profileCardVisible = true;
     }
-
+  
     if (forceExpand && body) {
       body.classList.remove("collapsed");
     }
-
+  
     if (railBtn) {
       railBtn.classList.add("active");
     }
-
+  
+    if (!hasLoadedLinkCodes) {
+      hasLoadedLinkCodes = true;
+      loadLinkCodesStatus();
+    }
+  
+    if (!hasLoadedNotifySettings) {
+      hasLoadedNotifySettings = true;
+      loadNotifySettings();
+    }
+  
     if (isFirstProfileForceOpen && currentWsUser) {
       isFirstProfileForceOpen = false;
       wsPost("/api/ws/profile/mark-link-seen", {}).catch(() => {});
     }
   }
+
+
+  async function loadDashboardBundle(force = false) {
+    if (!force && !canRunByCooldown(lastRightbarLoadAt, 30000)) {
+      return;
+    }
+  
+    try {
+      const { res, data } = await wsGet("/api/ws/dashboard-bundle");
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+  
+      currentWsUser = {
+        ...(currentWsUser || {}),
+        ...(data.user || {})
+      };
+  
+      renderWsUser(currentWsUser);
+  
+      balance = safeNumber(data?.binder?.game_balance ?? 0);
+      toOutput = safeNumber(data?.binder?.to_output ?? 0);
+      wsbuildBalance = safeNumber(data?.binder?.wsbuild_balance ?? 0);
+      wsAccountNumber = data?.binder?.account_number ? safeNumber(data.binder.account_number) : null;
+  
+      updateBalance();
+      updateToOutput();
+      renderWsbuildInfo();
+      startOutputCooldownTimer(data?.binder?.output_available_at || null);
+  
+      inventoryItems = Array.isArray(data.inventory)
+        ? data.inventory.map(normalizeInventoryRow)
+        : inventoryItems;
+  
+      renderInventory();
+      renderGameProfileInfo(data.user || {}, data.binder || {});
+  
+      renderPsOnlineList(data?.ps_online?.items || []);
+      renderSiteOnlineList(data?.site_online?.items || []);
+  
+      notificationsUnreadCount = safeNumber(data.notifications_unread_count || 0);
+      updateNotificationsBadge();
+  
+      activityFeedItems = safeArray(data.activity_feed);
+      renderActivityFeed(activityFeedItems);
+  
+      lastRightbarLoadAt = nowTs();
+    } catch (e) {
+      console.log("loadDashboardBundle error:", e.message);
+    }
+  }
+  
 
   function hideProfileCardCompletely() {
     const card = document.getElementById("profileFloatingCard");
@@ -6013,7 +6119,7 @@ async function createWsbuildPayment() {
   function openNotificationsPanel() {
     const bg = document.getElementById("notificationsModalBg");
     if (bg) bg.classList.remove("hidden");
-    loadNotifications();
+    loadNotifications(true);
   }
 
   function closeNotificationsPanel() {
@@ -6188,24 +6294,44 @@ async function createWsbuildPayment() {
   
   
 
-  async function loadNotifications() {
+  async function loadNotifications(force = false) {
+    if (!force && !canRunByCooldown(lastNotificationsLoadAt, 60000)) {
+      return;
+    }
+  
     setInlineLoading("notificationsLoading", true);
-
+  
     try {
       const { res, data } = await wsGet("/api/ws/notifications?limit=40");
-
+  
       if (res.status === 401) return logoutWs();
       if (!data.ok) return;
-
+  
       notificationsItems = safeArray(data.items);
       notificationsUnreadCount = safeNumber(data.unread_count);
-
+      lastNotificationsLoadAt = nowTs();
+      hasLoadedNotificationsAtLeastOnce = true;
+  
       updateNotificationsBadge();
       renderNotifications();
     } catch (e) {
       console.log("loadNotifications error:", e.message);
     } finally {
       setInlineLoading("notificationsLoading", false);
+    }
+  }
+
+  async function loadNotificationsLight() {
+    try {
+      const { res, data } = await wsGet("/api/ws/notifications?limit=5");
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+  
+      notificationsUnreadCount = safeNumber(data.unread_count);
+      updateNotificationsBadge();
+    } catch (e) {
+      console.log("loadNotificationsLight error:", e.message);
     }
   }
 
@@ -6452,24 +6578,30 @@ async function createWsbuildPayment() {
     }).join("");
   }
 
-  async function loadRightbarWidgets() {
+  async function loadRightbarWidgets(force = false) {
+    if (!force && !canRunByCooldown(lastRightbarLoadAt, 30000)) {
+      return;
+    }
+  
     try {
       const [psRes, siteRes] = await Promise.all([
         wsGet("/api/ws/presence/ps-online"),
         wsGet("/api/ws/presence/site-online")
       ]);
-
+  
       if (psRes.res.status === 401 || siteRes.res.status === 401) {
         return logoutWs();
       }
-
+  
       if (psRes.data?.ok) {
         renderPsOnlineList(psRes.data.items || psRes.data.users || []);
       }
-
+  
       if (siteRes.data?.ok) {
         renderSiteOnlineList(siteRes.data.items || siteRes.data.users || []);
       }
+  
+      lastRightbarLoadAt = nowTs();
     } catch (e) {
       console.log("loadRightbarWidgets error:", e.message);
     }
@@ -6512,16 +6644,23 @@ async function createWsbuildPayment() {
       }).join("");
     }
 
-  async function loadActivityFeed() {
+  async function loadActivityFeed(force = false) {
+    if (!force && !canRunByCooldown(lastActivityLoadAt, 60000)) {
+      return;
+    }
+  
     setInlineLoading("activityFeedLoading", true);
-
+  
     try {
-      const { res, data } = await wsGet("/api/ws/activity-feed?limit=30");
-
+      const { res, data } = await wsGet("/api/ws/activity-feed?limit=20");
+  
       if (res.status === 401) return logoutWs();
       if (!data.ok) return;
-
+  
       activityFeedItems = safeArray(data.items);
+      lastActivityLoadAt = nowTs();
+      hasLoadedActivityAtLeastOnce = true;
+  
       renderActivityFeed(activityFeedItems);
     } catch (e) {
       console.log("loadActivityFeed error:", e.message);
@@ -8718,14 +8857,36 @@ async function createWsbuildPayment() {
     renderContractsHistory();
   }
 
-  async function loadContractsAll() {
+  async function loadContractsAll(force = false) {
+    if (!force && !canRunByCooldown(lastContractsLoadAt, 45000)) {
+      return;
+    }
+  
     setInlineLoading("contractsLoading", true);
-
+  
     try {
-      await Promise.all([
-        loadContractsAvailable(),
-        loadMyContracts()
-      ]);
+      const { res, data } = await wsGet("/api/ws/contracts/bundle");
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) throw new Error(data.error || "Ошибка загрузки контрактов");
+  
+      contractsAvailableItems = safeArray(data.available);
+      contractsProgressItems = safeArray(data.in_progress);
+      contractsHistoryItems = [
+        ...safeArray(data.completed),
+        ...safeArray(data.expired),
+        ...safeArray(data.cancelled)
+      ];
+  
+      renderContractsAvailable();
+      renderContractsProgress();
+      renderContractsHistory();
+  
+      const count = document.getElementById("contractsAvailableCount");
+      if (count) count.textContent = String(safeNumber(data.available_count));
+  
+      lastContractsLoadAt = nowTs();
+      hasLoadedContractsAtLeastOnce = true;
     } catch (e) {
       showToast(e.message || "Ошибка загрузки контрактов", "error");
     } finally {
@@ -8930,11 +9091,9 @@ async function createWsbuildPayment() {
   // BOOTSTRAP
   // ═══════════════════════════════════════════════════════════
   async function bootstrapAuthorized() {
-    //setGlobalSectionLoading(true, "Подготовка сайта...");
-
     try {
       const { res, data } = await wsGet("/api/ws/me");
-
+  
       if (res.status === 401 || !data.ok || !data.user) {
         wsClearToken();
         currentWsUser = null;
@@ -8942,58 +9101,54 @@ async function createWsbuildPayment() {
         setGlobalSectionLoading(false);
         return;
       }
-
+  
       currentWsUser = data.user;
       renderWsUser(currentWsUser);
-
+  
       showAppView();
       switchMainTab("chest");
       switchShopView("inventory");
-
+  
       if (currentWsUser.profile_link_seen === false) {
         isFirstProfileForceOpen = true;
         showProfileCard(true);
       }
-
+  
       await loadPublicWsData();
-      await loadProfileFull();
-
+      await loadDashboardBundle(true);
+      
       await Promise.allSettled([
-        loadLinkCodesStatus(),
-        loadWsObjects(),
         loadChestStatus(),
         loadChestHistory(),
-        loadRoulettePrizes(),
         loadRouletteLimits(),
         loadBonusStatus(),
-        loadRightbarWidgets(),
-        loadActivityFeed(),
-        loadNotifications(),
-        loadNotifySettings(),
-        loadContractsAll(),
-        sitePing(),
-        loadWsbuildPackages(),
-        loadPaymentRequestsHistory(),
-        loadActivePaymentRequest()
+        sitePing()
       ]);
-
+  
       if (pollInterval) clearInterval(pollInterval);
-      pollInterval = setInterval(pollProfileBindingState, 12000);
-
+      pollInterval = setInterval(pollProfileBindingState, 30000);
+  
       if (sitePresenceInterval) clearInterval(sitePresenceInterval);
-      sitePresenceInterval = setInterval(sitePing, 25000);
-
-      if (rightbarInterval) clearInterval(rightbarInterval);
-      rightbarInterval = setInterval(async () => {
-        await loadRightbarWidgets();
-        await loadActivityFeed();
-        await loadNotifications();
-
+      sitePresenceInterval = setInterval(sitePing, 45000);
+  
+      if (notificationsUnreadPollTimer) clearInterval(notificationsUnreadPollTimer);
+      notificationsUnreadPollTimer = setInterval(async () => {
+        await loadNotificationsLight();
+      }, 30000);
+  
+      if (dashboardLightTimer) clearInterval(dashboardLightTimer);
+      dashboardLightTimer = setInterval(async () => {
+        await loadDashboardBundle();
         if (currentMainTab === "roulette") await loadRouletteLimits();
         if (currentMainTab === "chest") await loadChestStatus();
         if (currentMainTab === "bonus") await loadBonusStatus();
+      }, 30000);
+  
+      if (slowRefreshTimer) clearInterval(slowRefreshTimer);
+      slowRefreshTimer = setInterval(async () => {
         if (currentMainTab === "contracts") await loadContractsAll();
-      }, 15000);
+      }, 60000);
+  
     } finally {
       setGlobalSectionLoading(false);
     }
