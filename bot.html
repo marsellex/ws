@@ -8832,27 +8832,27 @@ async function createWsbuildPayment() {
 
   async function loadContractsAvailable() {
     const { res, data } = await wsGet("/api/ws/contracts/available");
-
+  
     if (res.status === 401) return logoutWs();
     if (!data.ok) throw new Error(data.error || "Ошибка загрузки доступных контрактов");
-
+  
     contractsAvailableItems = safeArray(data.items);
     renderContractsAvailable();
   }
-
+  
   async function loadMyContracts() {
     const { res, data } = await wsGet("/api/ws/contracts/my");
-
+  
     if (res.status === 401) return logoutWs();
     if (!data.ok) throw new Error(data.error || "Ошибка загрузки моих контрактов");
-
+  
     contractsProgressItems = safeArray(data.in_progress);
     contractsHistoryItems = [
       ...safeArray(data.completed),
       ...safeArray(data.expired),
       ...safeArray(data.cancelled)
     ];
-
+  
     renderContractsProgress();
     renderContractsHistory();
   }
@@ -8865,25 +8865,10 @@ async function createWsbuildPayment() {
     setInlineLoading("contractsLoading", true);
   
     try {
-      const { res, data } = await wsGet("/api/ws/contracts/bundle");
-  
-      if (res.status === 401) return logoutWs();
-      if (!data.ok) throw new Error(data.error || "Ошибка загрузки контрактов");
-  
-      contractsAvailableItems = safeArray(data.available);
-      contractsProgressItems = safeArray(data.in_progress);
-      contractsHistoryItems = [
-        ...safeArray(data.completed),
-        ...safeArray(data.expired),
-        ...safeArray(data.cancelled)
-      ];
-  
-      renderContractsAvailable();
-      renderContractsProgress();
-      renderContractsHistory();
-  
-      const count = document.getElementById("contractsAvailableCount");
-      if (count) count.textContent = String(safeNumber(data.available_count));
+      await Promise.all([
+        loadContractsAvailable(),
+        loadMyContracts()
+      ]);
   
       lastContractsLoadAt = nowTs();
       hasLoadedContractsAtLeastOnce = true;
