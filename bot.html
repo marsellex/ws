@@ -4518,6 +4518,92 @@
       font-size: 11px;
       font-weight: 800;
     }
+
+    .market-packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    
+    .market-package-card {
+      position: relative;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+        rgba(10,16,28,0.82);
+      transition: .25s ease;
+      overflow: hidden;
+    }
+    
+    .market-package-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(246,200,87,0.18);
+      box-shadow: 0 14px 34px rgba(245,158,11,0.10);
+    }
+    
+    .market-package-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #f6c857, #f59e0b);
+      color: #1a1305;
+      box-shadow: 0 4px 12px rgba(245,158,11,0.22);
+    }
+    
+    .market-package-title {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: #fff;
+      letter-spacing: -.02em;
+    }
+    
+    .market-package-amount {
+      font-size: 34px;
+      font-weight: 900;
+      color: #fff3cf;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    
+    .market-package-old {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: line-through;
+      margin-bottom: 4px;
+    }
+    
+    .market-package-price {
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffe08a;
+      margin-bottom: 10px;
+    }
+    
+    .market-package-discount {
+      font-size: 12px;
+      color: var(--success);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    
+    .market-package-bonus {
+      min-height: 42px;
+      font-size: 12px;
+      color: #9cefff;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    
+    .market-package-btn {
+      width: 100%;
+    }
     
   </style>
 </head>
@@ -5146,19 +5232,23 @@
                         Базовая цена: <b>19₽</b> за 1 Брюлик. На пакетах действуют скидки.
                       </div>
 
-                      <div class="market-packages-wrap">
+                      <div class="market-section-block">
                         <div class="profile-meta-label" style="margin-bottom:10px;">Пакеты</div>
                         <div id="wsbuildPackagesList" class="market-packages-grid"></div>
                       </div>
-
-                      <div class="market-custom-amount">
-                        <label class="profile-meta-label" for="wsbuildAmountInput">Свое количество Брюликов</label>
-                        <input id="wsbuildAmountInput" class="field" type="number" min="1" value="1" oninput="updateWsbuildTotalPreview()" />
-                      </div>
-
-                      <div class="market-total-card">
-                        <div class="profile-meta-label">Итоговая сумма</div>
-                        <div id="wsbuildTotalText" class="market-total-value">19₽</div>
+                      
+                      <div class="market-section-block" style="margin-top:18px;">
+                        <div class="profile-meta-label" style="margin-bottom:10px;">Стандартная покупка</div>
+                      
+                        <div class="market-custom-amount">
+                          <label class="profile-meta-label" for="wsbuildAmountInput">Свое количество Брюликов</label>
+                          <input id="wsbuildAmountInput" class="field" type="number" min="1" value="1" oninput="updateWsbuildTotalPreview()" />
+                        </div>
+                      
+                        <div class="market-total-card">
+                          <div class="profile-meta-label">Итоговая сумма</div>
+                          <div id="wsbuildTotalText" class="market-total-value">19₽</div>
+                        </div>
                       </div>
 
                       <div class="market-actions-row">
@@ -5892,8 +5982,8 @@
       hasLoadedContractsAtLeastOnce = true;
     }
 
-    if (wsbuildPackagesCache?.items) {
-      wsbuildPackages = safeArray(wsbuildPackagesCache.items);
+    if (wsbuildPackagesCache?.packages) {
+      wsbuildPackages = safeArray(wsbuildPackagesCache.packages);
       renderWsbuildPackages();
       hasLoadedWsbuildPackages = wsbuildPackages.length > 0;
     }
@@ -6527,20 +6617,41 @@
   function renderWsbuildPackages() {
     const box = document.getElementById("wsbuildPackagesList");
     const amountInput = document.getElementById("wsbuildAmountInput");
-
+  
     if (!box) return;
-
+  
     if (!Array.isArray(wsbuildPackages) || !wsbuildPackages.length) {
       box.innerHTML = '<div class="muted">Пакеты Брюликов пока недоступны.</div>';
       return;
     }
-
+  
     box.innerHTML = wsbuildPackages.map(pkg => `
-      <button class="btn btn-dark" type="button" onclick="selectWsbuildPackage(${Number(pkg.amount || 0)}, ${Number(pkg.price_rub || 0)})">
-        ⚙️ ${Number(pkg.amount || 0)} — ${Number(pkg.price_rub || 0)}₽
-      </button>
+      <div class="market-package-card">
+        ${pkg.badge ? `<div class="market-package-badge">${escapeHtml(pkg.badge)}</div>` : ""}
+  
+        <div class="market-package-title">${escapeHtml(pkg.title || "Пакет")}</div>
+        <div class="market-package-amount">${Number(pkg.amount || 0)} ⚙️</div>
+  
+        <div class="market-package-old">${Number(pkg.old_price_rub || 0)}₽</div>
+        <div class="market-package-price">${Number(pkg.price_rub || 0)}₽</div>
+        <div class="market-package-discount">
+          Экономия ${Number(pkg.discount_rub || 0)}₽ · скидка ${Number(pkg.discount_percent || 0)}%
+        </div>
+  
+        <div class="market-package-bonus">
+          ${pkg.bonus_text ? escapeHtml(pkg.bonus_text) : "Без дополнительного бонуса"}
+        </div>
+  
+        <button
+          class="btn btn-gold market-package-btn"
+          type="button"
+          onclick="selectWsbuildPackage(${Number(pkg.amount || 0)}, ${Number(pkg.price_rub || 0)})"
+        >
+          Выбрать пакет
+        </button>
+      </div>
     `).join("");
-
+  
     if (amountInput && !amountInput.value) amountInput.value = "1";
     updateWsbuildTotalPreview();
   }
@@ -6561,9 +6672,9 @@
       if (res.status === 401) return logoutWs();
       if (!data?.ok) return;
 
-      wsbuildPackages = Array.isArray(data.items) ? data.items : [];
+      wsbuildPackages = Array.isArray(data.packages) ? data.packages : [];
       renderWsbuildPackages();
-      setCachedData("wsbuild_packages", { items: wsbuildPackages });
+      setCachedData("wsbuild_packages", { packages: wsbuildPackages });
       hasLoadedWsbuildPackages = true;
     } catch (e) {
       console.log("loadWsbuildPackages error:", e.message);
