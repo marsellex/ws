@@ -4604,6 +4604,11 @@
     .market-package-btn {
       width: 100%;
     }
+    #psOnlinePill:hover::after,
+    #siteOnlinePill:hover::after,
+    #gameBalancePill:hover::after {
+      content: "Нажми для информации";
+    }
     
   </style>
 </head>
@@ -4723,20 +4728,33 @@
           <span id="psOnlineCountText" class="stat-pill-value">0</span>
         </div>
 
-        <div class="stat-pill">
-          <span class="stat-pill-icon">🌐</span>
-          <span class="stat-pill-label">На сайте</span>
-          <span class="stat-pill-dot">●</span>
-          <span id="siteOnlineCountText" class="stat-pill-value">0</span>
-        </div>
+        <button
+        id="siteOnlinePill"
+        class="stat-pill stat-pill-clickable"
+        type="button"
+        onclick="toggleSiteOnlinePanel()"
+        title="Нажми для информации"
+      >
+        <span class="stat-pill-icon">🌐</span>
+        <span class="stat-pill-label">На сайте</span>
+        <span class="stat-pill-dot">●</span>
+        <span id="siteOnlineCountText" class="stat-pill-value">0</span>
+      </button>
 
-        <div id="gameBalancePill" class="stat-pill stat-pill-balance">
+        <button
+          id="gameBalancePill"
+          class="stat-pill stat-pill-balance stat-pill-clickable"
+          type="button"
+          onclick="openBalanceQueueModal()"
+          title="Нажми для информации"
+        >
           <span class="stat-pill-icon">🛠</span>
           <span class="stat-pill-label">Игровой баланс</span>
           <span class="stat-pill-dot">●</span>
           <span id="widgetBalanceValue" class="stat-pill-value">$0</span>
           <span id="gameBalanceWarningText" class="stat-pill-timer hidden"></span>
-        </div>
+          <span id="gameBalanceNextReleaseText" class="stat-pill-timer hidden"></span>
+        </button>
 
         <div class="stat-pill stat-pill-output">
           <span class="stat-pill-icon">💰</span>
@@ -4797,16 +4815,6 @@
 
             <button class="account-icon-btn" type="button" onclick="openChangePasswordModal()" title="Сменить пароль">
               🔐
-            </button>
-
-            <button class="account-icon-btn" type="button" onclick="togglePsOnlinePanel()" title="Онлайн PS">
-              🚔
-              <span id="miniPsOnlineBadge" class="notify-badge hidden">0</span>
-            </button>
-
-            <button class="account-icon-btn" type="button" onclick="toggleSiteOnlinePanel()" title="Онлайн сайта">
-              🌐
-              <span id="miniSiteOnlineBadge" class="notify-badge hidden">0</span>
             </button>
 
             <button class="btn btn-dark" type="button" onclick="logoutWs()">🚪 Выйти</button>
@@ -5492,6 +5500,38 @@
     </div>
 
     <!-- MODALS -->
+
+    <div id="balanceQueueModalBg" class="modal-bg hidden">
+      <div class="modal" style="max-width:760px; max-height:90vh; overflow:auto;">
+        <div class="section-head" style="margin-bottom:14px;">
+          <div>
+            <h3 class="confirm-title" style="margin:0;">Игровой баланс</h3>
+            <div class="confirm-text" style="margin-top:8px;">
+              Здесь показаны суммы, которые сейчас находятся на игровом балансе и будут переведены к выводу через 3 дня.
+            </div>
+          </div>
+        </div>
+    
+        <div id="balanceQueueSummaryBox" class="contract-text-block" style="margin-bottom:14px;">
+          <div class="contract-text-title">Ближайший перевод</div>
+          <div class="contract-text-content">Загрузка...</div>
+        </div>
+    
+        <div class="contract-text-block">
+          <div class="contract-text-title">Ожидающие суммы</div>
+          <div id="balanceQueueList" class="contract-history-list">
+            <div class="muted">Загрузка...</div>
+          </div>
+        </div>
+    
+        <div class="modal-actions">
+          <button class="btn btn-dark" type="button" onclick="closeBalanceQueueModal()">Закрыть</button>
+        </div>
+      </div>
+    </div>
+
+
+    
     <div id="prizeViewModalBg" class="modal-bg hidden">
       <div class="modal prize-win-modal">
         <div class="prize-win-scene">
@@ -5679,6 +5719,97 @@
   let lastChestLoadAt = 0;
 
   let cachedRatingItems = [];
+
+  let balanceTransferPendingState = {
+    total_pending: 0,
+    nearest: null,
+    items: []
+  };
+
+  function openBalanceQueueModal() {
+    document.getElementById("balanceQueueModalBg")?.classList.remove("hidden");
+    loadBalanceTransferPending(true);
+  }
+  
+  function closeBalanceQueueModal() {
+    document.getElementById("balanceQueueModalBg")?.classList.add("hidden");
+  }
+  
+  function formatDayKey(dayKey) {
+    if (!dayKey || !/^\d{4}-\d{2}-\d{2}$/.test(dayKey)) return "—";
+    const [y, m, d] = dayKey.split("-");
+    return `${d}.${m}`;
+  }
+  
+  function renderBalanceTransferPending() {
+    const summaryBox = document.getElementById("balanceQueueSummaryBox");
+    const list = document.getElementById("balanceQueueList");
+    const nextReleaseText = document.getElementById("gameBalanceNextReleaseText");
+  
+    const items = safeArray(balanceTransferPendingState.items);
+    const nearest = balanceTransferPendingState.nearest;
+    const totalPending = safeNumber(balanceTransferPendingState.total_pending);
+  
+    if (summaryBox) {
+      const content = summaryBox.querySelector(".contract-text-content");
+      if (content) {
+        if (nearest) {
+          content.innerHTML = `Ближайший перевод: <b>${formatDateTime(nearest.available_at)}</b><br>За день: <b>${formatDayKey(nearest.day_key)}</b> · Сумма: <b>${formatMoney(nearest.amount)}</b><br>Всего ожидает: <b>${formatMoney(totalPending)}</b>`;
+        } else {
+          content.innerHTML = `Сейчас нет сумм, ожидающих перевода.`;
+        }
+      }
+    }
+  
+    if (nextReleaseText) {
+      if (nearest) {
+        nextReleaseText.textContent = `Ближ. вывод: ${formatDayKey(nearest.available_at?.slice?.(0,10) || "")} за ${formatDayKey(nearest.day_key)} | ${formatMoney(nearest.amount)}`;
+        nextReleaseText.classList.remove("hidden");
+      } else {
+        nextReleaseText.textContent = "";
+        nextReleaseText.classList.add("hidden");
+      }
+    }
+  
+    if (!list) return;
+  
+    if (!items.length) {
+      list.innerHTML = `<div class="muted">Нет сумм, ожидающих перевода.</div>`;
+      return;
+    }
+  
+    list.innerHTML = items.map(item => `
+      <div class="contract-history-item">
+        <div class="contract-history-type">За ${escapeHtml(formatDayKey(item.day_key))}</div>
+        <div class="contract-history-text">
+          Сумма: <b>${formatMoney(item.amount)}</b><br>
+          Перевод к выводу: <b>${escapeHtml(formatDateTime(item.available_at))}</b>
+        </div>
+        <div class="contract-history-date">
+          Начислено: ${escapeHtml(formatDateTime(item.earned_at))}
+        </div>
+      </div>
+    `).join("");
+  }
+  async function loadBalanceTransferPending(force = false) {
+    try {
+      const { res, data } = await wsGet("/api/ws/balance-transfer/pending");
+  
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return;
+  
+      balanceTransferPendingState = {
+        total_pending: safeNumber(data.total_pending),
+        nearest: data.nearest || null,
+        items: safeArray(data.items)
+      };
+  
+      renderBalanceTransferPending();
+    } catch (e) {
+      console.log("loadBalanceTransferPending error:", e.message);
+    }
+  }
+  
 
   // ═══════════════════════════════════════════════════════════
   // UTILS
@@ -7175,76 +7306,72 @@
     const safeUsers = safeArray(users);
     const list = document.getElementById("psOnlineList");
     const countText = document.getElementById("psOnlineCountText");
-
+  
     if (countText) countText.textContent = String(safeUsers.length);
     if (!list) return;
-
+  
     if (!safeUsers.length) {
       list.innerHTML = '<div class="muted">Нет игроков онлайн</div>';
-      updateMiniCounters();
       return;
     }
-
-    list.innerHTML = safeUsers.slice(0, 15).map(user => {
-      const displayName = user.nick || user.name || "Игрок";
-      const initials = getInitials(displayName);
-
+  
+    list.innerHTML = safeUsers.slice(0, 30).map(user => {
+      const gameNick = user.nick || "Игрок";
+      const serverName = user.server_name || "Police Script";
+      const initials = getInitials(gameNick);
+  
       return `
         <div class="site-online-user">
           <div class="site-online-avatar">${escapeHtml(initials)}</div>
+  
           <div>
-            <div class="online-user-name">${escapeHtml(displayName)}</div>
-            ${(user.server_name || user.server)
-              ? `<div class="online-user-meta">Сервер: ${escapeHtml(user.server_name || user.server)}</div>`
-              : ""
-            }
+            <div class="online-user-name">${escapeHtml(gameNick)}</div>
+            <div class="online-user-meta">${escapeHtml(serverName)}</div>
           </div>
-          <span class="profile-pill ok" style="padding:6px 8px;font-size:10px;">ONLINE</span>
+  
+          <span class="profile-pill ok" style="padding:6px 8px;font-size:10px;">PS</span>
         </div>
       `;
     }).join("");
-
-    updateMiniCounters();
   }
 
   function renderSiteOnlineList(users) {
     const safeUsers = safeArray(users);
     const list = document.getElementById("siteOnlineList");
     const countText = document.getElementById("siteOnlineCountText");
-
+  
     if (countText) countText.textContent = String(safeUsers.length);
     if (!list) return;
-
+  
     if (!safeUsers.length) {
       list.innerHTML = '<div class="muted">Нет пользователей онлайн</div>';
-      updateMiniCounters();
       return;
     }
-
-    list.innerHTML = safeUsers.slice(0, 15).map(user => {
-      const displayName = user.login || user.nickname || user.name || "Пользователь";
-      const sub = user.game_nick || user.nickname || "";
+  
+    list.innerHTML = safeUsers.slice(0, 30).map(user => {
+      const login = user.login || "Пользователь";
+      const gameNick = user.nickname || user.game_nick || "—";
       const avatarUrl = user.avatar_url || "";
-      const initials = getInitials(displayName);
-
+      const initials = getInitials(login);
+  
       return `
         <div class="site-online-user">
           <div class="site-online-avatar">
             ${avatarUrl
-              ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(displayName)}" />`
+              ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(login)}" />`
               : escapeHtml(initials)
             }
           </div>
+  
           <div>
-            <div class="online-user-name">${escapeHtml(displayName)}</div>
-            ${sub ? `<div class="online-user-meta">${escapeHtml(sub)}</div>` : ""}
+            <div class="online-user-name">${escapeHtml(login)}</div>
+            <div class="online-user-meta">Игровой ник: ${escapeHtml(gameNick)}</div>
           </div>
+  
           <span class="profile-pill ok" style="padding:6px 8px;font-size:10px;">SITE</span>
         </div>
       `;
     }).join("");
-
-    updateMiniCounters();
   }
 
   async function loadRightbarWidgets(force = false) {
@@ -9935,7 +10062,8 @@
         loadLinkCodesStatus(true),
         loadNotifySettings(true),
         sitePing(),
-        loadRightbarWidgets(true)
+        loadRightbarWidgets(true),
+        loadBalanceTransferPending(true)
       ]);
 
       if (pollInterval) clearInterval(pollInterval);
@@ -10067,6 +10195,10 @@
     if (e.target.id === "wsbuildInfoModalBg") closeWsbuildInfoModal();
   });
 
+  document.getElementById("balanceQueueModalBg")?.addEventListener("click", (e) => {
+    if (e.target.id === "balanceQueueModalBg") closeBalanceQueueModal();
+  });
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closePrizeViewModal();
@@ -10076,6 +10208,7 @@
       closeContractDetailsModal();
       closeChangePasswordModal();
       closeWsbuildInfoModal();
+      closeBalanceQueueModal();
     }
   });
 
