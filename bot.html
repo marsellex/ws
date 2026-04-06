@@ -7109,7 +7109,7 @@
     const qty = Math.max(1, parseInt(amount || 1, 10) || 1);
     const pkg = (wsbuildPackages || []).find(x => Number(x.amount || 0) === qty);
     if (pkg) return Number(pkg.price_rub || 0);
-    return qty * 19;
+    return qty * 3;
   }
 
   function updateWsbuildTotalPreview() {
