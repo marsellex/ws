@@ -4793,6 +4793,52 @@
       }
     }
 
+    .site-news-image {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 14px;
+      display: block;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    }
+    
+    .site-news-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    
+    .site-news-gallery-item {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+    }
+    
+    .site-news-gallery-item img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+    }
+    
+    .site-news-gallery-item:hover {
+      transform: translateY(-2px);
+      transition: .2s ease;
+      border-color: rgba(73,215,255,0.16);
+    }
+    
+    .site-news-content {
+      white-space: pre-wrap;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
     
     #psOnlinePill:hover::after,
     #siteOnlinePill:hover::after,
@@ -5723,10 +5769,16 @@
 
 
     <div id="siteNewsModalBg" class="modal-bg hidden">
-      <div class="modal" style="max-width:760px;">
+      <div class="modal" style="max-width:820px; max-height:90vh; overflow:auto;">
         <div id="siteNewsTypePill" class="market-status-pill pending" style="margin-bottom:12px;">ℹ️ Новость</div>
+    
         <h3 id="siteNewsTitle" class="confirm-title">Новость</h3>
-        <div id="siteNewsBody" class="confirm-text" style="white-space:pre-wrap; line-height:1.8;"></div>
+    
+        <img id="siteNewsMainImage" class="site-news-image hidden" alt="news image" />
+    
+        <div id="siteNewsBody" class="site-news-content"></div>
+    
+        <div id="siteNewsGallery" class="site-news-gallery hidden"></div>
     
         <div id="siteNewsButtonWrap" class="modal-actions" style="justify-content:flex-start; margin-top:18px;">
           <a id="siteNewsButton" class="btn btn-cyan hidden" href="#" target="_blank" rel="noopener noreferrer">Открыть</a>
@@ -5736,7 +5788,7 @@
           <button class="btn btn-dark" type="button" onclick="closeSiteNewsModal()">Закрыть</button>
         </div>
       </div>
-    </div>
+  </div>
     
 
     <div id="balanceQueueModalBg" class="modal-bg hidden">
@@ -5995,6 +6047,8 @@
     const title = document.getElementById("siteNewsTitle");
     const body = document.getElementById("siteNewsBody");
     const btn = document.getElementById("siteNewsButton");
+    const mainImage = document.getElementById("siteNewsMainImage");
+    const gallery = document.getElementById("siteNewsGallery");
   
     const visual = getNewsTypeVisual(item?.news_type);
   
@@ -6005,6 +6059,35 @@
   
     if (title) title.textContent = item?.title || "Новость";
     if (body) body.textContent = item?.body || "";
+  
+    const mainImageUrl = String(item?.main_image_url || "").trim();
+    if (mainImage) {
+      if (mainImageUrl) {
+        mainImage.src = mainImageUrl;
+        mainImage.classList.remove("hidden");
+      } else {
+        mainImage.removeAttribute("src");
+        mainImage.classList.add("hidden");
+      }
+    }
+  
+    const galleryImages = Array.isArray(item?.gallery_images)
+      ? item.gallery_images.map(x => String(x || "").trim()).filter(Boolean)
+      : [];
+  
+    if (gallery) {
+      if (galleryImages.length) {
+        gallery.innerHTML = galleryImages.map(url => `
+          <div class="site-news-gallery-item">
+            <img src="${escapeHtml(url)}" alt="news gallery image" />
+          </div>
+        `).join("");
+        gallery.classList.remove("hidden");
+      } else {
+        gallery.innerHTML = "";
+        gallery.classList.add("hidden");
+      }
+    }
   
     if (btn) {
       if (item?.button_text && item?.button_url) {
