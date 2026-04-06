@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>YooMoney Callback</title>
+</head>
+<body style="font-family: Arial; padding: 30px;">
+  <h2>Код авторизации YooMoney</h2>
+  <pre id="codeBox">Загрузка...</pre>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code") || "Код не найден";
+    document.getElementById("codeBox").textContent = code;
+  </script>
+</body>
+</html>
