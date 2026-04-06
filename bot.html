@@ -4604,6 +4604,196 @@
     .market-package-btn {
       width: 100%;
     }
+
+    .market-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .02em;
+      border: 1px solid rgba(255,255,255,0.08);
+      width: fit-content;
+    }
+    
+    .market-status-pill.pending {
+      background: rgba(251,191,36,0.10);
+      border-color: rgba(251,191,36,0.18);
+      color: #ffe08a;
+    }
+    
+    .market-status-pill.processing {
+      background: rgba(73,215,255,0.10);
+      border-color: rgba(73,215,255,0.18);
+      color: #97ecff;
+      box-shadow: 0 0 18px rgba(73,215,255,0.08);
+    }
+    
+    .market-status-pill.success {
+      background: rgba(72,229,123,0.10);
+      border-color: rgba(72,229,123,0.18);
+      color: #b8ffd1;
+      box-shadow: 0 0 18px rgba(72,229,123,0.08);
+    }
+    
+    .market-status-pill.danger {
+      background: rgba(255,107,107,0.10);
+      border-color: rgba(255,107,107,0.18);
+      color: #ffb0b0;
+    }
+    
+    .market-pay-box {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+        rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    
+    .market-pay-title {
+      font-size: 16px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    
+    .market-pay-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    
+    .market-payment-methods {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    
+    .market-payment-card {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      min-width: 0;
+    }
+    
+    .market-payment-card-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    
+    .market-payment-card-value {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+    
+    .market-payment-code-box {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(246,200,87,0.08);
+      border: 1px solid rgba(246,200,87,0.16);
+      text-align: center;
+    }
+    
+    .market-payment-code-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    
+    .market-payment-code-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff3cf;
+      letter-spacing: .10em;
+      line-height: 1.2;
+      word-break: break-all;
+    }
+    
+    .market-payment-notice {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(73,215,255,0.08);
+      border: 1px solid rgba(73,215,255,0.14);
+      color: #dff8ff;
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+    
+    .market-payment-warning {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,107,107,0.08);
+      border: 1px solid rgba(255,107,107,0.14);
+      color: #ffd0d0;
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+    
+    .market-history-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      width: fit-content;
+    }
+    
+    .market-history-status.pending {
+      background: rgba(251,191,36,0.10);
+      color: #ffe08a;
+    }
+    
+    .market-history-status.processing {
+      background: rgba(73,215,255,0.10);
+      color: #97ecff;
+    }
+    
+    .market-history-status.success {
+      background: rgba(72,229,123,0.10);
+      color: #b8ffd1;
+    }
+    
+    .market-history-status.danger {
+      background: rgba(255,107,107,0.10);
+      color: #ffb0b0;
+    }
+    
+    @media (max-width: 760px) {
+      .market-payment-methods {
+        grid-template-columns: 1fr;
+      }
+    
+      .market-payment-code-value {
+        font-size: 22px;
+      }
+    }
+
+    
     #psOnlinePill:hover::after,
     #siteOnlinePill:hover::after,
     #gameBalancePill:hover::after {
@@ -5272,43 +5462,38 @@
                         У тебя пока нет активной заявки. Создай её выше.
                       </div>
 
-                      <div id="paymentRequestBox" class="hidden">
-                        <div class="market-request-grid">
-                          <div class="market-request-item">
-                            <div class="profile-meta-label">Провайдер</div>
-                            <div class="profile-meta-value">ЮMoney / СБП</div>
+                      <div id="paymentRequestStatusPill" class="market-status-pill pending">⏳ Ожидает оплаты</div>
+                      <div class="market-pay-box">
+                        <div class="market-pay-title">Перейти к оплате</div>
+                        <div class="market-pay-subtitle">
+                          Переведи сумму <b><span id="requestAmountRubText2">—</span></b> и обязательно укажи код
+                          <span id="requestCodeInlineText" class="market-code-text">—</span>
+                          в комментарии к платежу.
+                        </div>
+                      
+                        <div class="market-payment-methods">
+                          <div class="market-payment-card">
+                            <div class="market-payment-card-title">СБП</div>
+                            <div id="paymentSbpText" class="market-payment-card-value">—</div>
                           </div>
-
-                          <div class="market-request-item">
-                            <div class="profile-meta-label">Сумма</div>
-                            <div id="requestAmountRubText" class="profile-meta-value">—</div>
-                          </div>
-
-                          <div class="market-request-item">
-                            <div class="profile-meta-label">Брюлики</div>
-                            <div id="requestWsbuildText" class="profile-meta-value">—</div>
-                          </div>
-
-                          <div class="market-request-item">
-                            <div class="profile-meta-label">Статус</div>
-                            <div id="requestStatusText" class="profile-meta-value">—</div>
+                      
+                          <div class="market-payment-card">
+                            <div class="market-payment-card-title">Номер карты</div>
+                            <div id="paymentCardText" class="market-payment-card-value">5599002134537267</div>
                           </div>
                         </div>
-
-                        <div class="market-pay-box">
-                          <div class="market-pay-title">Реквизиты для перевода</div>
-                          <div class="market-pay-line"><b>Получатель:</b> <span id="paymentReceiverText">—</span></div>
-                          <div class="market-pay-line"><b>Телефон / номер:</b> <span id="paymentPhoneText">—</span></div>
-                          <div class="market-pay-line"><b>Комментарий к переводу:</b> <span id="requestCodeText" class="market-code-text">—</span></div>
+                      
+                        <div class="market-payment-code-box">
+                          <div class="market-payment-code-label">Код для комментария к платежу</div>
+                          <div id="requestCodeText" class="market-payment-code-value">—</div>
                         </div>
-
-                        <div class="link-important warn" style="margin-top:12px;">
-                          ⚠️ Анализирую оплату только по точному коду. Обязательно укажи комментарий к переводу без ошибок.
+                      
+                        <div class="market-payment-notice">
+                          💡 После успешной оплаты Брюлики начислятся автоматически в течение <b>1–2 минут</b>.
                         </div>
-
-                        <div class="market-actions-row" style="margin-top:14px;">
-                          <button class="btn btn-green" type="button" onclick="markPaymentRequestPaid()">✅ Я оплатил</button>
-                          <button class="btn btn-dark" type="button" onclick="cancelPaymentRequest()">✖ Отменить заявку</button>
+                      
+                        <div class="market-payment-warning">
+                          ⚠️ Обязательно укажи код в комментарии к платежу, иначе система не сможет корректно зачислить Брюлики.
                         </div>
                       </div>
                     </div>
@@ -6145,6 +6330,51 @@
   // ═══════════════════════════════════════════════════════════
   // AUTH TOKEN
   // ═══════════════════════════════════════════════════════════
+
+  function getPaymentStatusVisual(status) {
+    const s = String(status || "").trim().toLowerCase();
+  
+    if (s === "pending_payment") {
+      return {
+        className: "pending",
+        text: "⏳ Ожидает оплаты"
+      };
+    }
+  
+    if (s === "waiting_check") {
+      return {
+        className: "processing",
+        text: "🔄 Обрабатывается..."
+      };
+    }
+  
+    if (s === "confirmed") {
+      return {
+        className: "success",
+        text: "✅ Успешно"
+      };
+    }
+  
+    if (s === "rejected") {
+      return {
+        className: "danger",
+        text: "❌ Отклонена"
+      };
+    }
+  
+    if (s === "cancelled") {
+      return {
+        className: "danger",
+        text: "✖ Отменена"
+      };
+    }
+  
+    return {
+      className: "pending",
+      text: "⏳ Неизвестный статус"
+    };
+  }
+  
   function wsSetToken(token) {
     localStorage.setItem("ws_token", token);
   }
@@ -6818,52 +7048,73 @@
   function renderActivePaymentRequest() {
     const emptyBox = document.getElementById("paymentRequestEmpty");
     const box = document.getElementById("paymentRequestBox");
-
+  
     const amountRubText = document.getElementById("requestAmountRubText");
+    const amountRubText2 = document.getElementById("requestAmountRubText2");
     const wsbuildText = document.getElementById("requestWsbuildText");
     const statusText = document.getElementById("requestStatusText");
+    const statusPill = document.getElementById("paymentRequestStatusPill");
     const codeText = document.getElementById("requestCodeText");
+    const codeInlineText = document.getElementById("requestCodeInlineText");
     const receiverText = document.getElementById("paymentReceiverText");
-    const phoneText = document.getElementById("paymentPhoneText");
-
+    const sbpText = document.getElementById("paymentSbpText");
+    const cardText = document.getElementById("paymentCardText");
+  
     if (!box || !emptyBox) return;
-
+  
     if (!activePaymentRequest) {
       emptyBox.classList.remove("hidden");
       box.classList.add("hidden");
       return;
     }
-
+  
     emptyBox.classList.add("hidden");
     box.classList.remove("hidden");
-
+  
+    const visual = getPaymentStatusVisual(activePaymentRequest.status);
+  
     if (amountRubText) amountRubText.textContent = `${activePaymentRequest.amount_rub || "—"}₽`;
+    if (amountRubText2) amountRubText2.textContent = `${activePaymentRequest.amount_rub || "—"}₽`;
     if (wsbuildText) wsbuildText.textContent = `${activePaymentRequest.wsbuild_amount || "—"} ⚙️`;
     if (statusText) statusText.textContent = activePaymentRequest.status_text || activePaymentRequest.status || "—";
+  
+    if (statusPill) {
+      statusPill.className = `market-status-pill ${visual.className}`;
+      statusPill.textContent = visual.text;
+    }
+  
     if (codeText) codeText.textContent = activePaymentRequest.payment_code || "—";
+    if (codeInlineText) codeInlineText.textContent = activePaymentRequest.payment_code || "—";
+  
     if (receiverText) receiverText.textContent = activePaymentRequest.receiver_name || "—";
-    if (phoneText) phoneText.textContent = activePaymentRequest.receiver_phone || "—";
+    if (sbpText) sbpText.textContent = activePaymentRequest.receiver_phone || "—";
+    if (cardText) cardText.textContent = activePaymentRequest.card_number || "5599002134537267";
   }
 
   function renderPaymentRequestsHistory() {
     const box = document.getElementById("paymentRequestsHistoryList");
     if (!box) return;
-
+  
     if (!Array.isArray(paymentRequestsHistory) || !paymentRequestsHistory.length) {
       box.innerHTML = '<div class="contract-empty">История заявок пока пуста.</div>';
       return;
     }
-
-    box.innerHTML = paymentRequestsHistory.map(item => `
-      <div class="activity-item">
-        <div class="activity-avatar">⚙️</div>
-        <div class="activity-content">
-          <div class="activity-login">${item.wsbuild_amount || 0} Брюликов · ${item.amount_rub || 0}₽</div>
-          <div class="activity-action">Статус: ${item.status_text || item.status || "—"}</div>
-          <div class="activity-action">Код: ${item.payment_code || "—"}</div>
+  
+    box.innerHTML = paymentRequestsHistory.map(item => {
+      const visual = getPaymentStatusVisual(item.status);
+  
+      return `
+        <div class="activity-item">
+          <div class="activity-avatar">⚙️</div>
+          <div class="activity-content">
+            <div class="activity-login">${item.wsbuild_amount || 0} Брюликов · ${item.amount_rub || 0}₽</div>
+            <div class="activity-action">Код: ${escapeHtml(item.payment_code || "—")}</div>
+            <div class="activity-action">${formatDateTime(item.created_at)}</div>
+            <div class="market-history-status ${visual.className}">${escapeHtml(visual.text)}</div>
+          </div>
         </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   async function createPaymentRequest() {
@@ -6878,13 +7129,25 @@
       if (res.status === 401) return logoutWs();
       if (!data.ok) return showToast(data.error || "Не удалось создать заявку", "error");
   
-      activePaymentRequest = data.item || null;
+      activePaymentRequest = data.item
+        ? {
+            ...data.item,
+            receiver_name: data.payment_details?.receiver_name || data.item.receiver_name || "",
+            receiver_phone: data.payment_details?.sbp_phone || data.item.receiver_phone || "",
+            card_number: data.payment_details?.card_number || "5599002134537267"
+          }
+        : null;
+  
       renderActivePaymentRequest();
       setCachedData("payment_active", { item: activePaymentRequest });
   
       await refreshAffectedData(["market", "profile", "dashboard"], true);
   
-      showToast(`Заявка создана на ${data.item?.amount_rub || 0}₽`, "success");
+      showToast(
+        `Заявка создана. Переведи ${data.payment_details?.amount_rub || data.item?.amount_rub || 0}₽ и укажи код ${data.payment_details?.payment_code || data.item?.payment_code || ""}`,
+        "success",
+        5500
+      );
     } catch (e) {
       showToast("Ошибка создания заявки: " + e.message, "error");
     }
@@ -6934,13 +7197,25 @@
       if (res.status === 401) return logoutWs();
       if (!data.ok) return showToast(data.error || "Не удалось отправить заявку на проверку", "error");
   
-      activePaymentRequest = data.item || null;
+      activePaymentRequest = data.item
+        ? {
+            ...data.item,
+            receiver_name: activePaymentRequest.receiver_name || "",
+            receiver_phone: activePaymentRequest.receiver_phone || "",
+            card_number: activePaymentRequest.card_number || "5599002134537267"
+          }
+        : activePaymentRequest;
+  
       renderActivePaymentRequest();
       setCachedData("payment_active", { item: activePaymentRequest });
   
       await refreshAffectedData(["market", "profile", "dashboard"], true);
   
-      showToast("Заявка отмечена как оплаченная. Ожидай проверки.", "success");
+      if (data.auto_confirmed) {
+        showToast("Платёж найден. Брюлики успешно начислены!", "success", 5000);
+      } else {
+        showToast("Платёж отправлен на автообработку. Обычно Брюлики приходят в течение 1–2 минут.", "info", 5000);
+      }
     } catch (e) {
       showToast("Ошибка подтверждения оплаты: " + e.message, "error");
     }
