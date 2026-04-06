@@ -5496,9 +5496,8 @@
                         <div class="market-pay-box">
                           <div class="market-pay-title">Перейти к оплате</div>
                           <div class="market-pay-subtitle">
-                            Переведи сумму <b><span id="requestAmountRubText2">—</span></b> и обязательно укажи код
-                            <span id="requestCodeInlineText" class="market-code-text">—</span>
-                            в комментарии к платежу.
+                            Переведи <b>точную сумму <span id="requestAmountRubText2">—</span></b>.
+                            Код <span id="requestCodeInlineText" class="market-code-text">—</span> сохраняется как резервный идентификатор заявки
                           </div>
 
                           <div class="market-payment-methods">
@@ -5519,11 +5518,11 @@
                           </div>
 
                           <div class="market-payment-notice">
-                            💡 После успешной оплаты Брюлики начислятся автоматически в течение <b>1–2 минут</b>.
+                            💡 После успешной оплаты и поступления перевода в YooMoney Брюлики начислятся автоматически в течение <b>1–2 минут</b>
                           </div>
 
                           <div class="market-payment-warning">
-                            ⚠️ Обязательно укажи код в комментарии к платежу, иначе система не сможет корректно зачислить Брюлики.
+                            ⚠️ Очень важно перевести точную сумму до копейки. Если сумма не совпадёт, система не сможет автоматически зачислить Брюлики
                           </div>
 
                           <div class="market-actions-row" style="margin-top:14px;">
@@ -7177,7 +7176,7 @@
       await refreshAffectedData(["market", "profile", "dashboard"], true);
   
       showToast(
-        `Заявка создана. Переведи ${data.payment_details?.amount_rub || data.item?.amount_rub || 0}₽ и укажи код ${data.payment_details?.payment_code || data.item?.payment_code || ""}`,
+        `Переведи точную сумму ${data.payment_details?.amount_rub || data.item?.amount_rub || 0}₽. После поступления платежа Брюлики начислятся автоматически.`,
         "success",
         5500
       );
