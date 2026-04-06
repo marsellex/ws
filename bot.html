@@ -5721,6 +5721,24 @@
 
     <!-- MODALS -->
 
+
+    <div id="siteNewsModalBg" class="modal-bg hidden">
+      <div class="modal" style="max-width:760px;">
+        <div id="siteNewsTypePill" class="market-status-pill pending" style="margin-bottom:12px;">ℹ️ Новость</div>
+        <h3 id="siteNewsTitle" class="confirm-title">Новость</h3>
+        <div id="siteNewsBody" class="confirm-text" style="white-space:pre-wrap; line-height:1.8;"></div>
+    
+        <div id="siteNewsButtonWrap" class="modal-actions" style="justify-content:flex-start; margin-top:18px;">
+          <a id="siteNewsButton" class="btn btn-cyan hidden" href="#" target="_blank" rel="noopener noreferrer">Открыть</a>
+        </div>
+    
+        <div class="modal-actions">
+          <button class="btn btn-dark" type="button" onclick="closeSiteNewsModal()">Закрыть</button>
+        </div>
+      </div>
+    </div>
+    
+
     <div id="balanceQueueModalBg" class="modal-bg hidden">
       <div class="modal" style="max-width:760px; max-height:90vh; overflow:auto;">
         <div class="section-head" style="margin-bottom:14px;">
@@ -5942,6 +5960,100 @@
     nearest: null,
     items: []
   };
+
+  let siteNewsState = null;
+  let siteNewsPollTimer = null;
+  
+  function getNewsTypeVisual(type) {
+    const t = String(type || "").trim().toLowerCase();
+  
+    if (t === "warning") {
+      return { className: "pending", text: "⚠️ Важно" };
+    }
+  
+    if (t === "critical") {
+      return { className: "danger", text: "🚨 Обязательно" };
+    }
+  
+    if (t === "update") {
+      return { className: "processing", text: "🆕 Обновление" };
+    }
+  
+    return { className: "success", text: "ℹ️ Новость" };
+  }
+  
+  function getSeenNewsVersionKey() {
+    return localStorage.getItem("ws_seen_news_version") || "";
+  }
+  
+  function setSeenNewsVersionKey(value) {
+    localStorage.setItem("ws_seen_news_version", String(value || ""));
+  }
+  
+  function renderSiteNewsModal(item) {
+    const pill = document.getElementById("siteNewsTypePill");
+    const title = document.getElementById("siteNewsTitle");
+    const body = document.getElementById("siteNewsBody");
+    const btn = document.getElementById("siteNewsButton");
+  
+    const visual = getNewsTypeVisual(item?.news_type);
+  
+    if (pill) {
+      pill.className = `market-status-pill ${visual.className}`;
+      pill.textContent = visual.text;
+    }
+  
+    if (title) title.textContent = item?.title || "Новость";
+    if (body) body.textContent = item?.body || "";
+  
+    if (btn) {
+      if (item?.button_text && item?.button_url) {
+        btn.textContent = item.button_text;
+        btn.href = item.button_url;
+        btn.classList.remove("hidden");
+      } else {
+        btn.classList.add("hidden");
+      }
+    }
+  }
+  
+  function openSiteNewsModal(item) {
+    if (!item) return;
+    siteNewsState = item;
+    renderSiteNewsModal(item);
+    document.getElementById("siteNewsModalBg")?.classList.remove("hidden");
+  }
+  
+  function closeSiteNewsModal() {
+    if (siteNewsState?.version_key) {
+      setSeenNewsVersionKey(siteNewsState.version_key);
+    }
+    document.getElementById("siteNewsModalBg")?.classList.add("hidden");
+  }
+  
+  async function loadLatestSiteNews(force = false) {
+    try {
+      const { data } = await wsGet("/api/ws/news/latest");
+      if (!data?.ok || !data.item) return;
+  
+      const item = data.item;
+      const seenVersion = getSeenNewsVersionKey();
+      const currentVersion = String(item.version_key || "");
+  
+      // обязательная новость
+      if (item.is_mandatory && currentVersion && currentVersion !== seenVersion) {
+        openSiteNewsModal(item);
+        return;
+      }
+  
+      // если force и новость есть, можно открыть вручную при необходимости
+      if (force && currentVersion && currentVersion !== seenVersion) {
+        openSiteNewsModal(item);
+      }
+    } catch (e) {
+      console.log("loadLatestSiteNews error:", e.message);
+    }
+  }
 
   function openBalanceQueueModal() {
     document.getElementById("balanceQueueModalBg")?.classList.remove("hidden");
@@ -6495,7 +6607,9 @@
     if (dashboardLightTimer) clearInterval(dashboardLightTimer);
     if (slowRefreshTimer) clearInterval(slowRefreshTimer);
     if (outputCooldownInterval) clearInterval(outputCooldownInterval);
-
+    if (siteNewsPollTimer) clearInterval(siteNewsPollTimer);
+    
+    siteNewsPollTimer = null;
     glitchTimer = null;
     pollInterval = null;
     sitePresenceInterval = null;
@@ -10370,6 +10484,7 @@
         loadNotifySettings(true),
         sitePing(),
         loadRightbarWidgets(true),
+        loadLatestSiteNews(true),
         loadBalanceTransferPending(true)
       ]);
 
@@ -10397,6 +10512,11 @@
       slowRefreshTimer = setInterval(async () => {
         if (currentMainTab === "contracts") await loadContractsAll(true);
       }, 60000);
+
+      if (siteNewsPollTimer) clearInterval(siteNewsPollTimer);
+      siteNewsPollTimer = setInterval(async () => {
+        await loadLatestSiteNews(false);
+      }, 5 * 60 * 1000);
 
     } finally {
       setGlobalSectionLoading(false);
@@ -10506,6 +10626,10 @@
     if (e.target.id === "balanceQueueModalBg") closeBalanceQueueModal();
   });
 
+  document.getElementById("siteNewsModalBg")?.addEventListener("click", (e) => {
+    if (e.target.id === "siteNewsModalBg") closeSiteNewsModal();
+  });
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closePrizeViewModal();
@@ -10516,6 +10640,7 @@
       closeChangePasswordModal();
       closeWsbuildInfoModal();
       closeBalanceQueueModal();
+      closeSiteNewsModal();
     }
   });
 
