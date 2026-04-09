@@ -1992,7 +1992,7 @@
     const API_BASE = "https://world-script-api.onrender.com/api";
 
     const memCache = new Map();
-    const CACHE_CFG = { day: 10000, week: 15000 };
+    const CACHE_CFG = { day: 30 * 60 * 1000, week: 30 * 60 * 1000 }; 
 
     function nowMs(){ return Date.now(); }
     function cacheKey(path){ return "cache:" + path; }
@@ -3120,7 +3120,7 @@
       autoRefreshTimer = setInterval(async () => {
         if (currentPeriod === "week") await loadWeeklyBlocks(true);
         else await loadLeaders(true);
-      }, 30000);
+      }, 1800000);
     }
 
     async function initPage() {
