@@ -5,803 +5,761 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WS — Профиль</title>
   <style>
-    :root {
-      --bg-1: #030816;
-      --bg-2: #071127;
-      --bg-3: #0c1835;
-      --panel: rgba(12, 19, 40, 0.88);
-      --panel-2: rgba(18, 28, 58, 0.92);
-      --line: rgba(120, 160, 255, 0.16);
-      --line-strong: rgba(120, 160, 255, 0.32);
-      --text: #f3f7ff;
-      --muted: #9aa8c7;
-      --blue: #4f8cff;
-      --blue-2: #6ea4ff;
-      --violet: #8b5cf6;
-      --cyan: #35d6ff;
-      --green: #22c55e;
-      --yellow: #f59e0b;
-      --red: #ef4444;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-      --radius: 18px;
-      --radius-sm: 12px;
-      --radius-xs: 8px;
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background:
+      radial-gradient(circle at top left, rgba(36, 79, 201, 0.22), transparent 28%),
+      radial-gradient(circle at top right, rgba(112, 0, 255, 0.16), transparent 26%),
+      linear-gradient(180deg, #02102b 0%, #020c22 52%, #010818 100%);
+    color: #f4f7ff;
+    font-family: Inter, Arial, sans-serif;
+  }
+
+  body {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .profile-page-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(64, 120, 255, 0.12), transparent 22%),
+      radial-gradient(circle at 85% 16%, rgba(124, 58, 237, 0.12), transparent 22%),
+      radial-gradient(circle at 50% 100%, rgba(0, 102, 255, 0.08), transparent 35%);
+    z-index: 0;
+  }
+
+  .profile-page-grid {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.06;
+    background-image:
+      linear-gradient(rgba(100, 140, 255, 0.22) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(100, 140, 255, 0.22) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.7), transparent 90%);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.7), transparent 90%);
+  }
+
+  .profile-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1520px;
+    margin: 0 auto;
+    padding: 12px 18px 28px;
+  }
+
+  .profile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .top-btn {
+    appearance: none;
+    border: 1px solid rgba(125, 160, 255, 0.22);
+    background:
+      linear-gradient(180deg, rgba(18, 31, 67, 0.92), rgba(10, 19, 46, 0.94));
+    color: #ffffff;
+    text-decoration: none;
+    padding: 14px 18px;
+    min-height: 48px;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      0 14px 30px rgba(0,0,0,0.18);
+    transition: 0.18s ease;
+    cursor: pointer;
+  }
+
+  .top-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(125, 160, 255, 0.34);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      0 18px 34px rgba(17, 74, 255, 0.12);
+  }
+
+  .reload-btn {
+    border-radius: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+    background:
+      linear-gradient(180deg, #3d7dff 0%, #2b5fdd 100%);
+  }
+
+  .error-box {
+    margin-bottom: 14px;
+    border: 1px solid rgba(255, 84, 84, 0.34);
+    background: linear-gradient(90deg, rgba(70, 10, 38, 0.92), rgba(50, 10, 28, 0.82));
+    color: #ffe3e3;
+    border-radius: 22px;
+    padding: 18px 20px;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 1.18fr 1fr;
+    gap: 16px;
+  }
+
+  .panel {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(120, 155, 255, 0.16);
+    background:
+      linear-gradient(135deg, rgba(17, 29, 63, 0.92), rgba(8, 16, 40, 0.96));
+    border-radius: 28px;
+    padding: 20px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.04),
+      0 18px 40px rgba(0,0,0,0.20);
+    min-height: 168px;
+  }
+
+  .panel-glow {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border-radius: 999px;
+    filter: blur(60px);
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  .panel-glow-left {
+    left: -100px;
+    top: -120px;
+    background: #2f69ff;
+  }
+
+  .panel-glow-right {
+    right: -120px;
+    top: -120px;
+    background: #7c3aed;
+  }
+
+  .hero-panel {
+    min-height: 390px;
+  }
+
+  .hero-headline-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.88);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .hero-mini-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid rgba(120,155,255,0.18);
+    background: rgba(0,0,0,0.12);
+    color: #dbe7ff;
+    font-size: 18px;
+    cursor: default;
+  }
+
+  .hero-main {
+    display: grid;
+    grid-template-columns: 98px 1fr;
+    gap: 18px;
+  }
+
+  .hero-avatar-wrap {
+    width: 98px;
+    height: 132px;
+    border-radius: 22px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0b1736, #071028);
+    border: 1px solid rgba(120,155,255,0.18);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .hero-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-meta {
+    min-width: 0;
+  }
+
+  .hero-name {
+    margin: 0;
+    font-size: clamp(34px, 4vw, 62px);
+    line-height: 0.95;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: #f5f8ff;
+  }
+
+  .hero-subname {
+    margin-top: 10px;
+    color: rgba(226, 235, 255, 0.7);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+  }
+
+  .hero-tag {
+    min-height: 36px;
+    padding: 0 16px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #eef4ff;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .hero-tag-main {
+    background: linear-gradient(180deg, rgba(46, 92, 212, 0.75), rgba(37, 63, 165, 0.75));
+    border-color: rgba(109, 155, 255, 0.26);
+  }
+
+  .hero-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    max-width: 540px;
+  }
+
+  .hero-stat-card {
+    min-height: 108px;
+    border-radius: 18px;
+    padding: 16px;
+    border: 1px solid rgba(120,155,255,0.14);
+    background:
+      linear-gradient(180deg, rgba(6, 16, 41, 0.82), rgba(4, 10, 27, 0.96));
+  }
+
+  .hero-stat-label {
+    color: rgba(214, 226, 255, 0.62);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .hero-stat-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: #f7fbff;
+  }
+
+  .progress-panel {
+    min-height: 390px;
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .panel-title {
+    margin: 0;
+    font-size: clamp(28px, 2vw, 34px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #f4f8ff;
+  }
+
+  .panel-side-text {
+    color: rgba(216, 227, 255, 0.56);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .progress-block {
+    margin-bottom: 18px;
+  }
+
+  .progress-caption-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .progress-caption {
+    font-size: 16px;
+    font-weight: 800;
+    color: #f3f7ff;
+  }
+
+  .progress-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: #dbe6ff;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 16px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.08);
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background:
+      linear-gradient(90deg, #4e7fff 0%, #6ca5ff 50%, #9ac2ff 100%);
+    box-shadow: 0 0 18px rgba(79, 141, 255, 0.34);
+  }
+
+  .progress-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .progress-subtext {
+    color: rgba(214, 226, 255, 0.62);
+    font-size: 14px;
+  }
+
+  .mini-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .small-card {
+    min-height: 122px;
+    border-radius: 18px;
+    border: 1px solid rgba(120,155,255,0.14);
+    background:
+      linear-gradient(180deg, rgba(13, 27, 61, 0.76), rgba(10, 20, 47, 0.92));
+    padding: 16px;
+  }
+
+  .small-label {
+    color: rgba(214, 226, 255, 0.62);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .small-value {
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+
+  .small-sub {
+    color: rgba(214, 226, 255, 0.62);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .wide-panel {
+    min-height: 180px;
+  }
+
+  .full-row-panel {
+    grid-column: 1 / -1;
+  }
+
+  .inventory-note {
+    margin-top: 2px;
+    margin-bottom: 14px;
+    color: rgba(214, 226, 255, 0.58);
+    font-size: 14px;
+  }
+
+  .mini-block {
+    margin-bottom: 12px;
+  }
+
+  .mini-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.92);
+    margin-bottom: 8px;
+  }
+
+  .feed-item {
+    padding: 12px 14px;
+    border: 1px solid rgba(120,160,255,0.16);
+    background: rgba(255,255,255,0.03);
+    margin-bottom: 10px;
+    border-radius: 12px;
+  }
+
+  .feed-action {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .feed-meta {
+    margin-top: 4px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.62);
+  }
+
+  .muted {
+    color: rgba(255,255,255,0.56);
+    font-size: 14px;
+  }
+
+  .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .inv-card {
+    border: 1px solid rgba(122, 162, 255, 0.16);
+    background: linear-gradient(180deg, rgba(18,28,60,0.88), rgba(8,14,35,0.88));
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .inv-image-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.03);
+    margin-bottom: 10px;
+  }
+
+  .inv-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .inv-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .inv-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.58);
+    margin-bottom: 8px;
+  }
+
+  .inv-count {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 10px;
+    border-radius: 10px;
+    background: rgba(80,120,255,0.16);
+    color: #dbe7ff;
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  @media (max-width: 1180px) {
+    .profile-layout {
+      grid-template-columns: 1fr;
     }
 
-    * {
-      box-sizing: border-box;
+    .mini-stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .profile-shell {
+      padding: 12px 12px 24px;
     }
 
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: Inter, system-ui, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(57, 112, 255, 0.18), transparent 30%),
-        radial-gradient(circle at top right, rgba(98, 0, 255, 0.16), transparent 28%),
-        linear-gradient(180deg, var(--bg-2), var(--bg-1) 35%, #020611 100%);
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0));
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .page {
-      width: min(1480px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 22px 0 40px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .topbar-left,
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      appearance: none;
-      border: 1px solid var(--line-strong);
-      background: linear-gradient(180deg, rgba(22, 33, 66, 0.95), rgba(14, 22, 45, 0.95));
-      color: var(--text);
-      padding: 12px 18px;
-      border-radius: 14px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 16px;
-      transition: 0.18s ease;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      border-color: rgba(123, 170, 255, 0.45);
-      box-shadow: 0 10px 30px rgba(50, 90, 180, 0.18);
-    }
-
-    .btn:active {
-      transform: scale(0.985);
-    }
-
-    .btn-primary {
-      background: linear-gradient(180deg, #3d7cff, #2a5fdb);
-      border-color: rgba(120, 170, 255, 0.45);
-    }
-
-    .btn-ghost {
-      background: rgba(12, 18, 39, 0.78);
-    }
-
-    .error-box {
-      display: none;
-      margin-bottom: 18px;
-      padding: 16px 18px;
-      border-radius: 18px;
-      border: 1px solid rgba(255, 80, 80, 0.28);
-      background: rgba(90, 15, 25, 0.35);
-      color: #ffd2d8;
-      font-size: 16px;
-      line-height: 1.45;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 18px;
-    }
-
-    .panel {
-      position: relative;
-      background: linear-gradient(180deg, rgba(14, 22, 48, 0.92), rgba(9, 15, 34, 0.92));
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(135deg, rgba(100,160,255,0.08), transparent 40%, transparent 60%, rgba(145,92,255,0.08));
-    }
-
-    .panel-inner {
-      position: relative;
-      z-index: 1;
-      padding: 22px;
-    }
-
-    .hero {
-      min-height: 260px;
-      display: flex;
+    .profile-topbar {
       flex-direction: column;
-      justify-content: flex-end;
-      background:
-        linear-gradient(180deg, rgba(4, 7, 18, 0.16), rgba(4, 7, 18, 0.86)),
-        var(--hero-bg, linear-gradient(135deg, rgba(34,89,208,0.22), rgba(98,0,255,0.16)));
-      background-size: cover;
-      background-position: center;
-    }
-
-    .hero-topline {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border: 1px solid rgba(133, 172, 255, 0.2);
-      background: rgba(8, 14, 30, 0.62);
-      border-radius: 999px;
-      font-size: 13px;
-      color: #dbe8ff;
-      backdrop-filter: blur(10px);
+      align-items: stretch;
     }
 
     .hero-main {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
+      grid-template-columns: 1fr;
     }
 
-    .profile-block {
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      min-width: 0;
+    .hero-avatar-wrap {
+      width: 92px;
+      height: 120px;
     }
 
-    .avatar-shell {
-      width: 106px;
-      height: 106px;
+    .hero-stats-grid {
+      grid-template-columns: 1fr;
+      max-width: none;
+    }
+
+    .mini-stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .panel {
       border-radius: 22px;
-      border: 1px solid rgba(138, 177, 255, 0.22);
-      background: linear-gradient(180deg, rgba(18, 28, 58, 0.95), rgba(8, 13, 28, 0.95));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
-      flex: 0 0 auto;
-    }
-
-    .avatar-shell img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .avatar-fallback {
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: #dce8ff;
-    }
-
-    .name-col {
-      min-width: 0;
-    }
-
-    .name-main {
-      font-size: clamp(34px, 4vw, 56px);
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      margin: 0 0 8px;
-    }
-
-    .name-sub {
-      color: var(--muted);
-      font-size: 18px;
-      margin-bottom: 12px;
-      word-break: break-word;
-    }
-
-    .tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .tag {
-      padding: 9px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .tag.role-admin {
-      background: rgba(168, 85, 247, 0.18);
-      border-color: rgba(168, 85, 247, 0.32);
-      color: #eed8ff;
-    }
-
-    .tag.role-user {
-      background: rgba(79, 140, 255, 0.18);
-      border-color: rgba(79, 140, 255, 0.3);
-      color: #d7e7ff;
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(150px, 1fr));
-      gap: 12px;
-      min-width: min(420px, 100%);
-    }
-
-    .hero-stat {
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(6, 10, 22, 0.5);
-      border: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(8px);
-    }
-
-    .hero-stat-label {
-      font-size: 12px;
-      color: #a9b9dc;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 6px;
-    }
-
-    .hero-stat-value {
-      font-size: 24px;
-      font-weight: 900;
-      line-height: 1.1;
-    }
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-size: 30px;
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-
-    .section-sub {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .mini-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .stat-card {
-      background: linear-gradient(180deg, rgba(20, 31, 61, 0.95), rgba(11, 18, 37, 0.95));
-      border: 1px solid var(--line);
-      border-radius: 18px;
       padding: 16px;
-      min-height: 106px;
     }
 
-    .stat-label {
-      font-size: 12px;
-      color: #98a8cb;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .stat-meta {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .progress-box {
-      display: grid;
-      gap: 12px;
-    }
-
-    .progress-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .progress-title {
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .progress-track {
-      height: 16px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0;
-      background:
-        linear-gradient(90deg, #4f8cff, #35d6ff 50%, #8b5cf6);
-      box-shadow: 0 0 22px rgba(79, 140, 255, 0.35);
-      transition: width 0.35s ease;
-    }
-
-    .progress-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .feed-item,
-    .row-card,
-    .inventory-item,
-    .notice-item {
-      background: linear-gradient(180deg, rgba(18, 28, 58, 0.9), rgba(10, 16, 34, 0.9));
-      border: 1px solid var(--line);
-      border-radius: 16px;
-    }
-
-    .feed-item,
-    .row-card,
-    .notice-item {
-      padding: 14px 16px;
-    }
-
-    .feed-action {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .feed-meta,
-    .row-meta,
-    .muted {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .row-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: start;
-      margin-bottom: 8px;
-    }
-
-    .row-title {
-      font-weight: 800;
-      font-size: 16px;
-      line-height: 1.35;
-    }
-
-    .row-badge {
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      white-space: nowrap;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .badge-green { background: rgba(34,197,94,0.16); color: #d7ffe5; }
-    .badge-red { background: rgba(239,68,68,0.16); color: #ffd8d8; }
-    .badge-blue { background: rgba(79,140,255,0.16); color: #dce8ff; }
-    .badge-yellow { background: rgba(245,158,11,0.16); color: #ffe7b7; }
-    .badge-violet { background: rgba(139,92,246,0.16); color: #eadcff; }
-
-    .inventory-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .inventory-item {
-      overflow: hidden;
-    }
-
-    .inventory-thumb {
-      height: 150px;
-      background:
-        linear-gradient(180deg, rgba(23, 35, 68, 0.95), rgba(10, 14, 28, 0.95));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .inventory-thumb img {
+    .top-btn {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+      justify-content: center;
+      text-align: center;
     }
-
-    .inventory-fallback {
-      font-size: 42px;
-      opacity: 0.9;
-    }
-
-    .inventory-body {
-      padding: 14px;
-    }
-
-    .inventory-title {
-      font-weight: 800;
-      margin-bottom: 6px;
-      line-height: 1.35;
-    }
-
-    .inventory-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-note {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .full {
-      margin-top: 18px;
-    }
-
-    .empty-box {
-      padding: 18px;
-      border-radius: 16px;
-      border: 1px dashed rgba(255,255,255,0.1);
-      color: var(--muted);
-      background: rgba(255,255,255,0.02);
-    }
-
-    .loading {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    @media (max-width: 1200px) {
-      .grid,
-      .two-col {
-        grid-template-columns: 1fr;
-      }
-
-      .mini-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .inventory-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
-      .page {
-        width: min(100% - 20px, 100%);
-        padding-top: 16px;
-      }
-
-      .topbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .topbar-left,
-      .topbar-right {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .hero-main {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .profile-block {
-        align-items: flex-start;
-      }
-
-      .mini-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .inventory-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .hero-stats {
-        grid-template-columns: 1fr;
-        min-width: 0;
-      }
-
-      .avatar-shell {
-        width: 88px;
-        height: 88px;
-      }
-
-      .name-main {
-        font-size: 34px;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .inventory-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <div class="page" id="pageRoot">
-    <div class="topbar">
-      <div class="topbar-left">
-        <a href="index.html" class="btn btn-ghost">← Назад на сайт</a>
-      </div>
+  <div class="profile-page-bg"></div>
+  <div class="profile-page-grid"></div>
 
-      <div class="topbar-right">
-        <button id="reloadBtn" class="btn btn-primary">Обновить</button>
-      </div>
+  <div class="profile-shell">
+    <div class="profile-topbar">
+      <a href="index.html" class="top-btn back-btn">← Назад на сайт</a>
+      <button id="reloadBtn" class="top-btn reload-btn" type="button">Обновить</button>
     </div>
 
-    <div id="errorBox" class="error-box"></div>
+    <div id="errorBox" class="error-box" style="display:none;"></div>
 
-    <div class="grid">
-      <div class="panel hero" id="heroPanel">
-        <div class="panel-inner">
-          <div class="hero-topline">
-            <div class="hero-badge" id="heroStatus">WS PROFILE // LOADING</div>
-            <div class="hero-badge" id="heroTime">—</div>
+    <div class="profile-layout">
+      <!-- ЛЕВАЯ ВЕРХНЯЯ КАРТОЧКА -->
+      <section class="panel hero-panel">
+        <div class="panel-glow panel-glow-left"></div>
+
+        <div class="hero-headline-row">
+          <div class="hero-badge">WS PROFILE // LOADING</div>
+          <button class="hero-mini-btn" type="button">—</button>
+        </div>
+
+        <div class="hero-main">
+          <div class="hero-avatar-wrap">
+            <img
+              id="userAvatar"
+              class="hero-avatar"
+              src=""
+              alt="avatar"
+            />
           </div>
 
-          <div class="hero-main">
-            <div class="profile-block">
-              <div class="avatar-shell" id="avatarShell">
-                <div class="avatar-fallback" id="avatarFallback">WS</div>
-                <img id="userAvatar" alt="avatar" style="display:none;" />
-              </div>
+          <div class="hero-meta">
+            <h1 id="userName" class="hero-name">Игрок</h1>
+            <div id="userSubname" class="hero-subname">@unknown</div>
 
-              <div class="name-col">
-                <div class="name-main" id="userName">Игрок</div>
-                <div class="name-sub" id="userSubname">@unknown</div>
-
-                <div class="tag-row">
-                  <div class="tag role-user" id="roleTag">ПОЛЬЗОВАТЕЛЬ</div>
-                  <div class="tag" id="vkTag">VK: не привязан</div>
-                  <div class="tag" id="bannerTag">Баннер: нет</div>
-                </div>
-              </div>
+            <div class="hero-tags">
+              <div id="userRole" class="hero-tag hero-tag-main">ПОЛЬЗОВАТЕЛЬ</div>
+              <div id="vkState" class="hero-tag">VK: не привязан</div>
+              <div id="bannerState" class="hero-tag">Баннер: нет</div>
             </div>
 
-            <div class="hero-stats">
-              <div class="hero-stat">
+            <div class="hero-stats-grid">
+              <div class="hero-stat-card">
                 <div class="hero-stat-label">Игровой баланс</div>
-                <div class="hero-stat-value" id="heroBalance">0</div>
+                <div id="gameBalance" class="hero-stat-value">0</div>
               </div>
 
-              <div class="hero-stat">
+              <div class="hero-stat-card">
                 <div class="hero-stat-label">К выводу</div>
-                <div class="hero-stat-value" id="heroOutput">0</div>
+                <div id="toOutput" class="hero-stat-value">0</div>
               </div>
 
-              <div class="hero-stat">
+              <div class="hero-stat-card">
                 <div class="hero-stat-label">WSBuild</div>
-                <div class="hero-stat-value" id="heroWsbuild">0</div>
+                <div id="wsbuildBalance" class="hero-stat-value">0</div>
               </div>
 
-              <div class="hero-stat">
+              <div class="hero-stat-card">
                 <div class="hero-stat-label">Инвентарь</div>
-                <div class="hero-stat-value" id="heroInventoryCount">0</div>
+                <div id="inventoryCount" class="hero-stat-value">0</div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="panel">
-        <div class="panel-inner">
-          <div class="section-title">
-            <h2>Прогресс аккаунта</h2>
-            <div class="section-sub" id="progressRankText">Ранг: INIT</div>
+      <!-- ПРАВАЯ ВЕРХНЯЯ КАРТОЧКА -->
+      <section class="panel progress-panel">
+        <div class="panel-glow panel-glow-right"></div>
+
+        <div class="panel-head">
+          <h2 class="panel-title">Прогресс аккаунта</h2>
+          <div id="rankLabel" class="panel-side-text">Ранг: INIT</div>
+        </div>
+
+        <div class="progress-block">
+          <div class="progress-caption-row">
+            <div class="progress-caption">Капитал аккаунта</div>
+            <div id="xpText" class="progress-value">0 / 1</div>
           </div>
 
-          <div class="progress-box">
-            <div class="progress-head">
-              <div class="progress-title" id="progressTitle">Капитал аккаунта</div>
-              <div class="section-sub" id="progressValueText">0 / 1</div>
-            </div>
-
-            <div class="progress-track">
-              <div class="progress-fill" id="progressFill"></div>
-            </div>
-
-            <div class="progress-meta">
-              <div id="progressCurrentText">Суммарный капитал: 0</div>
-              <div id="progressNextText">До следующего ранга: 0</div>
-            </div>
+          <div class="progress-track">
+            <div id="xpFill" class="progress-fill" style="width:0%;"></div>
           </div>
 
-          <div style="height:16px;"></div>
-
-          <div class="mini-grid">
-            <div class="stat-card">
-              <div class="stat-label">Ник в игре</div>
-              <div class="stat-value" id="gameNickCard">—</div>
-              <div class="stat-meta">Текущий привязанный ник</div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-label">Аккаунт</div>
-              <div class="stat-value" id="loginCard">—</div>
-              <div class="stat-meta">Логин сайта</div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-label">Уведомления</div>
-              <div class="stat-value" id="unreadCard">0</div>
-              <div class="stat-meta">Непрочитанные уведомления</div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-label">Активные контракты</div>
-              <div class="stat-value" id="contractsCard">0</div>
-              <div class="stat-meta">Сейчас в работе</div>
-            </div>
+          <div class="progress-bottom-row">
+            <div id="totalXp" class="progress-subtext">Суммарный капитал: 0</div>
+            <div id="nextRankText" class="progress-subtext">До следующего ранга: 0</div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="two-col">
-      <div class="panel">
-        <div class="panel-inner">
-          <div class="section-title">
-            <h2>Контракты</h2>
-            <div class="section-sub" id="contractsSummary">Загрузка...</div>
+        <div class="mini-stats-grid" id="statsGrid">
+          <div class="small-card">
+            <div class="small-label">Ник в игре</div>
+            <div id="statNick" class="small-value">—</div>
+            <div class="small-sub">Текущий привязанный ник</div>
           </div>
-          <div id="contractsList" class="list"></div>
-        </div>
-      </div>
 
-      <div class="panel">
-        <div class="panel-inner">
-          <div class="section-title">
-            <h2>Последняя активность</h2>
-            <div class="section-sub">Лента действий</div>
+          <div class="small-card">
+            <div class="small-label">Аккаунт</div>
+            <div id="statLogin" class="small-value">—</div>
+            <div class="small-sub">Логин сайта</div>
           </div>
-          <div id="activityList" class="list"></div>
-        </div>
-      </div>
-    </div>
 
-    <div class="two-col">
-      <div class="panel">
-        <div class="panel-inner">
-          <div class="section-title">
-            <h2>История сундука</h2>
-            <div class="section-sub" id="chestSummary">Загрузка...</div>
+          <div class="small-card">
+            <div class="small-label">Уведомления</div>
+            <div id="statNotifications" class="small-value">0</div>
+            <div class="small-sub">Непрочитанные уведомления</div>
           </div>
-          <div id="chestList" class="list"></div>
-        </div>
-      </div>
 
-      <div class="panel">
-        <div class="panel-inner">
-          <div class="section-title">
-            <h2>Переводы и WSBuild</h2>
-            <div class="section-sub">Отложенные начисления и автодонат</div>
+          <div class="small-card">
+            <div class="small-label">Активные контракты</div>
+            <div id="statContracts" class="small-value">0</div>
+            <div class="small-sub">Сейчас в работе</div>
           </div>
-          <div id="financeInfo" class="list"></div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <div class="panel full">
-      <div class="panel-inner">
-        <div class="section-title">
-          <h2>Инвентарь</h2>
-          <div class="section-sub" id="inventorySummary">Загрузка...</div>
+      <!-- КОНТРАКТЫ -->
+      <section class="panel wide-panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Контракты</h2>
+          <div class="panel-side-text">Загрузка...</div>
         </div>
-        <div id="inventoryGrid" class="inventory-grid"></div>
-        <div class="footer-note">Открывается отдельной страницей, назад можно вернуться кнопкой сверху.</div>
-      </div>
+        <div id="contractsList"></div>
+      </section>
+
+      <!-- АКТИВНОСТЬ -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Последняя активность</h2>
+          <div class="panel-side-text">Лента действий</div>
+        </div>
+        <div id="activityList"></div>
+      </section>
+
+      <!-- ИСТОРИЯ СУНДУКА -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">История сундука</h2>
+          <div class="panel-side-text">Загрузка...</div>
+        </div>
+        <div id="chestHistoryList"></div>
+      </section>
+
+      <!-- ПЕРЕВОДЫ И WSBUILD -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Переводы и WSBuild</h2>
+          <div class="panel-side-text">Отложенные начисления и автодонат</div>
+        </div>
+        <div id="transfersList"></div>
+      </section>
+
+      <!-- ИНВЕНТАРЬ -->
+      <section class="panel full-row-panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Инвентарь</h2>
+          <div class="panel-side-text">Загрузка...</div>
+        </div>
+
+        <div class="inventory-note">
+          Открывается отдельной страницей, назад можно вернуться кнопкой сверху.
+        </div>
+
+        <div id="inventoryList" class="inventory-grid"></div>
+      </section>
     </div>
   </div>
+</body>
+<script>
 
- <script>
   const API_BASE = "https://world-script-api.onrender.com";
-   
+  
   function getToken() {
     return localStorage.getItem("ws_token") || "";
+  }
+
+  function apiBase() {
+    const isLocal =
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1";
+
+    return isLocal
+      ? "http://localhost:3000"
+      : "https://world-script-api.onrender.com";
   }
 
   function formatNum(v) {
@@ -815,6 +773,13 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function safeDate(value) {
+    if (!value) return "—";
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return "—";
+    return d.toLocaleString("ru-RU");
   }
 
   function showError(text) {
@@ -831,83 +796,289 @@
     box.textContent = "";
   }
 
-  async function fetchJson(url, token) {
-    const fullUrl = url.startsWith("http") ? url : API_BASE + url;
-  
-    const resp = await fetch(fullUrl, {
-      headers: token
-        ? { Authorization: `Bearer ${token}` }
-        : {}
+  async function apiGet(path) {
+    const token = getToken();
+
+    if (!token) {
+      throw new Error("Нет ws_token. Сначала войди в аккаунт.");
+    }
+
+    const resp = await fetch(apiBase() + path, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
     });
-  
-    const raw = await resp.text();
-  
+
+    const text = await resp.text();
+
     let json = null;
     try {
-      json = JSON.parse(raw);
+      json = JSON.parse(text);
     } catch {
-      console.error("NOT JSON URL:", fullUrl);
-      console.error("NOT JSON RAW:", raw);
-      throw new Error(`Сервер вернул не JSON для ${fullUrl}`);
+      throw new Error(`Сервер вернул не JSON для ${path}`);
     }
-  
+
     if (!resp.ok || !json?.ok) {
-      throw new Error(json?.error || "Ошибка загрузки");
+      throw new Error(json?.error || `Ошибка запроса ${path}`);
     }
-  
+
     return json;
   }
-   
-  function renderInventory(items) {
-    const root = document.getElementById("achievementsList");
+
+  function renderMainProfile(profileJson, dashboardJson) {
+    const user = profileJson.user || {};
+    const binder = profileJson.binder || {};
+    const inventory = Array.isArray(profileJson.inventory) ? profileJson.inventory : [];
+
+    const unreadCount = Number(dashboardJson?.notifications_unread_count || 0);
+    const activeContracts = Array.isArray(dashboardJson?.contracts_in_progress)
+      ? dashboardJson.contracts_in_progress.length
+      : 0;
+
+    const rankValue = Number(binder.game_balance || 0) + Number(binder.to_output || 0);
+    const nextRank = 100000;
+    const progressPercent = Math.max(0, Math.min(100, Math.round((rankValue / nextRank) * 100)));
+
+    const avatar = document.getElementById("userAvatar");
+    if (avatar) {
+      avatar.src = user.avatar_url || "https://placehold.co/160x160?text=WS";
+      avatar.onerror = function () {
+        this.src = "https://placehold.co/160x160?text=WS";
+      };
+    }
+
+    const userName = document.getElementById("userName");
+    if (userName) {
+      userName.textContent = user.nickname || user.game_nick || user.login || "Игрок";
+    }
+
+    const userSubname = document.getElementById("userSubname");
+    if (userSubname) {
+      userSubname.textContent = "@" + (user.login || "unknown");
+    }
+
+    const roleEl = document.getElementById("userRole");
+    if (roleEl) {
+      roleEl.textContent = String(user.role || "user").toLowerCase() === "admin"
+        ? "АДМИНИСТРАТОР"
+        : "ПОЛЬЗОВАТЕЛЬ";
+    }
+
+    const vkState = document.getElementById("vkState");
+    if (vkState) {
+      vkState.textContent = user.vk_id ? `VK: ${user.vk_id}` : "VK: не привязан";
+    }
+
+    const bannerState = document.getElementById("bannerState");
+    if (bannerState) {
+      bannerState.textContent = user.profile_banner_url ? "Баннер: есть" : "Баннер: нет";
+    }
+
+    const gameBalance = document.getElementById("gameBalance");
+    if (gameBalance) gameBalance.textContent = formatNum(binder.game_balance);
+
+    const toOutput = document.getElementById("toOutput");
+    if (toOutput) toOutput.textContent = formatNum(binder.to_output);
+
+    const wsbuildBalance = document.getElementById("wsbuildBalance");
+    if (wsbuildBalance) wsbuildBalance.textContent = formatNum(binder.wsbuild_balance);
+
+    const inventoryCount = document.getElementById("inventoryCount");
+    if (inventoryCount) {
+      const totalItems = inventory.reduce((sum, item) => sum + Number(item.count || 0), 0);
+      inventoryCount.textContent = formatNum(totalItems);
+    }
+
+    const rankLabel = document.getElementById("rankLabel");
+    if (rankLabel) rankLabel.textContent = rankValue >= nextRank ? "Ранг: CORE" : "Ранг: INIT";
+
+    const progressFill = document.getElementById("xpFill");
+    if (progressFill) progressFill.style.width = progressPercent + "%";
+
+    const progressText = document.getElementById("xpText");
+    if (progressText) progressText.textContent = `${formatNum(rankValue)} / ${formatNum(nextRank)}`;
+
+    const totalXp = document.getElementById("totalXp");
+    if (totalXp) totalXp.textContent = `Суммарный капитал: ${formatNum(rankValue)}`;
+
+    const nextText = document.getElementById("nextRankText");
+    if (nextText) nextText.textContent = `До следующего ранга: ${formatNum(Math.max(0, nextRank - rankValue))}`;
+
+    const nickStat = document.getElementById("statNick");
+    if (nickStat) nickStat.textContent = user.game_nick || "—";
+
+    const loginStat = document.getElementById("statLogin");
+    if (loginStat) loginStat.textContent = user.login || "—";
+
+    const notifStat = document.getElementById("statNotifications");
+    if (notifStat) notifStat.textContent = formatNum(unreadCount);
+
+    const contractsStat = document.getElementById("statContracts");
+    if (contractsStat) contractsStat.textContent = formatNum(activeContracts);
+
+    renderInventory(profileJson.inventory || []);
+  }
+
+  function renderContracts(bundle) {
+    const root = document.getElementById("contractsList");
     if (!root) return;
 
-    if (!Array.isArray(items) || !items.length) {
-      root.innerHTML = '<div class="muted">Инвентарь пока пуст</div>';
+    const inProgress = Array.isArray(bundle?.in_progress) ? bundle.in_progress : [];
+    const completed = Array.isArray(bundle?.completed) ? bundle.completed : [];
+    const available = Array.isArray(bundle?.available) ? bundle.available : [];
+
+    const parts = [];
+
+    if (inProgress.length) {
+      parts.push(`
+        <div class="mini-block">
+          <div class="mini-title">В работе</div>
+          ${inProgress.slice(0, 4).map(item => `
+            <div class="feed-item">
+              <div class="feed-action">${escapeHtml(item.title || "Контракт")}</div>
+              <div class="feed-meta">Сложность: ${formatNum(item.difficulty || 1)}</div>
+            </div>
+          `).join("")}
+        </div>
+      `);
+    }
+
+    if (available.length) {
+      parts.push(`
+        <div class="mini-block">
+          <div class="mini-title">Доступно</div>
+          ${available.slice(0, 4).map(item => `
+            <div class="feed-item">
+              <div class="feed-action">${escapeHtml(item.title || "Контракт")}</div>
+              <div class="feed-meta">Награда: ${formatNum(item.reward_balance || 0)}</div>
+            </div>
+          `).join("")}
+        </div>
+      `);
+    }
+
+    if (completed.length) {
+      parts.push(`
+        <div class="mini-block">
+          <div class="mini-title">Завершено</div>
+          <div class="muted">Всего завершено: ${formatNum(completed.length)}</div>
+        </div>
+      `);
+    }
+
+    if (!parts.length) {
+      root.innerHTML = `<div class="muted">Контрактов пока нет</div>`;
       return;
     }
 
-    root.innerHTML = items.map(item => `
-      <div class="ach-card">
-        <div class="ach-top">
-          <div class="ach-icon">${escapeHtml(item.emoji || "📦")}</div>
-          <div style="flex:1">
-            <div class="ach-name">${escapeHtml(item.title || "Предмет")}</div>
-            <div class="ach-desc">${escapeHtml(item.rarity || "Обычный")}</div>
-          </div>
-          <div class="ach-state">
-            x${formatNum(item.count || 1)}
-          </div>
+    root.innerHTML = parts.join("");
+  }
+
+  function renderChestHistory(items) {
+    const root = document.getElementById("chestHistoryList");
+    if (!root) return;
+
+    if (!Array.isArray(items) || !items.length) {
+      root.innerHTML = `<div class="muted">История сундука пока пустая</div>`;
+      return;
+    }
+
+    root.innerHTML = items.slice(0, 6).map(item => `
+      <div class="feed-item">
+        <div class="feed-action">${escapeHtml(item.reward_title || "Награда")}</div>
+        <div class="feed-meta">
+          День ${formatNum(item.day_number || 0)} • ${safeDate(item.created_at)}
         </div>
       </div>
     `).join("");
   }
 
-  function renderActivityEmpty() {
+  function renderActivity(items) {
     const root = document.getElementById("activityList");
     if (!root) return;
-    root.innerHTML = '<div class="muted">Активность пока не подключена в API</div>';
+
+    if (!Array.isArray(items) || !items.length) {
+      root.innerHTML = `<div class="muted">Активности пока нет</div>`;
+      return;
+    }
+
+    root.innerHTML = items.slice(0, 8).map(item => `
+      <div class="feed-item">
+        <div class="feed-action">${escapeHtml(item.action_text || "Действие")}</div>
+        <div class="feed-meta">${safeDate(item.created_at)}</div>
+      </div>
+    `).join("");
   }
 
-  function renderStatsFromBinder(user, binder) {
-    const grid = document.getElementById("statsGrid");
-    if (!grid) return;
+  function renderTransfers(pendingJson, autotopupJson) {
+    const root = document.getElementById("transfersList");
+    if (!root) return;
 
-    const items = [
-      ["Логин", user.login || "—"],
-      ["Ник на сайте", user.nickname || "—"],
-      ["Игровой ник", user.game_nick || "—"],
-      ["VK ID", binder.vk_id || "—"],
-      ["Баланс", formatNum(binder.game_balance || 0)],
-      ["К выводу", formatNum(binder.to_output || 0)],
-      ["WSBuild", formatNum(binder.wsbuild_balance || 0)],
-      ["Номер счёта", binder.account_number || "—"]
-    ];
+    const pendingItems = Array.isArray(pendingJson?.items) ? pendingJson.items : [];
+    const autoItems = Array.isArray(autotopupJson?.items) ? autotopupJson.items : [];
 
-    grid.innerHTML = items.map(([label, value]) => `
-      <div class="small-card">
-        <div class="small-label">${escapeHtml(label)}</div>
-        <div class="small-value">${escapeHtml(value)}</div>
+    let html = "";
+
+    html += `
+      <div class="mini-block">
+        <div class="mini-title">Ожидает перевода</div>
+        <div class="muted">Сумма: ${formatNum(pendingJson?.total_pending || 0)}</div>
+      </div>
+    `;
+
+    if (pendingItems.length) {
+      html += pendingItems.slice(0, 3).map(item => `
+        <div class="feed-item">
+          <div class="feed-action">${escapeHtml(item.source_text || "Отложенное начисление")}</div>
+          <div class="feed-meta">
+            ${formatNum(item.amount || 0)} • доступно ${safeDate(item.available_at)}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    if (autoItems.length) {
+      html += `
+        <div class="mini-block" style="margin-top:14px">
+          <div class="mini-title">Автодонат WSBuild</div>
+          ${autoItems.slice(0, 3).map(item => `
+            <div class="feed-item">
+              <div class="feed-action">Пакет ${formatNum(item.package_amount || 0)} WSBuild</div>
+              <div class="feed-meta">
+                +${formatNum(item.topup_amount || 0)} • следующее: ${safeDate(item.next_topup_at)}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    root.innerHTML = html;
+  }
+
+  function renderInventory(items) {
+    const root = document.getElementById("inventoryList");
+    if (!root) return;
+
+    if (!Array.isArray(items) || !items.length) {
+      root.innerHTML = `<div class="muted">Инвентарь пуст</div>`;
+      return;
+    }
+
+    root.innerHTML = items.slice(0, 12).map(item => `
+      <div class="inv-card">
+        <div class="inv-image-wrap">
+          <img
+            src="${escapeHtml(item.image_url || "https://placehold.co/100x100?text=ITEM")}"
+            alt="${escapeHtml(item.title || "item")}"
+            class="inv-image"
+            onerror="this.src='https://placehold.co/100x100?text=ITEM'"
+          />
+        </div>
+        <div class="inv-name">${escapeHtml(item.title || "Предмет")}</div>
+        <div class="inv-meta">${escapeHtml(item.rarity || "Обычный")}</div>
+        <div class="inv-count">x${formatNum(item.count || 0)}</div>
       </div>
     `).join("");
   }
@@ -916,60 +1087,27 @@
     try {
       clearError();
 
-      const token = getToken();
-      if (!token) {
-        showError("Нет ws_token. Сначала войди в аккаунт.");
-        return;
-      }
+      const [
+        profileJson,
+        dashboardJson,
+        contractsJson,
+        chestJson,
+        pendingJson,
+        autotopupJson
+      ] = await Promise.all([
+        apiGet("/api/ws/profile-full"),
+        apiGet("/api/ws/dashboard-bundle"),
+        apiGet("/api/ws/contracts/bundle"),
+        apiGet("/api/ws/chest/history"),
+        apiGet("/api/ws/balance-transfer/pending"),
+        apiGet("/api/ws/wsbuild/autotopup/my")
+      ]);
 
-      const json = await fetchJson("/api/ws/profile-full", token);
-
-      const user = json.user || {};
-      const binder = json.binder || {};
-      const inventory = Array.isArray(json.inventory) ? json.inventory : [];
-
-      const avatar = document.getElementById("userAvatar");
-      if (avatar) {
-        avatar.src = user.avatar_url || "https://placehold.co/96x96?text=WS";
-      }
-
-      const nameEl = document.getElementById("userName");
-      if (nameEl) {
-        nameEl.textContent = user.nickname || user.game_nick || user.login || "Игрок";
-      }
-
-      const subEl = document.getElementById("userSubname");
-      if (subEl) {
-        subEl.textContent = `@${user.login || "unknown"}`;
-      }
-
-      const levelEl = document.getElementById("userLevel");
-      if (levelEl) {
-        levelEl.textContent = String(user.role || "user").toLowerCase() === "admin"
-          ? "Администратор"
-          : "Пользователь";
-      }
-
-      const xpText = document.getElementById("xpText");
-      if (xpText) {
-        xpText.textContent = `${formatNum(binder.game_balance || 0)} / ${formatNum((Number(binder.game_balance || 0) + Number(binder.to_output || 0)) || 1)}`;
-      }
-
-      const xpFill = document.getElementById("xpFill");
-      if (xpFill) {
-        const total = Number(binder.game_balance || 0) + Number(binder.to_output || 0);
-        const pct = total > 0 ? Math.max(8, Math.min(100, Math.round((Number(binder.game_balance || 0) / total) * 100))) : 0;
-        xpFill.style.width = pct + "%";
-      }
-
-      const totalXp = document.getElementById("totalXp");
-      if (totalXp) {
-        totalXp.textContent = `Всего средств: ${formatNum(Number(binder.game_balance || 0) + Number(binder.to_output || 0))}`;
-      }
-
-      renderStatsFromBinder(user, binder);
-      renderInventory(inventory);
-      renderActivityEmpty();
+      renderMainProfile(profileJson, dashboardJson);
+      renderContracts(contractsJson);
+      renderChestHistory(chestJson.items || []);
+      renderActivity(dashboardJson.activity_feed || []);
+      renderTransfers(pendingJson, autotopupJson);
     } catch (err) {
       showError(String(err.message || err));
     }
