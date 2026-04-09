@@ -797,449 +797,181 @@
     </div>
   </div>
 
-  <script>
-    function getToken() {
-      return localStorage.getItem("ws_token") || "";
+ <script>
+  function getToken() {
+    return localStorage.getItem("ws_token") || "";
+  }
+
+  function formatNum(v) {
+    return new Intl.NumberFormat("ru-RU").format(Number(v || 0));
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function showError(text) {
+    const box = document.getElementById("errorBox");
+    if (!box) return;
+    box.style.display = "block";
+    box.textContent = text;
+  }
+
+  function clearError() {
+    const box = document.getElementById("errorBox");
+    if (!box) return;
+    box.style.display = "none";
+    box.textContent = "";
+  }
+
+  async function fetchJson(url, token) {
+    const resp = await fetch(url, {
+      headers: token
+        ? { Authorization: `Bearer ${token}` }
+        : {}
+    });
+
+    const raw = await resp.text();
+
+    let json = null;
+    try {
+      json = JSON.parse(raw);
+    } catch {
+      console.error("NOT JSON:", raw);
+      throw new Error(`Сервер вернул не JSON для ${url}`);
     }
 
-    function formatNum(v) {
-      return new Intl.NumberFormat("ru-RU").format(Number(v || 0));
+    if (!resp.ok || !json?.ok) {
+      throw new Error(json?.error || "Ошибка загрузки");
     }
 
-    function escapeHtml(value) {
-      return String(value || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    return json;
+  }
+
+  function renderInventory(items) {
+    const root = document.getElementById("achievementsList");
+    if (!root) return;
+
+    if (!Array.isArray(items) || !items.length) {
+      root.innerHTML = '<div class="muted">Инвентарь пока пуст</div>';
+      return;
     }
 
-    function formatDateTime(value) {
-      if (!value) return "—";
-      const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return "—";
-      return d.toLocaleString("ru-RU");
-    }
+    root.innerHTML = items.map(item => `
+      <div class="ach-card">
+        <div class="ach-top">
+          <div class="ach-icon">${escapeHtml(item.emoji || "📦")}</div>
+          <div style="flex:1">
+            <div class="ach-name">${escapeHtml(item.title || "Предмет")}</div>
+            <div class="ach-desc">${escapeHtml(item.rarity || "Обычный")}</div>
+          </div>
+          <div class="ach-state">
+            x${formatNum(item.count || 1)}
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
 
-    function formatShortDate(value) {
-      if (!value) return "—";
-      const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return "—";
-      return d.toLocaleDateString("ru-RU") + " " + d.toLocaleTimeString("ru-RU", {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
+  function renderActivityEmpty() {
+    const root = document.getElementById("activityList");
+    if (!root) return;
+    root.innerHTML = '<div class="muted">Активность пока не подключена в API</div>';
+  }
 
-    function statusBadgeClass(status) {
-      const s = String(status || "").toLowerCase();
-      if (s === "completed") return "badge-green";
-      if (s === "cancelled" || s === "expired") return "badge-red";
-      if (s === "in_progress") return "badge-yellow";
-      return "badge-blue";
-    }
+  function renderStatsFromBinder(user, binder) {
+    const grid = document.getElementById("statsGrid");
+    if (!grid) return;
 
-    function translateContractStatus(status) {
-      const s = String(status || "").toLowerCase();
-      if (s === "available") return "Доступен";
-      if (s === "in_progress") return "В работе";
-      if (s === "completed") return "Завершён";
-      if (s === "expired") return "Истёк";
-      if (s === "cancelled") return "Отменён";
-      return status || "—";
-    }
+    const items = [
+      ["Логин", user.login || "—"],
+      ["Ник на сайте", user.nickname || "—"],
+      ["Игровой ник", user.game_nick || "—"],
+      ["VK ID", binder.vk_id || "—"],
+      ["Баланс", formatNum(binder.game_balance || 0)],
+      ["К выводу", formatNum(binder.to_output || 0)],
+      ["WSBuild", formatNum(binder.wsbuild_balance || 0)],
+      ["Номер счёта", binder.account_number || "—"]
+    ];
 
-    function calcRank(total) {
-      const value = Math.max(0, Number(total || 0));
-      const steps = [
-        { name: "RANK-01", need: 0 },
-        { name: "RANK-02", need: 10000 },
-        { name: "RANK-03", need: 50000 },
-        { name: "RANK-04", need: 100000 },
-        { name: "RANK-05", need: 250000 },
-        { name: "RANK-06", need: 500000 },
-        { name: "RANK-07", need: 1000000 },
-        { name: "RANK-08", need: 2500000 }
-      ];
+    grid.innerHTML = items.map(([label, value]) => `
+      <div class="small-card">
+        <div class="small-label">${escapeHtml(label)}</div>
+        <div class="small-value">${escapeHtml(value)}</div>
+      </div>
+    `).join("");
+  }
 
-      let current = steps[0];
-      let next = null;
+  async function loadProfile() {
+    try {
+      clearError();
 
-      for (let i = 0; i < steps.length; i++) {
-        if (value >= steps[i].need) {
-          current = steps[i];
-          next = steps[i + 1] || null;
-        }
-      }
-
-      const currentNeed = current.need;
-      const nextNeed = next ? next.need : current.need;
-      const currentProgress = next ? value - currentNeed : 1;
-      const maxProgress = next ? Math.max(1, nextNeed - currentNeed) : 1;
-      const percent = next ? Math.max(0, Math.min(100, Math.round((currentProgress / maxProgress) * 100))) : 100;
-
-      return {
-        currentName: current.name,
-        nextName: next ? next.name : "MAX",
-        currentNeed,
-        nextNeed,
-        currentProgress,
-        maxProgress,
-        percent,
-        left: next ? Math.max(0, nextNeed - value) : 0
-      };
-    }
-
-    async function fetchJson(url, token) {
-      const resp = await fetch(url, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
-      });
-
-      const raw = await resp.text();
-
-      let json = null;
-      try {
-        json = JSON.parse(raw);
-      } catch {
-        throw new Error(`Сервер вернул не JSON для ${url}`);
-      }
-
-      if (!resp.ok || !json?.ok) {
-        throw new Error(json?.error || `Ошибка загрузки ${url}`);
-      }
-
-      return json;
-    }
-
-    function showError(text) {
-      const box = document.getElementById("errorBox");
-      box.style.display = "block";
-      box.textContent = text;
-    }
-
-    function clearError() {
-      const box = document.getElementById("errorBox");
-      box.style.display = "none";
-      box.textContent = "";
-    }
-
-    function setLoading(state) {
-      document.getElementById("pageRoot").classList.toggle("loading", !!state);
-    }
-
-    function setAvatar(url, login) {
-      const img = document.getElementById("userAvatar");
-      const fallback = document.getElementById("avatarFallback");
-
-      if (url) {
-        img.src = url;
-        img.style.display = "block";
-        fallback.style.display = "none";
-        img.onerror = () => {
-          img.style.display = "none";
-          fallback.style.display = "flex";
-          fallback.textContent = String(login || "WS").slice(0, 2).toUpperCase();
-        };
-      } else {
-        img.style.display = "none";
-        fallback.style.display = "flex";
-        fallback.textContent = String(login || "WS").slice(0, 2).toUpperCase();
-      }
-    }
-
-    function renderHeader(profileJson, unreadCount, contractsMy) {
-      const user = profileJson.user || {};
-      const binder = profileJson.binder || {};
-      const inventory = Array.isArray(profileJson.inventory) ? profileJson.inventory : [];
-
-      const login = user.login || "unknown";
-      const nickname = user.nickname || user.game_nick || user.login || "Игрок";
-      const role = String(user.role || "user").toLowerCase();
-      const totalCapital = Number(binder.game_balance || 0) + Number(binder.to_output || 0);
-      const rank = calcRank(totalCapital);
-
-      setAvatar(user.avatar_url || "", login);
-
-      const heroPanel = document.getElementById("heroPanel");
-      if (user.profile_banner_url) {
-        heroPanel.style.setProperty(
-          "--hero-bg",
-          `linear-gradient(180deg, rgba(4,7,18,0.18), rgba(4,7,18,0.86)), url("${user.profile_banner_url}") center/cover no-repeat`
-        );
-      }
-
-      document.getElementById("heroStatus").textContent = `WS PROFILE // ${role === "admin" ? "ADMIN" : "USER"}`;
-      document.getElementById("heroTime").textContent = new Date().toLocaleString("ru-RU");
-
-      document.getElementById("userName").textContent = nickname;
-      document.getElementById("userSubname").textContent =
-        `@${login}${user.game_nick ? " • " + user.game_nick : ""}`;
-
-      const roleTag = document.getElementById("roleTag");
-      roleTag.textContent = role === "admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
-      roleTag.className = `tag ${role === "admin" ? "role-admin" : "role-user"}`;
-
-      document.getElementById("vkTag").textContent =
-        user.vk_id ? `VK: ${formatNum(user.vk_id)}` : "VK: не привязан";
-
-      document.getElementById("bannerTag").textContent =
-        user.profile_banner_url ? "Баннер: установлен" : "Баннер: нет";
-
-      document.getElementById("heroBalance").textContent = formatNum(binder.game_balance || 0);
-      document.getElementById("heroOutput").textContent = formatNum(binder.to_output || 0);
-      document.getElementById("heroWsbuild").textContent = formatNum(binder.wsbuild_balance || 0);
-      document.getElementById("heroInventoryCount").textContent = formatNum(inventory.length);
-
-      document.getElementById("progressRankText").textContent =
-        `Ранг: ${rank.currentName}${rank.nextName !== "MAX" ? " → " + rank.nextName : " • MAX"}`;
-
-      document.getElementById("progressTitle").textContent = "Прогресс по суммарному капиталу";
-      document.getElementById("progressValueText").textContent =
-        `${formatNum(rank.currentProgress)} / ${formatNum(rank.maxProgress)}`;
-      document.getElementById("progressFill").style.width = `${rank.percent}%`;
-      document.getElementById("progressCurrentText").textContent =
-        `Суммарный капитал: ${formatNum(totalCapital)}`;
-      document.getElementById("progressNextText").textContent =
-        rank.nextName === "MAX"
-          ? "Достигнут максимальный ранг"
-          : `До следующего ранга: ${formatNum(rank.left)}`;
-
-      document.getElementById("gameNickCard").textContent = user.game_nick || "—";
-      document.getElementById("loginCard").textContent = login;
-      document.getElementById("unreadCard").textContent = formatNum(unreadCount || 0);
-
-      const inProgress = Array.isArray(contractsMy?.in_progress) ? contractsMy.in_progress.length : 0;
-      document.getElementById("contractsCard").textContent = formatNum(inProgress);
-    }
-
-    function renderContracts(contractsMy) {
-      const root = document.getElementById("contractsList");
-      const summary = document.getElementById("contractsSummary");
-
-      const inProgress = Array.isArray(contractsMy?.in_progress) ? contractsMy.in_progress : [];
-      const completed = Array.isArray(contractsMy?.completed) ? contractsMy.completed : [];
-      const expired = Array.isArray(contractsMy?.expired) ? contractsMy.expired : [];
-      const cancelled = Array.isArray(contractsMy?.cancelled) ? contractsMy.cancelled : [];
-
-      const all = [...inProgress, ...completed.slice(0, 2), ...expired.slice(0, 1), ...cancelled.slice(0, 1)];
-
-      summary.textContent =
-        `В работе: ${inProgress.length} • Завершено: ${completed.length} • Истекло/отменено: ${expired.length + cancelled.length}`;
-
-      if (!all.length) {
-        root.innerHTML = `<div class="empty-box">Контрактов пока нет.</div>`;
+      const token = getToken();
+      if (!token) {
+        showError("Нет ws_token. Сначала войди в аккаунт.");
         return;
       }
 
-      root.innerHTML = all.map(item => `
-        <div class="row-card">
-          <div class="row-top">
-            <div class="row-title">${escapeHtml(item.title || "Контракт")}</div>
-            <div class="row-badge ${statusBadgeClass(item.status)}">${escapeHtml(translateContractStatus(item.status))}</div>
-          </div>
+      const json = await fetchJson("/api/ws/profile-full", token);
 
-          <div class="row-meta">
-            Сложность: ${formatNum(item.difficulty || 0)} • Баланс: ${formatNum(item.reward_balance || 0)} • К выводу: ${formatNum(item.reward_output || 0)}
-          </div>
+      const user = json.user || {};
+      const binder = json.binder || {};
+      const inventory = Array.isArray(json.inventory) ? json.inventory : [];
 
-          <div class="row-meta" style="margin-top:8px;">
-            ${item.expires_at ? "Истекает: " + formatShortDate(item.expires_at) : "Без срока"}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function renderActivity(activityItems) {
-      const root = document.getElementById("activityList");
-
-      if (!Array.isArray(activityItems) || !activityItems.length) {
-        root.innerHTML = `<div class="empty-box">Активности пока нет.</div>`;
-        return;
+      const avatar = document.getElementById("userAvatar");
+      if (avatar) {
+        avatar.src = user.avatar_url || "https://placehold.co/96x96?text=WS";
       }
 
-      root.innerHTML = activityItems.slice(0, 10).map(item => `
-        <div class="feed-item">
-          <div class="feed-action">${escapeHtml(item.action_text || "Действие")}</div>
-          <div class="feed-meta">
-            ${item.user_nickname ? escapeHtml(item.user_nickname) + " • " : ""}
-            ${formatDateTime(item.created_at)}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function renderChest(chestItems) {
-      const root = document.getElementById("chestList");
-      const summary = document.getElementById("chestSummary");
-
-      if (!Array.isArray(chestItems) || !chestItems.length) {
-        summary.textContent = "Истории пока нет";
-        root.innerHTML = `<div class="empty-box">Сундук ещё не открывался или история пустая.</div>`;
-        return;
+      const nameEl = document.getElementById("userName");
+      if (nameEl) {
+        nameEl.textContent = user.nickname || user.game_nick || user.login || "Игрок";
       }
 
-      summary.textContent = `Последних открытий: ${chestItems.length}`;
-
-      root.innerHTML = chestItems.slice(0, 8).map(item => `
-        <div class="row-card">
-          <div class="row-top">
-            <div class="row-title">${escapeHtml(item.reward_title || "Награда")}</div>
-            <div class="row-badge badge-violet">День ${formatNum(item.day_number || 0)}</div>
-          </div>
-          <div class="row-meta">
-            Тип: ${escapeHtml(item.reward_type || "—")} • Значение: ${formatNum(item.reward_value || 0)}
-          </div>
-          <div class="row-meta" style="margin-top:8px;">
-            ${formatDateTime(item.created_at)}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function renderFinance(pendingJson, autotopupJson, profileJson) {
-      const root = document.getElementById("financeInfo");
-      const binder = profileJson.binder || {};
-      const pendingItems = Array.isArray(pendingJson?.items) ? pendingJson.items : [];
-      const autoItems = Array.isArray(autotopupJson?.items) ? autotopupJson.items : [];
-      const activeAuto = autoItems.filter(x => x.is_active);
-
-      const blocks = [];
-
-      blocks.push(`
-        <div class="notice-item">
-          <div class="row-top">
-            <div class="row-title">WSBuild баланс</div>
-            <div class="row-badge badge-blue">${formatNum(binder.wsbuild_balance || 0)}</div>
-          </div>
-          <div class="row-meta">Брюлики на аккаунте</div>
-        </div>
-      `);
-
-      blocks.push(`
-        <div class="notice-item">
-          <div class="row-top">
-            <div class="row-title">Отложено к зачислению</div>
-            <div class="row-badge badge-yellow">${formatNum(pendingJson?.total_pending || 0)}</div>
-          </div>
-          <div class="row-meta">
-            ${pendingJson?.nearest?.available_at
-              ? "Ближайшее начисление: " + formatDateTime(pendingJson.nearest.available_at)
-              : "Нет ожидающих начислений"}
-          </div>
-        </div>
-      `);
-
-      blocks.push(`
-        <div class="notice-item">
-          <div class="row-top">
-            <div class="row-title">Автопополнения WSBuild</div>
-            <div class="row-badge badge-green">${formatNum(activeAuto.length)}</div>
-          </div>
-          <div class="row-meta">
-            ${activeAuto.length
-              ? activeAuto.slice(0, 2).map(x => `+${formatNum(x.topup_amount)} до ${formatShortDate(x.ends_at)}`).join(" • ")
-              : "Нет активных автопополнений"}
-          </div>
-        </div>
-      `);
-
-      if (pendingItems.length) {
-        pendingItems.slice(0, 3).forEach(item => {
-          blocks.push(`
-            <div class="notice-item">
-              <div class="row-top">
-                <div class="row-title">${escapeHtml(item.source_text || item.source_type || "Начисление")}</div>
-                <div class="row-badge badge-blue">${formatNum(item.amount || 0)}</div>
-              </div>
-              <div class="row-meta">
-                Доступно: ${formatDateTime(item.available_at)}
-              </div>
-            </div>
-          `);
-        });
+      const subEl = document.getElementById("userSubname");
+      if (subEl) {
+        subEl.textContent = `@${user.login || "unknown"}`;
       }
 
-      root.innerHTML = blocks.join("");
-    }
-
-    function renderInventory(items) {
-      const root = document.getElementById("inventoryGrid");
-      const summary = document.getElementById("inventorySummary");
-
-      if (!Array.isArray(items) || !items.length) {
-        summary.textContent = "Инвентарь пуст";
-        root.innerHTML = `<div class="empty-box" style="grid-column:1/-1;">У тебя пока нет предметов в инвентаре.</div>`;
-        return;
+      const levelEl = document.getElementById("userLevel");
+      if (levelEl) {
+        levelEl.textContent = String(user.role || "user").toLowerCase() === "admin"
+          ? "Администратор"
+          : "Пользователь";
       }
 
-      const totalCount = items.reduce((sum, item) => sum + Number(item.count || 0), 0);
-      summary.textContent = `Уникальных предметов: ${items.length} • Всего единиц: ${totalCount}`;
-
-      root.innerHTML = items.map(item => `
-        <div class="inventory-item">
-          <div class="inventory-thumb">
-            ${item.image_url
-              ? `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.title || "item")}" />`
-              : `<div class="inventory-fallback">📦</div>`}
-          </div>
-
-          <div class="inventory-body">
-            <div class="inventory-title">${escapeHtml(item.title || "Без названия")}</div>
-            <div class="inventory-meta">
-              <span>${escapeHtml(item.rarity || "Обычный")}</span>
-              <span>x${formatNum(item.count || 0)}</span>
-            </div>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    async function loadProfilePage() {
-      try {
-        setLoading(true);
-        clearError();
-
-        const token = getToken();
-        if (!token) {
-          showError("Нет ws_token. Сначала авторизуйся на сайте.");
-          return;
-        }
-
-        const [
-          profileJson,
-          activityJson,
-          contractsMyJson,
-          chestJson,
-          unreadJson,
-          pendingJson,
-          autotopupJson
-        ] = await Promise.all([
-          fetchJson("/api/ws/profile-full", token),
-          fetchJson("/api/ws/activity-feed?limit=20", token),
-          fetchJson("/api/ws/contracts/my", token),
-          fetchJson("/api/ws/chest/history", token).catch(() => ({ ok: true, items: [] })),
-          fetchJson("/api/ws/notifications/unread-count", token).catch(() => ({ ok: true, unread_count: 0 })),
-          fetchJson("/api/ws/balance-transfer/pending", token).catch(() => ({ ok: true, total_pending: 0, items: [] })),
-          fetchJson("/api/ws/wsbuild/autotopup/my", token).catch(() => ({ ok: true, items: [] }))
-        ]);
-
-        renderHeader(profileJson, unreadJson.unread_count || 0, contractsMyJson);
-        renderContracts(contractsMyJson);
-        renderActivity(Array.isArray(activityJson.items) ? activityJson.items : []);
-        renderChest(Array.isArray(chestJson.items) ? chestJson.items : []);
-        renderFinance(pendingJson, autotopupJson, profileJson);
-        renderInventory(Array.isArray(profileJson.inventory) ? profileJson.inventory : []);
-      } catch (err) {
-        console.error(err);
-        showError(String(err.message || err));
-      } finally {
-        setLoading(false);
+      const xpText = document.getElementById("xpText");
+      if (xpText) {
+        xpText.textContent = `${formatNum(binder.game_balance || 0)} / ${formatNum((Number(binder.game_balance || 0) + Number(binder.to_output || 0)) || 1)}`;
       }
-    }
 
-    document.getElementById("reloadBtn").addEventListener("click", loadProfilePage);
-    loadProfilePage();
-  </script>
+      const xpFill = document.getElementById("xpFill");
+      if (xpFill) {
+        const total = Number(binder.game_balance || 0) + Number(binder.to_output || 0);
+        const pct = total > 0 ? Math.max(8, Math.min(100, Math.round((Number(binder.game_balance || 0) / total) * 100))) : 0;
+        xpFill.style.width = pct + "%";
+      }
+
+      const totalXp = document.getElementById("totalXp");
+      if (totalXp) {
+        totalXp.textContent = `Всего средств: ${formatNum(Number(binder.game_balance || 0) + Number(binder.to_output || 0))}`;
+      }
+
+      renderStatsFromBinder(user, binder);
+      renderInventory(inventory);
+      renderActivityEmpty();
+    } catch (err) {
+      showError(String(err.message || err));
+    }
+  }
+
+  document.getElementById("reloadBtn")?.addEventListener("click", loadProfile);
+  loadProfile();
+</script>
 </body>
 </html>
