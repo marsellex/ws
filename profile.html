@@ -798,6 +798,8 @@
   </div>
 
  <script>
+  const API_BASE = "https://world-script-api.onrender.com";
+   
   function getToken() {
     return localStorage.getItem("ws_token") || "";
   }
@@ -830,29 +832,32 @@
   }
 
   async function fetchJson(url, token) {
-    const resp = await fetch(url, {
+    const fullUrl = url.startsWith("http") ? url : API_BASE + url;
+  
+    const resp = await fetch(fullUrl, {
       headers: token
         ? { Authorization: `Bearer ${token}` }
         : {}
     });
-
+  
     const raw = await resp.text();
-
+  
     let json = null;
     try {
       json = JSON.parse(raw);
     } catch {
-      console.error("NOT JSON:", raw);
-      throw new Error(`Сервер вернул не JSON для ${url}`);
+      console.error("NOT JSON URL:", fullUrl);
+      console.error("NOT JSON RAW:", raw);
+      throw new Error(`Сервер вернул не JSON для ${fullUrl}`);
     }
-
+  
     if (!resp.ok || !json?.ok) {
       throw new Error(json?.error || "Ошибка загрузки");
     }
-
+  
     return json;
   }
-
+   
   function renderInventory(items) {
     const root = document.getElementById("achievementsList");
     if (!root) return;
