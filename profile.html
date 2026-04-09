@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Профиль прогресса</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #fff;
+    }
+    .page {
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.09);
+    }
+    .btn:active {
+      transform: scale(.97);
+    }
+    .btn-primary {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .user-box {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 18px;
+      object-fit: cover;
+      background: #111827;
+    }
+    .name {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .subname {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 10px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.18);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .xp-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+    }
+    .track {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #3b82f6);
+      width: 0%;
+    }
+    .total-xp {
+      margin-top: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+    }
+    .grid-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .small-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .small-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 8px;
+    }
+    .small-value {
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 16px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .muted {
+      color: rgba(255,255,255,0.6);
+    }
+    .ach-list,
+    .feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ach-card,
+    .feed-item {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .ach-top {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .ach-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex: 0 0 42px;
+    }
+    .ach-name {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .ach-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+    }
+    .ach-state {
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .ach-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ach-progress-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .ach-progress-fill {
+      height: 100%;
+      background: #22c55e;
+      border-radius: 999px;
+      width: 0%;
+    }
+    .ach-progress-text {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      min-width: 72px;
+      text-align: right;
+    }
+    .feed-action {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .feed-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+    .error-box {
+      color: #fecaca;
+      background: rgba(127,29,29,0.25);
+      border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    @media (max-width: 900px) {
+      .hero,
+      .two-cols,
+      .grid-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="wrap">
+      <div class="topbar">
+        <a class="btn" href="/">← Назад на сайт</a>
+        <button id="reloadBtn" class="btn btn-primary">Обновить</button>
+      </div>
+
+      <div id="errorBox" class="error-box" style="display:none;"></div>
+
+      <div class="hero">
+        <div class="card">
+          <div class="user-box">
+            <img id="userAvatar" class="avatar" src="https://placehold.co/96x96?text=WS" alt="">
+            <div>
+              <div id="userName" class="name">Игрок</div>
+              <div id="userSubname" class="subname">@unknown</div>
+              <div id="userLevel" class="badge">Уровень 1</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="xp-header">
+            <span>Прогресс уровня</span>
+            <span id="xpText">0 / 1</span>
+          </div>
+          <div class="track">
+            <div id="xpFill" class="fill"></div>
+          </div>
+          <div id="totalXp" class="total-xp">Всего XP: 0</div>
+        </div>
+      </div>
+
+      <div id="statsGrid" class="grid-stats"></div>
+
+      <div class="two-cols">
+        <div class="card">
+          <div class="section-title">Достижения</div>
+          <div id="achievementsList" class="ach-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Последняя активность</div>
+          <div id="activityList" class="feed-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getToken() {
+      return localStorage.getItem("ws_token") || "";
+    }
+
+    function formatNum(v) {
+      return new Intl.NumberFormat("ru-RU").format(Number(v || 0));
+    }
+
+    function percentOf(current, max) {
+      const c = Number(current || 0);
+      const m = Math.max(1, Number(max || 1));
+      return Math.max(0, Math.min(100, Math.round((c / m) * 100)));
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function rarityColor(rarity) {
+      const r = String(rarity || "").toLowerCase();
+      if (r.includes("legend")) return "#f59e0b";
+      if (r.includes("epic")) return "#a855f7";
+      if (r.includes("rare")) return "#3b82f6";
+      return "rgba(255,255,255,0.08)";
+    }
+
+    function showError(text) {
+      const box = document.getElementById("errorBox");
+      box.style.display = "block";
+      box.textContent = text;
+    }
+
+    function clearError() {
+      const box = document.getElementById("errorBox");
+      box.style.display = "none";
+      box.textContent = "";
+    }
+
+    function renderStats(stats) {
+      const grid = document.getElementById("statsGrid");
+      const items = [
+        ["Бонусов взято", stats.bonuses_claimed_total],
+        ["Сундуков открыто", stats.chests_opened_total],
+        ["Рулетка", stats.roulette_spins_total],
+        ["Контрактов", stats.contracts_completed_total],
+        ["Предметов найдено", stats.items_found_total],
+        ["Предметов куплено", stats.items_bought_total],
+        ["Брюликов куплено", stats.wsbuild_bought_total],
+        ["Брюликов потрачено", stats.wsbuild_spent_total]
+      ];
+
+      grid.innerHTML = items.map(([label, value]) => `
+        <div class="small-card">
+          <div class="small-label">${escapeHtml(label)}</div>
+          <div class="small-value">${formatNum(value)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderAchievements(list) {
+      const root = document.getElementById("achievementsList");
+
+      if (!Array.isArray(list) || !list.length) {
+        root.innerHTML = '<div class="muted">Пока ничего нет</div>';
+        return;
+      }
+
+      root.innerHTML = list.map(item => {
+        const pct = percentOf(item.progress_value, item.progress_max);
+        const unlocked = !!item.unlocked;
+
+        return `
+          <div class="ach-card" style="border-color:${rarityColor(item.rarity)};opacity:${unlocked ? 1 : 0.75}">
+            <div class="ach-top">
+              <div class="ach-icon">${escapeHtml(item.icon || "🏆")}</div>
+              <div style="flex:1">
+                <div class="ach-name">${escapeHtml(item.title)}</div>
+                <div class="ach-desc">${escapeHtml(item.description)}</div>
+              </div>
+              <div class="ach-state" style="background:${unlocked ? "rgba(34,197,94,0.18)" : "rgba(255,255,255,0.06)"}">
+                ${unlocked ? "Открыто" : "В процессе"}
+              </div>
+            </div>
+            <div class="ach-progress-row">
+              <div class="ach-progress-track">
+                <div class="ach-progress-fill" style="width:${pct}%"></div>
+              </div>
+              <div class="ach-progress-text">${formatNum(item.progress_value)} / ${formatNum(item.progress_max)}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderActivity(list) {
+      const root = document.getElementById("activityList");
+
+      if (!Array.isArray(list) || !list.length) {
+        root.innerHTML = '<div class="muted">Активности пока нет</div>';
+        return;
+      }
+
+      root.innerHTML = list.map(item => `
+        <div class="feed-item">
+          <div class="feed-action">${escapeHtml(item.action_text || "Действие")}</div>
+          <div class="feed-meta">${item.created_at ? new Date(item.created_at).toLocaleString("ru-RU") : ""}</div>
+        </div>
+      `).join("");
+    }
+
+    async function loadProfile() {
+      try {
+        clearError();
+
+        const token = getToken();
+        if (!token) {
+          showError("Нет ws_token. Сначала войди в аккаунт.");
+          return;
+        }
+
+        const resp = await fetch("/api/ws/profile/progress", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const json = await resp.json();
+
+        if (!resp.ok || !json?.ok) {
+          throw new Error(json?.error || "Не удалось загрузить профиль");
+        }
+
+        const user = json.user || {};
+        const progress = json.progress || {};
+        const stats = json.stats || {};
+        const achievements = Array.isArray(json.achievements) ? json.achievements : [];
+        const recent = Array.isArray(json.recent_activity) ? json.recent_activity : [];
+
+        document.getElementById("userAvatar").src = user.avatar_url || "https://placehold.co/96x96?text=WS";
+        document.getElementById("userName").textContent = user.nickname || user.game_nick || user.login || "Игрок";
+        document.getElementById("userSubname").textContent =
+          `@${user.login || "unknown"}${user.game_nick ? " • " + user.game_nick : ""}`;
+        document.getElementById("userLevel").textContent = `Уровень ${formatNum(progress.level)}`;
+
+        document.getElementById("xpText").textContent =
+          `${formatNum(progress.current_xp)} / ${formatNum(progress.xp_to_next)}`;
+        document.getElementById("xpFill").style.width =
+          `${percentOf(progress.current_xp, progress.xp_to_next)}%`;
+        document.getElementById("totalXp").textContent =
+          `Всего XP: ${formatNum(progress.total_xp)}`;
+
+        renderStats(stats);
+        renderAchievements(achievements);
+        renderActivity(recent);
+      } catch (err) {
+        showError(String(err.message || err));
+      }
+    }
+
+    document.getElementById("reloadBtn").addEventListener("click", loadProfile);
+    loadProfile();
+  </script>
+</body>
+</html>
