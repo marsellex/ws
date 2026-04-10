@@ -11,9 +11,6 @@
 
   <style>
     :root{
-      --bg0:#020411;
-      --bg1:#060b1d;
-
       --txt: rgba(245,248,255,.94);
       --muted: rgba(215,230,255,.62);
       --muted2: rgba(215,230,255,.46);
@@ -21,10 +18,6 @@
       --stroke: rgba(140,170,255,.18);
       --stroke2: rgba(140,170,255,.12);
 
-      --cardA: rgba(14,24,55,.86);
-      --cardB: rgba(6,10,25,.94);
-
-      /* Theme (можно менять в настройках) */
       --accent1:#3d7dff;
       --accent2:#7c3aed;
       --glow:#ff64d7;
@@ -40,6 +33,11 @@
 
       --shadow: 0 28px 90px rgba(0,0,0,.46);
       --shadowSoft: 0 16px 52px rgba(0,0,0,.30);
+
+      --sidebarW: 308px;
+
+      --pageBgBlurPx: 0px;
+      --pageBgOpacity: 0.55;
     }
 
     *{ box-sizing:border-box; }
@@ -48,16 +46,37 @@
       margin:0;
       font-family: Inter, system-ui, Arial, sans-serif;
       color: var(--txt);
-      background:
-        radial-gradient(circle at 18% 14%, color-mix(in oklab, var(--accent1) 30%, transparent), transparent 34%),
-        radial-gradient(circle at 82% 10%, color-mix(in oklab, var(--accent2) 26%, transparent), transparent 36%),
-        radial-gradient(circle at 50% 100%, color-mix(in oklab, var(--glow) 14%, transparent), transparent 38%),
-        linear-gradient(180deg, #020411, #01030c);
+      background: linear-gradient(180deg, #020411, #01030c);
       overflow-x:hidden;
+    }
+
+    /* Custom page background */
+    .page-bg{
+      position:fixed;
+      inset:-50px;
+      z-index:-4;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      transform: scale(1.06);
+      opacity: var(--pageBgOpacity);
+      filter: blur(var(--pageBgBlurPx));
+    }
+    .page-bg-overlay{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 18% 14%, color-mix(in oklab, var(--accent1) 18%, transparent), transparent 34%),
+        radial-gradient(circle at 82% 10%, color-mix(in oklab, var(--accent2) 16%, transparent), transparent 36%),
+        radial-gradient(circle at 50% 100%, color-mix(in oklab, var(--glow) 12%, transparent), transparent 38%),
+        linear-gradient(180deg, rgba(2,4,17,.78), rgba(1,3,12,.90));
     }
 
     .bg-grid{
       position:fixed; inset:0; pointer-events:none; opacity:.06;
+      z-index:-2;
       background-image:
         linear-gradient(rgba(120,160,255,.28) 1px, transparent 1px),
         linear-gradient(90deg, rgba(120,160,255,.28) 1px, transparent 1px);
@@ -66,47 +85,114 @@
       -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.85), transparent 85%);
     }
 
-    .shell{
-      position:relative;
-      max-width: 1550px;
+    .app{
+      max-width: 1560px;
       margin: 0 auto;
       padding: 16px 16px 28px;
-      animation: pageIn .28s ease-out both;
+      display:grid;
+      grid-template-columns: var(--sidebarW) 1fr;
+      gap: 14px;
+      align-items:start;
+      animation: pageIn .26s ease-out both;
     }
-    @keyframes pageIn{ from{opacity:.6; transform: translateY(8px);} to{opacity:1; transform:none;} }
+    @keyframes pageIn{ from{opacity:.7; transform: translateY(10px);} to{opacity:1; transform:none;} }
 
-    .topbar{
+    /* ===== LEFT PANEL (no card block) ===== */
+    .sidebar{
+      position: sticky;
+      top: 14px;
+      height: calc(100vh - 28px);
+      border-radius: 26px;
+      overflow:hidden;
+
+      background:
+        radial-gradient(circle at 20% 0%, color-mix(in oklab, var(--accent1) 22%, transparent), transparent 52%),
+        radial-gradient(circle at 85% 10%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 58%),
+        rgba(255,255,255,.03);
+
+      border: 1px solid rgba(140,170,255,.14);
+      box-shadow: var(--shadowSoft);
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 14px;
+      flex-direction:column;
     }
 
+    .side-top{
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .me{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+    }
+    .me-ava{
+      width:56px; height:56px;
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      flex:none;
+    }
+    .me-ava img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .me-meta{ min-width:0; }
+    .me-login{
+      font-weight: 950;
+      letter-spacing:-.02em;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .me-nick{
+      margin-top:4px;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 13px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .me-role{
+      margin-top:10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height: 28px;
+      padding: 0 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-weight: 950;
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+    }
+
+    .side-actions{
+      display:flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap:wrap;
+    }
     .btn{
       appearance:none;
       border:1px solid rgba(140,170,255,.22);
       background: linear-gradient(180deg, rgba(18,31,67,.92), rgba(10,19,46,.94));
       color:#fff;
-      padding: 12px 16px;
+      padding: 12px 14px;
       border-radius: 16px;
       font-weight: 900;
       letter-spacing: .01em;
       cursor:pointer;
       transition:.16s ease;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 18px 42px rgba(0,0,0,.20);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 18px 42px rgba(0,0,0,.18);
       text-decoration:none;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:10px;
-      min-height:46px;
+      min-height: 42px;
       user-select:none;
     }
     .btn:hover{ transform: translateY(-1px); border-color: rgba(140,170,255,.34); }
     .btn.primary{
       background: linear-gradient(180deg, var(--accent1) 0%, color-mix(in oklab, var(--accent1) 55%, #000) 100%);
-      border-color: color-mix(in oklab, var(--accent1) 45%, rgba(120,160,255,.26));
     }
     .btn.ghost{
       background: rgba(255,255,255,.04);
@@ -117,103 +203,114 @@
       background: linear-gradient(180deg, rgba(255,90,122,.35), rgba(140,20,60,.35));
       border-color: rgba(255,90,122,.22);
     }
-    .btn.small{ min-height: 38px; padding: 10px 12px; border-radius: 14px; font-weight: 900; }
-
-    .error-global{
-      display:none;
-      margin-bottom: 12px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: linear-gradient(90deg, rgba(70,10,38,.92), rgba(50,10,28,.82));
-      border: 1px solid rgba(255,84,84,.34);
-      color: #ffe3e3;
-      font-weight: 850;
-      line-height:1.45;
-      white-space: pre-wrap;
-    }
-
-    /* ===== LAYOUT ===== */
-    .layout{
-      display:grid;
-      grid-template-columns: 320px 1fr;
-      gap:14px;
-      align-items:start;
-    }
-
-    .side{
-      border-radius: var(--r28);
-      border:1px solid rgba(140,170,255,.16);
-      background: linear-gradient(135deg, rgba(17,29,63,.84), rgba(8,16,40,.94));
-      box-shadow: var(--shadowSoft);
-      overflow:hidden;
-      position: sticky;
-      top: 14px;
-    }
-
-    .side-head{
-      padding: 14px 14px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      background:
-        radial-gradient(circle at 20% 10%, color-mix(in oklab, var(--accent1) 22%, transparent), transparent 52%),
-        radial-gradient(circle at 80% 0%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 58%),
-        rgba(255,255,255,.02);
-    }
-
-    .mini-user{
-      display:flex; gap:12px; align-items:center;
-    }
-    .mini-ava{
-      width:56px; height:56px; border-radius:16px; overflow:hidden;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      flex:none;
-    }
-    .mini-ava img{width:100%;height:100%;object-fit:cover;display:block}
-    .mini-meta{min-width:0}
-    .mini-login{font-weight:950; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .mini-sub{margin-top:4px; color: var(--muted); font-weight:800; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .mini-pill{
-      margin-top:10px;
-      display:inline-flex; align-items:center; justify-content:center;
-      height:28px; padding:0 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      font-weight:950; font-size:12px; letter-spacing:.08em; text-transform:uppercase;
-    }
+    .btn.small{ min-height: 36px; padding: 10px 12px; border-radius: 14px; }
 
     .nav{
-      padding: 12px;
+      padding: 12px 10px 12px;
       display:flex;
       flex-direction:column;
-      gap:8px;
+      gap: 6px;
+      overflow:auto;
     }
-    .nav .item{
+
+    .nav-btn{
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: rgba(255,255,255,.88);
+      cursor:pointer;
+      text-align:left;
+
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      gap: 10px;
+
       padding: 12px 12px;
       border-radius: 16px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      cursor:pointer;
-      transition: .14s ease;
+
+      position:relative;
+      transition: .16s ease;
       user-select:none;
       font-weight: 900;
-      color: rgba(255,255,255,.88);
     }
-    .nav .item:hover{
+
+    .nav-btn::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 18% 0%, color-mix(in oklab, var(--accent1) 22%, transparent), transparent 55%),
+        radial-gradient(circle at 90% 0%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 60%),
+        rgba(255,255,255,.03);
+      opacity: 0;
+      transition: .16s ease;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .nav-btn::after{
+      content:"";
+      position:absolute;
+      left: 6px;
+      top: 10px;
+      bottom: 10px;
+      width: 3px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent1), var(--accent2));
+      opacity: 0;
+      transform: scaleY(.6);
+      transition: .16s ease;
+    }
+
+    .nav-btn:hover{
       transform: translateY(-1px);
-      border-color: rgba(140,170,255,.20);
+    }
+    .nav-btn:hover::before{
+      opacity: 1;
       box-shadow: 0 18px 40px rgba(0,0,0,.18);
+      border-color: rgba(140,170,255,.14);
     }
-    .nav .item.active{
-      background: linear-gradient(180deg, color-mix(in oklab, var(--accent1) 30%, transparent), rgba(255,255,255,.03));
-      border-color: rgba(120,160,255,.24);
+
+    .nav-btn.active::before{
+      opacity: 1;
+      border-color: rgba(120,160,255,.22);
+      background:
+        linear-gradient(180deg, color-mix(in oklab, var(--accent1) 26%, transparent), rgba(255,255,255,.03));
     }
-    .nav .left{ display:flex; align-items:center; gap:10px; min-width:0; }
-    .nav .label{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .nav-btn.active::after{
+      opacity: 1;
+      transform: scaleY(1);
+    }
+
+    .nav-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      position:relative;
+      z-index:1;
+    }
+    .nav-ico{
+      width: 26px;
+      height: 26px;
+      border-radius: 10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      flex:none;
+    }
+    .nav-label{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
     .badge{
+      position:relative;
+      z-index:1;
       min-width: 24px;
       height: 22px;
       padding: 0 8px;
@@ -226,13 +323,41 @@
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.12);
       color:#fff;
+      flex:none;
     }
     .badge.red{ background: rgba(255,90,122,.28); border-color: rgba(255,90,122,.24); }
     .badge.blue{ background: rgba(61,125,255,.28); border-color: rgba(120,160,255,.22); }
 
+    .side-footer{
+      margin-top:auto;
+      padding: 12px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      color: var(--muted2);
+      font-weight: 750;
+      font-size: 12px;
+      line-height:1.4;
+    }
+
     /* ===== MAIN ===== */
     .main{
       min-width:0;
+    }
+
+    .statusline{
+      display:none;
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.90);
+      font-weight: 850;
+      white-space: pre-wrap;
+    }
+    .statusline.error{
+      border-color: rgba(255,90,122,.24);
+      background: rgba(255,90,122,.10);
+      color: rgba(255,220,230,.92);
     }
 
     /* ===== HERO CARD ===== */
@@ -268,7 +393,7 @@
     .hero-banner{
       height: 220px;
       background:
-        linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.70)),
+        linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.75)),
         radial-gradient(circle at 30% 40%, rgba(255,255,255,.08), transparent 50%),
         linear-gradient(90deg, rgba(61,125,255,.25), rgba(124,58,237,.20));
       background-size: cover;
@@ -289,17 +414,85 @@
 
     .hero-left{ display:flex; gap:14px; align-items:center; min-width:0; }
 
-    .hero-avatar{
-      width: 96px;
-      height: 96px;
+    /* Water level badge */
+    .level-badge{
+      --fill: 30%;
+      --tierA: rgba(61,125,255,.85);
+      --tierB: rgba(124,58,237,.75);
+      position:relative;
+      width: 92px;
+      height: 92px;
       border-radius: 22px;
       overflow:hidden;
-      border:1px solid rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.18);
       background: rgba(0,0,0,.22);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 18px 52px rgba(0,0,0,.38);
       flex:none;
     }
-    .hero-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .level-badge::after{
+      content:"";
+      position:absolute; inset:0;
+      border-radius: 22px;
+      padding:1px;
+      background: linear-gradient(90deg, var(--tierA), var(--tierB), color-mix(in oklab, var(--glow) 40%, transparent));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      opacity:.55;
+      pointer-events:none;
+    }
+    .water{
+      position:absolute;
+      left:0; right:0;
+      bottom:0;
+      height: var(--fill);
+      background: linear-gradient(180deg,
+        color-mix(in oklab, var(--tierA) 55%, #000),
+        color-mix(in oklab, var(--tierB) 40%, #000)
+      );
+      box-shadow: 0 -16px 40px color-mix(in oklab, var(--tierA) 34%, transparent);
+      transition: height .38s ease;
+    }
+    .wave{
+      position:absolute;
+      left:-20%;
+      width:140%;
+      height: 24px;
+      bottom: calc(var(--fill) - 12px);
+      background:
+        radial-gradient(circle at 10px 12px, rgba(255,255,255,.22) 0 10px, transparent 11px),
+        radial-gradient(circle at 34px 10px, rgba(255,255,255,.14) 0 10px, transparent 11px);
+      background-size: 44px 24px;
+      opacity:.55;
+      filter: blur(.2px);
+      animation: waveMove 2.0s linear infinite;
+      transition: bottom .38s ease;
+    }
+    @keyframes waveMove{ from{ transform: translateX(0); } to{ transform: translateX(-44px);} }
+
+    .level-content{
+      position:absolute; inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      z-index:2;
+      text-shadow: 0 10px 30px rgba(0,0,0,.55);
+    }
+    .level-label{
+      font-weight: 950;
+      letter-spacing: .12em;
+      font-size: 11px;
+      opacity:.9;
+    }
+    .level-num{
+      margin-top:4px;
+      font-weight: 950;
+      font-size: 26px;
+      letter-spacing: -0.03em;
+    }
 
     .hero-id{ min-width:0; }
     .hero-login{
@@ -355,94 +548,6 @@
       letter-spacing: -0.03em;
     }
 
-    /* ===== LEVEL BADGE (WATER) ===== */
-    .level-badge{
-      --fill: 30%;
-      --tierA: rgba(61,125,255,.85);
-      --tierB: rgba(124,58,237,.75);
-      position:relative;
-      width: 92px;
-      height: 92px;
-      border-radius: 22px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.22);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 18px 52px rgba(0,0,0,.38);
-      flex:none;
-    }
-    .level-badge::before{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(180deg, color-mix(in oklab, var(--tierA) 45%, transparent), transparent);
-      opacity:.9;
-      pointer-events:none;
-    }
-    .level-badge::after{
-      content:"";
-      position:absolute; inset:0;
-      border-radius: 22px;
-      padding:1px;
-      background: linear-gradient(90deg, var(--tierA), var(--tierB), color-mix(in oklab, var(--glow) 40%, transparent));
-      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      mask-composite: exclude;
-      -webkit-mask-composite: xor;
-      opacity:.55;
-      pointer-events:none;
-    }
-    .water{
-      position:absolute;
-      left:0; right:0;
-      bottom:0;
-      height: var(--fill);
-      background: linear-gradient(180deg,
-        color-mix(in oklab, var(--tierA) 55%, #000),
-        color-mix(in oklab, var(--tierB) 40%, #000)
-      );
-      box-shadow: 0 -16px 40px color-mix(in oklab, var(--tierA) 34%, transparent);
-    }
-    .wave{
-      position:absolute;
-      left:-20%;
-      width:140%;
-      height: 24px;
-      bottom: calc(var(--fill) - 12px);
-      background:
-        radial-gradient(circle at 10px 12px, rgba(255,255,255,.22) 0 10px, transparent 11px),
-        radial-gradient(circle at 34px 10px, rgba(255,255,255,.14) 0 10px, transparent 11px);
-      background-size: 44px 24px;
-      opacity:.55;
-      filter: blur(.2px);
-      animation: waveMove 2.0s linear infinite;
-    }
-    @keyframes waveMove{
-      from{ transform: translateX(0); }
-      to{ transform: translateX(-44px); }
-    }
-    .level-content{
-      position:absolute; inset:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      z-index:2;
-      text-shadow: 0 10px 30px rgba(0,0,0,.55);
-    }
-    .level-label{
-      font-weight: 950;
-      letter-spacing: .12em;
-      font-size: 11px;
-      opacity:.9;
-    }
-    .level-num{
-      margin-top:4px;
-      font-weight: 950;
-      font-size: 26px;
-      letter-spacing: -0.03em;
-    }
-
-    /* ===== HERO XP BAR ===== */
     .hero-xp{
       padding: 6px 18px 14px;
       position:relative;
@@ -494,7 +599,6 @@
       transition: width .35s ease;
     }
 
-    /* ===== HERO STATS ===== */
     .hero-stats{
       display:grid;
       grid-template-columns: repeat(4, minmax(0,1fr));
@@ -513,22 +617,12 @@
       position:relative;
       overflow:hidden;
     }
-    .stat::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(circle at 20% 0%, color-mix(in oklab, var(--accent1) 22%, transparent), transparent 45%);
-      opacity:0;
-      transition:.18s ease;
-      pointer-events:none;
-    }
     .stat:hover{
       transform: translateY(-1px);
       border-color: rgba(140,170,255,.22);
       box-shadow: 0 22px 60px rgba(0,0,0,.28);
     }
-    .stat:hover::before{ opacity:1; }
     .stat .k{
-      position:relative;
       color: rgba(215,230,255,.58);
       font-weight: 850;
       font-size: 12px;
@@ -536,13 +630,12 @@
       letter-spacing: .12em;
     }
     .stat .v{
-      position:relative;
       margin-top: 10px;
       font-weight: 950;
       font-size: 28px;
     }
 
-    /* ===== CONTENT CARD ===== */
+    /* ===== CONTENT ===== */
     .content{
       margin-top: 14px;
       border-radius: var(--r28);
@@ -556,14 +649,12 @@
     .content::after{
       content:"";
       position:absolute;
-      width:420px;
-      height:420px;
-      right:-160px;
-      top:-180px;
+      width:420px; height:420px;
+      right:-160px; top:-180px;
       background: color-mix(in oklab, var(--accent2) 26%, transparent);
       filter: blur(70px);
-      border-radius: 999px;
       opacity:.30;
+      border-radius: 999px;
       pointer-events:none;
     }
 
@@ -589,7 +680,6 @@
       font-size: 14px;
       line-height: 1.45;
     }
-
     .content-body{
       padding: 16px 18px 18px;
       position:relative;
@@ -602,7 +692,6 @@
       gap: 12px;
     }
 
-    /* ===== WIDGETS (drag/reorder) ===== */
     .widget{
       border:1px solid rgba(140,170,255,.14);
       background: linear-gradient(180deg, rgba(6,16,41,.76), rgba(4,10,27,.96));
@@ -612,22 +701,11 @@
       overflow:hidden;
       transition:.18s ease;
     }
-    .widget::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(circle at 20% 0%, color-mix(in oklab, var(--accent1) 22%, transparent), transparent 45%),
-        radial-gradient(circle at 85% 10%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 55%);
-      opacity:.00;
-      transition:.18s ease;
-      pointer-events:none;
-    }
     .widget:hover{
       transform: translateY(-1px);
       border-color: rgba(140,170,255,.24);
       box-shadow: 0 26px 70px rgba(0,0,0,.30);
     }
-    .widget:hover::before{ opacity:.95; }
 
     .widget-head{
       display:flex;
@@ -644,30 +722,10 @@
       text-transform: uppercase;
       font-size: 12px;
       color: rgba(255,255,255,.92);
-      user-select:none;
       min-width:0;
-    }
-    .widget-actions{
-      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-    }
-    .drag-handle{
-      width:26px; height:26px; border-radius:10px;
-      display:inline-flex; align-items:center; justify-content:center;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      cursor: grab;
       user-select:none;
     }
-    .drag-handle:active{ cursor: grabbing; }
-
-    .widget-body{
-      padding: 12px;
-    }
-
-    .widget.editing{
-      outline: 2px dashed rgba(120,160,255,.28);
-      outline-offset: 2px;
-    }
+    .widget-body{ padding: 12px; }
 
     .mini-row{
       display:flex;
@@ -683,7 +741,6 @@
     .mini-row .a{ font-weight: 900; }
     .mini-row .m{ color: rgba(255,255,255,.62); font-size: 13px; font-weight: 800; margin-top: 4px; }
 
-    .muted{ color: var(--muted); font-weight: 750; }
     .hr{ height:1px; background: rgba(255,255,255,.08); margin: 12px 0; }
 
     .widget-error{
@@ -697,21 +754,6 @@
       white-space: pre-wrap;
     }
 
-    .skeleton{
-      position:relative;
-      overflow:hidden;
-    }
-    .skeleton::after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
-      transform: translateX(-30%);
-      animation: sk 1.2s infinite linear;
-    }
-    @keyframes sk { to { transform: translateX(30%); } }
-
-    /* Inventory cards */
     .inv-grid{
       display:grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -753,7 +795,7 @@
       font-size: 13px;
     }
 
-    /* ===== MODAL ===== */
+    /* Modal */
     .modal-backdrop{
       position:fixed;
       inset:0;
@@ -765,24 +807,13 @@
       padding: 18px;
     }
     .modal{
-      width: min(840px, 100%);
+      width: min(860px, 100%);
       border-radius: 22px;
       border:1px solid rgba(140,170,255,.18);
       background: linear-gradient(135deg, rgba(17,29,63,.92), rgba(8,16,40,.96));
       box-shadow: 0 36px 120px rgba(0,0,0,.60);
       overflow:hidden;
       position:relative;
-    }
-    .modal::after{
-      content:"";
-      position:absolute;
-      width:420px; height:420px;
-      right:-180px; top:-220px;
-      background: color-mix(in oklab, var(--accent2) 26%, transparent);
-      filter: blur(80px);
-      opacity:.32;
-      border-radius: 999px;
-      pointer-events:none;
     }
     .modal-head{
       padding: 14px 16px 12px;
@@ -791,16 +822,8 @@
       align-items:center;
       justify-content:space-between;
       gap: 10px;
-      position:relative; z-index:1;
     }
-    .modal-title{
-      font-weight: 950;
-      letter-spacing: .02em;
-    }
-    .modal-body{
-      padding: 14px 16px 16px;
-      position:relative; z-index:1;
-    }
+    .modal-title{ font-weight: 950; letter-spacing: .02em; }
     .modal-close{
       width: 38px; height: 38px;
       border-radius: 14px;
@@ -810,16 +833,20 @@
       cursor:pointer;
       font-weight: 950;
     }
-    .form-row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+    .modal-body{ padding: 14px 16px 16px; }
+    .modal-actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+      justify-content:flex-end;
     }
     .field{
       border:1px solid rgba(140,170,255,.14);
       background: rgba(255,255,255,.03);
       border-radius: 14px;
       padding: 10px 12px;
+      margin-bottom: 12px;
     }
     .field label{
       display:block;
@@ -830,7 +857,7 @@
       color: rgba(255,255,255,.86);
       margin-bottom: 8px;
     }
-    .field input{
+    .field input[type="password"], .field input[type="text"]{
       width:100%;
       border:0;
       outline:0;
@@ -839,6 +866,8 @@
       font-weight: 800;
       font-size: 14px;
     }
+    .field input[type="range"]{ width:100%; }
+
     .preview{
       border:1px solid rgba(140,170,255,.14);
       background: rgba(255,255,255,.03);
@@ -850,23 +879,15 @@
       flex-wrap:wrap;
     }
     .preview .pimg{
-      width: 140px;
-      height: 140px;
+      width: 160px;
+      height: 160px;
       border-radius: 18px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.18);
     }
     .preview .pimg img{width:100%;height:100%;object-fit:cover;display:block}
-    .modal-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 12px;
-      justify-content:flex-end;
-    }
 
-    /* ===== TOAST ===== */
     .toast{
       position: fixed;
       right: 14px;
@@ -884,191 +905,176 @@
       white-space: pre-wrap;
     }
 
-    /* Responsive */
-    @media (max-width: 1120px){
-      .layout{ grid-template-columns: 1fr; }
-      .side{ position:relative; top:auto; }
-    }
-    @media (max-width: 980px){
-      .hero-stats{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .hero-right{ padding-top: 10px; text-align:left; }
-      .hero-top{ flex-direction: column; align-items:flex-start; }
-      .form-row{ grid-template-columns: 1fr; }
-    }
-    @media (max-width: 700px){
-      .shell{ padding: 12px 12px 22px; }
-      .topbar{ flex-direction: column; align-items: stretch; }
-      .btn{ width:100%; }
+    @media (max-width: 1150px){
+      .app{ grid-template-columns: 1fr; }
+      .sidebar{ position: relative; height:auto; }
     }
   </style>
 </head>
 
 <body>
+  <div id="pageBg" class="page-bg"></div>
+  <div class="page-bg-overlay"></div>
   <div class="bg-grid"></div>
 
-  <div class="shell">
-    <div class="topbar">
-      <a class="btn ghost" href="index.html">← Назад на сайт</a>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
-        <button id="btnReload" class="btn primary" type="button">Обновить</button>
-        <button id="btnLogout" class="btn danger" type="button">Выйти</button>
+  <div class="app">
+    <!-- LEFT PANEL -->
+    <aside class="sidebar">
+      <div class="side-top">
+        <div class="me">
+          <div class="me-ava"><img id="meAvatar" alt="avatar"></div>
+          <div class="me-meta">
+            <div class="me-login" id="meLogin">loading</div>
+            <div class="me-nick" id="meNick">—</div>
+            <div class="me-role" id="meRole">USER</div>
+          </div>
+        </div>
+
+        <div class="side-actions">
+          <a class="btn ghost small" href="index.html">← Назад</a>
+          <button id="btnReload" class="btn primary small" type="button">Обновить</button>
+          <button id="btnLogout" class="btn danger small" type="button">Выйти</button>
+        </div>
       </div>
-    </div>
 
-    <div id="errorGlobal" class="error-global"></div>
+      <nav class="nav" id="nav">
+        <button class="nav-btn active" data-tab="overview" type="button">
+          <span class="nav-left"><span class="nav-ico">⚡</span><span class="nav-label">Обзор</span></span>
+          <span class="badge" id="bdOverview"></span>
+        </button>
 
-    <div class="layout">
-      <!-- SIDEBAR -->
-      <aside class="side">
-        <div class="side-head">
-          <div class="mini-user">
-            <div class="mini-ava"><img id="miniAvatar" alt="avatar"></div>
-            <div class="mini-meta">
-              <div class="mini-login" id="miniLogin">loading</div>
-              <div class="mini-sub" id="miniSub">@unknown</div>
-              <div class="mini-pill" id="miniRole">USER</div>
+        <button class="nav-btn" data-tab="contracts" type="button">
+          <span class="nav-left"><span class="nav-ico">📜</span><span class="nav-label">Контракты</span></span>
+          <span class="badge blue" id="bdContracts">0</span>
+        </button>
+
+        <button class="nav-btn" data-tab="inventory" type="button">
+          <span class="nav-left"><span class="nav-ico">🎒</span><span class="nav-label">Инвентарь</span></span>
+          <span class="badge" id="bdInv">0</span>
+        </button>
+
+        <button class="nav-btn" data-tab="progress" type="button">
+          <span class="nav-left"><span class="nav-ico">🏆</span><span class="nav-label">Прогресс</span></span>
+          <span class="badge" id="bdLvl">1</span>
+        </button>
+
+        <button class="nav-btn" data-tab="notifications" type="button">
+          <span class="nav-left"><span class="nav-ico">🔔</span><span class="nav-label">Уведомления</span></span>
+          <span class="badge red" id="bdNotif">0</span>
+        </button>
+
+        <button class="nav-btn" data-tab="wsbuild" type="button">
+          <span class="nav-left"><span class="nav-ico">⚙️</span><span class="nav-label">WSBuild</span></span>
+          <span class="badge" id="bdWsb">0</span>
+        </button>
+
+        <button class="nav-btn" data-tab="settings" type="button">
+          <span class="nav-left"><span class="nav-ico">🛠</span><span class="nav-label">Настройки</span></span>
+          <span class="badge" id="bdSet"></span>
+        </button>
+      </nav>
+
+      <div class="side-footer">
+        Если какие-то запросы падают, профиль будет пытаться догрузить данные повторно.
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div id="statusLine" class="statusline"></div>
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-banner" id="heroBanner"></div>
+
+        <div class="hero-top">
+          <div class="hero-left">
+            <div class="level-badge" id="levelBadge">
+              <div class="water" id="levelWater"></div>
+              <div class="wave" id="levelWave"></div>
+              <div class="level-content">
+                <div class="level-label">LEVEL</div>
+                <div class="level-num" id="levelNum">—</div>
+              </div>
             </div>
+
+            <div class="hero-id">
+              <div class="hero-login" id="heroLogin">loading</div>
+              <div class="hero-name" id="heroName">—</div>
+
+              <div class="hero-pills">
+                <span class="pill role" id="heroRole">USER</span>
+                <span class="pill" id="heroRank">INIT</span>
+                <span class="pill" id="heroVk">VK: —</span>
+                <span class="pill" id="heroNick">NICK: —</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div class="hero-rating-label">Рейтинг</div>
+            <div class="hero-rating-value" id="heroRating">—</div>
           </div>
         </div>
 
-        <div class="nav" id="nav">
-          <div class="item active" data-tab="overview">
-            <div class="left"><span>⚡</span><span class="label">Обзор</span></div>
-            <span class="badge" id="bdOverview"> </span>
-          </div>
-
-          <div class="item" data-tab="contracts">
-            <div class="left"><span>📜</span><span class="label">Контракты</span></div>
-            <span class="badge blue" id="bdContracts">0</span>
-          </div>
-
-          <div class="item" data-tab="inventory">
-            <div class="left"><span>🎒</span><span class="label">Инвентарь</span></div>
-            <span class="badge" id="bdInv">0</span>
-          </div>
-
-          <div class="item" data-tab="progress">
-            <div class="left"><span>🏆</span><span class="label">Прогресс</span></div>
-            <span class="badge" id="bdLvl">1</span>
-          </div>
-
-          <div class="item" data-tab="notifications">
-            <div class="left"><span>🔔</span><span class="label">Уведомления</span></div>
-            <span class="badge red" id="bdNotif">0</span>
-          </div>
-
-          <div class="item" data-tab="wsbuild">
-            <div class="left"><span>⚙️</span><span class="label">WSBuild</span></div>
-            <span class="badge" id="bdWsb">0</span>
-          </div>
-
-          <div class="item" data-tab="settings">
-            <div class="left"><span>🛠</span><span class="label">Настройки</span></div>
-            <span class="badge" id="bdSet"> </span>
-          </div>
-        </div>
-      </aside>
-
-      <!-- MAIN -->
-      <main class="main">
-        <!-- HERO -->
-        <section class="hero" id="heroCard">
-          <div class="hero-banner" id="heroBanner"></div>
-
-          <div class="hero-top">
-            <div class="hero-left">
-              <!-- level badge (water) -->
-              <div class="level-badge" id="levelBadge" title="Уровень">
-                <div class="water" id="levelWater"></div>
-                <div class="wave" id="levelWave"></div>
-                <div class="level-content">
-                  <div class="level-label">LEVEL</div>
-                  <div class="level-num" id="levelNum">—</div>
-                </div>
-              </div>
-
-              <div class="hero-id">
-                <div class="hero-login" id="heroLogin">loading</div>
-                <div class="hero-name" id="heroName">—</div>
-
-                <div class="hero-pills">
-                  <span class="pill role" id="heroRole">USER</span>
-                  <span class="pill" id="heroRank">INIT</span>
-                  <span class="pill" id="heroVk">VK: —</span>
-                  <span class="pill" id="heroNick">NICK: —</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="hero-right">
-              <div class="hero-rating-label">Рейтинг</div>
-              <div class="hero-rating-value" id="heroRating">—</div>
-            </div>
-          </div>
-
-          <div class="hero-xp">
-            <div class="hero-xp-row">
-              <div>
-                <div class="hero-xp-title" id="heroXpTitle">XP</div>
-                <div class="hero-xp-text" id="heroXpText">— / —</div>
-              </div>
-              <div class="hero-xp-next" id="heroXpNext">До следующего: —</div>
-            </div>
-
-            <div class="xp-bar">
-              <div class="xp-fill" id="heroXpFill" style="width:0%"></div>
-            </div>
-          </div>
-
-          <div class="hero-stats">
-            <div class="stat">
-              <div class="k">Игровой баланс</div>
-              <div class="v" id="heroBal">0</div>
-            </div>
-            <div class="stat">
-              <div class="k">К выводу</div>
-              <div class="v" id="heroOut">0</div>
-            </div>
-            <div class="stat">
-              <div class="k">WSBuild</div>
-              <div class="v" id="heroWsb">0</div>
-            </div>
-            <div class="stat">
-              <div class="k">Инвентарь</div>
-              <div class="v" id="heroInv">0</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- CONTENT -->
-        <section class="content">
-          <div class="content-head">
+        <div class="hero-xp">
+          <div class="hero-xp-row">
             <div>
-              <h2 class="h-title" id="viewTitle">Обзор</h2>
-              <div class="h-sub" id="viewSub">Баланс, статусы, переводы, активность. Можно менять расстановку блоков.</div>
+              <div class="hero-xp-title">XP</div>
+              <div class="hero-xp-text" id="heroXpText">— / —</div>
             </div>
-
-            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
-              <button id="btnLayoutToggle" class="btn ghost small" type="button">Редактировать блоки</button>
-              <button id="btnLayoutReset" class="btn small" type="button" style="display:none;">Сбросить</button>
-              <button id="btnReadAll" class="btn ghost small" type="button" style="display:none;">Прочитать всё</button>
-            </div>
+            <div class="hero-xp-next" id="heroXpNext">До следующего: —</div>
           </div>
 
-          <div class="content-body" id="view"></div>
-        </section>
-      </main>
-    </div>
+          <div class="xp-bar">
+            <div class="xp-fill" id="heroXpFill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="k">Игровой баланс</div>
+            <div class="v" id="heroBal">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">К выводу</div>
+            <div class="v" id="heroOut">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">WSBuild</div>
+            <div class="v" id="heroWsb">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Инвентарь</div>
+            <div class="v" id="heroInv">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTENT -->
+      <section class="content">
+        <div class="content-head">
+          <div>
+            <h2 class="h-title" id="viewTitle">Обзор</h2>
+            <div class="h-sub" id="viewSub">Панели справа зависят от выбранного раздела слева.</div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+            <button id="btnReadAll" class="btn ghost small" type="button" style="display:none;">Прочитать всё</button>
+          </div>
+        </div>
+        <div class="content-body" id="view"></div>
+      </section>
+    </main>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <!-- Modal -->
   <div class="modal-backdrop" id="modalBackdrop">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="modal">
+    <div class="modal">
       <div class="modal-head">
         <div class="modal-title" id="modalTitle">Modal</div>
-        <button class="modal-close" type="button" id="modalClose">✕</button>
+        <button class="modal-close" id="modalClose" type="button">✕</button>
       </div>
       <div class="modal-body" id="modalBody"></div>
     </div>
@@ -1076,7 +1082,7 @@
 
 <script>
 /* ======================
-   CONFIG / HELPERS
+   Base / helpers
 ====================== */
 function apiBase(){
   const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
@@ -1097,17 +1103,6 @@ function esc(s){
     .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
-function showGlobalError(text){
-  const box = document.getElementById("errorGlobal");
-  box.style.display = "block";
-  box.textContent = String(text || "Ошибка");
-}
-function clearGlobalError(){
-  const box = document.getElementById("errorGlobal");
-  box.style.display = "none";
-  box.textContent = "";
-}
-
 function toast(text){
   const el = document.getElementById("toast");
   el.textContent = String(text||"");
@@ -1116,21 +1111,75 @@ function toast(text){
   window.__toast_t = setTimeout(()=> el.style.display = "none", 3500);
 }
 
-function niceHttpError(json, resp, path){
-  const status = resp?.status || 0;
-  const msg = json?.error ? String(json.error) : "";
+function setStatus(text, isError=false){
+  const el = document.getElementById("statusLine");
+  if(!text){
+    el.style.display = "none";
+    el.textContent = "";
+    el.classList.remove("error");
+    return;
+  }
+  el.style.display = "block";
+  el.textContent = String(text);
+  el.classList.toggle("error", !!isError);
+}
 
-  if(status === 401) return `401: Сессия истекла или нет доступа. (${path})\n${msg || "Unauthorized"}`;
-  if(status === 403) return `403: Доступ запрещён. (${path})\n${msg || "Forbidden"}`;
-  if(status === 404) return `404: Эндпоинт не найден. (${path})\n${msg || "Not Found"}`;
-  if(status === 400) return `400: Некорректный запрос. (${path})\n${msg || "Bad Request"}`;
-  if(status >= 500) return `Server ${status}: Ошибка сервера. (${path})\n${msg || "Internal error"}`;
-  return `${status || "ERR"}: ${msg || "Ошибка запроса"} (${path})`;
+function widgetError(text){
+  return `<div class="widget-error">${esc(text)}</div>`;
+}
+
+/* ======================
+   Retry fetch (GET retries until success*)
+   (*but stops on 400/401/403/404; stops after many attempts for safety)
+====================== */
+function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+function isRetryableError(err){
+  const status = Number(err?.status || 0);
+  const msg = String(err?.message || "").toLowerCase();
+
+  if ([400,401,403,404].includes(status)) return false;
+  if ([408,425,429,500,502,503,504].includes(status)) return true;
+
+  if (msg.includes("failed to fetch")) return true;
+  if (msg.includes("таймаут")) return true;
+  if (msg.includes("timeout")) return true;
+
+  return false;
+}
+function calcBackoff(attempt, base=650, cap=8000){
+  const exp = Math.min(cap, Math.round(base * Math.pow(1.6, attempt - 1)));
+  const jitter = Math.round(exp * (Math.random() * 0.25));
+  return Math.min(cap, exp + jitter);
+}
+
+async function withRetry(task, { maxAttempts=40, baseDelayMs=650, maxDelayMs=8000, label="" } = {}){
+  let attempt = 0;
+  while(true){
+    attempt++;
+    try{
+      const res = await task();
+      if (label) setStatus("");
+      return res;
+    }catch(err){
+      if(!isRetryableError(err) || attempt >= maxAttempts){
+        if (label) setStatus("", true);
+        throw err;
+      }
+      const delay = calcBackoff(attempt, baseDelayMs, maxDelayMs);
+      if (label) setStatus(`Сеть/Render: догружаю ${label}… попытка ${attempt}, повтор через ${Math.ceil(delay/1000)}с`);
+      await sleep(delay);
+    }
+  }
 }
 
 async function fetchJson(path, {method="GET", body=null, timeoutMs=15000} = {}){
   const token = getToken();
-  if(!token) throw new Error("Нет ws_token. Сначала войди в аккаунт.");
+  if(!token){
+    const e = new Error("Нет ws_token. Сначала войди в аккаунт.");
+    e.status = 401; e.path = path;
+    throw e;
+  }
 
   const ctrl = new AbortController();
   const t = setTimeout(()=> ctrl.abort(), timeoutMs);
@@ -1140,106 +1189,176 @@ async function fetchJson(path, {method="GET", body=null, timeoutMs=15000} = {}){
     resp = await fetch(apiBase()+path, {
       method,
       headers:{
-        "Authorization": "Bearer " + token,
-        "Accept": "application/json",
-        ...(method !== "GET" ? {"Content-Type":"application/json"} : {})
+        "Authorization":"Bearer "+token,
+        "Accept":"application/json",
+        ...(method!=="GET" ? {"Content-Type":"application/json"} : {})
       },
       body: body ? JSON.stringify(body) : null,
       signal: ctrl.signal
     });
 
     text = await resp.text();
-    try { json = JSON.parse(text); }
-    catch { json = null; }
+    try { json = JSON.parse(text); } catch { json = null; }
 
     if(!json){
-      throw new Error(`Сервер вернул не JSON (${resp.status}) для ${path}\n${text?.slice(0,220) || ""}`);
+      const e = new Error(`Сервер вернул не JSON (${resp.status}) для ${path}\n${String(text||"").slice(0,220)}`);
+      e.status = resp.status; e.path = path;
+      throw e;
     }
 
     if(!resp.ok || !json.ok){
-      throw new Error(niceHttpError(json, resp, path));
+      const e = new Error(String(json.error || `Ошибка ${resp.status}`));
+      e.status = resp.status; e.path = path; e.payload = json;
+      throw e;
     }
 
     return json;
-  } catch(e){
-    if(e?.name === "AbortError"){
-      throw new Error(`Таймаут запроса (${timeoutMs}мс): ${path}`);
+  } catch(err){
+    if(err?.name === "AbortError"){
+      const e = new Error(`Таймаут запроса (${timeoutMs}мс): ${path}`);
+      e.status = 408; e.path = path;
+      throw e;
     }
-    throw e;
+    if(err instanceof TypeError && String(err.message).includes("Failed to fetch")){
+      const e = new Error(`Failed to fetch (CORS/сеть/Render asleep): ${path}`);
+      e.status = 503; e.path = path;
+      throw e;
+    }
+    throw err;
   } finally {
     clearTimeout(t);
   }
 }
-const apiGet = (path, opts={}) => fetchJson(path, {method:"GET", ...opts});
-const apiPost = (path, body, opts={}) => fetchJson(path, {method:"POST", body, ...opts});
+
+async function apiGet(path, label="данные"){
+  return withRetry(()=>fetchJson(path, {method:"GET"}), { label, maxAttempts: 40 });
+}
+async function apiPost(path, body){
+  // POST не ретраим автоматически (чтобы не было двойных действий)
+  return fetchJson(path, {method:"POST", body});
+}
 
 /* ======================
-   THEME (user-custom)
+   Theme + page background (localStorage)
 ====================== */
-const THEME_KEY = "ws_profile_theme_v1";
-function loadTheme(){
-  try{
-    const raw = localStorage.getItem(THEME_KEY);
-    if(!raw) return null;
-    return JSON.parse(raw);
-  }catch{ return null; }
-}
-function saveTheme(theme){
-  localStorage.setItem(THEME_KEY, JSON.stringify(theme || {}));
-}
-function applyTheme(theme){
-  const t = theme || {};
-  const root = document.documentElement.style;
+const THEME_KEY = "ws_profile_theme_v2";
+const BG_KEY = "ws_profile_page_bg_v2";
 
-  if(t.accent1) root.setProperty("--accent1", t.accent1);
-  if(t.accent2) root.setProperty("--accent2", t.accent2);
-  if(t.glow) root.setProperty("--glow", t.glow);
+function loadTheme(){
+  try{ return JSON.parse(localStorage.getItem(THEME_KEY) || "null"); }catch{ return null; }
+}
+function saveTheme(t){ localStorage.setItem(THEME_KEY, JSON.stringify(t||{})); }
+function applyTheme(t){
+  const theme = t || {};
+  const s = document.documentElement.style;
+  if(theme.accent1) s.setProperty("--accent1", theme.accent1);
+  if(theme.accent2) s.setProperty("--accent2", theme.accent2);
+  if(theme.glow) s.setProperty("--glow", theme.glow);
+}
+
+function loadBg(){
+  try{
+    const x = JSON.parse(localStorage.getItem(BG_KEY) || "null");
+    if(!x) return { image:"", blur:0, opacity:55 };
+    return {
+      image: String(x.image||""),
+      blur: Math.max(0, Math.min(100, Number(x.blur||0))),
+      opacity: Math.max(0, Math.min(100, Number(x.opacity??55))),
+    };
+  }catch{
+    return { image:"", blur:0, opacity:55 };
+  }
+}
+function saveBg(cfg){ localStorage.setItem(BG_KEY, JSON.stringify(cfg)); }
+
+function applyBg(cfg){
+  const el = document.getElementById("pageBg");
+  const blurPx = Math.round((Number(cfg.blur||0) / 100) * 36); // 0..100 -> 0..36px
+  document.documentElement.style.setProperty("--pageBgBlurPx", blurPx + "px");
+  document.documentElement.style.setProperty("--pageBgOpacity", (Number(cfg.opacity||55) / 100).toFixed(2));
+  el.style.backgroundImage = cfg.image ? `url('${cfg.image}')` : "none";
+}
+
+async function compressToDataURL(file, {maxW=1920, maxH=1080, mime="image/jpeg", quality=0.82} = {}){
+  const bmp = await createImageBitmap(file);
+  let w = bmp.width, h = bmp.height;
+  const r = Math.min(maxW / w, maxH / h, 1);
+  w = Math.round(w*r); h = Math.round(h*r);
+
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+  ctx.drawImage(bmp, 0, 0, w, h);
+  return c.toDataURL(mime, quality);
 }
 
 /* ======================
-   STATE
+   Modal
+====================== */
+function modalOpen(title, html){
+  document.getElementById("modalTitle").textContent = title || "Modal";
+  document.getElementById("modalBody").innerHTML = html || "";
+  document.getElementById("modalBackdrop").style.display = "flex";
+}
+function modalClose(){
+  document.getElementById("modalBackdrop").style.display = "none";
+  document.getElementById("modalBody").innerHTML = "";
+}
+document.getElementById("modalClose").addEventListener("click", modalClose);
+document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
+  if(e.target.id === "modalBackdrop") modalClose();
+});
+
+/* ======================
+   State
 ====================== */
 const state = {
-  activeTab: "overview",
-  editingLayout: false,
-
+  tab: "overview",
   dashboard: null,
   progress: null,
 
-  overview: {
-    bonusStatus: null,
-    chestStatus: null,
-    rouletteLimits: null,
-    transfers: null,
-    chestHistory: null
-  },
-
-  contractsBundle: null,
+  overview: { bonus:null, chest:null, roulette:null, transfers:null, chestHistory:null },
+  contracts: null,
   notifications: null,
-
-  wsbuild: {
-    packages: null,
-    paymentActive: null,
-    paymentMy: null,
-    autotopup: null
-  },
-
-  settings: {
-    notifySettings: null,
-    linkCodes: null,
-    draft: {}
-  }
+  wsbuild: { packages:null, active:null, my:null, auto:null },
+  settings: { notify:null, codes:null, draft:{} },
 };
 
 /* ======================
-   NORMALIZERS
+   Level tier (colors)
 ====================== */
+function getLevelTier(level){
+  const lvl = Math.max(1, Number(level||1));
+  if(lvl >= 50) return { a:"#ffb86b", b:"#ff64d7" };
+  if(lvl >= 35) return { a:"#7c3aed", b:"#3d7dff" };
+  if(lvl >= 25) return { a:"#3d7dff", b:"#27d6ff" };
+  if(lvl >= 15) return { a:"#1bd760", b:"#3d7dff" };
+  if(lvl >= 8)  return { a:"#ffcc66", b:"#7c3aed" };
+  return { a:"#3d7dff", b:"#7c3aed" };
+}
+
+/* ======================
+   Render helpers
+====================== */
+function setActiveTab(tab){
+  state.tab = tab;
+  document.querySelectorAll(".nav-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.tab === tab);
+  });
+  document.getElementById("btnReadAll").style.display = tab === "notifications" ? "inline-flex" : "none";
+}
+
+function setHead(title, sub){
+  document.getElementById("viewTitle").textContent = title;
+  document.getElementById("viewSub").textContent = sub || "";
+}
+
 function normalizeInventory(items){
   const arr = Array.isArray(items) ? items : [];
   return arr.map(x=>{
     const obj = x.object || x.ws_object || {};
     return {
-      object_id: Number(x.object_id || x.id || 0),
+      object_id: Number(x.object_id || 0),
       count: Number(x.count || 0),
       title: String(x.title || obj.title || "Предмет"),
       rarity: String(x.rarity || obj.rarity || "Обычный"),
@@ -1249,126 +1368,65 @@ function normalizeInventory(items){
 }
 
 /* ======================
-   LEVEL TIERS (иконка/рамка)
+   Apply HERO (dashboard + progress)
 ====================== */
-function getLevelTier(level){
-  const lvl = Math.max(1, Number(level||1));
-  // Тиры можно менять как захочешь
-  if(lvl >= 50) return { name:"LEGEND", a:"#ffb86b", b:"#ff64d7" };
-  if(lvl >= 35) return { name:"MASTER", a:"#7c3aed", b:"#3d7dff" };
-  if(lvl >= 25) return { name:"OPERATIVE", a:"#3d7dff", b:"#27d6ff" };
-  if(lvl >= 15) return { name:"HUNTER", a:"#1bd760", b:"#3d7dff" };
-  if(lvl >= 8)  return { name:"ACTIVE", a:"#ffcc66", b:"#7c3aed" };
-  return { name:"ROOKIE", a:"#3d7dff", b:"#7c3aed" };
-}
+function applyHero(dash, prog){
+  const user = dash?.user || {};
+  const binder = dash?.binder || {};
+  const inv = normalizeInventory(dash?.inventory || []);
+  const invCount = inv.reduce((s,x)=>s+Number(x.count||0),0);
 
-/* ======================
-   COUNT-UP ANIMATION
-====================== */
-function animateNumber(el, to, {duration=650} = {}){
-  const from = Number(String(el.textContent||"").replace(/\s+/g,"").replace(/[^\d.-]/g,"")) || 0;
-  const start = performance.now();
-  const end = start + duration;
-  const target = Number(to || 0);
-
-  function tick(now){
-    const p = Math.min(1, (now - start) / duration);
-    const val = Math.round(from + (target - from) * (p < 1 ? (1 - Math.pow(1-p, 3)) : 1));
-    el.textContent = formatNum(val);
-    if(now < end) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-/* ======================
-   HERO RENDER
-====================== */
-function setHeroSkeleton(){
-  document.getElementById("heroLogin").textContent = "loading";
-  document.getElementById("heroName").textContent = "—";
-  document.getElementById("heroRole").textContent = "USER";
-  document.getElementById("heroRank").textContent = "INIT";
-  document.getElementById("heroVk").textContent = "VK: —";
-  document.getElementById("heroNick").textContent = "NICK: —";
-  document.getElementById("heroRating").textContent = "—";
-  document.getElementById("heroXpText").textContent = "— / —";
-  document.getElementById("heroXpNext").textContent = "До следующего: —";
-  document.getElementById("heroXpFill").style.width = "0%";
-  document.getElementById("levelBadge").style.setProperty("--fill", "0%");
-  document.getElementById("levelNum").textContent = "—";
-  document.getElementById("heroBal").textContent = "0";
-  document.getElementById("heroOut").textContent = "0";
-  document.getElementById("heroWsb").textContent = "0";
-  document.getElementById("heroInv").textContent = "0";
-}
-
-function applySidebarUser(user){
-  const miniAvatar = document.getElementById("miniAvatar");
-  miniAvatar.src = user.avatar_url || "https://placehold.co/200x200?text=WS";
-  miniAvatar.onerror = ()=> miniAvatar.src = "https://placehold.co/200x200?text=WS";
-
-  document.getElementById("miniLogin").textContent = user.login || "unknown";
-  document.getElementById("miniSub").textContent = "@" + (user.login || "unknown");
-  document.getElementById("miniRole").textContent = String(user.role||"user").toLowerCase()==="admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
-}
-
-function applyHero(dashboard, progress){
-  const user = dashboard?.user || {};
-  const binder = dashboard?.binder || {};
-  const inventory = normalizeInventory(dashboard?.inventory || []);
-  const invCount = inventory.reduce((s,x)=> s + Number(x.count||0), 0);
-
-  applySidebarUser(user);
+  // left panel user
+  const meAvatar = document.getElementById("meAvatar");
+  meAvatar.src = user.avatar_url || "https://placehold.co/160x160?text=WS";
+  meAvatar.onerror = ()=> meAvatar.src = "https://placehold.co/160x160?text=WS";
+  document.getElementById("meLogin").textContent = user.login || "unknown";
+  document.getElementById("meNick").textContent = user.game_nick || user.nickname || "—";
+  document.getElementById("meRole").textContent = String(user.role||"user").toLowerCase()==="admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
 
   // banner
-  const bannerEl = document.getElementById("heroBanner");
-  const bannerUrl = user.profile_banner_url;
-  if(bannerUrl){
-    bannerEl.style.backgroundImage =
-      `linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.75)), url('${bannerUrl}')`;
-    bannerEl.style.backgroundSize = "cover";
-    bannerEl.style.backgroundPosition = "center";
+  const banner = document.getElementById("heroBanner");
+  if(user.profile_banner_url){
+    banner.style.backgroundImage =
+      `linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.78)), url('${user.profile_banner_url}')`;
+    banner.style.backgroundSize = "cover";
+    banner.style.backgroundPosition = "center";
   } else {
-    bannerEl.style.backgroundImage = "";
+    banner.style.backgroundImage = "";
   }
 
-  // texts
+  // text blocks
   document.getElementById("heroLogin").textContent = user.login || "unknown";
   document.getElementById("heroName").textContent = user.game_nick || user.nickname || user.login || "—";
-
-  const role = String(user.role||"user").toLowerCase();
-  document.getElementById("heroRole").textContent = role === "admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
-
+  document.getElementById("heroRole").textContent = String(user.role||"user").toLowerCase()==="admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
   document.getElementById("heroVk").textContent = user.vk_id ? `VK: ${user.vk_id}` : "VK: —";
   document.getElementById("heroNick").textContent = user.game_nick ? `NICK: ${user.game_nick}` : "NICK: —";
 
-  // rank + rating
   const capital = Number(binder.game_balance||0) + Number(binder.to_output||0);
   document.getElementById("heroRank").textContent = capital >= 100000 ? "CORE" : "INIT";
 
-  const totalXp = Number(progress?.profile?.total_xp ?? 0);
+  // rating: from total_xp if exists, else capital/100
+  const totalXp = Number(prog?.profile?.total_xp ?? 0);
   const rating = totalXp > 0 ? Math.round(totalXp / 10) : Math.round(capital / 100);
   document.getElementById("heroRating").textContent = formatNum(rating);
 
-  // stats with animation
-  animateNumber(document.getElementById("heroBal"), Number(binder.game_balance||0));
-  animateNumber(document.getElementById("heroOut"), Number(binder.to_output||0));
-  animateNumber(document.getElementById("heroWsb"), Number(binder.wsbuild_balance||0));
-  animateNumber(document.getElementById("heroInv"), Number(invCount||0));
+  // stats
+  document.getElementById("heroBal").textContent = formatNum(binder.game_balance||0);
+  document.getElementById("heroOut").textContent = formatNum(binder.to_output||0);
+  document.getElementById("heroWsb").textContent = formatNum(binder.wsbuild_balance||0);
+  document.getElementById("heroInv").textContent = formatNum(invCount);
 
   // badges
   document.getElementById("bdWsb").textContent = formatNum(binder.wsbuild_balance || 0);
-  document.getElementById("bdInv").textContent = formatNum(invCount || 0);
-  document.getElementById("bdNotif").textContent = formatNum(dashboard.notifications_unread_count || 0);
+  document.getElementById("bdInv").textContent = formatNum(invCount);
+  document.getElementById("bdNotif").textContent = formatNum(dash.notifications_unread_count || 0);
+  document.getElementById("bdContracts").textContent = String((dash.contracts_in_progress||[]).length);
 
-  const inProgress = Array.isArray(dashboard.contracts_in_progress) ? dashboard.contracts_in_progress.length : 0;
-  document.getElementById("bdContracts").textContent = formatNum(inProgress);
-
-  // progress -> xp bar + water fill
-  const lvl = Number(progress?.profile?.level || 1);
-  const xp = Number(progress?.profile?.xp || 0);
-  const toNext = Number(progress?.profile?.xp_to_next || 100);
-  const pct = Math.max(0, Math.min(100, Number(progress?.profile?.progress_percent || 0)));
+  // level water + xp
+  const lvl = Number(prog?.profile?.level || 1);
+  const xp = Number(prog?.profile?.xp || 0);
+  const toNext = Number(prog?.profile?.xp_to_next || 100);
+  const pct = Math.max(0, Math.min(100, Number(prog?.profile?.progress_percent || 0)));
 
   document.getElementById("bdLvl").textContent = String(lvl);
   document.getElementById("levelNum").textContent = String(lvl);
@@ -1376,376 +1434,251 @@ function applyHero(dashboard, progress){
   document.getElementById("heroXpNext").textContent = `До следующего: ${formatNum(Math.max(0, toNext - xp))}`;
   document.getElementById("heroXpFill").style.width = pct + "%";
 
-  // water fill corresponds to pct (feel better visually if min 12%)
   const fill = Math.max(10, Math.min(100, pct));
   const badge = document.getElementById("levelBadge");
   badge.style.setProperty("--fill", fill + "%");
 
-  // tier colors
   const tier = getLevelTier(lvl);
   badge.style.setProperty("--tierA", tier.a);
   badge.style.setProperty("--tierB", tier.b);
 }
 
 /* ======================
-   MODAL
+   Loaders
 ====================== */
-function modalOpen(title, html){
-  const back = document.getElementById("modalBackdrop");
-  document.getElementById("modalTitle").textContent = title || "Modal";
-  document.getElementById("modalBody").innerHTML = html || "";
-  back.style.display = "flex";
-}
-function modalClose(){
-  const back = document.getElementById("modalBackdrop");
-  back.style.display = "none";
-  document.getElementById("modalBody").innerHTML = "";
-}
-document.getElementById("modalClose").addEventListener("click", modalClose);
-document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
-  if(e.target.id === "modalBackdrop") modalClose();
-});
-
-/* ======================
-   LAYOUT CUSTOMIZATION (Overview widgets)
-====================== */
-const LAYOUT_KEY = "ws_profile_overview_layout_v2";
-
-/**
- * Layout model:
- * {
- *   order: ["quick","status","transfers","chestHistory","activity"],
- *   spans: { quick:12, status:12, transfers:6, chestHistory:6, activity:12 },
- * }
- */
-function defaultLayout(){
-  return {
-    order: ["quick","status","transfers","chestHistory","activity"],
-    spans: { quick:12, status:12, transfers:6, chestHistory:6, activity:12 }
-  };
-}
-function loadLayout(){
-  try{
-    const raw = localStorage.getItem(LAYOUT_KEY);
-    if(!raw) return defaultLayout();
-    const p = JSON.parse(raw);
-    if(!p || !Array.isArray(p.order) || typeof p.spans !== "object") return defaultLayout();
-    return p;
-  }catch{ return defaultLayout(); }
-}
-function saveLayout(layout){
-  localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout));
-}
-function resetLayout(){
-  saveLayout(defaultLayout());
+async function loadCore(){
+  // core: dashboard + progress
+  const [dash, prog] = await Promise.all([
+    apiGet("/api/ws/dashboard-bundle", "dashboard"),
+    apiGet("/api/ws/profile/progress", "progress")
+  ]);
+  state.dashboard = dash;
+  state.progress = prog;
+  applyHero(dash, prog);
 }
 
-function setEditingLayout(flag){
-  state.editingLayout = !!flag;
-  const btn = document.getElementById("btnLayoutToggle");
-  const btnReset = document.getElementById("btnLayoutReset");
-  btn.textContent = state.editingLayout ? "Готово" : "Редактировать блоки";
-  btnReset.style.display = state.editingLayout ? "inline-flex" : "none";
-  renderActiveTab(); // rerender to show handles/buttons
+async function loadOverview(){
+  const tasks = await Promise.allSettled([
+    apiGet("/api/ws/bonus/status", "bonus"),
+    apiGet("/api/ws/chest/status", "chest"),
+    apiGet("/api/ws/roulette/limits", "roulette"),
+    apiGet("/api/ws/balance-transfer/pending", "transfers"),
+    apiGet("/api/ws/chest/history", "chest history"),
+  ]);
+
+  const get = (i)=> tasks[i].status==="fulfilled" ? tasks[i].value : null;
+
+  state.overview.bonus = get(0);
+  state.overview.chest = get(1);
+  state.overview.roulette = get(2);
+  state.overview.transfers = get(3);
+  state.overview.chestHistory = get(4);
 }
 
-/* ======================
-   VIEW HEAD
-====================== */
-function setViewHead(title, sub){
-  document.getElementById("viewTitle").textContent = title;
-  document.getElementById("viewSub").textContent = sub || "";
+async function loadContracts(){
+  state.contracts = await apiGet("/api/ws/contracts/bundle", "contracts");
+}
+
+async function loadNotifications(){
+  state.notifications = await apiGet("/api/ws/notifications?limit=60", "notifications");
+}
+
+async function loadWsbuild(){
+  const tasks = await Promise.allSettled([
+    apiGet("/api/ws/wsbuild/packages", "wsbuild packages"),
+    apiGet("/api/ws/payment-requests/active", "active request"),
+    apiGet("/api/ws/payment-requests/my", "my requests"),
+    apiGet("/api/ws/wsbuild/autotopup/my", "autotopup")
+  ]);
+  const get = (i)=> tasks[i].status==="fulfilled" ? tasks[i].value : null;
+
+  state.wsbuild.packages = get(0);
+  state.wsbuild.active = get(1);
+  state.wsbuild.my = get(2);
+  state.wsbuild.auto = get(3);
+}
+
+async function loadSettings(){
+  const tasks = await Promise.allSettled([
+    apiGet("/api/ws/notify/settings", "notify settings"),
+    apiGet("/api/ws/profile/link-codes", "link codes")
+  ]);
+  const get = (i)=> tasks[i].status==="fulfilled" ? tasks[i].value : null;
+
+  state.settings.notify = get(0);
+  state.settings.codes = get(1);
 }
 
 /* ======================
-   WIDGETS (Overview)
+   Views
 ====================== */
-function widgetError(text){
-  return `<div class="widget-error">${esc(text)}</div>`;
-}
-
-function renderWidgetShell({id, title, icon, span, bodyHtml, extraActionsHtml=""}){
-  const editing = state.editingLayout;
-
-  const handle = editing
-    ? `<div class="drag-handle" title="Перетаскивать" data-drag-handle="1">⠿</div>`
-    : "";
-
-  const sizeBtn = editing
-    ? `<button class="btn ghost small" type="button" data-size-btn="${esc(id)}" title="Изменить ширину">↔</button>`
-    : "";
-
-  return `
-    <div class="widget ${editing ? "editing" : ""}" data-widget="${esc(id)}" draggable="${editing ? "true" : "false"}"
-         style="grid-column: span ${Number(span||12)}">
-      <div class="widget-head">
-        <div class="widget-title">
-          ${handle}
-          <span>${esc(icon||"")}</span>
-          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(title||"")}</span>
-        </div>
-        <div class="widget-actions">
-          ${sizeBtn}
-          ${extraActionsHtml || ""}
-        </div>
-      </div>
-      <div class="widget-body">
-        ${bodyHtml || ""}
-      </div>
-    </div>
-  `;
-}
-
-function renderOverviewWidgets(){
+function renderOverview(){
+  const b = state.overview.bonus;
+  const c = state.overview.chest;
+  const r = state.overview.roulette;
+  const t = state.overview.transfers;
+  const h = state.overview.chestHistory;
   const dash = state.dashboard || {};
-  const inv = normalizeInventory(dash.inventory || []);
-  const binder = dash.binder || {};
-
-  const bonus = state.overview.bonusStatus;
-  const chest = state.overview.chestStatus;
-  const roulette = state.overview.rouletteLimits;
-  const transfers = state.overview.transfers;
-  const chestHistory = state.overview.chestHistory;
-
-  const layout = loadLayout();
-
-  // build widget bodies
-  const widgetMap = {
-    quick: {
-      id:"quick",
-      icon:"⚡",
-      title:"Быстрые действия",
-      body: `
-        <div class="mini-row">
-          <div>
-            <div class="a">Бонус</div>
-            <div class="m">${bonus ? (bonus.can_claim ? "Доступен" : `Ожидание • ~${formatNum(bonus.seconds_left||0)} сек`) : "—"}</div>
-          </div>
-          <div>
-            <button class="btn primary small" type="button" onclick="claimBonus()" ${bonus?.can_claim ? "" : "disabled"}>Забрать</button>
-          </div>
-        </div>
-
-        <div class="mini-row">
-          <div>
-            <div class="a">Сундук</div>
-            <div class="m">${chest ? (chest.can_open ? "Доступен" : `Ожидание • ~${formatNum(chest.seconds_left||0)} сек`) : "—"}</div>
-          </div>
-          <div>
-            <button class="btn primary small" type="button" onclick="openChest()" ${chest?.can_open ? "" : "disabled"}>Открыть</button>
-          </div>
-        </div>
-
-        <div class="mini-row">
-          <div>
-            <div class="a">WSBuild-сбросы</div>
-            <div class="m">Бонус/Сундук/Рулетка</div>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-            <button class="btn ghost small" type="button" onclick="wsbuildResetBonus()">Бонус</button>
-            <button class="btn ghost small" type="button" onclick="wsbuildResetChest()">Сундук</button>
-            <button class="btn ghost small" type="button" onclick="wsbuildResetRoulette()">Рулетка</button>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-        <div class="muted">Баланс: <b>${formatNum(binder.game_balance||0)}</b> • К выводу: <b>${formatNum(binder.to_output||0)}</b> • WSBuild: <b>${formatNum(binder.wsbuild_balance||0)}</b> • Инвентарь: <b>${formatNum(inv.reduce((s,x)=>s+Number(x.count||0),0))}</b></div>
-      `
-    },
-
-    status: {
-      id:"status",
-      icon:"📡",
-      title:"Статусы",
-      body: `
-        <div class="grid">
-          <div class="widget" style="grid-column: span 4; min-height:auto">
-            <div class="widget-body">
-              <div class="muted" style="font-weight:950;letter-spacing:.1em;text-transform:uppercase;font-size:12px">Бонус</div>
-              <div style="margin-top:10px;font-weight:950;font-size:20px">
-                ${bonus ? (bonus.can_claim ? "Доступен" : "Ожидание") : "—"}
-              </div>
-              <div class="muted" style="margin-top:8px">
-                ${bonus ? (bonus.can_claim ? "Можно забрать сейчас" : `~${formatNum(bonus.seconds_left||0)} сек`) : "Ошибка загрузки"}
-              </div>
-            </div>
-          </div>
-
-          <div class="widget" style="grid-column: span 4; min-height:auto">
-            <div class="widget-body">
-              <div class="muted" style="font-weight:950;letter-spacing:.1em;text-transform:uppercase;font-size:12px">Сундук</div>
-              <div style="margin-top:10px;font-weight:950;font-size:20px">
-                ${chest ? (chest.can_open ? "Доступен" : "Ожидание") : "—"}
-              </div>
-              <div class="muted" style="margin-top:8px">
-                ${chest ? `Серия: ${formatNum(chest.streak||0)} • ${chest.can_open ? "Можно открыть" : `~${formatNum(chest.seconds_left||0)} сек`}` : "Ошибка загрузки"}
-              </div>
-            </div>
-          </div>
-
-          <div class="widget" style="grid-column: span 4; min-height:auto">
-            <div class="widget-body">
-              <div class="muted" style="font-weight:950;letter-spacing:.1em;text-transform:uppercase;font-size:12px">Рулетка</div>
-              <div style="margin-top:10px;font-weight:950;font-size:20px">
-                ${roulette ? `${formatNum(roulette.left||0)} / ${formatNum(roulette.max||0)}` : "—"}
-              </div>
-              <div class="muted" style="margin-top:8px">
-                ${roulette ? `Осталось прокрутов` : "Ошибка загрузки"}
-              </div>
-            </div>
-          </div>
-        </div>
-      `
-    },
-
-    transfers: {
-      id:"transfers",
-      icon:"💸",
-      title:"Отложенные переводы",
-      body: transfers
-        ? `
-          <div style="font-weight:950;font-size:22px">${formatNum(transfers.total_pending||0)}</div>
-          <div class="muted" style="margin-top:8px">Сумма в очереди перевода к выводу</div>
-          <div class="hr"></div>
-          ${
-            (transfers.items||[]).length
-            ? (transfers.items||[]).slice(0,6).map(x=>`
-              <div class="mini-row">
-                <div style="min-width:0">
-                  <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.source_text||"Начисление")}</div>
-                  <div class="m">${formatNum(x.amount||0)} • доступно ${safeDate(x.available_at)}</div>
-                </div>
-              </div>
-            `).join("")
-            : `<div class="muted">Очередь пустая</div>`
-          }
-        `
-        : widgetError("Не удалось загрузить /api/ws/balance-transfer/pending")
-    },
-
-    chestHistory: {
-      id:"chestHistory",
-      icon:"🧰",
-      title:"История сундука",
-      body: chestHistory
-        ? (
-          (chestHistory.items||[]).length
-            ? (chestHistory.items||[]).slice(0,7).map(x=>`
-              <div class="mini-row">
-                <div style="min-width:0">
-                  <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.reward_title||"Награда")}</div>
-                  <div class="m">День ${formatNum(x.day_number||0)} • ${safeDate(x.created_at)}</div>
-                </div>
-              </div>
-            `).join("")
-            : `<div class="muted">Пока пусто</div>`
-        )
-        : widgetError("Не удалось загрузить /api/ws/chest/history")
-    },
-
-    activity: {
-      id:"activity",
-      icon:"🕒",
-      title:"Последняя активность",
-      body: (dash.activity_feed||[]).length
-        ? (dash.activity_feed||[]).slice(0,12).map(x=>`
-          <div class="mini-row">
-            <div style="min-width:0">
-              <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.action_text||"Действие")}</div>
-              <div class="m">${safeDate(x.created_at)}</div>
-            </div>
-          </div>
-        `).join("")
-        : `<div class="muted">Пока нет активности</div>`
-    }
-  };
-
-  const html = [];
-  for(const id of layout.order){
-    const w = widgetMap[id];
-    if(!w) continue;
-    const span = Number(layout.spans?.[id] || 12);
-    html.push(renderWidgetShell({
-      id: w.id,
-      title: w.title,
-      icon: w.icon,
-      span,
-      bodyHtml: w.body
-    }));
-  }
-
-  return `<div class="grid" id="overviewGrid">${html.join("")}</div>`;
-}
-
-/* ======================
-   OTHER TAB RENDERERS
-====================== */
-function renderContracts(){
-  const b = state.contractsBundle;
-  if(!b) return widgetError("Контракты не загружены.");
-
-  const available = Array.isArray(b.available) ? b.available : [];
-  const inProgress = Array.isArray(b.in_progress) ? b.in_progress : [];
-  const completed = Array.isArray(b.completed) ? b.completed : [];
-  const expired = Array.isArray(b.expired) ? b.expired : [];
-  const cancelled = Array.isArray(b.cancelled) ? b.cancelled : [];
-
-  const card = (c, extra="") => `
-    <div class="widget" style="grid-column: span 12; min-height:auto">
-      <div class="widget-body">
-        <div style="font-weight:950;font-size:16px">${esc(c.title||"Контракт")} <span class="muted">• ${"★".repeat(Math.max(1, Math.min(5, Number(c.difficulty||1))))}</span></div>
-        <div class="muted" style="margin-top:6px">
-          Награда: ${formatNum(c.reward_balance||0)} / к выводу ${formatNum(c.reward_output||0)}
-          ${c.expires_at ? ` • истекает: ${safeDate(c.expires_at)}` : ""}
-        </div>
-        ${extra}
-      </div>
-    </div>
-  `;
 
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head">
-          <div class="widget-title">📌 В работе</div>
+        <div class="widget-head"><div class="widget-title">⚡ Быстрые действия</div></div>
+        <div class="widget-body">
+          <div class="mini-row">
+            <div style="min-width:0">
+              <div class="a">Бонус</div>
+              <div class="m">${b ? (b.can_claim ? "Доступен" : `Ожидание • ~${formatNum(b.seconds_left||0)} сек`) : "—"}</div>
+            </div>
+            <div>
+              <button class="btn primary small" type="button" onclick="claimBonus()" ${b?.can_claim ? "" : "disabled"}>Забрать</button>
+            </div>
+          </div>
+
+          <div class="mini-row">
+            <div style="min-width:0">
+              <div class="a">Сундук</div>
+              <div class="m">${c ? (c.can_open ? "Доступен" : `Ожидание • ~${formatNum(c.seconds_left||0)} сек`) : "—"}</div>
+            </div>
+            <div>
+              <button class="btn primary small" type="button" onclick="openChest()" ${c?.can_open ? "" : "disabled"}>Открыть</button>
+            </div>
+          </div>
+
+          <div class="mini-row">
+            <div style="min-width:0">
+              <div class="a">WSBuild-сбросы</div>
+              <div class="m">Бонус/Сундук/Рулетка</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+              <button class="btn ghost small" type="button" onclick="wsbuildResetBonus()">Бонус</button>
+              <button class="btn ghost small" type="button" onclick="wsbuildResetChest()">Сундук</button>
+              <button class="btn ghost small" type="button" onclick="wsbuildResetRoulette()">Рулетка</button>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="muted">
+            Рулетка: ${r ? `<b>${formatNum(r.left||0)}/${formatNum(r.max||0)}</b>` : "—"} •
+            Непрочитано: <b>${formatNum(dash.notifications_unread_count||0)}</b>
+          </div>
         </div>
+      </div>
+
+      <div class="widget" style="grid-column: span 6; min-height:auto">
+        <div class="widget-head"><div class="widget-title">💸 Отложенные переводы</div></div>
+        <div class="widget-body">
+          ${
+            t ? `
+              <div style="font-weight:950;font-size:22px">${formatNum(t.total_pending||0)}</div>
+              <div class="muted" style="margin-top:8px">Сумма в очереди перевода к выводу</div>
+              <div class="hr"></div>
+              ${
+                (t.items||[]).length
+                ? (t.items||[]).slice(0,6).map(x=>`
+                  <div class="mini-row">
+                    <div style="min-width:0">
+                      <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.source_text||"Начисление")}</div>
+                      <div class="m">${formatNum(x.amount||0)} • доступно ${safeDate(x.available_at)}</div>
+                    </div>
+                  </div>
+                `).join("")
+                : `<div class="muted">Очередь пустая</div>`
+              }
+            ` : widgetError("Не удалось загрузить /api/ws/balance-transfer/pending")
+          }
+        </div>
+      </div>
+
+      <div class="widget" style="grid-column: span 6; min-height:auto">
+        <div class="widget-head"><div class="widget-title">🧰 История сундука</div></div>
+        <div class="widget-body">
+          ${
+            h ? (
+              (h.items||[]).length
+                ? (h.items||[]).slice(0,7).map(x=>`
+                  <div class="mini-row">
+                    <div style="min-width:0">
+                      <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.reward_title||"Награда")}</div>
+                      <div class="m">День ${formatNum(x.day_number||0)} • ${safeDate(x.created_at)}</div>
+                    </div>
+                  </div>
+                `).join("")
+                : `<div class="muted">Пока пусто</div>`
+            ) : widgetError("Не удалось загрузить /api/ws/chest/history")
+          }
+        </div>
+      </div>
+
+      <div class="widget" style="grid-column: span 12; min-height:auto">
+        <div class="widget-head"><div class="widget-title">🕒 Последняя активность</div></div>
+        <div class="widget-body">
+          ${
+            (dash.activity_feed||[]).length
+            ? (dash.activity_feed||[]).slice(0,12).map(x=>`
+              <div class="mini-row">
+                <div style="min-width:0">
+                  <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.action_text||"Действие")}</div>
+                  <div class="m">${safeDate(x.created_at)}</div>
+                </div>
+              </div>
+            `).join("")
+            : `<div class="muted">Пока нет активности</div>`
+          }
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderContracts(){
+  const b = state.contracts;
+  if(!b) return widgetError("Контракты не загружены.");
+
+  const card = (c, extra="") => `
+    <div class="mini-row">
+      <div style="min-width:0">
+        <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          ${esc(c.title||"Контракт")} <span class="muted">• ${"★".repeat(Math.max(1, Math.min(5, Number(c.difficulty||1))))}</span>
+        </div>
+        <div class="m">
+          Награда: ${formatNum(c.reward_balance||0)} / к выводу ${formatNum(c.reward_output||0)}
+          ${c.expires_at ? ` • истекает: ${safeDate(c.expires_at)}` : ""}
+        </div>
+      </div>
+      ${extra}
+    </div>
+  `;
+
+  const available = b.available || [];
+  const inProgress = b.in_progress || [];
+  const completed = b.completed || [];
+
+  return `
+    <div class="grid">
+      <div class="widget" style="grid-column: span 12; min-height:auto">
+        <div class="widget-head"><div class="widget-title">📌 В работе</div></div>
         <div class="widget-body">
           ${inProgress.length ? inProgress.map(c=>card(c)).join("") : `<div class="muted">Нет активных контрактов</div>`}
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head">
-          <div class="widget-title">✨ Доступно</div>
-        </div>
+        <div class="widget-head"><div class="widget-title">✨ Доступно</div></div>
         <div class="widget-body">
           ${
             available.length
-            ? available.map(c=>card(c, `
-                <div style="margin-top:10px">
-                  <button class="btn primary small" type="button" onclick="takeContract(${Number(c.id||0)})">Взять</button>
-                </div>
-              `)).join("")
-            : `<div class="muted">Нет доступных контрактов</div>`
+              ? available.map(c=>card(c, `<button class="btn primary small" type="button" onclick="takeContract(${Number(c.id||0)})">Взять</button>`)).join("")
+              : `<div class="muted">Нет доступных контрактов</div>`
           }
         </div>
       </div>
 
-      <div class="widget" style="grid-column: span 6; min-height:auto">
+      <div class="widget" style="grid-column: span 12; min-height:auto">
         <div class="widget-head"><div class="widget-title">✅ Завершено</div></div>
         <div class="widget-body">
           ${completed.length ? completed.slice(0,10).map(c=>card(c)).join("") : `<div class="muted">Пока пусто</div>`}
-        </div>
-      </div>
-
-      <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">⌛ Истёкшие / отменённые</div></div>
-        <div class="widget-body">
-          ${
-            (expired.length + cancelled.length)
-            ? [...expired.slice(0,6), ...cancelled.slice(0,6)].map(c=>card(c)).join("")
-            : `<div class="muted">Пока пусто</div>`
-          }
         </div>
       </div>
     </div>
@@ -1753,33 +1686,26 @@ function renderContracts(){
 }
 
 function renderInventory(){
-  const dash = state.dashboard || {};
-  const inv = normalizeInventory(dash.inventory || []);
+  const inv = normalizeInventory(state.dashboard?.inventory || []);
   return `
     <div class="widget" style="min-height:auto">
-      <div class="widget-head">
-        <div class="widget-title">🎒 Инвентарь</div>
-      </div>
+      <div class="widget-head"><div class="widget-title">🎒 Инвентарь</div></div>
       <div class="widget-body">
-        <div class="muted">Показано до 80 предметов. Поиск/фильтры/массовая продажа — можно добавить следующим шагом.</div>
-        <div class="hr"></div>
-        ${
-          inv.length
-            ? `<div class="inv-grid">
-                ${inv.slice(0,80).map(it=>`
-                  <div class="inv">
-                    <div class="img">
-                      <img src="${esc(it.image_url || "https://placehold.co/140x140?text=ITEM")}"
-                          onerror="this.src='https://placehold.co/140x140?text=ITEM'" alt="">
-                    </div>
-                    <div class="name">${esc(it.title || "Предмет")}</div>
-                    <div class="meta">${esc(it.rarity || "Обычный")}</div>
-                    <div class="count">x${formatNum(it.count||0)}</div>
-                  </div>
-                `).join("")}
-              </div>`
-            : `<div class="muted">Инвентарь пуст</div>`
-        }
+        ${inv.length ? `
+          <div class="inv-grid">
+            ${inv.slice(0,80).map(it=>`
+              <div class="inv">
+                <div class="img">
+                  <img src="${esc(it.image_url || "https://placehold.co/140x140?text=ITEM")}"
+                       onerror="this.src='https://placehold.co/140x140?text=ITEM'" alt="">
+                </div>
+                <div class="name">${esc(it.title||"Предмет")}</div>
+                <div class="meta">${esc(it.rarity||"Обычный")}</div>
+                <div class="count">x${formatNum(it.count||0)}</div>
+              </div>
+            `).join("")}
+          </div>
+        ` : `<div class="muted">Инвентарь пуст</div>`}
       </div>
     </div>
   `;
@@ -1791,35 +1717,12 @@ function renderProgress(){
 
   const prof = p.profile || {};
   const ach = Array.isArray(p.achievements) ? p.achievements : [];
-  const pct = Math.max(0, Math.min(100, Number(prof.progress_percent||0)));
-
   return `
     <div class="grid">
-      <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">📈 Уровень</div></div>
-        <div class="widget-body">
-          <div style="font-weight:950;font-size:28px">${formatNum(prof.level||1)} <span class="muted">• ${esc(prof.title||"")}</span></div>
-          <div class="muted" style="margin-top:8px">XP: ${formatNum(prof.xp||0)} / ${formatNum(prof.xp_to_next||100)} • total: ${formatNum(prof.total_xp||0)}</div>
-          <div class="hr"></div>
-          <div class="xp-bar"><div class="xp-fill" style="width:${pct}%"></div></div>
-        </div>
-      </div>
-
-      <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🏁 Рекорды</div></div>
-        <div class="widget-body">
-          <div class="muted">
-            Сундук (best): <b>${formatNum(p.records?.best_chest_streak||0)}</b><br>
-            Баланс (best): <b>${formatNum(p.records?.best_balance_record||0)}</b><br>
-            К выводу (best): <b>${formatNum(p.records?.best_to_output_record||0)}</b>
-          </div>
-        </div>
-      </div>
-
       <div class="widget" style="grid-column: span 12; min-height:auto">
         <div class="widget-head"><div class="widget-title">🏆 Достижения</div></div>
         <div class="widget-body">
-          <div class="muted">Показано: ${formatNum(ach.length)}</div>
+          <div class="muted">Уровень: <b>${formatNum(prof.level||1)}</b> • ${esc(prof.title||"")} • Total XP: <b>${formatNum(prof.total_xp||0)}</b></div>
           <div class="hr"></div>
           ${
             ach.length
@@ -1827,7 +1730,7 @@ function renderProgress(){
                 <div class="mini-row">
                   <div style="min-width:0">
                     <div class="a">${esc(a.icon||"")} ${esc(a.title||"Достижение")} ${a.is_unlocked ? `<span class="muted">• unlocked</span>` : ""}</div>
-                    <div class="m">${esc(a.description||"")} • ${formatNum(a.current_value||0)} / ${formatNum(a.target_value||0)} ${a.unlocked_at ? `• ${safeDate(a.unlocked_at)}` : ""}</div>
+                    <div class="m">${esc(a.description||"")} • ${formatNum(a.current_value||0)} / ${formatNum(a.target_value||0)}</div>
                   </div>
                 </div>
               `).join("")
@@ -1843,14 +1746,12 @@ function renderNotifications(){
   const n = state.notifications;
   if(!n) return widgetError("Не удалось загрузить /api/ws/notifications");
 
-  const items = Array.isArray(n.items) ? n.items : [];
+  const items = n.items || [];
   return `
     <div class="widget" style="min-height:auto">
       <div class="widget-head">
         <div class="widget-title">🔔 Уведомления</div>
-        <div class="widget-actions">
-          <span class="badge red">${formatNum(n.unread_count||0)}</span>
-        </div>
+        <div class="badge red">${formatNum(n.unread_count||0)}</div>
       </div>
       <div class="widget-body">
         ${
@@ -1861,9 +1762,7 @@ function renderNotifications(){
                   <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.title||"Уведомление")}</div>
                   <div class="m">${esc(x.message||"")} • ${safeDate(x.created_at)}</div>
                 </div>
-                <div>
-                  <button class="btn ghost small" type="button" onclick="readNotif(${Number(x.id||0)})">Прочитать</button>
-                </div>
+                <button class="btn ghost small" type="button" onclick="readNotif(${Number(x.id||0)})">Прочитать</button>
               </div>
             `).join("")
             : `<div class="muted">Пока пусто</div>`
@@ -1875,9 +1774,9 @@ function renderNotifications(){
 
 function renderWsbuild(){
   const pkgs = state.wsbuild.packages;
-  const active = state.wsbuild.paymentActive?.item || null;
-  const my = Array.isArray(state.wsbuild.paymentMy?.items) ? state.wsbuild.paymentMy.items : [];
-  const auto = Array.isArray(state.wsbuild.autotopup?.items) ? state.wsbuild.autotopup.items : [];
+  const active = state.wsbuild.active?.item || null;
+  const my = state.wsbuild.my?.items || [];
+  const auto = state.wsbuild.auto?.items || [];
 
   return `
     <div class="grid">
@@ -1885,18 +1784,18 @@ function renderWsbuild(){
         <div class="widget-head"><div class="widget-title">🧾 Активная заявка</div></div>
         <div class="widget-body">
           ${
-            active
-              ? `<div class="mini-row">
-                  <div style="min-width:0">
-                    <div class="a">#${Number(active.id||0)} • ${esc(active.status_text||active.status||"")}</div>
-                    <div class="m">${formatNum(active.wsbuild_amount||0)} • ${formatNum(active.amount_rub||0)} ₽ • код: ${esc(active.payment_code||"")}</div>
-                  </div>
+            active ? `
+              <div class="mini-row">
+                <div style="min-width:0">
+                  <div class="a">#${Number(active.id||0)} • ${esc(active.status_text||active.status||"")}</div>
+                  <div class="m">${formatNum(active.wsbuild_amount||0)} • ${formatNum(active.amount_rub||0)} ₽ • код: ${esc(active.payment_code||"")}</div>
                 </div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
-                  <button class="btn ghost small" type="button" onclick="markPaid(${Number(active.id||0)})">Я оплатил</button>
-                  <button class="btn small" type="button" onclick="cancelPay(${Number(active.id||0)})">Отменить</button>
-                </div>`
-              : `<div class="muted">Активной заявки нет</div>`
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
+                <button class="btn ghost small" type="button" onclick="markPaid(${Number(active.id||0)})">Я оплатил</button>
+                <button class="btn small" type="button" onclick="cancelPay(${Number(active.id||0)})">Отменить</button>
+              </div>
+            ` : `<div class="muted">Активной заявки нет</div>`
           }
         </div>
       </div>
@@ -1905,16 +1804,14 @@ function renderWsbuild(){
         <div class="widget-head"><div class="widget-title">⏱ Автопополнение</div></div>
         <div class="widget-body">
           ${
-            auto.length
-              ? auto.slice(0,6).map(x=>`
-                <div class="mini-row">
-                  <div style="min-width:0">
-                    <div class="a">Пакет ${formatNum(x.package_amount||0)} • +${formatNum(x.topup_amount||0)} каждые ${formatNum(x.interval_hours||0)}ч</div>
-                    <div class="m">Следующее: ${safeDate(x.next_topup_at)} • до: ${safeDate(x.ends_at)}</div>
-                  </div>
+            auto.length ? auto.slice(0,6).map(x=>`
+              <div class="mini-row">
+                <div style="min-width:0">
+                  <div class="a">Пакет ${formatNum(x.package_amount||0)} • +${formatNum(x.topup_amount||0)} каждые ${formatNum(x.interval_hours||0)}ч</div>
+                  <div class="m">Следующее: ${safeDate(x.next_topup_at)} • до: ${safeDate(x.ends_at)}</div>
                 </div>
-              `).join("")
-              : `<div class="muted">Автопополнений нет</div>`
+              </div>
+            `).join("") : `<div class="muted">Автопополнений нет</div>`
           }
         </div>
       </div>
@@ -1923,22 +1820,21 @@ function renderWsbuild(){
         <div class="widget-head"><div class="widget-title">🛒 Пакеты WSBuild</div></div>
         <div class="widget-body">
           ${
-            pkgs?.packages?.length
-              ? `<div class="grid">
-                  ${pkgs.packages.map(p=>`
-                    <div class="widget" style="grid-column: span 4; min-height:auto">
-                      <div class="widget-body">
-                        <div class="muted" style="font-weight:950;letter-spacing:.1em;text-transform:uppercase;font-size:12px">${esc(p.title||"Пакет")}</div>
-                        <div style="margin-top:10px;font-weight:950;font-size:22px">${formatNum(p.amount||0)} ⚙️</div>
-                        <div class="muted" style="margin-top:6px">${formatNum(p.price_rub||0)} ₽ ${p.badge ? `• ${esc(p.badge)}` : ""}</div>
-                        <div style="margin-top:12px">
-                          <button class="btn primary small" type="button" onclick="createPay(${Number(p.amount||0)})">Создать заявку</button>
-                        </div>
+            pkgs?.packages?.length ? `
+              <div class="grid">
+                ${pkgs.packages.map(p=>`
+                  <div class="widget" style="grid-column: span 4; min-height:auto">
+                    <div class="widget-body">
+                      <div class="a">${esc(p.title||"Пакет")}</div>
+                      <div class="m">${formatNum(p.amount||0)} ⚙️ • ${formatNum(p.price_rub||0)} ₽ ${p.badge ? `• ${esc(p.badge)}` : ""}</div>
+                      <div style="margin-top:12px">
+                        <button class="btn primary small" type="button" onclick="createPay(${Number(p.amount||0)})">Создать заявку</button>
                       </div>
                     </div>
-                  `).join("")}
-                </div>`
-              : widgetError("Не удалось загрузить /api/ws/wsbuild/packages")
+                  </div>
+                `).join("")}
+              </div>
+            ` : widgetError("Не удалось загрузить /api/ws/wsbuild/packages")
           }
         </div>
       </div>
@@ -1947,16 +1843,14 @@ function renderWsbuild(){
         <div class="widget-head"><div class="widget-title">📜 История заявок</div></div>
         <div class="widget-body">
           ${
-            my.length
-              ? my.slice(0,30).map(x=>`
-                <div class="mini-row">
-                  <div style="min-width:0">
-                    <div class="a">#${Number(x.id||0)} • ${esc(x.status_text||x.status||"")}</div>
-                    <div class="m">${formatNum(x.wsbuild_amount||0)} • ${formatNum(x.amount_rub||0)} ₽ • ${safeDate(x.created_at)}</div>
-                  </div>
+            my.length ? my.slice(0,25).map(x=>`
+              <div class="mini-row">
+                <div style="min-width:0">
+                  <div class="a">#${Number(x.id||0)} • ${esc(x.status_text||x.status||"")}</div>
+                  <div class="m">${formatNum(x.wsbuild_amount||0)} • ${formatNum(x.amount_rub||0)} ₽ • ${safeDate(x.created_at)}</div>
                 </div>
-              `).join("")
-              : `<div class="muted">История пустая</div>`
+              </div>
+            `).join("") : `<div class="muted">История пустая</div>`
           }
         </div>
       </div>
@@ -1965,41 +1859,88 @@ function renderWsbuild(){
 }
 
 function renderSettings(){
-  const s = state.settings.notifySettings?.item || state.settings.notifySettings || null;
-  const c = state.settings.linkCodes || null;
   const theme = loadTheme() || { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
+  const bg = loadBg();
+  const notify = state.settings.notify?.item || null;
+  const codes = state.settings.codes || null;
 
   const row = (k, label) => `
-    <label style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.06)">
-      <span class="muted">${esc(label)}</span>
-      <input type="checkbox" ${s?.[k] ? "checked" : ""} onchange="toggleSetting('${k}', this.checked)">
-    </label>
+    <div class="mini-row">
+      <div style="min-width:0">
+        <div class="a">${esc(label)}</div>
+        <div class="m">${notify?.[k] ? "Включено" : "Выключено"}</div>
+      </div>
+      <input type="checkbox" ${notify?.[k] ? "checked" : ""} onchange="toggleNotify('${k}', this.checked)">
+    </div>
   `;
 
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🎛 Тема</div></div>
+        <div class="widget-head"><div class="widget-title">🎨 Тема</div></div>
         <div class="widget-body">
-          <div class="form-row">
-            <div class="field">
-              <label>Accent 1</label>
-              <input type="color" value="${esc(theme.accent1 || "#3d7dff")}" onchange="setThemeColor('accent1', this.value)">
-            </div>
-            <div class="field">
-              <label>Accent 2</label>
-              <input type="color" value="${esc(theme.accent2 || "#7c3aed")}" onchange="setThemeColor('accent2', this.value)">
-            </div>
+          <div class="field">
+            <label>Accent 1</label>
+            <input type="text" value="${esc(theme.accent1)}" oninput="setTheme('accent1', this.value)" placeholder="#3d7dff">
           </div>
-          <div style="margin-top:12px" class="field">
+          <div class="field">
+            <label>Accent 2</label>
+            <input type="text" value="${esc(theme.accent2)}" oninput="setTheme('accent2', this.value)" placeholder="#7c3aed">
+          </div>
+          <div class="field">
             <label>Glow</label>
-            <input type="color" value="${esc(theme.glow || "#ff64d7")}" onchange="setThemeColor('glow', this.value)">
+            <input type="text" value="${esc(theme.glow)}" oninput="setTheme('glow', this.value)" placeholder="#ff64d7">
           </div>
           <div class="modal-actions" style="justify-content:flex-start">
-            <button class="btn ghost small" type="button" onclick="saveThemeNow()">Сохранить тему</button>
-            <button class="btn small" type="button" onclick="resetThemeNow()">Сбросить тему</button>
+            <button class="btn ghost small" type="button" onclick="saveThemeNow()">Сохранить</button>
+            <button class="btn small" type="button" onclick="resetThemeNow()">Сбросить</button>
           </div>
-          <div class="muted" style="margin-top:10px">Цвета применяются сразу. Сохранение — чтобы не сбрасывались после обновления.</div>
+        </div>
+      </div>
+
+      <div class="widget" style="grid-column: span 6; min-height:auto">
+        <div class="widget-head"><div class="widget-title">🖼 Фон страницы</div></div>
+        <div class="widget-body">
+          <div class="field">
+            <label>Blur (0..100)</label>
+            <input type="range" min="0" max="100" value="${bg.blur}" oninput="bgBlur(this.value)">
+            <div class="m" style="margin-top:8px">Текущее: <b id="bgBlurVal">${bg.blur}</b></div>
+          </div>
+          <div class="field">
+            <label>Opacity (0..100)</label>
+            <input type="range" min="0" max="100" value="${bg.opacity}" oninput="bgOpacity(this.value)">
+            <div class="m" style="margin-top:8px">Текущее: <b id="bgOpVal">${bg.opacity}</b></div>
+          </div>
+
+          <div class="mini-row">
+            <div style="min-width:0">
+              <div class="a">Выбрать фон</div>
+              <div class="m">Сохраняется локально</div>
+            </div>
+            <input id="bgFile" type="file" accept="image/*">
+          </div>
+
+          <div class="modal-actions" style="justify-content:flex-start">
+            <button class="btn ghost small" type="button" onclick="clearBgNow()">Очистить фон</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="widget" style="grid-column: span 12; min-height:auto">
+        <div class="widget-head"><div class="widget-title">👤 Профиль</div></div>
+        <div class="widget-body">
+          <div class="mini-row">
+            <div style="min-width:0">
+              <div class="a">Аватар / Баннер</div>
+              <div class="m">Загрузка через модалку с preview</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button class="btn ghost small" type="button" onclick="openUpload('avatar')">Аватар</button>
+              <button class="btn ghost small" type="button" onclick="openUpload('banner')">Баннер</button>
+              <button class="btn small" type="button" onclick="clearBanner()">Убрать баннер</button>
+              <button class="btn small" type="button" onclick="openPassword()">Сменить пароль</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2007,7 +1948,7 @@ function renderSettings(){
         <div class="widget-head"><div class="widget-title">🔔 Уведомления (сайт)</div></div>
         <div class="widget-body">
           ${
-            s ? `
+            notify ? `
               ${row("notify_site_bonus_ready", "Бонус доступен")}
               ${row("notify_site_chest_ready", "Сундук доступен")}
               ${row("notify_site_roulette_ready", "Рулетка доступна")}
@@ -2015,8 +1956,8 @@ function renderSettings(){
               ${row("notify_site_contract_expiring", "Контракт скоро истечёт")}
               ${row("notify_site_contract_expired", "Контракт истёк")}
               <div class="modal-actions">
-                <button class="btn primary small" type="button" onclick="saveNotifySettings()">Сохранить</button>
-                <button class="btn ghost small" type="button" onclick="reloadSettings()">Обновить</button>
+                <button class="btn primary small" type="button" onclick="saveNotify()">Сохранить</button>
+                <button class="btn ghost small" type="button" onclick="openTab('settings')">Обновить</button>
               </div>
             ` : widgetError("Не удалось загрузить /api/ws/notify/settings")
           }
@@ -2027,11 +1968,11 @@ function renderSettings(){
         <div class="widget-head"><div class="widget-title">🔗 Коды привязки</div></div>
         <div class="widget-body">
           ${
-            c ? `
+            codes ? `
               <div class="mini-row">
                 <div style="min-width:0">
                   <div class="a">Основной код</div>
-                  <div class="m">${c.link_active ? esc(c.link_code) : "—"} • ${c.link_active ? safeDate(c.link_expires_at) : "не активен"}</div>
+                  <div class="m">${codes.link_active ? esc(codes.link_code) : "—"} • ${codes.link_active ? safeDate(codes.link_expires_at) : "не активен"}</div>
                 </div>
                 <button class="btn ghost small" type="button" onclick="genCode('link')">Сгенерировать</button>
               </div>
@@ -2039,7 +1980,7 @@ function renderSettings(){
               <div class="mini-row">
                 <div style="min-width:0">
                   <div class="a">VK код</div>
-                  <div class="m">${c.vk_active ? esc(c.vk_code) : "—"} • ${c.vk_active ? safeDate(c.vk_expires_at) : "не активен"}</div>
+                  <div class="m">${codes.vk_active ? esc(codes.vk_code) : "—"} • ${codes.vk_active ? safeDate(codes.vk_expires_at) : "не активен"}</div>
                 </div>
                 <button class="btn ghost small" type="button" onclick="genCode('vk')">VK</button>
               </div>
@@ -2047,7 +1988,7 @@ function renderSettings(){
               <div class="mini-row">
                 <div style="min-width:0">
                   <div class="a">Nick код</div>
-                  <div class="m">${c.nick_active ? esc(c.nick_code) : "—"} • ${c.nick_active ? safeDate(c.nick_expires_at) : "не активен"}</div>
+                  <div class="m">${codes.nick_active ? esc(codes.nick_code) : "—"} • ${codes.nick_active ? safeDate(codes.nick_expires_at) : "не активен"}</div>
                 </div>
                 <button class="btn ghost small" type="button" onclick="genCode('nick')">Nick</button>
               </div>
@@ -2055,345 +1996,94 @@ function renderSettings(){
           }
         </div>
       </div>
-
-      <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🖼 Профиль</div></div>
-        <div class="widget-body">
-          <div class="muted">Загрузка аватара/баннера через модалку с preview.</div>
-          <div class="modal-actions" style="justify-content:flex-start">
-            <button class="btn ghost small" type="button" onclick="openUploadModal('avatar')">Сменить аватар</button>
-            <button class="btn ghost small" type="button" onclick="openUploadModal('banner')">Установить баннер</button>
-            <button class="btn small" type="button" onclick="clearBanner()">Убрать баннер</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="modal-actions" style="justify-content:flex-start">
-            <button class="btn small" type="button" onclick="openPasswordModal()">Сменить пароль</button>
-          </div>
-        </div>
-      </div>
     </div>
   `;
 }
 
 /* ======================
-   DRAG & DROP (Overview grid)
+   Actions
 ====================== */
-let dragId = null;
-
-function bindOverviewDnD(){
-  const grid = document.getElementById("overviewGrid");
-  if(!grid) return;
-
-  // bind size buttons
-  grid.querySelectorAll("[data-size-btn]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.getAttribute("data-size-btn");
-      cycleWidgetSpan(id);
-    });
-  });
-
-  if(!state.editingLayout) return;
-
-  grid.querySelectorAll("[data-widget]").forEach(w=>{
-    w.addEventListener("dragstart", (e)=>{
-      dragId = w.getAttribute("data-widget");
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", dragId);
-    });
-
-    w.addEventListener("dragover", (e)=>{
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-    });
-
-    w.addEventListener("drop", (e)=>{
-      e.preventDefault();
-      const targetId = w.getAttribute("data-widget");
-      const sourceId = e.dataTransfer.getData("text/plain") || dragId;
-      if(!sourceId || !targetId || sourceId === targetId) return;
-      reorderWidgets(sourceId, targetId);
-    });
-  });
-}
-
-function reorderWidgets(sourceId, targetId){
-  const layout = loadLayout();
-  const order = [...layout.order];
-
-  const srcIdx = order.indexOf(sourceId);
-  const trgIdx = order.indexOf(targetId);
-  if(srcIdx === -1 || trgIdx === -1) return;
-
-  order.splice(srcIdx, 1);
-  order.splice(trgIdx, 0, sourceId);
-
-  layout.order = order;
-  saveLayout(layout);
-
-  renderActiveTab();
-}
-
-function cycleWidgetSpan(id){
-  const layout = loadLayout();
-  const current = Number(layout.spans?.[id] || 12);
-  const next = current === 12 ? 6 : (current === 6 ? 4 : 12);
-  layout.spans[id] = next;
-  saveLayout(layout);
-  renderActiveTab();
-}
-
-/* ======================
-   LOADERS (устойчивые)
-====================== */
-async function loadHeroCore(){
-  setHeroSkeleton();
-  clearGlobalError();
-
-  const tasks = await Promise.allSettled([
-    apiGet("/api/ws/dashboard-bundle"),
-    apiGet("/api/ws/profile/progress")
-  ]);
-
-  const dash = tasks[0].status === "fulfilled" ? tasks[0].value : null;
-  const prog = tasks[1].status === "fulfilled" ? tasks[1].value : null;
-
-  if(!dash){
-    showGlobalError(tasks[0].reason?.message || "Не удалось загрузить /api/ws/dashboard-bundle");
-    return false;
-  }
-
-  state.dashboard = dash;
-  state.progress = prog || state.progress;
-
-  applyHero(dash, state.progress);
-
-  return true;
-}
-
-async function loadOverviewData(){
-  const tasks = await Promise.allSettled([
-    apiGet("/api/ws/bonus/status"),
-    apiGet("/api/ws/chest/status"),
-    apiGet("/api/ws/roulette/limits"),
-    apiGet("/api/ws/balance-transfer/pending"),
-    apiGet("/api/ws/chest/history")
-  ]);
-
-  state.overview.bonusStatus = tasks[0].status === "fulfilled" ? tasks[0].value : null;
-  state.overview.chestStatus = tasks[1].status === "fulfilled" ? tasks[1].value : null;
-  state.overview.rouletteLimits = tasks[2].status === "fulfilled" ? tasks[2].value : null;
-  state.overview.transfers = tasks[3].status === "fulfilled" ? tasks[3].value : null;
-  state.overview.chestHistory = tasks[4].status === "fulfilled" ? tasks[4].value : null;
-}
-
-async function loadContracts(){
-  const r = await apiGet("/api/ws/contracts/bundle");
-  state.contractsBundle = r;
-}
-
-async function loadNotifications(){
-  const r = await apiGet("/api/ws/notifications?limit=60");
-  state.notifications = r;
-}
-
-async function loadWsbuild(){
-  const tasks = await Promise.allSettled([
-    apiGet("/api/ws/wsbuild/packages"),
-    apiGet("/api/ws/payment-requests/active"),
-    apiGet("/api/ws/payment-requests/my"),
-    apiGet("/api/ws/wsbuild/autotopup/my")
-  ]);
-  state.wsbuild.packages = tasks[0].status === "fulfilled" ? tasks[0].value : null;
-  state.wsbuild.paymentActive = tasks[1].status === "fulfilled" ? tasks[1].value : null;
-  state.wsbuild.paymentMy = tasks[2].status === "fulfilled" ? tasks[2].value : null;
-  state.wsbuild.autotopup = tasks[3].status === "fulfilled" ? tasks[3].value : null;
-}
-
-async function loadSettings(){
-  const tasks = await Promise.allSettled([
-    apiGet("/api/ws/notify/settings"),
-    apiGet("/api/ws/profile/link-codes")
-  ]);
-  state.settings.notifySettings = tasks[0].status === "fulfilled" ? tasks[0].value : null;
-  state.settings.linkCodes = tasks[1].status === "fulfilled" ? tasks[1].value : null;
-}
-
-/* ======================
-   TAB ENGINE
-====================== */
-function setActiveTab(tab){
-  state.activeTab = tab;
-
-  document.querySelectorAll("#nav .item").forEach(el=>{
-    el.classList.toggle("active", el.dataset.tab === tab);
-  });
-
-  const btnReadAll = document.getElementById("btnReadAll");
-  btnReadAll.style.display = tab === "notifications" ? "inline-flex" : "none";
-
-  const btnLayoutToggle = document.getElementById("btnLayoutToggle");
-  const btnLayoutReset = document.getElementById("btnLayoutReset");
-
-  const showLayoutButtons = tab === "overview";
-  btnLayoutToggle.style.display = showLayoutButtons ? "inline-flex" : "none";
-  btnLayoutReset.style.display = (showLayoutButtons && state.editingLayout) ? "inline-flex" : "none";
-}
-
-function renderActiveTab(){
-  const view = document.getElementById("view");
-
-  if(state.activeTab === "overview"){
-    setViewHead("Обзор", "Баланс, статусы, переводы, активность. Можно менять расстановку блоков.");
-    view.innerHTML = renderOverviewWidgets();
-    bindOverviewDnD();
-    return;
-  }
-
-  if(state.activeTab === "contracts"){
-    setViewHead("Контракты", "Доступные и твои контракты.");
-    view.innerHTML = renderContracts();
-    return;
-  }
-
-  if(state.activeTab === "inventory"){
-    setViewHead("Инвентарь", "Предметы и количество.");
-    view.innerHTML = renderInventory();
-    return;
-  }
-
-  if(state.activeTab === "progress"){
-    setViewHead("Прогресс", "Уровень, XP и достижения.");
-    view.innerHTML = renderProgress();
-    return;
-  }
-
-  if(state.activeTab === "notifications"){
-    setViewHead("Уведомления", "Управление уведомлениями.");
-    view.innerHTML = renderNotifications();
-    return;
-  }
-
-  if(state.activeTab === "wsbuild"){
-    setViewHead("WSBuild", "Пакеты, заявки, автопополнение.");
-    view.innerHTML = renderWsbuild();
-    return;
-  }
-
-  if(state.activeTab === "settings"){
-    setViewHead("Настройки", "Тема, уведомления, привязки, баннер/аватар, пароль.");
-    view.innerHTML = renderSettings();
-    return;
-  }
-
-  view.innerHTML = `<div class="widget-error">Unknown tab</div>`;
-}
-
 async function openTab(tab){
   setActiveTab(tab);
-  const view = document.getElementById("view");
-  view.innerHTML = `<div class="grid"><div class="widget skeleton" style="grid-column: span 12; min-height:220px"></div></div>`;
-
-  const ok = await loadHeroCore();
-  if(!ok){
-    view.innerHTML = widgetError("Профиль не загрузился: dashboard-bundle недоступен.");
-    return;
-  }
-
-  // Update sidebar badges from dashboard
-  const dash = state.dashboard || {};
-  const binder = dash.binder || {};
-  const invCount = normalizeInventory(dash.inventory || []).reduce((s,x)=>s+Number(x.count||0),0);
-
-  document.getElementById("bdWsb").textContent = formatNum(binder.wsbuild_balance || 0);
-  document.getElementById("bdInv").textContent = formatNum(invCount);
-  document.getElementById("bdNotif").textContent = formatNum(dash.notifications_unread_count || 0);
+  setStatus("Загрузка…");
+  document.getElementById("view").innerHTML = `<div class="widget skeleton" style="min-height:220px"></div>`;
 
   try{
-    if(tab === "overview"){
-      await loadOverviewData();
-    }
-    if(tab === "contracts"){
-      await loadContracts().catch(e => (state.contractsBundle = null, toast(e.message)));
-    }
-    if(tab === "notifications"){
-      await loadNotifications().catch(e => (state.notifications = null, toast(e.message)));
-    }
-    if(tab === "wsbuild"){
-      await loadWsbuild();
-    }
-    if(tab === "settings"){
-      await loadSettings();
-    }
-  }catch(e){
-    toast(e.message || e);
-  }
+    await loadCore();
 
-  renderActiveTab();
+    if(tab === "overview"){
+      setHead("Обзор", "Быстрые действия, статусы, переводы, история и активность.");
+      await loadOverview();
+      document.getElementById("view").innerHTML = renderOverview();
+    }
+    else if(tab === "contracts"){
+      setHead("Контракты", "Доступные и твои контракты.");
+      await loadContracts();
+      document.getElementById("view").innerHTML = renderContracts();
+    }
+    else if(tab === "inventory"){
+      setHead("Инвентарь", "Предметы и количество.");
+      document.getElementById("view").innerHTML = renderInventory();
+    }
+    else if(tab === "progress"){
+      setHead("Прогресс", "Уровни, XP и достижения.");
+      document.getElementById("view").innerHTML = renderProgress();
+    }
+    else if(tab === "notifications"){
+      setHead("Уведомления", "Управление уведомлениями.");
+      await loadNotifications();
+      document.getElementById("view").innerHTML = renderNotifications();
+    }
+    else if(tab === "wsbuild"){
+      setHead("WSBuild", "Пакеты, заявки, автопополнение.");
+      await loadWsbuild();
+      document.getElementById("view").innerHTML = renderWsbuild();
+    }
+    else if(tab === "settings"){
+      setHead("Настройки", "Тема, фон страницы, баннер/аватар, уведомления, коды.");
+      await loadSettings();
+      document.getElementById("view").innerHTML = renderSettings();
+      bindBgFile();
+    }
+
+    setStatus("");
+  }catch(e){
+    setStatus(e.message || String(e), true);
+    document.getElementById("view").innerHTML = widgetError(e.message || String(e));
+  }
 }
 
-/* ======================
-   ACTIONS (API)
-====================== */
+/* Contracts */
 async function takeContract(id){
   try{
     await apiPost("/api/ws/contracts/take", { contract_id: id });
     toast("Контракт взят.");
     await openTab("contracts");
-    await loadHeroCore();
   }catch(e){ toast(e.message); }
 }
 
+/* Notifications */
 async function readNotif(id){
   try{
     await apiPost("/api/ws/notifications/read", { notification_id: id });
-    toast("Уведомление прочитано.");
+    toast("Прочитано.");
     await openTab("notifications");
-    await loadHeroCore();
   }catch(e){ toast(e.message); }
 }
-
 async function readAllNotifs(){
   try{
     await apiPost("/api/ws/notifications/read-all", {});
     toast("Все уведомления прочитаны.");
     await openTab("notifications");
-    await loadHeroCore();
   }catch(e){ toast(e.message); }
 }
 
-async function createPay(amount){
-  try{
-    await apiPost("/api/ws/payment-requests/create", { wsbuild_amount: amount });
-    toast("Заявка создана.");
-    await openTab("wsbuild");
-    await loadHeroCore();
-  }catch(e){ toast(e.message); }
-}
-async function markPaid(id){
-  try{
-    await apiPost("/api/ws/payment-requests/mark-paid", { request_id: id });
-    toast("Отмечено как оплачено.");
-    await openTab("wsbuild");
-    await loadHeroCore();
-  }catch(e){ toast(e.message); }
-}
-async function cancelPay(id){
-  try{
-    await apiPost("/api/ws/payment-requests/cancel", { request_id: id });
-    toast("Заявка отменена.");
-    await openTab("wsbuild");
-    await loadHeroCore();
-  }catch(e){ toast(e.message); }
-}
-
+/* Bonus / chest */
 async function claimBonus(){
   try{
     const r = await apiPost("/api/ws/bonus/claim", {});
-    toast(`Бонус: +${formatNum(r.amount || 0)}`);
+    toast(`Бонус: +${formatNum(r.amount||0)}`);
     await openTab("overview");
-    await loadHeroCore();
   }catch(e){ toast(e.message); }
 }
 async function openChest(){
@@ -2401,180 +2091,73 @@ async function openChest(){
     const r = await apiPost("/api/ws/chest/open", {});
     toast(`Сундук: ${r?.reward?.title || "награда"}`);
     await openTab("overview");
-    await loadHeroCore();
+  }catch(e){ toast(e.message); }
+}
+
+/* WSBuild */
+async function createPay(amount){
+  try{
+    await apiPost("/api/ws/payment-requests/create", { wsbuild_amount: amount });
+    toast("Заявка создана.");
+    await openTab("wsbuild");
+  }catch(e){ toast(e.message); }
+}
+async function markPaid(id){
+  try{
+    await apiPost("/api/ws/payment-requests/mark-paid", { request_id: id });
+    toast("Отмечено как оплачено.");
+    await openTab("wsbuild");
+  }catch(e){ toast(e.message); }
+}
+async function cancelPay(id){
+  try{
+    await apiPost("/api/ws/payment-requests/cancel", { request_id: id });
+    toast("Заявка отменена.");
+    await openTab("wsbuild");
   }catch(e){ toast(e.message); }
 }
 
 async function wsbuildResetBonus(){
-  try{
-    await apiPost("/api/ws/wsbuild/reset-bonus", {});
-    toast("Бонус сброшен.");
-    await openTab("overview");
-    await loadHeroCore();
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/wsbuild/reset-bonus", {}); toast("Бонус сброшен."); await openTab("overview"); }
+  catch(e){ toast(e.message); }
 }
 async function wsbuildResetChest(){
-  try{
-    await apiPost("/api/ws/wsbuild/reset-chest", {});
-    toast("Сундук сделан доступным.");
-    await openTab("overview");
-    await loadHeroCore();
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/wsbuild/reset-chest", {}); toast("Сундук доступен."); await openTab("overview"); }
+  catch(e){ toast(e.message); }
 }
 async function wsbuildResetRoulette(){
-  try{
-    await apiPost("/api/ws/wsbuild/reset-roulette", {});
-    toast("Рулетка сброшена.");
-    await openTab("overview");
-    await loadHeroCore();
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/wsbuild/reset-roulette", {}); toast("Рулетка сброшена."); await openTab("overview"); }
+  catch(e){ toast(e.message); }
 }
 
-/* ===== Settings actions ===== */
-function toggleSetting(key, value){ state.settings.draft[key] = !!value; }
-
-async function saveNotifySettings(){
+/* Settings: notify */
+function toggleNotify(key, val){ state.settings.draft[key] = !!val; }
+async function saveNotify(){
   try{
     await apiPost("/api/ws/notify/settings/update", state.settings.draft);
-    toast("Настройки сохранены.");
+    toast("Сохранено.");
     state.settings.draft = {};
     await openTab("settings");
   }catch(e){ toast(e.message); }
 }
-async function reloadSettings(){ await openTab("settings"); }
 
+/* Settings: link codes */
 async function genCode(type){
   try{
-    if(type === "link") await apiPost("/api/ws/profile/generate-link-code", {});
-    if(type === "vk") await apiPost("/api/ws/profile/generate-vk-link-code", {});
-    if(type === "nick") await apiPost("/api/ws/profile/generate-nick-link-code", {});
+    if(type==="link") await apiPost("/api/ws/profile/generate-link-code", {});
+    if(type==="vk") await apiPost("/api/ws/profile/generate-vk-link-code", {});
+    if(type==="nick") await apiPost("/api/ws/profile/generate-nick-link-code", {});
     toast("Код сгенерирован.");
     await openTab("settings");
   }catch(e){ toast(e.message); }
 }
 
-/* ======================
-   Upload avatar/banner (modal + preview)
-====================== */
-function fileToBase64(file){
-  return new Promise((resolve, reject)=>{
-    const r = new FileReader();
-    r.onload = () => resolve(String(r.result || ""));
-    r.onerror = () => reject(new Error("Не удалось прочитать файл"));
-    r.readAsDataURL(file);
-  });
-}
-
-async function openUploadModal(kind){
-  const isAvatar = kind === "avatar";
-  const title = isAvatar ? "Смена аватара" : "Установка баннера";
-
-  modalOpen(title, `
-    <div class="preview">
-      <div class="pimg"><img id="upPreview" alt="preview" src="https://placehold.co/280x280?text=PREVIEW"></div>
-      <div style="min-width:240px">
-        <div class="muted">Выбери файл, посмотри preview, затем нажми “Сохранить”.</div>
-        <div class="hr"></div>
-        <input id="upFile" type="file" accept="image/*" />
-        <div class="muted" style="margin-top:10px">Сервер сам сожмёт/обрежет картинку.</div>
-      </div>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn ghost" type="button" onclick="modalClose()">Отмена</button>
-      <button class="btn primary" type="button" id="upSaveBtn" disabled>Сохранить</button>
-    </div>
-  `);
-
-  const fileInput = document.getElementById("upFile");
-  const preview = document.getElementById("upPreview");
-  const saveBtn = document.getElementById("upSaveBtn");
-
-  let base64 = "";
-
-  fileInput.addEventListener("change", async ()=>{
-    const file = fileInput.files?.[0];
-    if(!file){ base64=""; saveBtn.disabled=true; return; }
-    base64 = await fileToBase64(file);
-    preview.src = base64;
-    saveBtn.disabled = false;
-  });
-
-  saveBtn.addEventListener("click", async ()=>{
-    try{
-      saveBtn.disabled = true;
-      if(!base64) return;
-
-      if(isAvatar){
-        await apiPost("/api/ws/profile/upload-avatar", { image_base64: base64 });
-        toast("Аватар обновлён.");
-      }else{
-        await apiPost("/api/ws/profile/upload-banner", { image_base64: base64 });
-        toast("Баннер обновлён.");
-      }
-
-      modalClose();
-      await loadHeroCore();
-      if(state.activeTab === "settings") await openTab("settings");
-    }catch(e){
-      toast(e.message);
-      saveBtn.disabled = false;
-    }
-  });
-}
-
-async function clearBanner(){
-  try{
-    await apiPost("/api/ws/profile/clear-banner", {});
-    toast("Баннер убран.");
-    await loadHeroCore();
-    if(state.activeTab === "settings") await openTab("settings");
-  }catch(e){ toast(e.message); }
-}
-
-function openPasswordModal(){
-  modalOpen("Смена пароля", `
-    <div class="form-row">
-      <div class="field">
-        <label>Старый пароль</label>
-        <input id="oldPass" type="password" placeholder="••••••">
-      </div>
-      <div class="field">
-        <label>Новый пароль</label>
-        <input id="newPass" type="password" placeholder="••••••">
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn ghost" type="button" onclick="modalClose()">Отмена</button>
-      <button class="btn primary" type="button" id="passSave">Сохранить</button>
-    </div>
-  `);
-
-  document.getElementById("passSave").addEventListener("click", async ()=>{
-    const oldp = String(document.getElementById("oldPass").value || "");
-    const newp = String(document.getElementById("newPass").value || "");
-    if(!oldp || !newp){
-      toast("Заполни оба поля.");
-      return;
-    }
-    try{
-      await apiPost("/api/ws/profile/change-password", { old_password: oldp, new_password: newp });
-      toast("Пароль изменён.");
-      modalClose();
-    }catch(e){
-      toast(e.message);
-    }
-  });
-}
-
-/* ======================
-   Theme controls
-====================== */
+/* Settings: theme */
 let themeDraft = loadTheme() || { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
 applyTheme(themeDraft);
 
-function setThemeColor(key, value){
-  themeDraft = {...themeDraft, [key]: value };
+function setTheme(key, value){
+  themeDraft = {...themeDraft, [key]: String(value||"").trim() };
   applyTheme(themeDraft);
 }
 function saveThemeNow(){
@@ -2589,57 +2172,182 @@ function resetThemeNow(){
   openTab("settings");
 }
 
+/* Settings: background */
+function bgBlur(v){
+  const cfg = loadBg();
+  cfg.blur = Math.max(0, Math.min(100, Number(v||0)));
+  saveBg(cfg); applyBg(cfg);
+  const el = document.getElementById("bgBlurVal"); if(el) el.textContent = String(cfg.blur);
+}
+function bgOpacity(v){
+  const cfg = loadBg();
+  cfg.opacity = Math.max(0, Math.min(100, Number(v||0)));
+  saveBg(cfg); applyBg(cfg);
+  const el = document.getElementById("bgOpVal"); if(el) el.textContent = String(cfg.opacity);
+}
+function clearBgNow(){
+  const cfg = { image:"", blur:0, opacity:55 };
+  saveBg(cfg); applyBg(cfg);
+  toast("Фон очищен.");
+  openTab("settings");
+}
+function bindBgFile(){
+  const input = document.getElementById("bgFile");
+  if(!input) return;
+  input.addEventListener("change", async ()=>{
+    try{
+      const file = input.files?.[0];
+      input.value = "";
+      if(!file) return;
+      if(file.size > 6 * 1024 * 1024) throw new Error("Файл слишком большой. Максимум 6 МБ.");
+      const dataUrl = await compressToDataURL(file);
+      const cfg = loadBg();
+      cfg.image = dataUrl;
+      saveBg(cfg);
+      applyBg(cfg);
+      toast("Фон обновлён.");
+    }catch(e){
+      toast(e.message);
+    }
+  }, { once:true });
+}
+
+/* Profile: upload avatar/banner + clear banner + password */
+function openUpload(kind){
+  const isAvatar = kind === "avatar";
+  const title = isAvatar ? "Смена аватара" : "Установка баннера";
+
+  modalOpen(title, `
+    <div class="preview">
+      <div class="pimg"><img id="upPreview" alt="preview" src="https://placehold.co/300x300?text=PREVIEW"></div>
+      <div style="min-width:260px">
+        <div class="m">Выбери файл → preview → “Сохранить”.</div>
+        <div class="hr"></div>
+        <input id="upFile" type="file" accept="image/*" />
+        <div class="m" style="margin-top:10px">Если словишь 413 — увеличь лимит JSON на сервере.</div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn ghost" type="button" onclick="modalClose()">Отмена</button>
+      <button class="btn primary" type="button" id="upSave" disabled>Сохрани��ь</button>
+    </div>
+  `);
+
+  const file = document.getElementById("upFile");
+  const preview = document.getElementById("upPreview");
+  const save = document.getElementById("upSave");
+  let base64 = "";
+
+  file.addEventListener("change", async ()=>{
+    const f = file.files?.[0];
+    if(!f){ base64=""; save.disabled=true; return; }
+    base64 = await compressToDataURL(f, {maxW: isAvatar ? 600 : 1920, maxH: isAvatar ? 600 : 1080, quality:0.86});
+    preview.src = base64;
+    save.disabled = false;
+  });
+
+  save.addEventListener("click", async ()=>{
+    try{
+      save.disabled = true;
+      if(isAvatar){
+        await apiPost("/api/ws/profile/upload-avatar", { image_base64: base64 });
+        toast("Аватар обновлён.");
+      }else{
+        await apiPost("/api/ws/profile/upload-banner", { image_base64: base64 });
+        toast("Баннер обновлён.");
+      }
+      modalClose();
+      await openTab(state.tab);
+    }catch(e){
+      toast(e.message);
+      save.disabled = false;
+    }
+  });
+}
+
+async function clearBanner(){
+  try{
+    await apiPost("/api/ws/profile/clear-banner", {});
+    toast("Баннер убран.");
+    await openTab(state.tab);
+  }catch(e){ toast(e.message); }
+}
+
+function openPassword(){
+  modalOpen("Смена пароля", `
+    <div class="field">
+      <label>Старый пароль</label>
+      <input id="oldPass" type="password" placeholder="••••••">
+    </div>
+    <div class="field">
+      <label>Новый пароль</label>
+      <input id="newPass" type="password" placeholder="••••••">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn ghost" type="button" onclick="modalClose()">Отмена</button>
+      <button class="btn primary" type="button" id="passSave">Сохранить</button>
+    </div>
+  `);
+
+  document.getElementById("passSave").addEventListener("click", async ()=>{
+    const oldp = String(document.getElementById("oldPass").value || "");
+    const newp = String(document.getElementById("newPass").value || "");
+    if(!oldp || !newp){ toast("Заполни оба поля."); return; }
+    try{
+      await apiPost("/api/ws/profile/change-password", { old_password: oldp, new_password: newp });
+      toast("Пароль изменён.");
+      modalClose();
+    }catch(e){ toast(e.message); }
+  });
+}
+
 /* ======================
-   EVENTS
+   Events
 ====================== */
-document.getElementById("btnReload").addEventListener("click", ()=> openTab(state.activeTab));
+document.getElementById("nav").addEventListener("click", (e)=>{
+  const btn = e.target.closest(".nav-btn");
+  if(!btn) return;
+  openTab(btn.dataset.tab);
+});
+document.getElementById("btnReload").addEventListener("click", ()=>openTab(state.tab));
 document.getElementById("btnLogout").addEventListener("click", ()=>{
   localStorage.removeItem("ws_token");
   location.href = "index.html";
 });
 document.getElementById("btnReadAll").addEventListener("click", readAllNotifs);
 
-document.getElementById("btnLayoutToggle").addEventListener("click", ()=>{
-  setEditingLayout(!state.editingLayout);
-});
-document.getElementById("btnLayoutReset").addEventListener("click", ()=>{
-  resetLayout();
-  toast("Расстановка сброшена.");
-  renderActiveTab();
-});
-
-document.getElementById("nav").addEventListener("click", (e)=>{
-  const tab = e.target.closest(".item")?.dataset?.tab;
-  if(tab) openTab(tab);
-});
-
-/* expose */
+/* expose for onclick */
+window.openTab = openTab;
 window.takeContract = takeContract;
-window.readNotif = readNotif;
-window.readAllNotifs = readAllNotifs;
-window.createPay = createPay;
-window.markPaid = markPaid;
-window.cancelPay = cancelPay;
 window.claimBonus = claimBonus;
 window.openChest = openChest;
 window.wsbuildResetBonus = wsbuildResetBonus;
 window.wsbuildResetChest = wsbuildResetChest;
 window.wsbuildResetRoulette = wsbuildResetRoulette;
-
-window.toggleSetting = toggleSetting;
-window.saveNotifySettings = saveNotifySettings;
-window.reloadSettings = reloadSettings;
+window.readNotif = readNotif;
+window.readAllNotifs = readAllNotifs;
+window.createPay = createPay;
+window.markPaid = markPaid;
+window.cancelPay = cancelPay;
+window.toggleNotify = toggleNotify;
+window.saveNotify = saveNotify;
 window.genCode = genCode;
-
-window.openUploadModal = openUploadModal;
-window.clearBanner = clearBanner;
-window.openPasswordModal = openPasswordModal;
-
-window.setThemeColor = setThemeColor;
+window.setTheme = setTheme;
 window.saveThemeNow = saveThemeNow;
 window.resetThemeNow = resetThemeNow;
+window.bgBlur = bgBlur;
+window.bgOpacity = bgOpacity;
+window.clearBgNow = clearBgNow;
+window.openUpload = openUpload;
+window.clearBanner = clearBanner;
+window.openPassword = openPassword;
+window.modalClose = modalClose;
 
 /* boot */
+applyTheme(themeDraft);
+applyBg(loadBg());
 openTab("overview");
 </script>
 </body>
