@@ -4,42 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WS — Профиль</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
       --txt: rgba(245,248,255,.94);
       --muted: rgba(215,230,255,.62);
-      --muted2: rgba(215,230,255,.46);
-
+      --muted2: rgba(215,230,255,.44);
       --stroke: rgba(140,170,255,.18);
-      --stroke2: rgba(140,170,255,.12);
-
       --accent1:#3d7dff;
       --accent2:#7c3aed;
       --glow:#ff64d7;
-
       --danger:#ff5a7a;
-      --ok:#1bd760;
-      --amber:#ffcc66;
-
-      --r14:14px;
-      --r18:18px;
-      --r22:22px;
       --r28:28px;
-
       --shadow: 0 28px 90px rgba(0,0,0,.46);
       --shadowSoft: 0 16px 52px rgba(0,0,0,.30);
-
       --sidebarW: 308px;
-
       --pageBgBlurPx: 0px;
       --pageBgOpacity: 0.55;
     }
-
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
@@ -49,8 +33,6 @@
       background: linear-gradient(180deg, #020411, #01030c);
       overflow-x:hidden;
     }
-
-    /* Custom page background */
     .page-bg{
       position:fixed;
       inset:-50px;
@@ -73,7 +55,6 @@
         radial-gradient(circle at 50% 100%, color-mix(in oklab, var(--glow) 12%, transparent), transparent 38%),
         linear-gradient(180deg, rgba(2,4,17,.78), rgba(1,3,12,.90));
     }
-
     .bg-grid{
       position:fixed; inset:0; pointer-events:none; opacity:.06;
       z-index:-2;
@@ -84,7 +65,6 @@
       mask-image: linear-gradient(180deg, rgba(0,0,0,.85), transparent 85%);
       -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.85), transparent 85%);
     }
-
     .app{
       max-width: 1560px;
       margin: 0 auto;
@@ -93,34 +73,29 @@
       grid-template-columns: var(--sidebarW) 1fr;
       gap: 14px;
       align-items:start;
-      animation: pageIn .26s ease-out both;
+      animation: pageIn .22s ease-out both;
     }
     @keyframes pageIn{ from{opacity:.7; transform: translateY(10px);} to{opacity:1; transform:none;} }
 
-    /* ===== LEFT PANEL (no card block) ===== */
     .sidebar{
       position: sticky;
       top: 14px;
       height: calc(100vh - 28px);
       border-radius: 26px;
       overflow:hidden;
-
       background:
         radial-gradient(circle at 20% 0%, color-mix(in oklab, var(--accent1) 22%, transparent), transparent 52%),
         radial-gradient(circle at 85% 10%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 58%),
         rgba(255,255,255,.03);
-
       border: 1px solid rgba(140,170,255,.14);
       box-shadow: var(--shadowSoft);
       display:flex;
       flex-direction:column;
     }
-
     .side-top{
       padding: 14px 14px 12px;
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
-
     .me{
       display:flex;
       gap: 12px;
@@ -212,7 +187,6 @@
       gap: 6px;
       overflow:auto;
     }
-
     .nav-btn{
       width: 100%;
       border: 0;
@@ -220,21 +194,17 @@
       color: rgba(255,255,255,.88);
       cursor:pointer;
       text-align:left;
-
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap: 10px;
-
       padding: 12px 12px;
       border-radius: 16px;
-
       position:relative;
       transition: .16s ease;
       user-select:none;
       font-weight: 900;
     }
-
     .nav-btn::before{
       content:"";
       position:absolute;
@@ -248,7 +218,6 @@
       transition: .16s ease;
       border: 1px solid rgba(255,255,255,.08);
     }
-
     .nav-btn::after{
       content:"";
       position:absolute;
@@ -262,26 +231,18 @@
       transform: scaleY(.6);
       transition: .16s ease;
     }
-
-    .nav-btn:hover{
-      transform: translateY(-1px);
-    }
+    .nav-btn:hover{ transform: translateY(-1px); }
     .nav-btn:hover::before{
       opacity: 1;
       box-shadow: 0 18px 40px rgba(0,0,0,.18);
       border-color: rgba(140,170,255,.14);
     }
-
     .nav-btn.active::before{
       opacity: 1;
       border-color: rgba(120,160,255,.22);
-      background:
-        linear-gradient(180deg, color-mix(in oklab, var(--accent1) 26%, transparent), rgba(255,255,255,.03));
+      background: linear-gradient(180deg, color-mix(in oklab, var(--accent1) 26%, transparent), rgba(255,255,255,.03));
     }
-    .nav-btn.active::after{
-      opacity: 1;
-      transform: scaleY(1);
-    }
+    .nav-btn.active::after{ opacity: 1; transform: scaleY(1); }
 
     .nav-left{
       display:flex;
@@ -307,7 +268,6 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-
     .badge{
       position:relative;
       z-index:1;
@@ -332,35 +292,26 @@
       margin-top:auto;
       padding: 12px;
       border-top: 1px solid rgba(255,255,255,.06);
-      color: var(--muted2);
-      font-weight: 750;
-      font-size: 12px;
-      line-height:1.4;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      min-height: 44px;
     }
+    .spinner{
+      width:16px;
+      height:16px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,.18);
+      border-top-color: var(--accent1);
+      animation: spin .9s linear infinite;
+      opacity: 0;
+      transition: opacity .15s ease;
+    }
+    .spinner.on{ opacity: 1; }
+    @keyframes spin{ to { transform: rotate(360deg); } }
 
-    /* ===== MAIN ===== */
-    .main{
-      min-width:0;
-    }
+    .main{ min-width:0; }
 
-    .statusline{
-      display:none;
-      margin-bottom: 12px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      color: rgba(255,255,255,.90);
-      font-weight: 850;
-      white-space: pre-wrap;
-    }
-    .statusline.error{
-      border-color: rgba(255,90,122,.24);
-      background: rgba(255,90,122,.10);
-      color: rgba(255,220,230,.92);
-    }
-
-    /* ===== HERO CARD ===== */
     .hero{
       position:relative;
       border-radius: var(--r28);
@@ -389,7 +340,6 @@
       opacity:.55;
       pointer-events:none;
     }
-
     .hero-banner{
       height: 220px;
       background:
@@ -399,9 +349,7 @@
       background-size: cover;
       background-position: center;
       border-bottom: 1px solid rgba(255,255,255,.08);
-      position: relative;
     }
-
     .hero-top{
       display:flex;
       justify-content:space-between;
@@ -411,10 +359,7 @@
       position:relative;
       z-index: 1;
     }
-
     .hero-left{ display:flex; gap:14px; align-items:center; min-width:0; }
-
-    /* Water level badge */
     .level-badge{
       --fill: 30%;
       --tierA: rgba(61,125,255,.85);
@@ -470,7 +415,6 @@
       transition: bottom .38s ease;
     }
     @keyframes waveMove{ from{ transform: translateX(0); } to{ transform: translateX(-44px);} }
-
     .level-content{
       position:absolute; inset:0;
       display:flex;
@@ -493,7 +437,6 @@
       font-size: 26px;
       letter-spacing: -0.03em;
     }
-
     .hero-id{ min-width:0; }
     .hero-login{
       font-weight: 950;
@@ -509,7 +452,6 @@
       font-size: 16px;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
-
     .hero-pills{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; }
     .pill{
       display:inline-flex;
@@ -530,16 +472,10 @@
       background: linear-gradient(180deg, rgba(124,58,237,.35), rgba(61,125,255,.20));
       border-color: rgba(140,170,255,.24);
     }
-
     .hero-right{
       text-align:right;
       padding-top: 42px;
       flex:none;
-    }
-    .hero-rating-label{
-      color: rgba(215,230,255,.58);
-      font-weight: 850;
-      font-size: 14px;
     }
     .hero-rating-value{
       margin-top: 6px;
@@ -547,7 +483,6 @@
       font-size: 36px;
       letter-spacing: -0.03em;
     }
-
     .hero-xp{
       padding: 6px 18px 14px;
       position:relative;
@@ -560,15 +495,7 @@
       flex-wrap:wrap;
       align-items:flex-end;
     }
-    .hero-xp-title{
-      font-weight: 950;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      font-size: 12px;
-      color: rgba(255,255,255,.88);
-    }
     .hero-xp-text{
-      margin-top: 6px;
       font-weight: 950;
       font-size: 18px;
     }
@@ -577,7 +504,6 @@
       font-weight: 850;
       font-size: 14px;
     }
-
     .xp-bar{
       height: 14px;
       border-radius: 999px;
@@ -598,7 +524,6 @@
       box-shadow: 0 0 18px rgba(79,141,255,.30);
       transition: width .35s ease;
     }
-
     .hero-stats{
       display:grid;
       grid-template-columns: repeat(4, minmax(0,1fr));
@@ -635,7 +560,6 @@
       font-size: 28px;
     }
 
-    /* ===== CONTENT ===== */
     .content{
       margin-top: 14px;
       border-radius: var(--r28);
@@ -646,18 +570,6 @@
       position:relative;
       min-height: 220px;
     }
-    .content::after{
-      content:"";
-      position:absolute;
-      width:420px; height:420px;
-      right:-160px; top:-180px;
-      background: color-mix(in oklab, var(--accent2) 26%, transparent);
-      filter: blur(70px);
-      opacity:.30;
-      border-radius: 999px;
-      pointer-events:none;
-    }
-
     .content-head{
       padding: 18px 18px 0;
       display:flex;
@@ -669,29 +581,20 @@
     }
     .h-title{
       margin:0;
-      font-size: clamp(24px, 2.1vw, 34px);
+      font-size: clamp(22px, 2.0vw, 32px);
       font-weight: 950;
       letter-spacing: -0.03em;
-    }
-    .h-sub{
-      margin-top: 8px;
-      color: var(--muted);
-      font-weight: 750;
-      font-size: 14px;
-      line-height: 1.45;
     }
     .content-body{
       padding: 16px 18px 18px;
       position:relative;
       z-index:1;
     }
-
     .grid{
       display:grid;
       grid-template-columns: repeat(12, minmax(0,1fr));
       gap: 12px;
     }
-
     .widget{
       border:1px solid rgba(140,170,255,.14);
       background: linear-gradient(180deg, rgba(6,16,41,.76), rgba(4,10,27,.96));
@@ -706,7 +609,6 @@
       border-color: rgba(140,170,255,.24);
       box-shadow: 0 26px 70px rgba(0,0,0,.30);
     }
-
     .widget-head{
       display:flex;
       align-items:center;
@@ -726,7 +628,6 @@
       user-select:none;
     }
     .widget-body{ padding: 12px; }
-
     .mini-row{
       display:flex;
       align-items:center;
@@ -740,9 +641,6 @@
     }
     .mini-row .a{ font-weight: 900; }
     .mini-row .m{ color: rgba(255,255,255,.62); font-size: 13px; font-weight: 800; margin-top: 4px; }
-
-    .hr{ height:1px; background: rgba(255,255,255,.08); margin: 12px 0; }
-
     .widget-error{
       border:1px solid rgba(255,90,122,.22);
       background: rgba(255,90,122,.10);
@@ -753,7 +651,7 @@
       line-height:1.4;
       white-space: pre-wrap;
     }
-
+    .hr{ height:1px; background: rgba(255,255,255,.08); margin: 12px 0; }
     .inv-grid{
       display:grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -795,7 +693,6 @@
       font-size: 13px;
     }
 
-    /* Modal */
     .modal-backdrop{
       position:fixed;
       inset:0;
@@ -867,7 +764,6 @@
       font-size: 14px;
     }
     .field input[type="range"]{ width:100%; }
-
     .preview{
       border:1px solid rgba(140,170,255,.14);
       background: rgba(255,255,255,.03);
@@ -909,6 +805,11 @@
       .app{ grid-template-columns: 1fr; }
       .sidebar{ position: relative; height:auto; }
     }
+    @media (max-width: 980px){
+      .hero-top{ flex-direction: column; align-items:flex-start; }
+      .hero-right{ text-align:left; padding-top: 0; }
+      .hero-stats{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
   </style>
 </head>
 
@@ -918,7 +819,6 @@
   <div class="bg-grid"></div>
 
   <div class="app">
-    <!-- LEFT PANEL -->
     <aside class="sidebar">
       <div class="side-top">
         <div class="me">
@@ -931,9 +831,9 @@
         </div>
 
         <div class="side-actions">
-          <a class="btn ghost small" href="index.html">← Назад</a>
-          <button id="btnReload" class="btn primary small" type="button">Обновить</button>
-          <button id="btnLogout" class="btn danger small" type="button">Выйти</button>
+          <a class="btn ghost small" href="index.html">←</a>
+          <button id="btnReload" class="btn primary small" type="button">⟳</button>
+          <button id="btnLogout" class="btn danger small" type="button">⎋</button>
         </div>
       </div>
 
@@ -975,15 +875,11 @@
       </nav>
 
       <div class="side-footer">
-        Если какие-то запросы падают, профиль будет пытаться догрузить данные повторно.
+        <div id="spin" class="spinner"></div>
       </div>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
-      <div id="statusLine" class="statusline"></div>
-
-      <!-- HERO -->
       <section class="hero">
         <div class="hero-banner" id="heroBanner"></div>
 
@@ -1012,18 +908,14 @@
           </div>
 
           <div class="hero-right">
-            <div class="hero-rating-label">Рейтинг</div>
             <div class="hero-rating-value" id="heroRating">—</div>
           </div>
         </div>
 
         <div class="hero-xp">
           <div class="hero-xp-row">
-            <div>
-              <div class="hero-xp-title">XP</div>
-              <div class="hero-xp-text" id="heroXpText">— / —</div>
-            </div>
-            <div class="hero-xp-next" id="heroXpNext">До следующего: —</div>
+            <div class="hero-xp-text" id="heroXpText">— / —</div>
+            <div class="hero-xp-next" id="heroXpNext">—</div>
           </div>
 
           <div class="xp-bar">
@@ -1033,7 +925,7 @@
 
         <div class="hero-stats">
           <div class="stat">
-            <div class="k">Игровой баланс</div>
+            <div class="k">Баланс</div>
             <div class="v" id="heroBal">0</div>
           </div>
           <div class="stat">
@@ -1051,16 +943,10 @@
         </div>
       </section>
 
-      <!-- CONTENT -->
       <section class="content">
         <div class="content-head">
-          <div>
-            <h2 class="h-title" id="viewTitle">Обзор</h2>
-            <div class="h-sub" id="viewSub">Панели справа зависят от выбранного раздела слева.</div>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
-            <button id="btnReadAll" class="btn ghost small" type="button" style="display:none;">Прочитать всё</button>
-          </div>
+          <h2 class="h-title" id="viewTitle">Обзор</h2>
+          <button id="btnReadAll" class="btn ghost small" type="button" style="display:none;">Прочитать всё</button>
         </div>
         <div class="content-body" id="view"></div>
       </section>
@@ -1069,7 +955,6 @@
 
   <div class="toast" id="toast"></div>
 
-  <!-- Modal -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal">
       <div class="modal-head">
@@ -1081,15 +966,11 @@
   </div>
 
 <script>
-/* ======================
-   Base / helpers
-====================== */
 function apiBase(){
   const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   return isLocal ? "http://localhost:3000" : "https://world-script-api.onrender.com";
 }
 function getToken(){ return localStorage.getItem("ws_token") || ""; }
-
 function formatNum(v){ return new Intl.NumberFormat("ru-RU").format(Number(v||0)); }
 function safeDate(value){
   if(!value) return "—";
@@ -1102,7 +983,6 @@ function esc(s){
     .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
     .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
-
 function toast(text){
   const el = document.getElementById("toast");
   el.textContent = String(text||"");
@@ -1110,41 +990,26 @@ function toast(text){
   clearTimeout(window.__toast_t);
   window.__toast_t = setTimeout(()=> el.style.display = "none", 3500);
 }
-
-function setStatus(text, isError=false){
-  const el = document.getElementById("statusLine");
-  if(!text){
-    el.style.display = "none";
-    el.textContent = "";
-    el.classList.remove("error");
-    return;
-  }
-  el.style.display = "block";
-  el.textContent = String(text);
-  el.classList.toggle("error", !!isError);
-}
-
 function widgetError(text){
   return `<div class="widget-error">${esc(text)}</div>`;
 }
 
-/* ======================
-   Retry fetch (GET retries until success*)
-   (*but stops on 400/401/403/404; stops after many attempts for safety)
-====================== */
-function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+let loadingCount = 0;
+function setLoading(on){
+  const spin = document.getElementById("spin");
+  if(on) loadingCount++;
+  else loadingCount = Math.max(0, loadingCount - 1);
+  spin.classList.toggle("on", loadingCount > 0);
+}
 
+function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
 function isRetryableError(err){
   const status = Number(err?.status || 0);
-  const msg = String(err?.message || "").toLowerCase();
-
   if ([400,401,403,404].includes(status)) return false;
   if ([408,425,429,500,502,503,504].includes(status)) return true;
-
+  const msg = String(err?.message || "").toLowerCase();
   if (msg.includes("failed to fetch")) return true;
-  if (msg.includes("таймаут")) return true;
-  if (msg.includes("timeout")) return true;
-
+  if (msg.includes("таймаут") || msg.includes("timeout")) return true;
   return false;
 }
 function calcBackoff(attempt, base=650, cap=8000){
@@ -1152,23 +1017,15 @@ function calcBackoff(attempt, base=650, cap=8000){
   const jitter = Math.round(exp * (Math.random() * 0.25));
   return Math.min(cap, exp + jitter);
 }
-
-async function withRetry(task, { maxAttempts=40, baseDelayMs=650, maxDelayMs=8000, label="" } = {}){
+async function withRetry(task, { maxAttempts=5 } = {}){
   let attempt = 0;
   while(true){
     attempt++;
     try{
-      const res = await task();
-      if (label) setStatus("");
-      return res;
+      return await task();
     }catch(err){
-      if(!isRetryableError(err) || attempt >= maxAttempts){
-        if (label) setStatus("", true);
-        throw err;
-      }
-      const delay = calcBackoff(attempt, baseDelayMs, maxDelayMs);
-      if (label) setStatus(`Сеть/Render: догружаю ${label}… попытка ${attempt}, повтор через ${Math.ceil(delay/1000)}с`);
-      await sleep(delay);
+      if(!isRetryableError(err) || attempt >= maxAttempts) throw err;
+      await sleep(calcBackoff(attempt));
     }
   }
 }
@@ -1176,17 +1033,15 @@ async function withRetry(task, { maxAttempts=40, baseDelayMs=650, maxDelayMs=800
 async function fetchJson(path, {method="GET", body=null, timeoutMs=15000} = {}){
   const token = getToken();
   if(!token){
-    const e = new Error("Нет ws_token. Сначала войди в аккаунт.");
+    const e = new Error("Требуется вход");
     e.status = 401; e.path = path;
     throw e;
   }
-
   const ctrl = new AbortController();
   const t = setTimeout(()=> ctrl.abort(), timeoutMs);
-
-  let resp, text, json;
+  setLoading(true);
   try{
-    resp = await fetch(apiBase()+path, {
+    const resp = await fetch(apiBase()+path, {
       method,
       headers:{
         "Authorization":"Bearer "+token,
@@ -1196,87 +1051,43 @@ async function fetchJson(path, {method="GET", body=null, timeoutMs=15000} = {}){
       body: body ? JSON.stringify(body) : null,
       signal: ctrl.signal
     });
-
-    text = await resp.text();
+    const text = await resp.text();
+    let json = null;
     try { json = JSON.parse(text); } catch { json = null; }
-
     if(!json){
-      const e = new Error(`Сервер вернул не JSON (${resp.status}) для ${path}\n${String(text||"").slice(0,220)}`);
+      const e = new Error("Ошибка");
       e.status = resp.status; e.path = path;
       throw e;
     }
-
     if(!resp.ok || !json.ok){
-      const e = new Error(String(json.error || `Ошибка ${resp.status}`));
+      const e = new Error(String(json.error || "Ошибка"));
       e.status = resp.status; e.path = path; e.payload = json;
       throw e;
     }
-
     return json;
   } catch(err){
     if(err?.name === "AbortError"){
-      const e = new Error(`Таймаут запроса (${timeoutMs}мс): ${path}`);
+      const e = new Error("Время ожидания истекло");
       e.status = 408; e.path = path;
       throw e;
     }
     if(err instanceof TypeError && String(err.message).includes("Failed to fetch")){
-      const e = new Error(`Failed to fetch (CORS/сеть/Render asleep): ${path}`);
+      const e = new Error("Не удалось загрузить");
       e.status = 503; e.path = path;
       throw e;
     }
     throw err;
   } finally {
     clearTimeout(t);
+    setLoading(false);
   }
 }
 
-async function apiGet(path, label="данные"){
-  return withRetry(()=>fetchJson(path, {method:"GET"}), { label, maxAttempts: 40 });
+async function apiGet(path){
+  return withRetry(()=>fetchJson(path, {method:"GET"}), { maxAttempts: 5 });
 }
 async function apiPost(path, body){
-  // POST не ретраим автоматически (чтобы не было двойных действий)
   return fetchJson(path, {method:"POST", body});
-}
-
-/* ======================
-   Theme + page background (localStorage)
-====================== */
-const THEME_KEY = "ws_profile_theme_v2";
-const BG_KEY = "ws_profile_page_bg_v2";
-
-function loadTheme(){
-  try{ return JSON.parse(localStorage.getItem(THEME_KEY) || "null"); }catch{ return null; }
-}
-function saveTheme(t){ localStorage.setItem(THEME_KEY, JSON.stringify(t||{})); }
-function applyTheme(t){
-  const theme = t || {};
-  const s = document.documentElement.style;
-  if(theme.accent1) s.setProperty("--accent1", theme.accent1);
-  if(theme.accent2) s.setProperty("--accent2", theme.accent2);
-  if(theme.glow) s.setProperty("--glow", theme.glow);
-}
-
-function loadBg(){
-  try{
-    const x = JSON.parse(localStorage.getItem(BG_KEY) || "null");
-    if(!x) return { image:"", blur:0, opacity:55 };
-    return {
-      image: String(x.image||""),
-      blur: Math.max(0, Math.min(100, Number(x.blur||0))),
-      opacity: Math.max(0, Math.min(100, Number(x.opacity??55))),
-    };
-  }catch{
-    return { image:"", blur:0, opacity:55 };
-  }
-}
-function saveBg(cfg){ localStorage.setItem(BG_KEY, JSON.stringify(cfg)); }
-
-function applyBg(cfg){
-  const el = document.getElementById("pageBg");
-  const blurPx = Math.round((Number(cfg.blur||0) / 100) * 36); // 0..100 -> 0..36px
-  document.documentElement.style.setProperty("--pageBgBlurPx", blurPx + "px");
-  document.documentElement.style.setProperty("--pageBgOpacity", (Number(cfg.opacity||55) / 100).toFixed(2));
-  el.style.backgroundImage = cfg.image ? `url('${cfg.image}')` : "none";
 }
 
 async function compressToDataURL(file, {maxW=1920, maxH=1080, mime="image/jpeg", quality=0.82} = {}){
@@ -1284,7 +1095,6 @@ async function compressToDataURL(file, {maxW=1920, maxH=1080, mime="image/jpeg",
   let w = bmp.width, h = bmp.height;
   const r = Math.min(maxW / w, maxH / h, 1);
   w = Math.round(w*r); h = Math.round(h*r);
-
   const c = document.createElement("canvas");
   c.width = w; c.height = h;
   const ctx = c.getContext("2d");
@@ -1292,11 +1102,8 @@ async function compressToDataURL(file, {maxW=1920, maxH=1080, mime="image/jpeg",
   return c.toDataURL(mime, quality);
 }
 
-/* ======================
-   Modal
-====================== */
 function modalOpen(title, html){
-  document.getElementById("modalTitle").textContent = title || "Modal";
+  document.getElementById("modalTitle").textContent = title || "";
   document.getElementById("modalBody").innerHTML = html || "";
   document.getElementById("modalBackdrop").style.display = "flex";
 }
@@ -1309,24 +1116,49 @@ document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
   if(e.target.id === "modalBackdrop") modalClose();
 });
 
-/* ======================
-   State
-====================== */
+const THEME_KEY = "ws_profile_theme_min_v1";
+let themeDraft = (()=>{ try { return JSON.parse(localStorage.getItem(THEME_KEY) || "null"); } catch { return null; } })() || { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
+function applyTheme(t){
+  const s = document.documentElement.style;
+  if(t.accent1) s.setProperty("--accent1", t.accent1);
+  if(t.accent2) s.setProperty("--accent2", t.accent2);
+  if(t.glow) s.setProperty("--glow", t.glow);
+}
+applyTheme(themeDraft);
+
+function setTheme(key, value){
+  themeDraft = {...themeDraft, [key]: String(value||"").trim() };
+  applyTheme(themeDraft);
+}
+function saveThemeNow(){
+  localStorage.setItem(THEME_KEY, JSON.stringify(themeDraft));
+  toast("Сохранено");
+}
+function resetThemeNow(){
+  themeDraft = { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
+  localStorage.setItem(THEME_KEY, JSON.stringify(themeDraft));
+  applyTheme(themeDraft);
+  openTab("settings");
+}
+
+function applyPageBg({image_url="", blur=0, opacity=55} = {}){
+  const el = document.getElementById("pageBg");
+  const blurPx = Math.round((Number(blur||0) / 100) * 36);
+  document.documentElement.style.setProperty("--pageBgBlurPx", blurPx + "px");
+  document.documentElement.style.setProperty("--pageBgOpacity", (Number(opacity||55) / 100).toFixed(2));
+  el.style.backgroundImage = image_url ? `url('${image_url}')` : "none";
+}
+
 const state = {
   tab: "overview",
-  dashboard: null,
-  progress: null,
-
+  core: { dash:null, prog:null, pageBg:null },
   overview: { bonus:null, chest:null, roulette:null, transfers:null, chestHistory:null },
   contracts: null,
   notifications: null,
   wsbuild: { packages:null, active:null, my:null, auto:null },
-  settings: { notify:null, codes:null, draft:{} },
+  settings: { notify:null, codes:null, draft:{} }
 };
 
-/* ======================
-   Level tier (colors)
-====================== */
 function getLevelTier(level){
   const lvl = Math.max(1, Number(level||1));
   if(lvl >= 50) return { a:"#ffb86b", b:"#ff64d7" };
@@ -1335,22 +1167,6 @@ function getLevelTier(level){
   if(lvl >= 15) return { a:"#1bd760", b:"#3d7dff" };
   if(lvl >= 8)  return { a:"#ffcc66", b:"#7c3aed" };
   return { a:"#3d7dff", b:"#7c3aed" };
-}
-
-/* ======================
-   Render helpers
-====================== */
-function setActiveTab(tab){
-  state.tab = tab;
-  document.querySelectorAll(".nav-btn").forEach(b=>{
-    b.classList.toggle("active", b.dataset.tab === tab);
-  });
-  document.getElementById("btnReadAll").style.display = tab === "notifications" ? "inline-flex" : "none";
-}
-
-function setHead(title, sub){
-  document.getElementById("viewTitle").textContent = title;
-  document.getElementById("viewSub").textContent = sub || "";
 }
 
 function normalizeInventory(items){
@@ -1367,35 +1183,29 @@ function normalizeInventory(items){
   });
 }
 
-/* ======================
-   Apply HERO (dashboard + progress)
-====================== */
 function applyHero(dash, prog){
   const user = dash?.user || {};
   const binder = dash?.binder || {};
   const inv = normalizeInventory(dash?.inventory || []);
   const invCount = inv.reduce((s,x)=>s+Number(x.count||0),0);
 
-  // left panel user
   const meAvatar = document.getElementById("meAvatar");
   meAvatar.src = user.avatar_url || "https://placehold.co/160x160?text=WS";
   meAvatar.onerror = ()=> meAvatar.src = "https://placehold.co/160x160?text=WS";
+
   document.getElementById("meLogin").textContent = user.login || "unknown";
   document.getElementById("meNick").textContent = user.game_nick || user.nickname || "—";
   document.getElementById("meRole").textContent = String(user.role||"user").toLowerCase()==="admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
 
-  // banner
   const banner = document.getElementById("heroBanner");
   if(user.profile_banner_url){
-    banner.style.backgroundImage =
-      `linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.78)), url('${user.profile_banner_url}')`;
+    banner.style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.78)), url('${user.profile_banner_url}')`;
     banner.style.backgroundSize = "cover";
     banner.style.backgroundPosition = "center";
   } else {
     banner.style.backgroundImage = "";
   }
 
-  // text blocks
   document.getElementById("heroLogin").textContent = user.login || "unknown";
   document.getElementById("heroName").textContent = user.game_nick || user.nickname || user.login || "—";
   document.getElementById("heroRole").textContent = String(user.role||"user").toLowerCase()==="admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
@@ -1405,24 +1215,20 @@ function applyHero(dash, prog){
   const capital = Number(binder.game_balance||0) + Number(binder.to_output||0);
   document.getElementById("heroRank").textContent = capital >= 100000 ? "CORE" : "INIT";
 
-  // rating: from total_xp if exists, else capital/100
   const totalXp = Number(prog?.profile?.total_xp ?? 0);
   const rating = totalXp > 0 ? Math.round(totalXp / 10) : Math.round(capital / 100);
   document.getElementById("heroRating").textContent = formatNum(rating);
 
-  // stats
   document.getElementById("heroBal").textContent = formatNum(binder.game_balance||0);
   document.getElementById("heroOut").textContent = formatNum(binder.to_output||0);
   document.getElementById("heroWsb").textContent = formatNum(binder.wsbuild_balance||0);
   document.getElementById("heroInv").textContent = formatNum(invCount);
 
-  // badges
   document.getElementById("bdWsb").textContent = formatNum(binder.wsbuild_balance || 0);
   document.getElementById("bdInv").textContent = formatNum(invCount);
   document.getElementById("bdNotif").textContent = formatNum(dash.notifications_unread_count || 0);
   document.getElementById("bdContracts").textContent = String((dash.contracts_in_progress||[]).length);
 
-  // level water + xp
   const lvl = Number(prog?.profile?.level || 1);
   const xp = Number(prog?.profile?.xp || 0);
   const toNext = Number(prog?.profile?.xp_to_next || 100);
@@ -1431,9 +1237,9 @@ function applyHero(dash, prog){
   document.getElementById("bdLvl").textContent = String(lvl);
   document.getElementById("levelNum").textContent = String(lvl);
   document.getElementById("heroXpText").textContent = `${formatNum(xp)} / ${formatNum(toNext)}`;
-  document.getElementById("heroXpNext").textContent = `До следующего: ${formatNum(Math.max(0, toNext - xp))}`;
-  document.getElementById("heroXpFill").style.width = pct + "%";
+  document.getElementById("heroXpNext").textContent = `${formatNum(Math.max(0, toNext - xp))}`;
 
+  document.getElementById("heroXpFill").style.width = pct + "%";
   const fill = Math.max(10, Math.min(100, pct));
   const badge = document.getElementById("levelBadge");
   badge.style.setProperty("--fill", fill + "%");
@@ -1443,31 +1249,34 @@ function applyHero(dash, prog){
   badge.style.setProperty("--tierB", tier.b);
 }
 
-/* ======================
-   Loaders
-====================== */
+function setActiveTab(tab){
+  state.tab = tab;
+  document.querySelectorAll(".nav-btn").forEach(b=> b.classList.toggle("active", b.dataset.tab === tab));
+  document.getElementById("btnReadAll").style.display = tab === "notifications" ? "inline-flex" : "none";
+}
+
 async function loadCore(){
-  // core: dashboard + progress
-  const [dash, prog] = await Promise.all([
-    apiGet("/api/ws/dashboard-bundle", "dashboard"),
-    apiGet("/api/ws/profile/progress", "progress")
+  const [dash, prog, bg] = await Promise.all([
+    apiGet("/api/ws/dashboard-bundle"),
+    apiGet("/api/ws/profile/progress"),
+    apiGet("/api/ws/profile/page-bg").catch(()=>null)
   ]);
-  state.dashboard = dash;
-  state.progress = prog;
+  state.core.dash = dash;
+  state.core.prog = prog;
+  state.core.pageBg = bg;
+  if (bg) applyPageBg({ image_url: bg.image_url || "", blur: bg.blur ?? 0, opacity: bg.opacity ?? 55 });
   applyHero(dash, prog);
 }
 
 async function loadOverview(){
   const tasks = await Promise.allSettled([
-    apiGet("/api/ws/bonus/status", "bonus"),
-    apiGet("/api/ws/chest/status", "chest"),
-    apiGet("/api/ws/roulette/limits", "roulette"),
-    apiGet("/api/ws/balance-transfer/pending", "transfers"),
-    apiGet("/api/ws/chest/history", "chest history"),
+    apiGet("/api/ws/bonus/status"),
+    apiGet("/api/ws/chest/status"),
+    apiGet("/api/ws/roulette/limits"),
+    apiGet("/api/ws/balance-transfer/pending"),
+    apiGet("/api/ws/chest/history")
   ]);
-
   const get = (i)=> tasks[i].status==="fulfilled" ? tasks[i].value : null;
-
   state.overview.bonus = get(0);
   state.overview.chest = get(1);
   state.overview.roulette = get(2);
@@ -1475,156 +1284,128 @@ async function loadOverview(){
   state.overview.chestHistory = get(4);
 }
 
-async function loadContracts(){
-  state.contracts = await apiGet("/api/ws/contracts/bundle", "contracts");
-}
-
-async function loadNotifications(){
-  state.notifications = await apiGet("/api/ws/notifications?limit=60", "notifications");
-}
-
+async function loadContracts(){ state.contracts = await apiGet("/api/ws/contracts/bundle"); }
+async function loadNotifications(){ state.notifications = await apiGet("/api/ws/notifications?limit=60"); }
 async function loadWsbuild(){
   const tasks = await Promise.allSettled([
-    apiGet("/api/ws/wsbuild/packages", "wsbuild packages"),
-    apiGet("/api/ws/payment-requests/active", "active request"),
-    apiGet("/api/ws/payment-requests/my", "my requests"),
-    apiGet("/api/ws/wsbuild/autotopup/my", "autotopup")
+    apiGet("/api/ws/wsbuild/packages"),
+    apiGet("/api/ws/payment-requests/active"),
+    apiGet("/api/ws/payment-requests/my"),
+    apiGet("/api/ws/wsbuild/autotopup/my")
   ]);
   const get = (i)=> tasks[i].status==="fulfilled" ? tasks[i].value : null;
-
   state.wsbuild.packages = get(0);
   state.wsbuild.active = get(1);
   state.wsbuild.my = get(2);
   state.wsbuild.auto = get(3);
 }
-
 async function loadSettings(){
   const tasks = await Promise.allSettled([
-    apiGet("/api/ws/notify/settings", "notify settings"),
-    apiGet("/api/ws/profile/link-codes", "link codes")
+    apiGet("/api/ws/notify/settings"),
+    apiGet("/api/ws/profile/link-codes"),
+    apiGet("/api/ws/profile/page-bg").catch(()=>null)
   ]);
   const get = (i)=> tasks[i].status==="fulfilled" ? tasks[i].value : null;
-
   state.settings.notify = get(0);
   state.settings.codes = get(1);
+  const bg = tasks[2]?.status === "fulfilled" ? tasks[2].value : null;
+  if (bg) {
+    state.core.pageBg = bg;
+    applyPageBg({ image_url: bg.image_url || "", blur: bg.blur ?? 0, opacity: bg.opacity ?? 55 });
+  }
 }
 
-/* ======================
-   Views
-====================== */
 function renderOverview(){
   const b = state.overview.bonus;
   const c = state.overview.chest;
-  const r = state.overview.roulette;
   const t = state.overview.transfers;
   const h = state.overview.chestHistory;
-  const dash = state.dashboard || {};
+  const dash = state.core.dash || {};
 
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">⚡ Быстрые действия</div></div>
+        <div class="widget-head"><div class="widget-title">⚡</div></div>
         <div class="widget-body">
           <div class="mini-row">
             <div style="min-width:0">
               <div class="a">Бонус</div>
-              <div class="m">${b ? (b.can_claim ? "Доступен" : `Ожидание • ~${formatNum(b.seconds_left||0)} сек`) : "—"}</div>
+              <div class="m">${b ? (b.can_claim ? "Доступен" : "—") : "—"}</div>
             </div>
-            <div>
-              <button class="btn primary small" type="button" onclick="claimBonus()" ${b?.can_claim ? "" : "disabled"}>Забрать</button>
-            </div>
+            <button class="btn primary small" type="button" onclick="claimBonus()" ${b?.can_claim ? "" : "disabled"}>Забрать</button>
           </div>
-
           <div class="mini-row">
             <div style="min-width:0">
               <div class="a">Сундук</div>
-              <div class="m">${c ? (c.can_open ? "Доступен" : `Ожидание • ~${formatNum(c.seconds_left||0)} сек`) : "—"}</div>
+              <div class="m">${c ? (c.can_open ? "Доступен" : "—") : "—"}</div>
             </div>
-            <div>
-              <button class="btn primary small" type="button" onclick="openChest()" ${c?.can_open ? "" : "disabled"}>Открыть</button>
-            </div>
+            <button class="btn primary small" type="button" onclick="openChest()" ${c?.can_open ? "" : "disabled"}>Открыть</button>
           </div>
-
           <div class="mini-row">
-            <div style="min-width:0">
-              <div class="a">WSBuild-сбросы</div>
-              <div class="m">Бонус/Сундук/Рулетка</div>
-            </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+            <div class="a">WSBuild</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
               <button class="btn ghost small" type="button" onclick="wsbuildResetBonus()">Бонус</button>
               <button class="btn ghost small" type="button" onclick="wsbuildResetChest()">Сундук</button>
               <button class="btn ghost small" type="button" onclick="wsbuildResetRoulette()">Рулетка</button>
             </div>
           </div>
-
-          <div class="hr"></div>
-
-          <div class="muted">
-            Рулетка: ${r ? `<b>${formatNum(r.left||0)}/${formatNum(r.max||0)}</b>` : "—"} •
-            Непрочитано: <b>${formatNum(dash.notifications_unread_count||0)}</b>
-          </div>
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">💸 Отложенные переводы</div></div>
+        <div class="widget-head"><div class="widget-title">💸</div></div>
         <div class="widget-body">
           ${
             t ? `
-              <div style="font-weight:950;font-size:22px">${formatNum(t.total_pending||0)}</div>
-              <div class="muted" style="margin-top:8px">Сумма в очереди перевода к выводу</div>
-              <div class="hr"></div>
+              <div class="mini-row">
+                <div class="a">Сумма</div>
+                <div class="a">${formatNum(t.total_pending||0)}</div>
+              </div>
               ${
-                (t.items||[]).length
-                ? (t.items||[]).slice(0,6).map(x=>`
+                (t.items||[]).slice(0,5).map(x=>`
                   <div class="mini-row">
                     <div style="min-width:0">
-                      <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.source_text||"Начисление")}</div>
-                      <div class="m">${formatNum(x.amount||0)} • доступно ${safeDate(x.available_at)}</div>
+                      <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.source_text||"")}</div>
+                      <div class="m">${formatNum(x.amount||0)} • ${safeDate(x.available_at)}</div>
                     </div>
                   </div>
                 `).join("")
-                : `<div class="muted">Очередь пустая</div>`
               }
-            ` : widgetError("Не удалось загрузить /api/ws/balance-transfer/pending")
+            ` : widgetError("Недоступно")
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🧰 История сундука</div></div>
+        <div class="widget-head"><div class="widget-title">🧰</div></div>
         <div class="widget-body">
           ${
             h ? (
-              (h.items||[]).length
-                ? (h.items||[]).slice(0,7).map(x=>`
-                  <div class="mini-row">
-                    <div style="min-width:0">
-                      <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.reward_title||"Награда")}</div>
-                      <div class="m">День ${formatNum(x.day_number||0)} • ${safeDate(x.created_at)}</div>
-                    </div>
+              (h.items||[]).slice(0,7).map(x=>`
+                <div class="mini-row">
+                  <div style="min-width:0">
+                    <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.reward_title||"")}</div>
+                    <div class="m">#${formatNum(x.day_number||0)} • ${safeDate(x.created_at)}</div>
                   </div>
-                `).join("")
-                : `<div class="muted">Пока пусто</div>`
-            ) : widgetError("Не удалось загрузить /api/ws/chest/history")
+                </div>
+              `).join("") || `<div class="m">${"—"}</div>`
+            ) : widgetError("Недоступно")
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🕒 Последняя активность</div></div>
+        <div class="widget-head"><div class="widget-title">🕒</div></div>
         <div class="widget-body">
           ${
-            (dash.activity_feed||[]).length
-            ? (dash.activity_feed||[]).slice(0,12).map(x=>`
+            (dash.activity_feed||[]).slice(0,12).map(x=>`
               <div class="mini-row">
                 <div style="min-width:0">
-                  <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.action_text||"Действие")}</div>
+                  <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.action_text||"")}</div>
                   <div class="m">${safeDate(x.created_at)}</div>
                 </div>
               </div>
-            `).join("")
-            : `<div class="muted">Пока нет активности</div>`
+            `).join("") || `<div class="m">—</div>`
           }
         </div>
       </div>
@@ -1634,109 +1415,82 @@ function renderOverview(){
 
 function renderContracts(){
   const b = state.contracts;
-  if(!b) return widgetError("Контракты не загружены.");
-
+  if(!b) return widgetError("Недоступно");
   const card = (c, extra="") => `
     <div class="mini-row">
       <div style="min-width:0">
-        <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-          ${esc(c.title||"Контракт")} <span class="muted">• ${"★".repeat(Math.max(1, Math.min(5, Number(c.difficulty||1))))}</span>
-        </div>
-        <div class="m">
-          Награда: ${formatNum(c.reward_balance||0)} / к выводу ${formatNum(c.reward_output||0)}
-          ${c.expires_at ? ` • истекает: ${safeDate(c.expires_at)}` : ""}
-        </div>
+        <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.title||"")}</div>
+        <div class="m">${formatNum(c.reward_balance||0)} / ${formatNum(c.reward_output||0)}</div>
       </div>
       ${extra}
     </div>
   `;
-
   const available = b.available || [];
   const inProgress = b.in_progress || [];
   const completed = b.completed || [];
-
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">📌 В работе</div></div>
-        <div class="widget-body">
-          ${inProgress.length ? inProgress.map(c=>card(c)).join("") : `<div class="muted">Нет активных контрактов</div>`}
-        </div>
+        <div class="widget-head"><div class="widget-title">📌</div></div>
+        <div class="widget-body">${inProgress.length ? inProgress.map(c=>card(c)).join("") : `<div class="m">—</div>`}</div>
       </div>
-
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">✨ Доступно</div></div>
-        <div class="widget-body">
-          ${
-            available.length
-              ? available.map(c=>card(c, `<button class="btn primary small" type="button" onclick="takeContract(${Number(c.id||0)})">Взять</button>`)).join("")
-              : `<div class="muted">Нет доступных контрактов</div>`
-          }
-        </div>
+        <div class="widget-head"><div class="widget-title">✨</div></div>
+        <div class="widget-body">${available.length ? available.map(c=>card(c, `<button class="btn primary small" type="button" onclick="takeContract(${Number(c.id||0)})">Взять</button>`)).join("") : `<div class="m">—</div>`}</div>
       </div>
-
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">✅ Завершено</div></div>
-        <div class="widget-body">
-          ${completed.length ? completed.slice(0,10).map(c=>card(c)).join("") : `<div class="muted">Пока пусто</div>`}
-        </div>
+        <div class="widget-head"><div class="widget-title">✅</div></div>
+        <div class="widget-body">${completed.length ? completed.slice(0,10).map(c=>card(c)).join("") : `<div class="m">—</div>`}</div>
       </div>
     </div>
   `;
 }
 
 function renderInventory(){
-  const inv = normalizeInventory(state.dashboard?.inventory || []);
+  const inv = normalizeInventory(state.core.dash?.inventory || []);
   return `
     <div class="widget" style="min-height:auto">
-      <div class="widget-head"><div class="widget-title">🎒 Инвентарь</div></div>
+      <div class="widget-head"><div class="widget-title">🎒</div></div>
       <div class="widget-body">
-        ${inv.length ? `
-          <div class="inv-grid">
-            ${inv.slice(0,80).map(it=>`
-              <div class="inv">
-                <div class="img">
-                  <img src="${esc(it.image_url || "https://placehold.co/140x140?text=ITEM")}"
-                       onerror="this.src='https://placehold.co/140x140?text=ITEM'" alt="">
+        ${
+          inv.length ? `
+            <div class="inv-grid">
+              ${inv.slice(0,80).map(it=>`
+                <div class="inv">
+                  <div class="img">
+                    <img src="${esc(it.image_url || "https://placehold.co/140x140?text=ITEM")}" onerror="this.src='https://placehold.co/140x140?text=ITEM'" alt="">
+                  </div>
+                  <div class="name">${esc(it.title||"")}</div>
+                  <div class="meta">${esc(it.rarity||"")}</div>
+                  <div class="count">x${formatNum(it.count||0)}</div>
                 </div>
-                <div class="name">${esc(it.title||"Предмет")}</div>
-                <div class="meta">${esc(it.rarity||"Обычный")}</div>
-                <div class="count">x${formatNum(it.count||0)}</div>
-              </div>
-            `).join("")}
-          </div>
-        ` : `<div class="muted">Инвентарь пуст</div>`}
+              `).join("")}
+            </div>
+          ` : `<div class="m">—</div>`
+        }
       </div>
     </div>
   `;
 }
 
 function renderProgress(){
-  const p = state.progress;
-  if(!p) return widgetError("Не удалось загрузить /api/ws/profile/progress");
-
-  const prof = p.profile || {};
-  const ach = Array.isArray(p.achievements) ? p.achievements : [];
+  const p = state.core.prog;
+  if(!p) return widgetError("Недоступно");
+  const ach = p.achievements || [];
   return `
-    <div class="grid">
-      <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🏆 Достижения</div></div>
-        <div class="widget-body">
-          <div class="muted">Уровень: <b>${formatNum(prof.level||1)}</b> • ${esc(prof.title||"")} • Total XP: <b>${formatNum(prof.total_xp||0)}</b></div>
-          <div class="hr"></div>
-          ${
-            ach.length
-              ? ach.slice(0,70).map(a=>`
-                <div class="mini-row">
-                  <div style="min-width:0">
-                    <div class="a">${esc(a.icon||"")} ${esc(a.title||"Достижение")} ${a.is_unlocked ? `<span class="muted">• unlocked</span>` : ""}</div>
-                    <div class="m">${esc(a.description||"")} • ${formatNum(a.current_value||0)} / ${formatNum(a.target_value||0)}</div>
-                  </div>
-                </div>
-              `).join("")
-              : `<div class="muted">Пока нет достижений</div>`
-          }
-        </div>
+    <div class="widget" style="min-height:auto">
+      <div class="widget-head"><div class="widget-title">🏆</div></div>
+      <div class="widget-body">
+        ${
+          ach.length ? ach.slice(0,70).map(a=>`
+            <div class="mini-row">
+              <div style="min-width:0">
+                <div class="a">${esc(a.icon||"")} ${esc(a.title||"")}</div>
+                <div class="m">${formatNum(a.current_value||0)} / ${formatNum(a.target_value||0)}</div>
+              </div>
+            </div>
+          `).join("") : `<div class="m">—</div>`
+        }
       </div>
     </div>
   `;
@@ -1744,28 +1498,22 @@ function renderProgress(){
 
 function renderNotifications(){
   const n = state.notifications;
-  if(!n) return widgetError("Не удалось загрузить /api/ws/notifications");
-
+  if(!n) return widgetError("Недоступно");
   const items = n.items || [];
   return `
     <div class="widget" style="min-height:auto">
-      <div class="widget-head">
-        <div class="widget-title">🔔 Уведомления</div>
-        <div class="badge red">${formatNum(n.unread_count||0)}</div>
-      </div>
+      <div class="widget-head"><div class="widget-title">🔔</div><div class="badge red">${formatNum(n.unread_count||0)}</div></div>
       <div class="widget-body">
         ${
-          items.length
-            ? items.map(x=>`
-              <div class="mini-row">
-                <div style="min-width:0">
-                  <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.title||"Уведомление")}</div>
-                  <div class="m">${esc(x.message||"")} • ${safeDate(x.created_at)}</div>
-                </div>
-                <button class="btn ghost small" type="button" onclick="readNotif(${Number(x.id||0)})">Прочитать</button>
+          items.length ? items.map(x=>`
+            <div class="mini-row">
+              <div style="min-width:0">
+                <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.title||"")}</div>
+                <div class="m">${safeDate(x.created_at)}</div>
               </div>
-            `).join("")
-            : `<div class="muted">Пока пусто</div>`
+              <button class="btn ghost small" type="button" onclick="readNotif(${Number(x.id||0)})">✓</button>
+            </div>
+          `).join("") : `<div class="m">—</div>`
         }
       </div>
     </div>
@@ -1777,47 +1525,46 @@ function renderWsbuild(){
   const active = state.wsbuild.active?.item || null;
   const my = state.wsbuild.my?.items || [];
   const auto = state.wsbuild.auto?.items || [];
-
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🧾 Активная заявка</div></div>
+        <div class="widget-head"><div class="widget-title">🧾</div></div>
         <div class="widget-body">
           ${
             active ? `
               <div class="mini-row">
                 <div style="min-width:0">
                   <div class="a">#${Number(active.id||0)} • ${esc(active.status_text||active.status||"")}</div>
-                  <div class="m">${formatNum(active.wsbuild_amount||0)} • ${formatNum(active.amount_rub||0)} ₽ • код: ${esc(active.payment_code||"")}</div>
+                  <div class="m">${formatNum(active.wsbuild_amount||0)} • ${formatNum(active.amount_rub||0)} ₽</div>
                 </div>
               </div>
               <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
-                <button class="btn ghost small" type="button" onclick="markPaid(${Number(active.id||0)})">Я оплатил</button>
-                <button class="btn small" type="button" onclick="cancelPay(${Number(active.id||0)})">Отменить</button>
+                <button class="btn ghost small" type="button" onclick="markPaid(${Number(active.id||0)})">Оплатил</button>
+                <button class="btn small" type="button" onclick="cancelPay(${Number(active.id||0)})">Отмена</button>
               </div>
-            ` : `<div class="muted">Активной заявки нет</div>`
+            ` : `<div class="m">—</div>`
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">⏱ Автопополнение</div></div>
+        <div class="widget-head"><div class="widget-title">⏱</div></div>
         <div class="widget-body">
           ${
             auto.length ? auto.slice(0,6).map(x=>`
               <div class="mini-row">
                 <div style="min-width:0">
-                  <div class="a">Пакет ${formatNum(x.package_amount||0)} • +${formatNum(x.topup_amount||0)} каждые ${formatNum(x.interval_hours||0)}ч</div>
-                  <div class="m">Следующее: ${safeDate(x.next_topup_at)} • до: ${safeDate(x.ends_at)}</div>
+                  <div class="a">${formatNum(x.package_amount||0)} • +${formatNum(x.topup_amount||0)}</div>
+                  <div class="m">${safeDate(x.next_topup_at)}</div>
                 </div>
               </div>
-            `).join("") : `<div class="muted">Автопополнений нет</div>`
+            `).join("") : `<div class="m">—</div>`
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🛒 Пакеты WSBuild</div></div>
+        <div class="widget-head"><div class="widget-title">🛒</div></div>
         <div class="widget-body">
           ${
             pkgs?.packages?.length ? `
@@ -1825,32 +1572,32 @@ function renderWsbuild(){
                 ${pkgs.packages.map(p=>`
                   <div class="widget" style="grid-column: span 4; min-height:auto">
                     <div class="widget-body">
-                      <div class="a">${esc(p.title||"Пакет")}</div>
-                      <div class="m">${formatNum(p.amount||0)} ⚙️ • ${formatNum(p.price_rub||0)} ₽ ${p.badge ? `• ${esc(p.badge)}` : ""}</div>
+                      <div class="a">${esc(p.title||"")}</div>
+                      <div class="m">${formatNum(p.amount||0)} • ${formatNum(p.price_rub||0)} ₽</div>
                       <div style="margin-top:12px">
-                        <button class="btn primary small" type="button" onclick="createPay(${Number(p.amount||0)})">Создать заявку</button>
+                        <button class="btn primary small" type="button" onclick="createPay(${Number(p.amount||0)})">+</button>
                       </div>
                     </div>
                   </div>
                 `).join("")}
               </div>
-            ` : widgetError("Не удалось загрузить /api/ws/wsbuild/packages")
+            ` : `<div class="m">—</div>`
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">📜 История заявок</div></div>
+        <div class="widget-head"><div class="widget-title">📜</div></div>
         <div class="widget-body">
           ${
             my.length ? my.slice(0,25).map(x=>`
               <div class="mini-row">
                 <div style="min-width:0">
                   <div class="a">#${Number(x.id||0)} • ${esc(x.status_text||x.status||"")}</div>
-                  <div class="m">${formatNum(x.wsbuild_amount||0)} • ${formatNum(x.amount_rub||0)} ₽ • ${safeDate(x.created_at)}</div>
+                  <div class="m">${formatNum(x.wsbuild_amount||0)} • ${formatNum(x.amount_rub||0)} ₽</div>
                 </div>
               </div>
-            `).join("") : `<div class="muted">История пустая</div>`
+            `).join("") : `<div class="m">—</div>`
           }
         </div>
       </div>
@@ -1858,18 +1605,31 @@ function renderWsbuild(){
   `;
 }
 
+let bgDebounceT = null;
+async function bgSavePatch(patch){
+  clearTimeout(bgDebounceT);
+  bgDebounceT = setTimeout(async ()=>{
+    try{
+      const current = state.core.pageBg || { image_url:"", blur:0, opacity:55 };
+      const payload = {
+        blur: patch.blur ?? current.blur ?? 0,
+        opacity: patch.opacity ?? current.opacity ?? 55
+      };
+      const res = await apiPost("/api/ws/profile/page-bg/set", payload);
+      state.core.pageBg = res;
+      applyPageBg({ image_url: res.image_url || "", blur: res.blur ?? 0, opacity: res.opacity ?? 55 });
+    }catch(e){}
+  }, 350);
+}
+
 function renderSettings(){
-  const theme = loadTheme() || { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
-  const bg = loadBg();
   const notify = state.settings.notify?.item || null;
   const codes = state.settings.codes || null;
+  const bg = state.core.pageBg || { image_url:"", blur:0, opacity:55 };
 
   const row = (k, label) => `
     <div class="mini-row">
-      <div style="min-width:0">
-        <div class="a">${esc(label)}</div>
-        <div class="m">${notify?.[k] ? "Включено" : "Выключено"}</div>
-      </div>
+      <div class="a">${esc(label)}</div>
       <input type="checkbox" ${notify?.[k] ? "checked" : ""} onchange="toggleNotify('${k}', this.checked)">
     </div>
   `;
@@ -1877,122 +1637,107 @@ function renderSettings(){
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🎨 Тема</div></div>
+        <div class="widget-head"><div class="widget-title">🎨</div></div>
         <div class="widget-body">
           <div class="field">
-            <label>Accent 1</label>
-            <input type="text" value="${esc(theme.accent1)}" oninput="setTheme('accent1', this.value)" placeholder="#3d7dff">
+            <label>Accent1</label>
+            <input type="text" value="${esc(themeDraft.accent1)}" oninput="setTheme('accent1', this.value)">
           </div>
           <div class="field">
-            <label>Accent 2</label>
-            <input type="text" value="${esc(theme.accent2)}" oninput="setTheme('accent2', this.value)" placeholder="#7c3aed">
+            <label>Accent2</label>
+            <input type="text" value="${esc(themeDraft.accent2)}" oninput="setTheme('accent2', this.value)">
           </div>
           <div class="field">
             <label>Glow</label>
-            <input type="text" value="${esc(theme.glow)}" oninput="setTheme('glow', this.value)" placeholder="#ff64d7">
+            <input type="text" value="${esc(themeDraft.glow)}" oninput="setTheme('glow', this.value)">
           </div>
           <div class="modal-actions" style="justify-content:flex-start">
-            <button class="btn ghost small" type="button" onclick="saveThemeNow()">Сохранить</button>
-            <button class="btn small" type="button" onclick="resetThemeNow()">Сбросить</button>
+            <button class="btn ghost small" type="button" onclick="saveThemeNow()">OK</button>
+            <button class="btn small" type="button" onclick="resetThemeNow()">Reset</button>
           </div>
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🖼 Фон страницы</div></div>
+        <div class="widget-head"><div class="widget-title">🖼</div></div>
         <div class="widget-body">
           <div class="field">
-            <label>Blur (0..100)</label>
-            <input type="range" min="0" max="100" value="${bg.blur}" oninput="bgBlur(this.value)">
-            <div class="m" style="margin-top:8px">Текущее: <b id="bgBlurVal">${bg.blur}</b></div>
+            <label>Blur</label>
+            <input type="range" min="0" max="100" value="${Number(bg.blur||0)}" oninput="bgBlur(this.value)">
           </div>
           <div class="field">
-            <label>Opacity (0..100)</label>
-            <input type="range" min="0" max="100" value="${bg.opacity}" oninput="bgOpacity(this.value)">
-            <div class="m" style="margin-top:8px">Текущее: <b id="bgOpVal">${bg.opacity}</b></div>
+            <label>Opacity</label>
+            <input type="range" min="0" max="100" value="${Number(bg.opacity||55)}" oninput="bgOpacity(this.value)">
           </div>
-
           <div class="mini-row">
-            <div style="min-width:0">
-              <div class="a">Выбрать фон</div>
-              <div class="m">Сохраняется локально</div>
-            </div>
+            <div class="a">Фон</div>
             <input id="bgFile" type="file" accept="image/*">
           </div>
-
           <div class="modal-actions" style="justify-content:flex-start">
-            <button class="btn ghost small" type="button" onclick="clearBgNow()">Очистить фон</button>
+            <button class="btn ghost small" type="button" onclick="bgClear()">Clear</button>
           </div>
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">👤 Профиль</div></div>
+        <div class="widget-head"><div class="widget-title">👤</div></div>
         <div class="widget-body">
           <div class="mini-row">
-            <div style="min-width:0">
-              <div class="a">Аватар / Баннер</div>
-              <div class="m">Загрузка через модалку с preview</div>
-            </div>
+            <div class="a">Профиль</div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
               <button class="btn ghost small" type="button" onclick="openUpload('avatar')">Аватар</button>
               <button class="btn ghost small" type="button" onclick="openUpload('banner')">Баннер</button>
-              <button class="btn small" type="button" onclick="clearBanner()">Убрать баннер</button>
-              <button class="btn small" type="button" onclick="openPassword()">Сменить пароль</button>
+              <button class="btn small" type="button" onclick="clearBanner()">Баннер ✕</button>
+              <button class="btn small" type="button" onclick="openPassword()">Пароль</button>
             </div>
           </div>
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🔔 Уведомления (сайт)</div></div>
+        <div class="widget-head"><div class="widget-title">🔔</div></div>
         <div class="widget-body">
           ${
             notify ? `
-              ${row("notify_site_bonus_ready", "Бонус доступен")}
-              ${row("notify_site_chest_ready", "Сундук доступен")}
-              ${row("notify_site_roulette_ready", "Рулетка доступна")}
-              ${row("notify_site_contract_available", "Контракты доступны")}
-              ${row("notify_site_contract_expiring", "Контракт скоро истечёт")}
-              ${row("notify_site_contract_expired", "Контракт истёк")}
+              ${row("notify_site_bonus_ready","Бонус")}
+              ${row("notify_site_chest_ready","Сундук")}
+              ${row("notify_site_roulette_ready","Рулетка")}
+              ${row("notify_site_contract_available","Контракты")}
               <div class="modal-actions">
-                <button class="btn primary small" type="button" onclick="saveNotify()">Сохранить</button>
-                <button class="btn ghost small" type="button" onclick="openTab('settings')">Обновить</button>
+                <button class="btn primary small" type="button" onclick="saveNotify()">OK</button>
               </div>
-            ` : widgetError("Не удалось загрузить /api/ws/notify/settings")
+            ` : `<div class="m">—</div>`
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🔗 Коды привязки</div></div>
+        <div class="widget-head"><div class="widget-title">🔗</div></div>
         <div class="widget-body">
           ${
             codes ? `
               <div class="mini-row">
                 <div style="min-width:0">
-                  <div class="a">Основной код</div>
-                  <div class="m">${codes.link_active ? esc(codes.link_code) : "—"} • ${codes.link_active ? safeDate(codes.link_expires_at) : "не активен"}</div>
+                  <div class="a">LINK</div>
+                  <div class="m">${codes.link_active ? esc(codes.link_code) : "—"}</div>
                 </div>
-                <button class="btn ghost small" type="button" onclick="genCode('link')">Сгенерировать</button>
+                <button class="btn ghost small" type="button" onclick="genCode('link')">↻</button>
               </div>
-
               <div class="mini-row">
                 <div style="min-width:0">
-                  <div class="a">VK код</div>
-                  <div class="m">${codes.vk_active ? esc(codes.vk_code) : "—"} • ${codes.vk_active ? safeDate(codes.vk_expires_at) : "не активен"}</div>
+                  <div class="a">VK</div>
+                  <div class="m">${codes.vk_active ? esc(codes.vk_code) : "—"}</div>
                 </div>
-                <button class="btn ghost small" type="button" onclick="genCode('vk')">VK</button>
+                <button class="btn ghost small" type="button" onclick="genCode('vk')">↻</button>
               </div>
-
               <div class="mini-row">
                 <div style="min-width:0">
-                  <div class="a">Nick код</div>
-                  <div class="m">${codes.nick_active ? esc(codes.nick_code) : "—"} • ${codes.nick_active ? safeDate(codes.nick_expires_at) : "не активен"}</div>
+                  <div class="a">NICK</div>
+                  <div class="m">${codes.nick_active ? esc(codes.nick_code) : "—"}</div>
                 </div>
-                <button class="btn ghost small" type="button" onclick="genCode('nick')">Nick</button>
+                <button class="btn ghost small" type="button" onclick="genCode('nick')">↻</button>
               </div>
-            ` : widgetError("Не удалось загрузить /api/ws/profile/link-codes")
+            ` : `<div class="m">—</div>`
           }
         </div>
       </div>
@@ -2000,196 +1745,102 @@ function renderSettings(){
   `;
 }
 
-/* ======================
-   Actions
-====================== */
 async function openTab(tab){
   setActiveTab(tab);
-  setStatus("Загрузка…");
-  document.getElementById("view").innerHTML = `<div class="widget skeleton" style="min-height:220px"></div>`;
+  document.getElementById("viewTitle").textContent = tab === "overview" ? "Обзор" :
+    tab === "contracts" ? "Контракты" :
+    tab === "inventory" ? "Инвентарь" :
+    tab === "progress" ? "Прогресс" :
+    tab === "notifications" ? "Уведомления" :
+    tab === "wsbuild" ? "WSBuild" : "Настройки";
+
+  document.getElementById("view").innerHTML = `<div class="widget" style="min-height:220px"></div>`;
 
   try{
     await loadCore();
 
-    if(tab === "overview"){
-      setHead("Обзор", "Быстрые действия, статусы, переводы, история и активность.");
-      await loadOverview();
-      document.getElementById("view").innerHTML = renderOverview();
-    }
-    else if(tab === "contracts"){
-      setHead("Контракты", "Доступные и твои контракты.");
-      await loadContracts();
-      document.getElementById("view").innerHTML = renderContracts();
-    }
-    else if(tab === "inventory"){
-      setHead("Инвентарь", "Предметы и количество.");
-      document.getElementById("view").innerHTML = renderInventory();
-    }
-    else if(tab === "progress"){
-      setHead("Прогресс", "Уровни, XP и достижения.");
-      document.getElementById("view").innerHTML = renderProgress();
-    }
-    else if(tab === "notifications"){
-      setHead("Уведомления", "Управление уведомлениями.");
-      await loadNotifications();
-      document.getElementById("view").innerHTML = renderNotifications();
-    }
-    else if(tab === "wsbuild"){
-      setHead("WSBuild", "Пакеты, заявки, автопополнение.");
-      await loadWsbuild();
-      document.getElementById("view").innerHTML = renderWsbuild();
-    }
-    else if(tab === "settings"){
-      setHead("Настройки", "Тема, фон страницы, баннер/аватар, уведомления, коды.");
-      await loadSettings();
-      document.getElementById("view").innerHTML = renderSettings();
-      bindBgFile();
-    }
+    if(tab === "overview"){ await loadOverview(); document.getElementById("view").innerHTML = renderOverview(); }
+    else if(tab === "contracts"){ await loadContracts(); document.getElementById("view").innerHTML = renderContracts(); }
+    else if(tab === "inventory"){ document.getElementById("view").innerHTML = renderInventory(); }
+    else if(tab === "progress"){ document.getElementById("view").innerHTML = renderProgress(); }
+    else if(tab === "notifications"){ await loadNotifications(); document.getElementById("view").innerHTML = renderNotifications(); }
+    else if(tab === "wsbuild"){ await loadWsbuild(); document.getElementById("view").innerHTML = renderWsbuild(); }
+    else if(tab === "settings"){ await loadSettings(); document.getElementById("view").innerHTML = renderSettings(); bindBgFile(); }
 
-    setStatus("");
   }catch(e){
-    setStatus(e.message || String(e), true);
-    document.getElementById("view").innerHTML = widgetError(e.message || String(e));
+    toast("Не удалось загрузить");
+    document.getElementById("view").innerHTML = widgetError("Недоступно");
   }
 }
 
-/* Contracts */
 async function takeContract(id){
-  try{
-    await apiPost("/api/ws/contracts/take", { contract_id: id });
-    toast("Контракт взят.");
-    await openTab("contracts");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/contracts/take", { contract_id: id }); toast("Готово"); openTab("contracts"); }catch(e){ toast("Ошибка"); }
 }
-
-/* Notifications */
 async function readNotif(id){
-  try{
-    await apiPost("/api/ws/notifications/read", { notification_id: id });
-    toast("Прочитано.");
-    await openTab("notifications");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/notifications/read", { notification_id: id }); openTab("notifications"); }catch(e){}
 }
 async function readAllNotifs(){
-  try{
-    await apiPost("/api/ws/notifications/read-all", {});
-    toast("Все уведомления прочитаны.");
-    await openTab("notifications");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/notifications/read-all", {}); openTab("notifications"); }catch(e){}
 }
-
-/* Bonus / chest */
 async function claimBonus(){
-  try{
-    const r = await apiPost("/api/ws/bonus/claim", {});
-    toast(`Бонус: +${formatNum(r.amount||0)}`);
-    await openTab("overview");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/bonus/claim", {}); openTab("overview"); }catch(e){}
 }
 async function openChest(){
-  try{
-    const r = await apiPost("/api/ws/chest/open", {});
-    toast(`Сундук: ${r?.reward?.title || "награда"}`);
-    await openTab("overview");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/chest/open", {}); openTab("overview"); }catch(e){}
 }
-
-/* WSBuild */
 async function createPay(amount){
-  try{
-    await apiPost("/api/ws/payment-requests/create", { wsbuild_amount: amount });
-    toast("Заявка создана.");
-    await openTab("wsbuild");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/payment-requests/create", { wsbuild_amount: amount }); openTab("wsbuild"); }catch(e){}
 }
 async function markPaid(id){
-  try{
-    await apiPost("/api/ws/payment-requests/mark-paid", { request_id: id });
-    toast("Отмечено как оплачено.");
-    await openTab("wsbuild");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/payment-requests/mark-paid", { request_id: id }); openTab("wsbuild"); }catch(e){}
 }
 async function cancelPay(id){
-  try{
-    await apiPost("/api/ws/payment-requests/cancel", { request_id: id });
-    toast("Заявка отменена.");
-    await openTab("wsbuild");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/payment-requests/cancel", { request_id: id }); openTab("wsbuild"); }catch(e){}
 }
-
 async function wsbuildResetBonus(){
-  try{ await apiPost("/api/ws/wsbuild/reset-bonus", {}); toast("Бонус сброшен."); await openTab("overview"); }
-  catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/wsbuild/reset-bonus", {}); openTab("overview"); }catch(e){}
 }
 async function wsbuildResetChest(){
-  try{ await apiPost("/api/ws/wsbuild/reset-chest", {}); toast("Сундук доступен."); await openTab("overview"); }
-  catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/wsbuild/reset-chest", {}); openTab("overview"); }catch(e){}
 }
 async function wsbuildResetRoulette(){
-  try{ await apiPost("/api/ws/wsbuild/reset-roulette", {}); toast("Рулетка сброшена."); await openTab("overview"); }
-  catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/wsbuild/reset-roulette", {}); openTab("overview"); }catch(e){}
 }
 
-/* Settings: notify */
 function toggleNotify(key, val){ state.settings.draft[key] = !!val; }
 async function saveNotify(){
-  try{
-    await apiPost("/api/ws/notify/settings/update", state.settings.draft);
-    toast("Сохранено.");
-    state.settings.draft = {};
-    await openTab("settings");
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/notify/settings/update", state.settings.draft); state.settings.draft = {}; openTab("settings"); }catch(e){}
 }
-
-/* Settings: link codes */
 async function genCode(type){
   try{
     if(type==="link") await apiPost("/api/ws/profile/generate-link-code", {});
     if(type==="vk") await apiPost("/api/ws/profile/generate-vk-link-code", {});
     if(type==="nick") await apiPost("/api/ws/profile/generate-nick-link-code", {});
-    toast("Код сгенерирован.");
-    await openTab("settings");
-  }catch(e){ toast(e.message); }
+    openTab("settings");
+  }catch(e){}
 }
 
-/* Settings: theme */
-let themeDraft = loadTheme() || { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
-applyTheme(themeDraft);
-
-function setTheme(key, value){
-  themeDraft = {...themeDraft, [key]: String(value||"").trim() };
-  applyTheme(themeDraft);
-}
-function saveThemeNow(){
-  saveTheme(themeDraft);
-  toast("Тема сохранена.");
-}
-function resetThemeNow(){
-  themeDraft = { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
-  saveTheme(themeDraft);
-  applyTheme(themeDraft);
-  toast("Тема сброшена.");
-  openTab("settings");
-}
-
-/* Settings: background */
 function bgBlur(v){
-  const cfg = loadBg();
-  cfg.blur = Math.max(0, Math.min(100, Number(v||0)));
-  saveBg(cfg); applyBg(cfg);
-  const el = document.getElementById("bgBlurVal"); if(el) el.textContent = String(cfg.blur);
+  const cur = state.core.pageBg || { image_url:"", blur:0, opacity:55 };
+  const blur = Math.max(0, Math.min(100, Number(v||0)));
+  state.core.pageBg = {...cur, blur};
+  applyPageBg({ image_url: cur.image_url || "", blur, opacity: cur.opacity ?? 55 });
+  bgSavePatch({ blur });
 }
 function bgOpacity(v){
-  const cfg = loadBg();
-  cfg.opacity = Math.max(0, Math.min(100, Number(v||0)));
-  saveBg(cfg); applyBg(cfg);
-  const el = document.getElementById("bgOpVal"); if(el) el.textContent = String(cfg.opacity);
+  const cur = state.core.pageBg || { image_url:"", blur:0, opacity:55 };
+  const opacity = Math.max(0, Math.min(100, Number(v||0)));
+  state.core.pageBg = {...cur, opacity};
+  applyPageBg({ image_url: cur.image_url || "", blur: cur.blur ?? 0, opacity });
+  bgSavePatch({ opacity });
 }
-function clearBgNow(){
-  const cfg = { image:"", blur:0, opacity:55 };
-  saveBg(cfg); applyBg(cfg);
-  toast("Фон очищен.");
-  openTab("settings");
+async function bgClear(){
+  try{
+    const res = await apiPost("/api/ws/profile/page-bg/clear", {});
+    state.core.pageBg = res;
+    applyPageBg({ image_url:"", blur:0, opacity:55 });
+    openTab("settings");
+  }catch(e){}
 }
 function bindBgFile(){
   const input = document.getElementById("bgFile");
@@ -2199,38 +1850,28 @@ function bindBgFile(){
       const file = input.files?.[0];
       input.value = "";
       if(!file) return;
-      if(file.size > 6 * 1024 * 1024) throw new Error("Файл слишком большой. Максимум 6 МБ.");
-      const dataUrl = await compressToDataURL(file);
-      const cfg = loadBg();
-      cfg.image = dataUrl;
-      saveBg(cfg);
-      applyBg(cfg);
-      toast("Фон обновлён.");
-    }catch(e){
-      toast(e.message);
-    }
+      const image_base64 = await compressToDataURL(file);
+      const cur = state.core.pageBg || { blur:0, opacity:55 };
+      const res = await apiPost("/api/ws/profile/page-bg/set", { image_base64, blur: cur.blur ?? 0, opacity: cur.opacity ?? 55 });
+      state.core.pageBg = res;
+      applyPageBg({ image_url: res.image_url || "", blur: res.blur ?? 0, opacity: res.opacity ?? 55 });
+      openTab("settings");
+    }catch(e){}
   }, { once:true });
 }
 
-/* Profile: upload avatar/banner + clear banner + password */
 function openUpload(kind){
   const isAvatar = kind === "avatar";
-  const title = isAvatar ? "Смена аватара" : "Установка баннера";
-
-  modalOpen(title, `
+  modalOpen(isAvatar ? "Аватар" : "Баннер", `
     <div class="preview">
       <div class="pimg"><img id="upPreview" alt="preview" src="https://placehold.co/300x300?text=PREVIEW"></div>
       <div style="min-width:260px">
-        <div class="m">Выбери файл → preview → “Сохранить”.</div>
-        <div class="hr"></div>
         <input id="upFile" type="file" accept="image/*" />
-        <div class="m" style="margin-top:10px">Если словишь 413 — увеличь лимит JSON на сервере.</div>
       </div>
     </div>
-
     <div class="modal-actions">
       <button class="btn ghost" type="button" onclick="modalClose()">Отмена</button>
-      <button class="btn primary" type="button" id="upSave" disabled>Сохрани��ь</button>
+      <button class="btn primary" type="button" id="upSave" disabled>OK</button>
     </div>
   `);
 
@@ -2250,62 +1891,47 @@ function openUpload(kind){
   save.addEventListener("click", async ()=>{
     try{
       save.disabled = true;
-      if(isAvatar){
-        await apiPost("/api/ws/profile/upload-avatar", { image_base64: base64 });
-        toast("Аватар обновлён.");
-      }else{
-        await apiPost("/api/ws/profile/upload-banner", { image_base64: base64 });
-        toast("Баннер обновлён.");
-      }
+      if(isAvatar) await apiPost("/api/ws/profile/upload-avatar", { image_base64: base64 });
+      else await apiPost("/api/ws/profile/upload-banner", { image_base64: base64 });
       modalClose();
-      await openTab(state.tab);
+      openTab(state.tab);
     }catch(e){
-      toast(e.message);
       save.disabled = false;
     }
   });
 }
 
 async function clearBanner(){
-  try{
-    await apiPost("/api/ws/profile/clear-banner", {});
-    toast("Баннер убран.");
-    await openTab(state.tab);
-  }catch(e){ toast(e.message); }
+  try{ await apiPost("/api/ws/profile/clear-banner", {}); openTab(state.tab); }catch(e){}
 }
 
 function openPassword(){
-  modalOpen("Смена пароля", `
+  modalOpen("Пароль", `
     <div class="field">
-      <label>Старый пароль</label>
-      <input id="oldPass" type="password" placeholder="••••••">
+      <label>Старый</label>
+      <input id="oldPass" type="password">
     </div>
     <div class="field">
-      <label>Новый пароль</label>
-      <input id="newPass" type="password" placeholder="••••••">
+      <label>Новый</label>
+      <input id="newPass" type="password">
     </div>
-
     <div class="modal-actions">
       <button class="btn ghost" type="button" onclick="modalClose()">Отмена</button>
-      <button class="btn primary" type="button" id="passSave">Сохранить</button>
+      <button class="btn primary" type="button" id="passSave">OK</button>
     </div>
   `);
 
   document.getElementById("passSave").addEventListener("click", async ()=>{
     const oldp = String(document.getElementById("oldPass").value || "");
     const newp = String(document.getElementById("newPass").value || "");
-    if(!oldp || !newp){ toast("Заполни оба поля."); return; }
+    if(!oldp || !newp) return;
     try{
       await apiPost("/api/ws/profile/change-password", { old_password: oldp, new_password: newp });
-      toast("Пароль изменён.");
       modalClose();
-    }catch(e){ toast(e.message); }
+    }catch(e){}
   });
 }
 
-/* ======================
-   Events
-====================== */
 document.getElementById("nav").addEventListener("click", (e)=>{
   const btn = e.target.closest(".nav-btn");
   if(!btn) return;
@@ -2318,7 +1944,6 @@ document.getElementById("btnLogout").addEventListener("click", ()=>{
 });
 document.getElementById("btnReadAll").addEventListener("click", readAllNotifs);
 
-/* expose for onclick */
 window.openTab = openTab;
 window.takeContract = takeContract;
 window.claimBonus = claimBonus;
@@ -2339,15 +1964,12 @@ window.saveThemeNow = saveThemeNow;
 window.resetThemeNow = resetThemeNow;
 window.bgBlur = bgBlur;
 window.bgOpacity = bgOpacity;
-window.clearBgNow = clearBgNow;
+window.bgClear = bgClear;
 window.openUpload = openUpload;
 window.clearBanner = clearBanner;
 window.openPassword = openPassword;
 window.modalClose = modalClose;
 
-/* boot */
-applyTheme(themeDraft);
-applyBg(loadBg());
 openTab("overview");
 </script>
 </body>
