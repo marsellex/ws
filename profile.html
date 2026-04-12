@@ -971,6 +971,12 @@
   </div>
 
 <script>
+
+const urlParams = new URLSearchParams(location.search);
+const viewUserId = Number(urlParams.get("user_id") || 0);
+let isPublicView = false;
+let myUserId = 0;  
+  
 function apiBase(){
   const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   return isLocal ? "http://localhost:3000" : "https://world-script-api.onrender.com";
@@ -1750,7 +1756,39 @@ function renderSettings(){
   `;
 }
 
+async function initProfileMode() {
+  // проверим токен + получим мой id
+  const me = await apiGet("/api/ws/me").catch(() => null);
+  if (!me?.ok || !me.user?.id) {
+    localStorage.removeItem("ws_token");
+    location.href = "index.html";
+    return false;
+  }
+  myUserId = Number(me.user.id || 0);
+
+  isPublicView = viewUserId > 0 && viewUserId !== myUserId;
+
+  if (isPublicView) {
+    // оставляем только Overview в меню
+    const nav = document.getElementById("nav");
+    if (nav) {
+      nav.innerHTML = `
+        <button class="nav-btn active" data-tab="overview" type="button">
+          <span class="nav-left"><span class="nav-ico">👤</span><span class="nav-label">Профиль</span></span>
+          <span class="badge" id="bdOverview"></span>
+        </button>
+      `;
+    }
+    document.getElementById("btnReadAll").style.display = "none";
+  }
+
+  return true;
+}
+
 async function openTab(tab){
+  if (isPublicView && tab !== "overview") {
+    tab = "overview";
+  }
   setActiveTab(tab);
   document.getElementById("viewTitle").textContent = tab === "overview" ? "Обзор" :
     tab === "contracts" ? "Контракты" :
@@ -1823,6 +1861,53 @@ async function genCode(type){
     if(type==="nick") await apiPost("/api/ws/profile/generate-nick-link-code", {});
     openTab("settings");
   }catch(e){}
+}
+
+
+async function loadCore(){
+  if (isPublicView) {
+    const pub = await apiGet("/api/ws/users/public/" + viewUserId);
+    // соберём данные в формат, который использует hero
+    const dashLike = {
+      user: pub.user,
+      binder: { game_balance: 0, to_output: 0, wsbuild_balance: 0 },
+      inventory: [],
+      notifications_unread_count: 0,
+      activity_feed: []
+    };
+    const progLike = { profile: pub.progress, achievements: [] };
+
+    state.core.dash = dashLike;
+    state.core.prog = progLike;
+    state.core.pageBg = null;
+
+    applyHero(dashLike, progLike);
+
+    // убираем лишние цифры, чтобы не вводить в заблуждение
+    document.getElementById("heroBal").textContent = "—";
+    document.getElementById("heroOut").textContent = "—";
+    document.getElementById("heroWsb").textContent = "—";
+
+    // бейджи
+    document.getElementById("bdNotif").textContent = "0";
+    document.getElementById("bdInv").textContent = "—";
+    document.getElementById("bdWsb").textContent = "—";
+    document.getElementById("bdLvl").textContent = String(pub.progress?.level || 1);
+    document.getElementById("bdContracts").textContent = "—";
+    return;
+  }
+
+  // обычный режим (как было)
+  const [dash, prog, bg] = await Promise.all([
+    apiGet("/api/ws/dashboard-bundle"),
+    apiGet("/api/ws/profile/progress"),
+    apiGet("/api/ws/profile/page-bg").catch(()=>null)
+  ]);
+  state.core.dash = dash;
+  state.core.prog = prog;
+  state.core.pageBg = bg;
+  if (bg) applyPageBg({ image_url: bg.image_url || "", blur: bg.blur ?? 0, opacity: bg.opacity ?? 55 });
+  applyHero(dash, prog);
 }
 
 function bgBlur(v){
@@ -1975,7 +2060,11 @@ window.clearBanner = clearBanner;
 window.openPassword = openPassword;
 window.modalClose = modalClose;
 
-openTab("overview");
+(async () => {
+  const ok = await initProfileMode();
+  if (!ok) return;
+  openTab("overview");
+})();
 </script>
 </body>
 </html>
