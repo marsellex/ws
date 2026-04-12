@@ -697,32 +697,16 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 16px;
       min-width: 0;
     }
-
-    .brand-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 900;
-      background: linear-gradient(135deg, rgba(255,62,157,0.22), rgba(73,215,255,0.18));
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 8px 28px rgba(255,62,157,0.16);
-      flex-shrink: 0;
-    }
-
-    .brand-text { min-width: 0; }
-
-    .brand-title {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: -.04em;
-      margin-bottom: 4px;
+    
+    .brand-logo-image {
+      display: block;
+      height: 68px;
+      width: auto;
+      max-width: 320px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 24px rgba(73, 215, 255, 0.14));
     }
 
     .topbar-right {
@@ -5205,6 +5189,7 @@
         font-size: 9px;
       }
     }
+
         
   </style>
 </head>
@@ -5310,11 +5295,13 @@
         <!-- TOPBAR -->
         <header class="topbar glass">
           <div class="brand">
-            <div class="brand-logo">WS</div>
-            <div class="brand-text">
-              <div class="brand-title" id="brandTitle">World Script</div>
-            </div>
-          </div>
+          <img
+            id="brandLogoImage"
+            class="brand-logo-image"
+            src="./botlogo.png"
+            alt="World Script"
+          />
+        </div>
 
           <div class="topbar-stats">
             <button
@@ -8165,7 +8152,9 @@
   // ═══════════════════════════════════════════════════════════
   function applyWsSettings(settings) {
     const brandTitle = document.getElementById("brandTitle");
-    if (brandTitle && settings.site_title) brandTitle.textContent = settings.site_title;
+    if (brandTitle && settings.site_title) {
+      brandTitle.textContent = settings.site_title;
+    }
   }
 
   function startGlitchRotation(phrases) {
