@@ -4947,264 +4947,427 @@
       line-height: 1.4;
     }
 
-    .section-shortcuts-card {
-      padding: 18px;
-      margin-bottom: 18px;
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr) 128px;
+      gap: 18px;
+      align-items: start;
     }
     
-    .section-shortcuts-head {
+    .left-column,
+    .center-column,
+    .mini-rail,
+    .right-column {
+      min-width: 0;
+    }
+    
+    .left-column {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      position: sticky;
+      top: 22px;
+    }
+    
+    .center-column {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+      overflow: hidden;
+    }
+    
+    .mini-rail {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      position: sticky;
+      top: 22px;
+    }
+    
+    /* ОСНОВНЫЕ КНОПКИ СПРАВА */
+    .rail-btn {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    
-    .section-shortcuts-sub {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-top: 4px;
-    }
-    
-    .section-shortcuts-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-    
-    .shortcut-card {
-      position: relative;
-      min-height: 240px;
-      border-radius: 24px;
-      overflow: hidden;
+      justify-content: center;
+      font-size: 30px;
       cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.08);
+      transition: .22s ease;
+      overflow: visible;
+      margin: 0 auto;
+    }
+    
+    .rail-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    
+    .rail-btn.active {
+      background: linear-gradient(135deg, rgba(255,62,157,0.16), rgba(73,215,255,0.14));
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 8px 26px rgba(73,215,255,0.12);
+    }
+    
+    .rail-btn.chest {
+      background: linear-gradient(135deg, rgba(246,200,87,0.22), rgba(245,158,11,0.16));
+      border-color: rgba(246,200,87,0.24);
+      box-shadow: 0 10px 28px rgba(245,158,11,0.16);
+      color: #fff3cf;
+    }
+    
+    .rail-badge {
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(12,18,30,0.96);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: .2s ease;
+      margin-right: -8px;
+      z-index: 20;
+    }
+    
+    .rail-btn:hover .rail-badge {
+      opacity: 1;
+      visibility: visible;
+      margin-right: -18px;
+    }
+    
+    .rail-contracts-badge,
+    .rail-counter-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff3e9d, #fbbf24);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(255,62,157,0.35);
+      pointer-events: none;
+    }
+    
+    /* НОВЫЙ БЛОК РАЗДЕЛОВ В ПРАВОМ МЕНЮ */
+    .rail-sections {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    
+    .rail-section-card {
+      position: relative;
+      width: 128px;
+      height: 128px;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
       background:
         linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
-        rgba(10,16,28,0.84);
-      box-shadow: var(--shadow);
+        rgba(10,16,28,0.82);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.26);
+      cursor: pointer;
       transition:
-        transform .28s cubic-bezier(.22,.68,0,1),
-        box-shadow .28s ease,
-        border-color .28s ease,
-        background .28s ease;
-      font-family: var(--font);
+        transform .26s cubic-bezier(.22,.68,0,1),
+        border-color .26s ease,
+        box-shadow .26s ease,
+        filter .26s ease;
       padding: 0;
     }
     
-    .shortcut-card:hover {
-      transform: translateY(-6px) scale(1.015);
-      border-color: rgba(255,255,255,0.14);
-      box-shadow: 0 22px 46px rgba(0,0,0,0.34);
+    .rail-section-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      border-color: rgba(255,255,255,0.16);
+      box-shadow:
+        0 20px 42px rgba(0,0,0,0.34),
+        0 0 0 1px rgba(255,255,255,0.04);
+      filter: brightness(1.04);
     }
     
-    .shortcut-card::before {
+    .rail-section-card:active {
+      transform: translateY(-1px) scale(.985);
+    }
+    
+    .rail-section-card::before {
       content: "";
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.03), transparent 24%, transparent 70%, rgba(255,255,255,0.04)),
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.10), transparent 40%);
-      opacity: .9;
-      pointer-events: none;
+        linear-gradient(180deg, rgba(255,255,255,0.06), transparent 38%, transparent 100%),
+        radial-gradient(circle at 80% 10%, rgba(255,255,255,0.14), transparent 28%);
       z-index: 1;
+      pointer-events: none;
     }
     
-    .shortcut-card::after {
+    .rail-section-card::after {
       content: "";
       position: absolute;
-      inset: -40%;
-      background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.12) 50%, transparent 65%);
-      transform: translateX(-70%) rotate(8deg);
-      transition: transform .8s ease;
+      top: 0;
+      left: -140%;
+      width: 75%;
+      height: 100%;
+      transform: skewX(-22deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent);
+      opacity: 0;
+      z-index: 3;
       pointer-events: none;
-      z-index: 2;
     }
     
-    .shortcut-card:hover::after {
-      transform: translateX(70%) rotate(8deg);
+    .rail-section-card:hover::after {
+      opacity: 1;
+      animation: railCardShine .85s ease;
     }
     
-    .shortcut-card.market {
-      border-color: rgba(246,200,87,0.22);
-      background:
-        linear-gradient(180deg, rgba(246,200,87,0.08), rgba(255,255,255,0.02)),
-        rgba(10,16,28,0.86);
+    @keyframes railCardShine {
+      from { left: -140%; }
+      to { left: 160%; }
+    }
+    
+    .rail-section-card.market {
+      border-color: rgba(246,200,87,0.20);
       box-shadow:
-        0 14px 34px rgba(0,0,0,0.32),
+        0 14px 34px rgba(0,0,0,0.28),
         0 0 0 1px rgba(246,200,87,0.05),
-        0 0 28px rgba(245,158,11,0.12);
+        0 0 24px rgba(245,158,11,0.12);
     }
     
-    .shortcut-card.market:hover {
+    .rail-section-card.market:hover {
       border-color: rgba(246,200,87,0.34);
       box-shadow:
-        0 24px 52px rgba(0,0,0,0.38),
+        0 20px 44px rgba(0,0,0,0.34),
         0 0 0 1px rgba(246,200,87,0.08),
-        0 0 36px rgba(245,158,11,0.18);
+        0 0 34px rgba(245,158,11,0.18);
     }
     
-    .shortcut-card.market .shortcut-badge {
-      background: linear-gradient(135deg, #f6c857, #f59e0b);
-      color: #1d1300;
+    .rail-section-card.contracts {
+      border-color: rgba(255,62,157,0.18);
+      box-shadow:
+        0 14px 34px rgba(0,0,0,0.28),
+        0 0 0 1px rgba(255,62,157,0.04),
+        0 0 22px rgba(255,62,157,0.10);
     }
     
-    .shortcut-image-wrap {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      min-height: 170px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.02);
+    .rail-section-card.contracts:hover {
+      border-color: rgba(255,62,157,0.28);
+      box-shadow:
+        0 20px 44px rgba(0,0,0,0.34),
+        0 0 0 1px rgba(255,62,157,0.06),
+        0 0 30px rgba(255,62,157,0.16);
     }
     
-    .shortcut-image {
+    .rail-section-card.workshop {
+      border-color: rgba(141,92,255,0.18);
+      box-shadow:
+        0 14px 34px rgba(0,0,0,0.28),
+        0 0 0 1px rgba(141,92,255,0.04),
+        0 0 22px rgba(141,92,255,0.10);
+    }
+    
+    .rail-section-card.workshop:hover {
+      border-color: rgba(141,92,255,0.28);
+      box-shadow:
+        0 20px 44px rgba(0,0,0,0.34),
+        0 0 0 1px rgba(141,92,255,0.06),
+        0 0 30px rgba(141,92,255,0.16);
+    }
+    
+    .rail-section-image {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transform: scale(1.01);
-      transition: transform .45s ease, filter .35s ease;
-      filter: saturate(1.02);
+      z-index: 0;
+      transition: transform .35s ease, filter .35s ease;
     }
     
-    .shortcut-card:hover .shortcut-image {
-      transform: scale(1.07);
-      filter: saturate(1.1) brightness(1.04);
+    .rail-section-card:hover .rail-section-image {
+      transform: scale(1.06);
+      filter: saturate(1.08);
     }
     
-    .shortcut-overlay {
+    .rail-section-overlay {
       position: absolute;
       inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 12px;
       background:
-        linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.12) 45%, rgba(5,8,16,0.82) 100%);
-      z-index: 1;
+        linear-gradient(180deg, rgba(5,8,14,0.00) 18%, rgba(5,8,14,0.26) 52%, rgba(5,8,14,0.90) 100%);
     }
     
-    .shortcut-badge {
+    .rail-section-title {
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.2;
+      color: #fff;
+      text-align: left;
+      letter-spacing: .01em;
+      text-shadow: 0 3px 14px rgba(0,0,0,0.45);
+    }
+    
+    .rail-section-sub {
+      margin-top: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: rgba(230,240,255,0.84);
+      text-align: left;
+    }
+    
+    .rail-section-card.market .rail-section-title {
+      color: #fff4c8;
+      text-shadow: 0 0 16px rgba(245,158,11,0.18);
+    }
+    
+    .rail-section-card.market .rail-section-sub {
+      color: #ffe4a0;
+    }
+    
+    .rail-section-badge {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      z-index: 3;
+      top: 10px;
+      right: 10px;
+      z-index: 4;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 7px 11px;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 10px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 900;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      background: rgba(255,255,255,0.10);
+      letter-spacing: .04em;
       border: 1px solid rgba(255,255,255,0.12);
-      color: #fff;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     
-    .shortcut-content {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 3;
-      padding: 18px;
-      display: grid;
-      gap: 8px;
+    .rail-section-card.market .rail-section-badge {
+      background: linear-gradient(135deg, #f6c857, #f59e0b);
+      color: #1a1305;
+      border: none;
+      box-shadow: 0 6px 16px rgba(245,158,11,0.26);
     }
     
-    .shortcut-title {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: -.03em;
-      color: #fff;
-      line-height: 1.05;
+    /* АДАПТИВ */
+    @media (max-width: 1680px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr 128px;
+      }
+    
+      .left-column {
+        display: none;
+      }
     }
     
-    .shortcut-text {
-      font-size: 13px;
-      color: #d9e3f7;
-      line-height: 1.55;
-      max-width: 90%;
-    }
-    
-    .shortcut-arrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 2px;
-      font-size: 12px;
-      font-weight: 900;
-      color: #fff;
-      opacity: .9;
-      transition: transform .22s ease, opacity .22s ease;
-    }
-    
-    .shortcut-card:hover .shortcut-arrow {
-      transform: translateX(4px);
-      opacity: 1;
-    }
-    
-    .shortcut-glow {
-      position: absolute;
-      inset: auto -10% -35% -10%;
-      height: 120px;
-      background: radial-gradient(circle, rgba(73,215,255,0.20), transparent 70%);
-      pointer-events: none;
-      z-index: 2;
-      opacity: .65;
-      transition: opacity .28s ease, transform .28s ease;
-    }
-    
-    .shortcut-card.market .shortcut-glow {
-      background: radial-gradient(circle, rgba(245,158,11,0.26), transparent 70%);
-    }
-    
-    .shortcut-card.contracts .shortcut-glow {
-      background: radial-gradient(circle, rgba(255,80,80,0.22), transparent 70%);
-    }
-    
-    .shortcut-card.workshop .shortcut-glow {
-      background: radial-gradient(circle, rgba(141,92,255,0.22), transparent 70%);
-    }
-    
-    .shortcut-card:hover .shortcut-glow {
-      opacity: 1;
-      transform: scale(1.08);
-    }
-    
-    @media (max-width: 1100px) {
-      .section-shortcuts-grid {
+    @media (max-width: 900px) {
+      .dashboard-layout {
         grid-template-columns: 1fr;
       }
     
-      .shortcut-card {
-        min-height: 220px;
+      .mini-rail {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        gap: 10px;
+        z-index: 100;
+        background: rgba(10,16,28,0.95);
+        padding: 12px;
+        border-radius: 22px;
+        border: 1px solid rgba(255,255,255,0.10);
+        backdrop-filter: blur(12px);
+        max-width: calc(100vw - 20px);
+        overflow-x: auto;
       }
     
-      .shortcut-image-wrap {
-        min-height: 190px;
+      .rail-sections {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 0;
+      }
+    
+      .rail-section-card {
+        width: 92px;
+        height: 92px;
+        min-width: 92px;
+        border-radius: 20px;
+      }
+    
+      .rail-section-overlay {
+        padding: 8px;
+      }
+    
+      .rail-section-title {
+        font-size: 10px;
+      }
+    
+      .rail-section-sub,
+      .rail-section-badge {
+        display: none;
+      }
+    
+      .rail-btn {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        font-size: 22px;
+        border-radius: 18px;
       }
     }
     
     @media (max-width: 760px) {
-      .section-shortcuts-card {
-        padding: 16px;
+      .mini-rail {
+        bottom: 12px;
+        padding: 10px;
+        gap: 8px;
       }
     
-      .shortcut-content {
-        padding: 16px;
+      .rail-section-card {
+        width: 84px;
+        height: 84px;
+        min-width: 84px;
       }
     
-      .shortcut-title {
+      .rail-btn {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
         font-size: 20px;
       }
-    
-      .shortcut-text {
-        max-width: 100%;
-      }
     }
-    
+        
   </style>
 </head>
 <body>
@@ -5979,60 +6142,6 @@
               </div>
             </div>
 
-
-            <div class="glass section-shortcuts-card">
-              <div class="section-shortcuts-head">
-                <div>
-                  <h3 class="widget-title" style="margin:0;">Главные разделы</h3>
-                  <div class="section-shortcuts-sub">Быстрый переход в ключевые разделы World Script</div>
-                </div>
-              </div>
-            
-              <div class="section-shortcuts-grid">
-                <button class="shortcut-card market" type="button" onclick="openMarketPage()">
-                  <div class="shortcut-image-wrap">
-                    <img class="shortcut-image" src="./market.png" alt="Магазин брюликов" />
-                    <div class="shortcut-overlay"></div>
-                    <div class="shortcut-badge">⚙️ Топ раздел</div>
-                  </div>
-                  <div class="shortcut-glow"></div>
-                  <div class="shortcut-content">
-                    <div class="shortcut-title">Магазин брюликов</div>
-                    <div class="shortcut-text">Покупка Брюликов, заявки на оплату и история пополнений.</div>
-                    <div class="shortcut-arrow">Открыть раздел →</div>
-                  </div>
-                </button>
-            
-                <button class="shortcut-card contracts" type="button" onclick="openContractsPage()">
-                  <div class="shortcut-image-wrap">
-                    <img class="shortcut-image" src="./contracts.png" alt="Контракты" />
-                    <div class="shortcut-overlay"></div>
-                    <div class="shortcut-badge">🎯 Боевая зона</div>
-                  </div>
-                  <div class="shortcut-glow"></div>
-                  <div class="shortcut-content">
-                    <div class="shortcut-title">Контракты</div>
-                    <div class="shortcut-text">Бери задания, выполняй условия и получай награды.</div>
-                    <div class="shortcut-arrow">Открыть раздел →</div>
-                  </div>
-                </button>
-            
-                <button class="shortcut-card workshop" type="button" onclick="openWorkshopPage()">
-                  <div class="shortcut-image-wrap">
-                    <img class="shortcut-image" src="./workshop.png" alt="Мастерская" />
-                    <div class="shortcut-overlay"></div>
-                    <div class="shortcut-badge">🛠 Крафт</div>
-                  </div>
-                  <div class="shortcut-glow"></div>
-                  <div class="shortcut-content">
-                    <div class="shortcut-title">Мастерская</div>
-                    <div class="shortcut-text">Создавай и собирай редкие, эпические и легендарные предметы.</div>
-                    <div class="shortcut-arrow">Открыть раздел →</div>
-                  </div>
-                </button>
-              </div>
-            </div>
-
             <!-- BONUS -->
             <div id="tab-bonus" class="tab-panel">
               <div class="bonus-layout">
@@ -6109,6 +6218,41 @@
               </div>
             </div>
           </main>
+            <!-- RIGHT COLUMN -->
+            <aside class="right-column">
+              <div class="right-menu-stack">
+                <button class="section-image-card section-image-card-market active" type="button" onclick="openMarketPage()">
+                  <img src="./market.png" alt="Магазин брюликов" class="section-image-card-bg" />
+                  <div class="section-image-card-overlay"></div>
+                  <div class="section-image-card-content">
+                    <div class="section-image-card-kicker">Премиум</div>
+                    <div class="section-image-card-title">Магазин брюликов</div>
+                    <div class="section-image-card-sub">Покупка WSBuild</div>
+                  </div>
+                </button>
+          
+                <button class="section-image-card section-image-card-contracts" type="button" onclick="openContractsPage()">
+                  <img src="./contracts.png" alt="Контракты" class="section-image-card-bg" />
+                  <div class="section-image-card-overlay"></div>
+                  <div class="section-image-card-content">
+                    <div class="section-image-card-kicker">Задания</div>
+                    <div class="section-image-card-title">Контракты</div>
+                    <div class="section-image-card-sub">Опасные миссии</div>
+                  </div>
+                </button>
+          
+                <button class="section-image-card section-image-card-workshop" type="button" onclick="openWorkshopPage()">
+                  <img src="./workshop.png" alt="Мастерская" class="section-image-card-bg" />
+                  <div class="section-image-card-overlay"></div>
+                  <div class="section-image-card-content">
+                    <div class="section-image-card-kicker">Крафт</div>
+                    <div class="section-image-card-title">Мастерская</div>
+                    <div class="section-image-card-sub">Создание предметов</div>
+                  </div>
+                </button>
+              </div>
+            </aside>
+          
         </div>
       </div>
     </section>
