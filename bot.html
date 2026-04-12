@@ -5114,8 +5114,12 @@
                   📊
                 </button>
 
-                <button class="account-icon-btn" type="button" onclick="showProfileCard(true)" title="Профиль">
-                  👤
+                <button class="account-icon-btn" type="button" onclick="openUsersPage()" title="Пользователи">
+                  👥
+                </button>
+
+                <button class="account-icon-btn" type="button" onclick="showProfileCard(true)" title="Привязка и настройки">
+                  🔗
                 </button>
 
                 <button class="account-icon-btn" type="button" onclick="openChangePasswordModal()" title="Сменить пароль">
@@ -8575,6 +8579,10 @@
     } catch {
       showToast("Ошибка генерации кода ника", "error");
     }
+  }
+
+  function openUsersPage() {
+    window.open("./users.html", "_blank", "noopener,noreferrer");
   }
 
   // ═══════════════════════════════════════════════════════════
