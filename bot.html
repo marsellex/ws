@@ -5161,7 +5161,7 @@
                     <span class="tab-indicator">◆</span>
                   </button>
 
-                  <button id="tabBtn-market" class="section-tab section-tab-market" type="button" onclick="switchMainTab('market')">
+                  <button id="tabBtn-market" class="section-tab section-tab-market" type="button" onclick="openMarketPage()">
                     <span class="tab-glow"></span>
                     ⚙️ Магазин
                     <span class="tab-indicator">◆</span>
@@ -7093,6 +7093,10 @@
   function closeChangePasswordModal() {
     const bg = document.getElementById("changePasswordModalBg");
     if (bg) bg.classList.add("hidden");
+  }
+
+  function openMarketPage() {
+    window.open("./market.html", "_blank", "noopener,noreferrer");
   }
 
   async function submitChangePassword() {
@@ -10638,9 +10642,6 @@
         loadNotifications(true),
         loadActivityFeed(true),
         loadContractsAll(true),
-        loadWsbuildPackages(true),
-        loadActivePaymentRequest(true),
-        loadPaymentRequestsHistory(true),
         loadLinkCodesStatus(true),
         loadNotifySettings(true),
         sitePing(),
@@ -10666,7 +10667,6 @@
         if (currentMainTab === "roulette") await loadRouletteLimits(true);
         if (currentMainTab === "chest") await loadChestStatus(true);
         if (currentMainTab === "bonus") await loadBonusStatus(true);
-        if (currentMainTab === "market") await loadMarketBundle(true);
       }, 30000);
 
       if (slowRefreshTimer) clearInterval(slowRefreshTimer);
