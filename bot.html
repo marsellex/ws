@@ -4946,6 +4946,264 @@
       color: var(--text-muted);
       line-height: 1.4;
     }
+
+    .section-shortcuts-card {
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    
+    .section-shortcuts-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    
+    .section-shortcuts-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+    
+    .section-shortcuts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    
+    .shortcut-card {
+      position: relative;
+      min-height: 240px;
+      border-radius: 24px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+        rgba(10,16,28,0.84);
+      box-shadow: var(--shadow);
+      transition:
+        transform .28s cubic-bezier(.22,.68,0,1),
+        box-shadow .28s ease,
+        border-color .28s ease,
+        background .28s ease;
+      font-family: var(--font);
+      padding: 0;
+    }
+    
+    .shortcut-card:hover {
+      transform: translateY(-6px) scale(1.015);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 22px 46px rgba(0,0,0,0.34);
+    }
+    
+    .shortcut-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), transparent 24%, transparent 70%, rgba(255,255,255,0.04)),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.10), transparent 40%);
+      opacity: .9;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .shortcut-card::after {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.12) 50%, transparent 65%);
+      transform: translateX(-70%) rotate(8deg);
+      transition: transform .8s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+    
+    .shortcut-card:hover::after {
+      transform: translateX(70%) rotate(8deg);
+    }
+    
+    .shortcut-card.market {
+      border-color: rgba(246,200,87,0.22);
+      background:
+        linear-gradient(180deg, rgba(246,200,87,0.08), rgba(255,255,255,0.02)),
+        rgba(10,16,28,0.86);
+      box-shadow:
+        0 14px 34px rgba(0,0,0,0.32),
+        0 0 0 1px rgba(246,200,87,0.05),
+        0 0 28px rgba(245,158,11,0.12);
+    }
+    
+    .shortcut-card.market:hover {
+      border-color: rgba(246,200,87,0.34);
+      box-shadow:
+        0 24px 52px rgba(0,0,0,0.38),
+        0 0 0 1px rgba(246,200,87,0.08),
+        0 0 36px rgba(245,158,11,0.18);
+    }
+    
+    .shortcut-card.market .shortcut-badge {
+      background: linear-gradient(135deg, #f6c857, #f59e0b);
+      color: #1d1300;
+    }
+    
+    .shortcut-image-wrap {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      min-height: 170px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+    }
+    
+    .shortcut-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.01);
+      transition: transform .45s ease, filter .35s ease;
+      filter: saturate(1.02);
+    }
+    
+    .shortcut-card:hover .shortcut-image {
+      transform: scale(1.07);
+      filter: saturate(1.1) brightness(1.04);
+    }
+    
+    .shortcut-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.12) 45%, rgba(5,8,16,0.82) 100%);
+      z-index: 1;
+    }
+    
+    .shortcut-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      backdrop-filter: blur(10px);
+    }
+    
+    .shortcut-content {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      padding: 18px;
+      display: grid;
+      gap: 8px;
+    }
+    
+    .shortcut-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      color: #fff;
+      line-height: 1.05;
+    }
+    
+    .shortcut-text {
+      font-size: 13px;
+      color: #d9e3f7;
+      line-height: 1.55;
+      max-width: 90%;
+    }
+    
+    .shortcut-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      opacity: .9;
+      transition: transform .22s ease, opacity .22s ease;
+    }
+    
+    .shortcut-card:hover .shortcut-arrow {
+      transform: translateX(4px);
+      opacity: 1;
+    }
+    
+    .shortcut-glow {
+      position: absolute;
+      inset: auto -10% -35% -10%;
+      height: 120px;
+      background: radial-gradient(circle, rgba(73,215,255,0.20), transparent 70%);
+      pointer-events: none;
+      z-index: 2;
+      opacity: .65;
+      transition: opacity .28s ease, transform .28s ease;
+    }
+    
+    .shortcut-card.market .shortcut-glow {
+      background: radial-gradient(circle, rgba(245,158,11,0.26), transparent 70%);
+    }
+    
+    .shortcut-card.contracts .shortcut-glow {
+      background: radial-gradient(circle, rgba(255,80,80,0.22), transparent 70%);
+    }
+    
+    .shortcut-card.workshop .shortcut-glow {
+      background: radial-gradient(circle, rgba(141,92,255,0.22), transparent 70%);
+    }
+    
+    .shortcut-card:hover .shortcut-glow {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+    
+    @media (max-width: 1100px) {
+      .section-shortcuts-grid {
+        grid-template-columns: 1fr;
+      }
+    
+      .shortcut-card {
+        min-height: 220px;
+      }
+    
+      .shortcut-image-wrap {
+        min-height: 190px;
+      }
+    }
+    
+    @media (max-width: 760px) {
+      .section-shortcuts-card {
+        padding: 16px;
+      }
+    
+      .shortcut-content {
+        padding: 16px;
+      }
+    
+      .shortcut-title {
+        font-size: 20px;
+      }
+    
+      .shortcut-text {
+        max-width: 100%;
+      }
+    }
     
   </style>
 </head>
@@ -5188,12 +5446,6 @@
                   <button id="tabBtn-shop" class="section-tab" type="button" onclick="switchMainTab('shop')">
                     <span class="tab-glow"></span>
                     🛒 Предметы
-                    <span class="tab-indicator">◆</span>
-                  </button>
-
-                  <button id="tabBtn-market" class="section-tab section-tab-market" type="button" onclick="openMarketPage()">
-                    <span class="tab-glow"></span>
-                    ⚙️ Магазин
                     <span class="tab-indicator">◆</span>
                   </button>
 
@@ -5727,12 +5979,57 @@
               </div>
             </div>
 
-            <div class="glass widget-box" style="margin-bottom:18px;">
-              <h3 class="widget-title">Разделы</h3>
-              <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="btn btn-gold" type="button" onclick="openMarketPage()">⚙️ Магазин Брюликов</button>
-                <button class="btn btn-pink" type="button" onclick="openContractsPage()">🎯 Контракты</button>
-                <button class="btn btn-dark" type="button" onclick="openWorkshopPage()">🛠 Мастерская</button>
+
+            <div class="glass section-shortcuts-card">
+              <div class="section-shortcuts-head">
+                <div>
+                  <h3 class="widget-title" style="margin:0;">Главные разделы</h3>
+                  <div class="section-shortcuts-sub">Быстрый переход в ключевые разделы World Script</div>
+                </div>
+              </div>
+            
+              <div class="section-shortcuts-grid">
+                <button class="shortcut-card market" type="button" onclick="openMarketPage()">
+                  <div class="shortcut-image-wrap">
+                    <img class="shortcut-image" src="./market.png" alt="Магазин брюликов" />
+                    <div class="shortcut-overlay"></div>
+                    <div class="shortcut-badge">⚙️ Топ раздел</div>
+                  </div>
+                  <div class="shortcut-glow"></div>
+                  <div class="shortcut-content">
+                    <div class="shortcut-title">Магазин брюликов</div>
+                    <div class="shortcut-text">Покупка Брюликов, заявки на оплату и история пополнений.</div>
+                    <div class="shortcut-arrow">Открыть раздел →</div>
+                  </div>
+                </button>
+            
+                <button class="shortcut-card contracts" type="button" onclick="openContractsPage()">
+                  <div class="shortcut-image-wrap">
+                    <img class="shortcut-image" src="./contracts.png" alt="Контракты" />
+                    <div class="shortcut-overlay"></div>
+                    <div class="shortcut-badge">🎯 Боевая зона</div>
+                  </div>
+                  <div class="shortcut-glow"></div>
+                  <div class="shortcut-content">
+                    <div class="shortcut-title">Контракты</div>
+                    <div class="shortcut-text">Бери задания, выполняй условия и получай награды.</div>
+                    <div class="shortcut-arrow">Открыть раздел →</div>
+                  </div>
+                </button>
+            
+                <button class="shortcut-card workshop" type="button" onclick="openWorkshopPage()">
+                  <div class="shortcut-image-wrap">
+                    <img class="shortcut-image" src="./workshop.png" alt="Мастерская" />
+                    <div class="shortcut-overlay"></div>
+                    <div class="shortcut-badge">🛠 Крафт</div>
+                  </div>
+                  <div class="shortcut-glow"></div>
+                  <div class="shortcut-content">
+                    <div class="shortcut-title">Мастерская</div>
+                    <div class="shortcut-text">Создавай и собирай редкие, эпические и легендарные предметы.</div>
+                    <div class="shortcut-arrow">Открыть раздел →</div>
+                  </div>
+                </button>
               </div>
             </div>
 
