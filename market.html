@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Магазин Брюликов — World Script</title>
+  <link rel="icon" href="./ws_logo.ico" type="image/x-icon" />
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    * { box-sizing: border-box; }
+    :root {
+      --bg-body: #060912;
+      --bg-body-2: #0b1020;
+      --bg-card: rgba(16, 23, 38, 0.78);
+      --bg-card-2: rgba(10, 16, 28, 0.92);
+      --bg-input: rgba(7, 10, 18, 0.86);
+
+      --border: rgba(255,255,255,0.08);
+      --text: #f4f8ff;
+      --text-secondary: #b6c2da;
+      --text-muted: #7f8ba8;
+
+      --pink: #ff3e9d;
+      --pink-2: #cf267a;
+      --cyan: #49d7ff;
+      --cyan-2: #2b90ff;
+      --green: #48e57b;
+      --green-2: #1dbf62;
+      --gold: #f59e0b;
+      --gold-2: #f6c857;
+      --red: #ff6b6b;
+      --red-2: #ee4444;
+
+      --shadow: 0 12px 40px rgba(0,0,0,0.34);
+      --shadow-lg: 0 22px 70px rgba(0,0,0,0.46);
+
+      --radius: 18px;
+      --font: "Inter", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255,62,157,0.08), transparent 30%),
+        radial-gradient(circle at top right, rgba(73,215,255,0.08), transparent 28%),
+        linear-gradient(180deg, var(--bg-body), var(--bg-body-2));
+      overflow-x: hidden;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .glass {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        140deg,
+        rgba(255,255,255,0.07),
+        transparent 22%,
+        transparent 76%,
+        rgba(255,255,255,0.025)
+      );
+      opacity: .7;
+      pointer-events: none;
+    }
+
+    .glass > * { position: relative; z-index: 1; }
+
+    .muted { color: var(--text-muted); font-size: 13px; line-height: 1.7; }
+    .hidden { display: none !important; }
+
+    .toast-wrap {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 3000;
+      display: grid;
+      gap: 10px;
+      width: min(380px, calc(100vw - 24px));
+    }
+    .toast {
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.45;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      animation: toastIn .24s ease;
+    }
+    .toast.success { background: rgba(72,229,123,0.14); color: #98ffc0; border-color: rgba(72,229,123,0.18); }
+    .toast.error { background: rgba(255,107,107,0.14); color: #ff9a9a; border-color: rgba(255,107,107,0.18); }
+    .toast.info { background: rgba(73,215,255,0.14); color: #95eeff; border-color: rgba(73,215,255,0.18); }
+    @keyframes toastIn { from { opacity:0; transform: translateX(18px);} to {opacity:1; transform: translateX(0);} }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 11px 16px;
+      font-size: 13px;
+      font-weight: 900;
+      color: white;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: transform .18s ease, opacity .18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:disabled { opacity: .55; cursor: default; transform: none; }
+
+    .btn-gold { background: linear-gradient(135deg, var(--gold-2), var(--gold)); color: #1a1305; }
+    .btn-dark { color: var(--text-secondary); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
+    .btn-green { background: linear-gradient(135deg, var(--green), var(--green-2)); }
+    .btn-red { background: linear-gradient(135deg, var(--red), var(--red-2)); }
+    .btn-cyan { background: linear-gradient(135deg, var(--cyan), var(--cyan-2)); }
+
+    .field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--bg-input);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: .18s ease;
+      font-family: var(--font);
+    }
+    .field:focus {
+      border-color: rgba(73,215,255,0.22);
+      box-shadow: 0 0 0 3px rgba(73,215,255,0.08);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 900;
+      background: linear-gradient(135deg, rgba(255,62,157,0.22), rgba(73,215,255,0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      margin-bottom: 2px;
+    }
+    .brand-sub { color: var(--text-muted); font-size: 12px; line-height: 1.4; }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .stat-pill-value { color: #fff; font-weight: 900; }
+
+    .section-box { padding: 18px; margin-top: 16px; }
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 900;
+      margin: 0;
+      letter-spacing: -.03em;
+    }
+    .section-sub { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.55; }
+
+    .contract-empty {
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.02);
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* MARKET */
+    .market-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+    }
+    .market-main-grid { display: grid; gap: 16px; }
+
+    .market-balance-card,
+    .market-buy-card,
+    .market-request-card,
+    .market-history-card { padding: 18px; }
+
+    .market-balance-kicker {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #ffe39a;
+      background: rgba(246,200,87,0.08);
+      border: 1px solid rgba(246,200,87,0.16);
+      margin-bottom: 12px;
+    }
+
+    .market-balance-row { display:flex; align-items:center; gap:14px; }
+    .market-balance-icon {
+      width: 62px; height: 62px; border-radius: 18px;
+      display: flex; align-items:center; justify-content:center;
+      font-size: 30px;
+      background: linear-gradient(135deg, rgba(246,200,87,0.18), rgba(141,92,255,0.12));
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .market-balance-title { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .market-balance-value { font-size: 40px; font-weight: 900; line-height: 1; color: #fff3cf; }
+
+    .market-packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .market-package-card {
+      position: relative;
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+        rgba(10,16,28,0.82);
+      transition: .25s ease;
+      overflow: hidden;
+    }
+    .market-package-card:hover { transform: translateY(-3px); border-color: rgba(246,200,87,0.18); }
+    .market-package-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #f6c857, #f59e0b);
+      color: #1a1305;
+    }
+    .market-package-title { font-size: 16px; font-weight: 900; margin-bottom: 6px; }
+    .market-package-amount { font-size: 28px; font-weight: 900; color: #fff3cf; margin-bottom: 10px; }
+    .market-package-old { font-size: 12px; color: var(--text-muted); text-decoration: line-through; margin-bottom: 4px; }
+    .market-package-price { font-size: 20px; font-weight: 900; color: #ffe08a; margin-bottom: 10px; }
+    .market-package-discount { font-size: 12px; color: #98ffc0; font-weight: 800; margin-bottom: 10px; }
+    .market-package-bonus { min-height: 38px; font-size: 12px; color: #9cefff; line-height: 1.5; margin-bottom: 12px; }
+    .market-package-btn { width: 100%; }
+
+    .market-custom-amount { display: grid; gap: 10px; max-width: 360px; margin-top: 14px; }
+    .market-total-card {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      max-width: 360px;
+    }
+    .market-total-value { font-size: 24px; font-weight: 900; color: #ffe08a; }
+
+    .market-actions-row { display:flex; gap:10px; flex-wrap: wrap; margin-top: 14px; }
+
+    .market-request-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .market-request-item {
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .profile-meta-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .profile-meta-value { font-size: 14px; font-weight: 900; color: #fff; line-height: 1.45; }
+
+    .market-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,0.08);
+      width: fit-content;
+    }
+    .market-status-pill.pending { background: rgba(251,191,36,0.10); border-color: rgba(251,191,36,0.18); color: #ffe08a; }
+    .market-status-pill.processing { background: rgba(73,215,255,0.10); border-color: rgba(73,215,255,0.18); color: #97ecff; }
+    .market-status-pill.success { background: rgba(72,229,123,0.10); border-color: rgba(72,229,123,0.18); color: #b8ffd1; }
+    .market-status-pill.danger { background: rgba(255,107,107,0.10); border-color: rgba(255,107,107,0.18); color: #ffb0b0; }
+
+    .market-pay-box {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+        rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .market-pay-title { font-size: 15px; font-weight: 900; margin-bottom: 10px; }
+    .market-pay-subtitle { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 12px; }
+
+    .market-payment-methods {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .market-payment-card {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      min-width: 0;
+    }
+    .market-payment-card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .market-payment-card-value {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .market-payment-code-box {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(246,200,87,0.08);
+      border: 1px solid rgba(246,200,87,0.16);
+      text-align: center;
+    }
+    .market-payment-code-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .market-payment-code-value {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff3cf;
+      letter-spacing: .10em;
+      word-break: break-all;
+      line-height: 1.2;
+    }
+
+    .market-payment-notice {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(73,215,255,0.08);
+      border: 1px solid rgba(73,215,255,0.14);
+      color: #dff8ff;
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+    .market-payment-warning {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,107,107,0.08);
+      border: 1px solid rgba(255,107,107,0.14);
+      color: #ffd0d0;
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .activity-feed-list {
+      display: grid;
+      gap: 10px;
+      max-height: 560px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .activity-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .activity-avatar {
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items:center; justify-content:center;
+      font-weight: 900;
+    }
+    .activity-login { font-size: 13px; font-weight: 900; margin-bottom: 4px; }
+    .activity-action { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    .market-history-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      width: fit-content;
+    }
+    .market-history-status.pending { background: rgba(251,191,36,0.10); color: #ffe08a; }
+    .market-history-status.processing { background: rgba(73,215,255,0.10); color: #97ecff; }
+    .market-history-status.success { background: rgba(72,229,123,0.10); color: #b8ffd1; }
+    .market-history-status.danger { background: rgba(255,107,107,0.10); color: #ffb0b0; }
+
+    @media (max-width: 980px) {
+      .market-layout { grid-template-columns: 1fr; }
+      .market-payment-methods { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="page">
+    <header class="topbar glass">
+      <div class="brand">
+        <div class="brand-logo">WS</div>
+        <div style="min-width:0;">
+          <div class="brand-title">Магазин Брюликов</div>
+          <div id="marketUserLine" class="brand-sub">—</div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="stat-pill">
+          <span>⚙️</span>
+          <span>Брюлики:</span>
+          <span id="marketWsbuildBalance" class="stat-pill-value">0</span>
+        </div>
+
+        <a class="btn btn-dark" href="./index.html">← На главную</a>
+        <button class="btn btn-dark" type="button" onclick="logoutWs()">🚪 Выйти</button>
+      </div>
+    </header>
+
+    <!-- OFFERS (пока заглушка) -->
+    <section class="glass section-box">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">🔥 Предложения от разработчика</h2>
+          <div class="section-sub">Временные скидки, наборы и бонусы. Здесь появится отдельная система.</div>
+        </div>
+      </div>
+
+      <div id="devOffersBlock" class="contract-empty">
+        Пока нет активных предложений.
+      </div>
+    </section>
+
+    <!-- MAIN MARKET -->
+    <section class="glass section-box">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">⚙️ Магазин Брюликов</h2>
+          <div class="section-sub">Покупка WSBuild, заявка и история оплат</div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-dark" type="button" onclick="reloadMarket()">↺ Обновить</button>
+        </div>
+      </div>
+
+      <div class="market-layout">
+        <div class="market-main-grid">
+
+          <div class="glass market-balance-card">
+            <div class="market-balance-kicker">Баланс донат-валюты</div>
+            <div class="market-balance-row">
+              <div class="market-balance-icon">⚙️</div>
+              <div>
+                <div class="market-balance-title">Мои Брюлики</div>
+                <div id="marketWsbuildBalanceBig" class="market-balance-value">0</div>
+              </div>
+            </div>
+            <div class="muted" style="margin-top:10px;">
+              Пакеты обновляются разработчиком. Оплата: точная сумма до копейки.
+            </div>
+          </div>
+
+          <div class="glass market-buy-card">
+            <div class="section-head" style="margin-bottom:10px;">
+              <div>
+                <div class="section-title" style="font-size:16px;">Покупка Брюликов</div>
+                <div class="muted">Базовая цена: <b>3₽</b> за 1 Брюлик. На пакетах действуют скидки.</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="profile-meta-label">Пакеты</div>
+              <div id="wsbuildPackagesList" class="market-packages-grid"></div>
+            </div>
+
+            <div style="margin-top:16px;">
+              <div class="profile-meta-label">Стандартная покупка</div>
+
+              <div class="market-custom-amount">
+                <label class="profile-meta-label" for="wsbuildAmountInput">Свое количество Брюликов</label>
+                <input id="wsbuildAmountInput" class="field" type="number" min="1" value="1" />
+              </div>
+
+              <div class="market-total-card">
+                <div class="profile-meta-label">Итоговая сумма</div>
+                <div id="wsbuildTotalText" class="market-total-value">3₽</div>
+              </div>
+            </div>
+
+            <div class="market-actions-row">
+              <button class="btn btn-gold" type="button" onclick="createPaymentRequest()">💳 Перейти к оплате</button>
+              <button class="btn btn-dark" type="button" onclick="loadWsbuildPackages(true)">↺ Обновить пакеты</button>
+            </div>
+          </div>
+
+          <div class="glass market-request-card">
+            <div class="section-title" style="font-size:16px; margin-bottom:10px;">Реквизиты для оплаты</div>
+
+            <div id="paymentRequestEmpty" class="contract-empty">
+              У тебя пока нет активной заявки. Создай её выше.
+            </div>
+
+            <div id="paymentRequestBox" class="hidden">
+              <div id="paymentRequestStatusPill" class="market-status-pill pending">⏳ Ожидает оплаты</div>
+
+              <div class="market-request-grid">
+                <div class="market-request-item">
+                  <div class="profile-meta-label">Сумма</div>
+                  <div id="requestAmountRubText" class="profile-meta-value">—</div>
+                </div>
+                <div class="market-request-item">
+                  <div class="profile-meta-label">Брюлики</div>
+                  <div id="requestWsbuildText" class="profile-meta-value">—</div>
+                </div>
+                <div class="market-request-item">
+                  <div class="profile-meta-label">Статус</div>
+                  <div id="requestStatusText" class="profile-meta-value">—</div>
+                </div>
+                <div class="market-request-item">
+                  <div class="profile-meta-label">Получатель</div>
+                  <div id="paymentReceiverText" class="profile-meta-value">—</div>
+                </div>
+              </div>
+
+              <div class="market-pay-box">
+                <div class="market-pay-title">Перейти к оплате</div>
+                <div class="market-pay-subtitle">
+                  Переведи <b>точную сумму <span id="requestAmountRubText2">—</span></b>.
+                  Код <span id="requestCodeInlineText" style="color:#9cefff;font-weight:900;">—</span> — резервный идентификатор.
+                </div>
+
+                <div class="market-payment-methods">
+                  <div class="market-payment-card">
+                    <div class="market-payment-card-title">СБП | ЮMoney</div>
+                    <div id="paymentSbpText" class="market-payment-card-value">—</div>
+                  </div>
+
+                  <div class="market-payment-card">
+                    <div class="market-payment-card-title">Номер карты</div>
+                    <div id="paymentCardText" class="market-payment-card-value">—</div>
+                  </div>
+                </div>
+
+                <div class="market-payment-code-box">
+                  <div class="market-payment-code-label">Код для комментария к платежу</div>
+                  <div id="requestCodeText" class="market-payment-code-value">—</div>
+                </div>
+
+                <div class="market-payment-notice">
+                  💡 После поступления платежа в YooMoney Брюлики начислятся автоматически обычно в течение <b>1–2 минут</b>.
+                </div>
+                <div class="market-payment-warning">
+                  ⚠️ Очень важно перевести точную сумму до копейки — иначе автозачисление не сработает.
+                </div>
+
+                <div class="market-actions-row">
+                  <button class="btn btn-green" type="button" onclick="markPaymentRequestPaid()">✅ Я оплатил</button>
+                  <button class="btn btn-red" type="button" onclick="cancelPaymentRequest()">✖ Отменить заявку</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="glass market-history-card">
+          <div class="section-head" style="margin-bottom:10px;">
+            <div>
+              <div class="section-title" style="font-size:16px;">История заявок</div>
+              <div class="muted">Твои пополнения Брюликов</div>
+            </div>
+            <button class="btn btn-dark" type="button" onclick="loadPaymentRequestsHistory(true)">↺</button>
+          </div>
+
+          <div id="paymentRequestsHistoryList" class="activity-feed-list"></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const API_BASE = "https://world-script-api.onrender.com";
+
+    const toastWrap = document.getElementById("toastWrap");
+
+    let wsbuildPackages = [];
+    let wsbuildBalance = 0;
+    let activePaymentRequest = null;
+    let paymentRequestsHistory = [];
+
+    function safeNumber(v, d = 0) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : d;
+    }
+
+    function safeArray(v) {
+      return Array.isArray(v) ? v : [];
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function showToast(message, type = "info", duration = 2600) {
+      if (!toastWrap) return;
+
+      const el = document.createElement("div");
+      el.className = "toast " + type;
+      el.textContent = String(message || "");
+      toastWrap.appendChild(el);
+
+      setTimeout(() => {
+        el.style.transition = ".22s ease";
+        el.style.opacity = "0";
+        el.style.transform = "translateX(18px)";
+        setTimeout(() => el.remove(), 220);
+      }, duration);
+    }
+
+    function wsSetToken(token) { localStorage.setItem("ws_token", token); }
+    function wsGetToken() { return localStorage.getItem("ws_token") || ""; }
+    function wsClearToken() { localStorage.removeItem("ws_token"); }
+
+    async function wsRequest(path, options = {}) {
+      const token = wsGetToken();
+      const headers = { ...(options.headers || {}) };
+      if (token) headers.Authorization = "Bearer " + token;
+
+      const response = await fetch(API_BASE + path, { ...options, headers });
+      const data = await response.json().catch(() => ({ ok: false, error: "Bad JSON" }));
+      return { res: response, data };
+    }
+    function wsGet(path) { return wsRequest(path, { method: "GET" }); }
+    function wsPost(path, body) {
+      return wsRequest(path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body || {})
+      });
+    }
+
+    function getPaymentStatusVisual(status) {
+      const s = String(status || "").trim().toLowerCase();
+      if (s === "pending_payment") return { className: "pending", text: "⏳ Ожидает оплаты" };
+      if (s === "waiting_check") return { className: "processing", text: "🔄 Обрабатывается..." };
+      if (s === "confirmed") return { className: "success", text: "✅ Успешно" };
+      if (s === "rejected") return { className: "danger", text: "❌ Отклонена" };
+      if (s === "cancelled") return { className: "danger", text: "✖ Отменена" };
+      return { className: "pending", text: "⏳ Неизвестный статус" };
+    }
+
+    function renderWsbuildInfo() {
+      const a = document.getElementById("marketWsbuildBalance");
+      const b = document.getElementById("marketWsbuildBalanceBig");
+      if (a) a.textContent = String(wsbuildBalance || 0);
+      if (b) b.textContent = String(wsbuildBalance || 0);
+    }
+
+    function calcWsbuildPreviewPrice(amount) {
+      const qty = Math.max(1, Math.floor(safeNumber(amount, 1)));
+      const pkg = (wsbuildPackages || []).find(x => Number(x.amount || 0) === qty);
+      if (pkg) return safeNumber(pkg.price_rub, 0);
+      return qty * 3;
+    }
+
+    function updateWsbuildTotalPreview() {
+      const amountInput = document.getElementById("wsbuildAmountInput");
+      const totalEl = document.getElementById("wsbuildTotalText");
+      if (!amountInput || !totalEl) return;
+
+      const qty = Math.max(1, Math.floor(safeNumber(amountInput.value, 1)));
+      totalEl.textContent = `${calcWsbuildPreviewPrice(qty)}₽`;
+    }
+
+    function selectWsbuildPackage(amount, priceRub) {
+      const amountInput = document.getElementById("wsbuildAmountInput");
+      const totalEl = document.getElementById("wsbuildTotalText");
+      if (amountInput) amountInput.value = String(Math.max(1, Math.floor(safeNumber(amount, 1))));
+      if (totalEl) totalEl.textContent = `${safeNumber(priceRub, 0)}₽`;
+    }
+
+    function renderWsbuildPackages() {
+      const box = document.getElementById("wsbuildPackagesList");
+      if (!box) return;
+
+      if (!Array.isArray(wsbuildPackages) || !wsbuildPackages.length) {
+        box.innerHTML = '<div class="contract-empty">Пакеты Брюликов пока недоступны.</div>';
+        return;
+      }
+
+      box.innerHTML = wsbuildPackages.map(pkg => `
+        <div class="market-package-card">
+          ${pkg.badge ? `<div class="market-package-badge">${escapeHtml(pkg.badge)}</div>` : ""}
+
+          <div class="market-package-title">${escapeHtml(pkg.title || "Пакет")}</div>
+          <div class="market-package-amount">${safeNumber(pkg.amount)} ⚙️</div>
+
+          <div class="market-package-old">${safeNumber(pkg.old_price_rub)}₽</div>
+          <div class="market-package-price">${safeNumber(pkg.price_rub)}₽</div>
+
+          <div class="market-package-discount">
+            Экономия ${safeNumber(pkg.discount_rub)}₽ · скидка ${safeNumber(pkg.discount_percent)}%
+          </div>
+
+          <div class="market-package-bonus">
+            ${pkg.bonus_text ? escapeHtml(pkg.bonus_text) : "Без дополнительного бонуса"}
+          </div>
+
+          <button
+            class="btn btn-gold market-package-btn"
+            type="button"
+            onclick="selectWsbuildPackage(${safeNumber(pkg.amount)}, ${safeNumber(pkg.price_rub)})"
+          >
+            Выбрать пакет
+          </button>
+        </div>
+      `).join("");
+
+      updateWsbuildTotalPreview();
+    }
+
+    async function loadWsbuildPackages(force = false) {
+      const { res, data } = await wsGet("/api/ws/wsbuild/packages");
+      if (res.status === 401) return handle401();
+      if (!data?.ok) return;
+
+      wsbuildPackages = safeArray(data.packages);
+      renderWsbuildPackages();
+    }
+
+    function renderActivePaymentRequest() {
+      const emptyBox = document.getElementById("paymentRequestEmpty");
+      const box = document.getElementById("paymentRequestBox");
+
+      const amountRubText = document.getElementById("requestAmountRubText");
+      const amountRubText2 = document.getElementById("requestAmountRubText2");
+      const wsbuildText = document.getElementById("requestWsbuildText");
+      const statusText = document.getElementById("requestStatusText");
+      const statusPill = document.getElementById("paymentRequestStatusPill");
+      const codeText = document.getElementById("requestCodeText");
+      const codeInlineText = document.getElementById("requestCodeInlineText");
+      const receiverText = document.getElementById("paymentReceiverText");
+      const sbpText = document.getElementById("paymentSbpText");
+      const cardText = document.getElementById("paymentCardText");
+
+      if (!box || !emptyBox) return;
+
+      if (!activePaymentRequest) {
+        emptyBox.classList.remove("hidden");
+        box.classList.add("hidden");
+        return;
+      }
+
+      emptyBox.classList.add("hidden");
+      box.classList.remove("hidden");
+
+      const visual = getPaymentStatusVisual(activePaymentRequest.status);
+
+      if (amountRubText) amountRubText.textContent = `${activePaymentRequest.amount_rub || "—"}₽`;
+      if (amountRubText2) amountRubText2.textContent = `${activePaymentRequest.amount_rub || "—"}₽`;
+      if (wsbuildText) wsbuildText.textContent = `${activePaymentRequest.wsbuild_amount || "—"} ⚙️`;
+      if (statusText) statusText.textContent = activePaymentRequest.status_text || activePaymentRequest.status || "—";
+
+      if (statusPill) {
+        statusPill.className = `market-status-pill ${visual.className}`;
+        statusPill.textContent = visual.text;
+      }
+
+      if (codeText) codeText.textContent = activePaymentRequest.payment_code || "—";
+      if (codeInlineText) codeInlineText.textContent = activePaymentRequest.payment_code || "—";
+
+      if (receiverText) receiverText.textContent = activePaymentRequest.receiver_name || "—";
+      if (sbpText) sbpText.textContent = activePaymentRequest.receiver_phone || "—";
+      if (cardText) cardText.textContent = activePaymentRequest.card_number || "—";
+    }
+
+    function renderPaymentRequestsHistory() {
+      const box = document.getElementById("paymentRequestsHistoryList");
+      if (!box) return;
+
+      if (!Array.isArray(paymentRequestsHistory) || !paymentRequestsHistory.length) {
+        box.innerHTML = '<div class="contract-empty">История заявок пока пуста.</div>';
+        return;
+      }
+
+      box.innerHTML = paymentRequestsHistory.map(item => {
+        const visual = getPaymentStatusVisual(item.status);
+        return `
+          <div class="activity-item">
+            <div class="activity-avatar">⚙️</div>
+            <div>
+              <div class="activity-login">${safeNumber(item.wsbuild_amount)} Брюликов · ${safeNumber(item.amount_rub)}₽</div>
+              <div class="activity-action">Код: ${escapeHtml(item.payment_code || "—")}</div>
+              <div class="market-history-status ${visual.className}">${escapeHtml(visual.text)}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadActivePaymentRequest(force = false) {
+      const { res, data } = await wsGet("/api/ws/payment-requests/active");
+      if (res.status === 401) return handle401();
+      if (!data?.ok) return;
+
+      if (!data.item) {
+        activePaymentRequest = null;
+        renderActivePaymentRequest();
+        return;
+      }
+
+      // дополним реквизиты из payment_details (сервер их отдаёт)
+      activePaymentRequest = {
+        ...data.item,
+        receiver_name: data.payment_details?.receiver_name || data.item.receiver_name || "",
+        receiver_phone: data.payment_details?.sbp_phone || data.item.receiver_phone || "",
+        card_number: data.payment_details?.card_number || data.item.card_number || ""
+      };
+
+      renderActivePaymentRequest();
+    }
+
+    async function loadPaymentRequestsHistory(force = false) {
+      const { res, data } = await wsGet("/api/ws/payment-requests/my");
+      if (res.status === 401) return handle401();
+      if (!data?.ok) return;
+
+      paymentRequestsHistory = safeArray(data.items);
+      renderPaymentRequestsHistory();
+    }
+
+    async function createPaymentRequest() {
+      const amountInput = document.getElementById("wsbuildAmountInput");
+      const qty = Math.max(1, Math.floor(safeNumber(amountInput?.value, 1)));
+
+      const { res, data } = await wsPost("/api/ws/payment-requests/create", { wsbuild_amount: qty });
+      if (res.status === 401) return handle401();
+      if (!data?.ok) return showToast(data.error || "Не удалось создать заявку", "error");
+
+      activePaymentRequest = {
+        ...data.item,
+        receiver_name: data.payment_details?.receiver_name || "",
+        receiver_phone: data.payment_details?.sbp_phone || "",
+        card_number: data.payment_details?.card_number || ""
+      };
+
+      renderActivePaymentRequest();
+      showToast("Заявка создана. Переведи точную сумму и нажми «Я оплатил».", "success", 4500);
+
+      // обновим баланс/историю
+      await Promise.allSettled([
+        loadUserBundle(),
+        loadPaymentRequestsHistory(true)
+      ]);
+    }
+
+    async function markPaymentRequestPaid() {
+      if (!activePaymentRequest?.id) return showToast("Нет активной заявки", "info");
+
+      const { res, data } = await wsPost("/api/ws/payment-requests/mark-paid", {
+        request_id: safeNumber(activePaymentRequest.id)
+      });
+
+      if (res.status === 401) return handle401();
+      if (!data?.ok) return showToast(data.error || "Не удалось отправить на проверку", "error");
+
+      if (data.auto_confirmed) {
+        showToast("Платёж найден. Брюлики начислены!", "success", 5000);
+      } else {
+        showToast("Отправлено на автообработку. Обычно 1–2 минуты.", "info", 5000);
+      }
+
+      // Обновим всё
+      await Promise.allSettled([
+        loadUserBundle(),
+        loadActivePaymentRequest(true),
+        loadPaymentRequestsHistory(true)
+      ]);
+    }
+
+    async function cancelPaymentRequest() {
+      if (!activePaymentRequest?.id) return showToast("Нет активной заявки", "info");
+
+      const { res, data } = await wsPost("/api/ws/payment-requests/cancel", {
+        request_id: safeNumber(activePaymentRequest.id)
+      });
+
+      if (res.status === 401) return handle401();
+      if (!data?.ok) return showToast(data.error || "Не удалось отменить заявку", "error");
+
+      activePaymentRequest = null;
+      renderActivePaymentRequest();
+      showToast("Заявка отменена", "success");
+
+      await Promise.allSettled([
+        loadActivePaymentRequest(true),
+        loadPaymentRequestsHistory(true)
+      ]);
+    }
+
+    async function loadUserBundle() {
+      // dashboard-bundle содержит binder.wsbuild_balance
+      const { res, data } = await wsGet("/api/ws/dashboard-bundle");
+      if (res.status === 401) return handle401();
+      if (!data?.ok) return;
+
+      wsbuildBalance = safeNumber(data?.binder?.wsbuild_balance, 0);
+      renderWsbuildInfo();
+
+      const userLine = document.getElementById("marketUserLine");
+      if (userLine) {
+        const login = data?.user?.login || "—";
+        userLine.textContent = `Пользователь: ${login}`;
+      }
+    }
+
+    function handle401() {
+      wsClearToken();
+      showToast("Сессия истекла. Войди заново.", "error", 3000);
+      setTimeout(() => window.location.href = "./index.html", 400);
+    }
+
+    async function reloadMarket() {
+      await Promise.allSettled([
+        loadUserBundle(),
+        loadWsbuildPackages(true),
+        loadActivePaymentRequest(true),
+        loadPaymentRequestsHistory(true)
+      ]);
+      updateWsbuildTotalPreview();
+    }
+
+    async function logoutWs() {
+      // Можно попробовать уведомить сервер, но без keepalive/headers это не всегда успеет
+      wsClearToken();
+      window.location.href = "./index.html";
+    }
+
+    // init
+    (async function initMarket() {
+      const amountInput = document.getElementById("wsbuildAmountInput");
+      if (amountInput) {
+        amountInput.addEventListener("input", updateWsbuildTotalPreview);
+      }
+
+      if (!wsGetToken()) {
+        window.location.href = "./index.html";
+        return;
+      }
+
+      // проверка токена
+      const me = await wsGet("/api/ws/me");
+      if (me.res.status === 401 || !me.data?.ok) {
+        return handle401();
+      }
+
+      await reloadMarket();
+    })();
+  </script>
+</body>
+</html>
