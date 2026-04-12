@@ -4907,6 +4907,45 @@
     .profile-entry.is-opening .profile-avatar-wrap {
       transform: scale(0.96);
     }
+
+    .roulette-batch-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap:12px;
+    }
+    
+    .roulette-batch-slot{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      padding: 12px;
+      min-height: 110px;
+      opacity: .55;
+      transform: translateY(0);
+    }
+    
+    .roulette-batch-slot.filled{
+      opacity: 1;
+      animation: batchPop .35s cubic-bezier(.22,.68,0,1);
+      border-color: rgba(246,200,87,0.18);
+    }
+    
+    @keyframes batchPop{
+      from { opacity:0; transform: translateY(10px) scale(.96); }
+      to { opacity:1; transform: translateY(0) scale(1); }
+    }
+    
+    .roulette-batch-title{
+      font-weight: 900;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    
+    .roulette-batch-meta{
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
     
   </style>
 </head>
@@ -5019,19 +5058,6 @@
           </div>
 
           <div class="topbar-stats">
-            <button
-              id="psOnlinePill"
-              class="stat-pill stat-pill-clickable"
-              type="button"
-              onclick="togglePsOnlinePanel()"
-              title="Нажми для информации"
-            >
-              <span class="stat-pill-icon">🚔</span>
-              <span class="stat-pill-label">Онлайн PS</span>
-              <span class="stat-pill-dot">●</span>
-              <span id="psOnlineCountText" class="stat-pill-value">0</span>
-            </button>
-
             <button
               id="siteOnlinePill"
               class="stat-pill stat-pill-clickable"
@@ -5171,12 +5197,6 @@
                     <span class="tab-indicator">◆</span>
                   </button>
 
-                  <button id="tabBtn-workshop" class="section-tab" type="button" onclick="switchMainTab('workshop')">
-                    <span class="tab-glow"></span>
-                    🛠 Мастерская
-                    <span class="tab-indicator">◆</span>
-                  </button>
-
                   <button id="tabBtn-roulette" class="section-tab" type="button" onclick="switchMainTab('roulette')">
                     <span class="tab-glow"></span>
                     🎰 Рулетка
@@ -5190,14 +5210,6 @@
                   </button>
                 </div>
 
-                <div class="section-tabs-right">
-                  <button id="tabBtn-contracts" class="section-tab contracts" type="button" onclick="switchMainTab('contracts')">
-                    <span class="tab-glow"></span>
-                    🎯 Контракты
-                    <span class="tab-indicator">◆</span>
-                    <span id="contractsTabBadge" class="contracts-badge hidden">0</span>
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -5693,6 +5705,14 @@
                 <div class="roulette-big-btn-wrap" style="flex-wrap:wrap; gap:12px;">
                   <button id="spinButton" class="btn btn-gold roulette-big-btn" type="button" onclick="spinRoulette()" disabled>🎰 КРУТИТЬ РУЛЕТКУ</button>
                   <button class="btn btn-gold" type="button" onclick="resetRouletteByWsbuild()">⚙️ Обнулить за 3</button>
+                  <button class="btn btn-pink roulette-big-btn" type="button" onclick="spinRouletteAllByWsbuild()">
+                    ⚙️ КРУТИТЬ ВСЁ ЗА 6
+                  </button>
+                </div>
+
+                <div style="margin-top:16px;">
+                  <div class="profile-meta-label" style="margin-bottom:10px;">Результаты (до 10)</div>
+                  <div id="rouletteBatchGrid" class="roulette-batch-grid"></div>
                 </div>
 
                 <div class="roulette-strip-shell">
@@ -5704,6 +5724,15 @@
                 </div>
 
                 <div id="rouletteResult" class="roulette-status-box">Крути рулетку, чтобы получить приз!</div>
+              </div>
+            </div>
+
+            <div class="glass widget-box" style="margin-bottom:18px;">
+              <h3 class="widget-title">Разделы</h3>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-gold" type="button" onclick="openMarketPage()">⚙️ Магазин Брюликов</button>
+                <button class="btn btn-pink" type="button" onclick="openContractsPage()">🎯 Контракты</button>
+                <button class="btn btn-dark" type="button" onclick="openWorkshopPage()">🛠 Мастерская</button>
               </div>
             </div>
 
@@ -7077,6 +7106,13 @@
     } else {
       window.open("/profile.html", "_blank", "noopener,noreferrer");
     }
+  }
+
+  function openContractsPage() {
+    window.open("./contracts.html", "_blank", "noopener,noreferrer");
+  }
+  function openWorkshopPage() {
+    window.open("./workshop.html", "_blank", "noopener,noreferrer");
   }
 
   function openChangePasswordModal() {
@@ -9088,40 +9124,122 @@
     return sequence.findIndex((x, idx) => idx >= minIndex && String(x?.id) === String(prizeId));
   }
 
-  function animateRouletteToPrize(prize) {
+  function animateRouletteToPrize(prize, durationMs = 6200) {
     return new Promise((resolve) => {
       const strip = document.getElementById("rouletteStrip");
       const shell = document.querySelector(".roulette-strip-shell");
-
       if (!strip || !shell || !roulettePrizes.length) return resolve();
-
+  
       const weightedSequence = buildWeightedSequence(roulettePrizes, 120);
       if (!weightedSequence.length) return resolve();
-
+  
       strip.innerHTML = weightedSequence.map((item) => getPrizeCardHtml(item)).join("");
-
+  
       const viewportWidth = shell.getBoundingClientRect().width;
       const { cardWidth, gap } = getCardMetrics();
-
+  
       const minIndex = Math.max(20, Math.floor(weightedSequence.length * 0.55));
       let stopIndex = findBestWeightedStopIndex(weightedSequence, prize.id, minIndex);
       if (stopIndex < 0) stopIndex = minIndex;
-
+  
       const cardFull = cardWidth + gap;
       const centerOffset = (viewportWidth / 2) - (cardWidth / 2);
       const targetX = -((stopIndex * cardFull) - centerOffset);
-
+  
       strip.style.transition = "none";
       strip.style.transform = "translate3d(0,0,0)";
       strip.offsetHeight;
-
+  
       requestAnimationFrame(() => {
-        strip.style.transition = "transform 6.2s cubic-bezier(.08,.72,0,1)";
+        strip.style.transition = `transform ${Math.max(300, durationMs) / 1000}s cubic-bezier(.08,.72,0,1)`;
         strip.style.transform = `translate3d(${targetX}px,0,0)`;
       });
-
-      setTimeout(resolve, 6400);
+  
+      setTimeout(resolve, durationMs + 150);
     });
+  }
+
+  function renderRouletteBatchPlaceholders(total = 10) {
+    const grid = document.getElementById("rouletteBatchGrid");
+    if (!grid) return;
+  
+    grid.innerHTML = Array.from({ length: total }).map((_, i) => `
+      <div class="roulette-batch-slot" id="rbSlot${i}">
+        <div class="roulette-batch-title">Прокрут #${i + 1}</div>
+        <div class="roulette-batch-meta">—</div>
+      </div>
+    `).join("");
+  }
+  
+  function fillRouletteBatchSlot(index, prize, comboApplied) {
+    const slot = document.getElementById("rbSlot" + index);
+    if (!slot) return;
+  
+    let meta = "";
+    if (prize.type === "money") meta = `+${formatMoney(prize.value)} к выводу`;
+    else if (prize.type === "combo") meta = formatComboPrizeText(prize, comboApplied || []);
+    else meta = "Предмет";
+  
+    slot.classList.add("filled");
+    slot.innerHTML = `
+      <div class="roulette-batch-title">#${index + 1} · ${escapeHtml(prize.title || "Приз")}</div>
+      <div class="roulette-batch-meta">${escapeHtml(meta)}</div>
+    `;
+  }
+  
+  async function spinRouletteAllByWsbuild() {
+    if (rouletteSpinning) return;
+  
+    const spinBtn = document.getElementById("spinButton");
+    const resultBox = document.getElementById("rouletteResult");
+  
+    try {
+      rouletteSpinning = true;
+      if (spinBtn) spinBtn.disabled = true;
+      setInlineLoading("rouletteLoading", true);
+  
+      renderRouletteBatchPlaceholders(10);
+      if (resultBox) resultBox.textContent = "⚙️ Прокручиваем все шансы...";
+  
+      const { res, data } = await wsPost("/api/ws/wsbuild/roulette-spin-all", {});
+      if (res.status === 401) return logoutWs();
+      if (!data.ok) return showToast(data.error || "Не удалось прокрутить рулетку", "error");
+  
+      // обновим баланс брюликов заранее
+      wsbuildBalance = safeNumber(data.wsbuild_balance, wsbuildBalance);
+      renderWsbuildInfo();
+  
+      const results = safeArray(data.results);
+  
+      // анимация: быстро крутим и после каждого показываем карточку результата
+      for (let i = 0; i < results.length; i++) {
+        const prize = results[i]?.prize;
+        const comboApplied = results[i]?.combo_applied || [];
+        if (!prize) continue;
+  
+        await animateRouletteToPrize(prize, 1200); // быстро
+        fillRouletteBatchSlot(i, prize, comboApplied);
+      }
+  
+      // применяем финальные состояния (сервер уже всё применил)
+      toOutput = safeNumber(data.to_output, toOutput);
+      updateToOutput();
+  
+      if (Array.isArray(data.inventory)) {
+        inventoryItems = data.inventory.map(normalizeInventoryRow);
+        renderInventory();
+      }
+  
+      showToast(`Готово: прокрутов ${safeNumber(data.spins_count)} · списано 6 брюликов`, "success", 4500);
+  
+      await refreshAffectedData(["profile", "dashboard", "roulette", "notifications", "activity"], true);
+    } catch (e) {
+      showToast("Ошибка: " + e.message, "error");
+    } finally {
+      rouletteSpinning = false;
+      setInlineLoading("rouletteLoading", false);
+      await loadRouletteLimits(true);
+    }
   }
 
   function formatComboPrizeText(prize, comboApplied) {
@@ -10498,8 +10616,6 @@
   
       renderInventory();
       renderGameProfileInfo(data.user || {}, data.binder || {});
-  
-      renderPsOnlineList(data?.ps_online?.items || []);
       renderSiteOnlineList(data?.site_online?.items || []);
   
       notificationsUnreadCount = safeNumber(data.notifications_unread_count || 0);
