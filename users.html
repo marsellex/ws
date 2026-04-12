@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Пользователи — World Script</title>
+  <link rel="icon" href="./ws_logo.ico" type="image/x-icon" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap');
+    body{margin:0;font-family:Inter,system-ui;background:#060912;color:#f4f8ff;}
+    .page{max-width:1100px;margin:0 auto;padding:18px;}
+    .glass{background:rgba(16,23,38,.78);border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.34);backdrop-filter:blur(18px);padding:16px;}
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-bottom:14px;}
+    .title{font-size:22px;font-weight:900;margin:0;}
+    .muted{color:rgba(215,230,255,.62);font-size:13px;line-height:1.6}
+    .field{padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(7,10,18,.86);color:#fff;min-width:260px}
+    .btn{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);color:#fff;border-radius:14px;padding:10px 14px;font-weight:900;cursor:pointer;text-decoration:none}
+    .list{display:grid;gap:10px}
+    .item{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;padding:12px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);cursor:pointer}
+    .ava{width:46px;height:46px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-weight:900}
+    .ava img{width:100%;height:100%;object-fit:cover;display:block}
+    .name{font-weight:900}
+    .sub{color:rgba(215,230,255,.62);font-size:12px;margin-top:4px}
+    .pill{font-size:11px;font-weight:900;padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.06);text-transform:uppercase;letter-spacing:.08em}
+    .pill.admin{border-color:rgba(255,62,157,.25);background:rgba(255,62,157,.12)}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="glass">
+      <div class="row">
+        <div>
+          <h1 class="title">Пользователи сайта</h1>
+          <div class="muted" id="meLine">—</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a class="btn" href="./index.html">← На главную</a>
+          <button class="btn" type="button" onclick="reloadUsers()">↺ Обновить</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <input id="searchInput" class="field" placeholder="Поиск: логин / ник" />
+        <div class="muted" id="countText">—</div>
+      </div>
+
+      <div id="list" class="list"></div>
+    </div>
+  </div>
+
+<script>
+const API_BASE = "https://world-script-api.onrender.com";
+function token(){ return localStorage.getItem("ws_token") || ""; }
+function esc(s){ return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+
+async function req(path){
+  const t = token();
+  if(!t){ location.href="./index.html"; return {ok:false}; }
+  const r = await fetch(API_BASE+path, { headers: { Authorization:"Bearer "+t }});
+  const j = await r.json().catch(()=>null);
+  if(r.status===401 || !j?.ok){ localStorage.removeItem("ws_token"); location.href="./index.html"; return {ok:false}; }
+  return j;
+}
+
+function openUserProfile(userId){
+  window.open("./profile.html?user_id="+encodeURIComponent(userId), "_blank", "noopener,noreferrer");
+}
+
+function render(items){
+  const box = document.getElementById("list");
+  if(!box) return;
+  if(!items.length){
+    box.innerHTML = `<div class="muted">Пусто</div>`;
+    return;
+  }
+  box.innerHTML = items.map(u => `
+    <div class="item" onclick="openUserProfile(${Number(u.id||0)})">
+      <div class="ava">
+        ${u.avatar_url ? `<img src="${esc(u.avatar_url)}" alt="">` : esc((u.login||"WS").slice(0,2).toUpperCase())}
+      </div>
+      <div>
+        <div class="name">${esc(u.login||"")}</div>
+        <div class="sub">${esc(u.nickname||"")}${u.game_nick ? " · "+esc(u.game_nick) : ""}</div>
+      </div>
+      <div class="pill ${String(u.role||"user")==="admin"?"admin":""}">${esc(u.role||"user")}</div>
+    </div>
+  `).join("");
+}
+
+let page = 1;
+let perPage = 60;
+
+async function loadUsers(){
+  const q = document.getElementById("searchInput")?.value?.trim() || "";
+  const data = await req(`/api/ws/users/list?page=${page}&per_page=${perPage}&search=${encodeURIComponent(q)}`);
+  if(!data?.ok) return;
+
+  document.getElementById("countText").textContent = `Найдено: ${Number(data.total||0)}`;
+  render(Array.isArray(data.items)?data.items:[]);
+}
+
+async function init(){
+  const me = await req("/api/ws/me");
+  if(me?.ok){
+    document.getElementById("meLine").textContent = `Вы вошли как: ${me.user?.login || "—"}`;
+  }
+
+  const input = document.getElementById("searchInput");
+  if(input){
+    input.addEventListener("input", () => {
+      clearTimeout(window.__t);
+      window.__t = setTimeout(loadUsers, 250);
+    });
+  }
+  await loadUsers();
+}
+function reloadUsers(){ loadUsers(); }
+window.openUserProfile = openUserProfile;
+init();
+</script>
+</body>
+</html>
