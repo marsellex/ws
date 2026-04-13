@@ -8299,23 +8299,34 @@
   // ═══════════════════════════════════════════════════════════
   // ACTIVITY
   // ═══════════════════════════════════════════════════════════
+  function resolveActivityAvatar(item) {
+    return normalizeText(
+      item?.avatar_url ||
+      item?.avatar ||
+      item?.user_avatar_url ||
+      item?.profile_avatar_url ||
+      "",
+      ""
+    );
+  }
+  
   function renderActivityFeed(items) {
     const box = document.getElementById("activityFeedList");
     if (!box) return;
-
+  
     const safeItems = safeArray(items);
-
+  
     if (!safeItems.length) {
       box.innerHTML = '<div class="muted" style="padding:12px;text-align:center;">История пуста</div>';
       return;
     }
-
+  
     box.innerHTML = safeItems.slice(0, 15).map(item => {
-      const login = item.login || item.nickname || "Пользователь";
-      const actionText = item.action_text || item.actionType || "Событие";
-      const avatarUrl = item.avatar_url || "";
+      const login = normalizeText(item?.login || item?.nickname || item?.game_nick, "Пользователь");
+      const actionText = normalizeText(item?.action_text || item?.actionType, "Событие");
+      const avatarUrl = resolveActivityAvatar(item);
       const initials = getInitials(login);
-
+  
       return `
         <div class="activity-item">
           <div class="activity-avatar">
@@ -8331,6 +8342,14 @@
         </div>
       `;
     }).join("");
+  
+    box.querySelectorAll(".activity-avatar img").forEach((img) => {
+      img.addEventListener("error", () => {
+        const parent = img.parentElement;
+        const alt = img.getAttribute("alt") || "WS";
+        if (parent) parent.textContent = getInitials(alt);
+      });
+    });
   }
 
   async function loadActivityFeed(force = false) {
