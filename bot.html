@@ -5345,6 +5345,7 @@
     </div>
 
     <!-- GUEST VIEW -->
+
     <section id="guestView" class="guest-wrap">
       <div class="auth-shell">
         <div class="glass auth-hero">
@@ -5358,7 +5359,7 @@
             </div>
           </div>
         </div>
-
+    
         <div class="glass auth-panel">
           <div class="auth-panel-head">
             <h2 class="auth-panel-title">Вход в систему</h2>
@@ -5366,29 +5367,41 @@
               Используй существующий аккаунт World Script или создай новый профиль.
             </div>
           </div>
-
+    
           <div class="auth-tabs" role="tablist" aria-label="Авторизация">
             <button id="authLoginBtn" class="auth-tab-btn active" type="button" onclick="switchAuthTab('login')">Вход</button>
             <button id="authRegisterBtn" class="auth-tab-btn" type="button" onclick="switchAuthTab('register')">Регистрация</button>
           </div>
-
+    
           <div id="authLoginForm" class="auth-form active">
             <div class="form-grid">
               <input id="loginInput" class="field" placeholder="Логин" autocomplete="username" />
               <input id="passwordInput" class="field" type="password" placeholder="Пароль" autocomplete="current-password" />
             </div>
-
+    
+            <div class="auth-actions">
+              <button id="loginSubmitBtn" class="btn btn-pink" type="button" onclick="loginWs()">🔐 Войти</button>
+            </div>
+            <div id="loginMsg" class="auth-msg" aria-live="polite"></div>
+          </div>
+    
+          <div id="authRegisterForm" class="auth-form">
+            <div class="form-grid">
+              <input id="regLoginInput" class="field" placeholder="Логин" autocomplete="username" />
+              <input id="regPasswordInput" class="field" type="password" placeholder="Пароль" autocomplete="new-password" />
+            </div>
+    
             <div class="avatar-select-box">
               <div class="avatar-select-title">Выбери аватарку</div>
-            
+    
               <div id="registerAvatarGrid" class="default-avatar-grid"></div>
-            
+    
               <div class="avatar-upload-line">
                 <label class="btn btn-dark" for="regAvatarFileInput">📁 Загрузить свою</label>
                 <input id="regAvatarFileInput" type="file" accept="image/*" class="hidden" />
                 <div id="regAvatarFileName" class="muted">Файл не выбран</div>
               </div>
-            
+    
               <div id="registerAvatarPreviewWrap" class="register-avatar-preview hidden">
                 <div class="register-avatar-preview-title">Предпросмотр</div>
                 <div class="register-avatar-preview-box">
@@ -5396,18 +5409,7 @@
                 </div>
               </div>
             </div>
-            
-            <div class="auth-actions">
-              <button id="loginSubmitBtn" class="btn btn-pink" type="button" onclick="loginWs()">🔐 Войти</button>
-            </div>
-            <div id="loginMsg" class="auth-msg" aria-live="polite"></div>
-          </div>
-
-          <div id="authRegisterForm" class="auth-form">
-            <div class="form-grid">
-              <input id="regLoginInput" class="field" placeholder="Логин" autocomplete="username" />
-              <input id="regPasswordInput" class="field" type="password" placeholder="Пароль" autocomplete="new-password" />
-            </div>
+    
             <div class="auth-actions">
               <button id="registerSubmitBtn" class="btn btn-cyan" type="button" onclick="registerWs()">✨ Создать аккаунт</button>
             </div>
@@ -5416,6 +5418,36 @@
         </div>
       </div>
     </section>
+
+    <div id="avatarRequiredModalBg" class="modal-bg hidden">
+      <div class="modal" style="max-width:780px;">
+        <h3 class="confirm-title">Выбери аватарку</h3>
+        <div class="confirm-text">
+          Для продолжения нужно установить аватарку. Можно выбрать одну из стандартных или загрузить свою.
+        </div>
+    
+        <div class="avatar-select-box" style="margin-top:16px;">
+          <div id="requiredAvatarGrid" class="default-avatar-grid"></div>
+    
+          <div class="avatar-upload-line">
+            <label class="btn btn-dark" for="requiredAvatarFileInput">📁 Загрузить свою</label>
+            <input id="requiredAvatarFileInput" type="file" accept="image/*" class="hidden" />
+            <div id="requiredAvatarFileName" class="muted">Файл не выбран</div>
+          </div>
+    
+          <div id="requiredAvatarPreviewWrap" class="register-avatar-preview hidden">
+            <div class="register-avatar-preview-title">Предпросмотр</div>
+            <div class="register-avatar-preview-box">
+              <img id="requiredAvatarPreview" alt="preview" />
+            </div>
+          </div>
+        </div>
+    
+        <div class="modal-actions">
+          <button id="saveRequiredAvatarBtn" class="btn btn-cyan" type="button">Сохранить аватарку</button>
+        </div>
+      </div>
+    </div>
 
     <!-- APP VIEW -->
     <section id="appView" class="hidden">
@@ -6527,18 +6559,18 @@
   let cachedRatingItems = [];
 
   const DEFAULT_AVATAR_ITEMS = [
-    { key: "m_avatars1", url: "./default-avatars/m_avatars1.png" },
-    { key: "m_avatars2", url: "./default-avatars/m_avatars2.png" },
-    { key: "m_avatars3", url: "./default-avatars/m_avatars3.png" },
-    { key: "m_avatars4", url: "./default-avatars/m_avatars4.png" },
-    { key: "m_avatars5", url: "./default-avatars/m_avatars5.png" },
-    { key: "m_avatars6", url: "./default-avatars/m_avatars6.png" },
-    { key: "d_avatars1", url: "./default-avatars/d_avatars1.png" },
-    { key: "d_avatars2", url: "./default-avatars/d_avatars2.png" },
-    { key: "d_avatars3", url: "./default-avatars/d_avatars3.png" },
-    { key: "d_avatars4", url: "./default-avatars/d_avatars4.png" },
-    { key: "d_avatars5", url: "./default-avatars/d_avatars5.png" },
-    { key: "d_avatars6", url: "./default-avatars/d_avatars6.png" }
+    { key: "m_avatars1", url: "./default-avatars/m_avatar1.png" },
+    { key: "m_avatars2", url: "./default-avatars/m_avatar2.png" },
+    { key: "m_avatars3", url: "./default-avatars/m_avatar3.png" },
+    { key: "m_avatars4", url: "./default-avatars/m_avatar4.png" },
+    { key: "m_avatars5", url: "./default-avatars/m_avatar5.png" },
+    { key: "m_avatars6", url: "./default-avatars/m_avatar6.png" },
+    { key: "d_avatars1", url: "./default-avatars/d_avatar1.png" },
+    { key: "d_avatars2", url: "./default-avatars/d_avatar2.png" },
+    { key: "d_avatars3", url: "./default-avatars/d_avatar3.png" },
+    { key: "d_avatars4", url: "./default-avatars/d_avatar4.png" },
+    { key: "d_avatars5", url: "./default-avatars/d_avatar5.png" },
+    { key: "d_avatars6", url: "./default-avatars/d_avatar6.png" }
   ];
   
   let registerAvatarChoice = {
