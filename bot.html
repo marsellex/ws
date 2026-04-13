@@ -3934,31 +3934,25 @@
     .modal-bg {
       position: fixed;
       inset: 0;
-      z-index: 2000;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(8px);
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      animation: modalBgIn .3s ease;
+      overflow-y: auto;
+      padding: 24px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
     }
-
-    .modal-bg.hidden { display: none; }
-
-    @keyframes modalBgIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    
+    .modal-bg.hidden{
+      display: none;
     }
-
+    
     .modal {
-      background: var(--bg-card-2);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 24px;
-      padding: 28px;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: var(--shadow-lg);
-      animation: modalIn .3s ease;
+      margin: 0 auto;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+    }
+    
+    body.modal-open{
+      overflow: hidden;
     }
 
     @keyframes modalIn {
@@ -8800,8 +8794,20 @@
   }
 
   function openRequiredAvatarModal() {
-    document.getElementById("avatarRequiredModalBg")?.classList.remove("hidden");
+    resetAvatarChoiceState("required");
+  
+    const previewWrap = document.getElementById("requiredAvatarPreviewWrap");
+    const previewImg = document.getElementById("requiredAvatarPreview");
+    const fileName = document.getElementById("requiredAvatarFileName");
+    const fileInput = document.getElementById("requiredAvatarFileInput");
+  
+    if (previewWrap) previewWrap.classList.add("hidden");
+    if (previewImg) previewImg.removeAttribute("src");
+    if (fileName) fileName.textContent = "Файл не выбран";
+    if (fileInput) fileInput.value = "";
+  
     renderDefaultAvatarGrid("required");
+    document.getElementById("avatarRequiredModalBg")?.classList.remove("hidden");
   }
   
   function closeRequiredAvatarModal() {
@@ -8814,7 +8820,8 @@
   
   async function submitRequiredAvatarChoice() {
     if (!hasChosenAvatar("required")) {
-      return showToast("Сначала выбери аватарку или загрузи свою", "error");
+      showToast("Сначала выбери аватарку или загрузи свою", "error");
+      return;
     }
   
     const btn = document.getElementById("saveRequiredAvatarBtn");
@@ -8831,7 +8838,11 @@
         });
   
         if (res.status === 401) return logoutWs();
-        if (!data.ok) return showToast(data.error || "Не удалось сохранить аватарку", "error");
+        if (!data.ok) {
+          showToast(data.error || "Не удалось сохранить аватарку", "error");
+          return;
+        }
+  
         resData = data;
       } else {
         const { res, data } = await wsPost("/api/ws/profile/set-default-avatar", {
@@ -8839,7 +8850,11 @@
         });
   
         if (res.status === 401) return logoutWs();
-        if (!data.ok) return showToast(data.error || "Не удалось сохранить аватарку", "error");
+        if (!data.ok) {
+          showToast(data.error || "Не удалось сохранить аватарку", "error");
+          return;
+        }
+  
         resData = data;
       }
   
@@ -8849,10 +8864,10 @@
       };
   
       renderWsUser(currentWsUser);
-      if (!userHasAvatar(currentWsUser)) {
-        openRequiredAvatarModal();
-      }
       closeRequiredAvatarModal();
+      resetAvatarChoiceState("required");
+      renderDefaultAvatarGrid("required");
+  
       showToast("Аватарка сохранена", "success");
   
       await refreshAffectedData(["profile", "dashboard", "activity"], true);
@@ -11654,6 +11669,11 @@
       }).catch(() => {});
     }
   });
+
+  window.selectDefaultAvatar = selectDefaultAvatar;
+  window.submitRequiredAvatarChoice = submitRequiredAvatarChoice;
+  window.openRequiredAvatarModal = openRequiredAvatarModal;
+  window.closeRequiredAvatarModal = closeRequiredAvatarModal;
 
   init();
 </script>
