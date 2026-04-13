@@ -8260,27 +8260,65 @@
       return;
     }
 
-    box.innerHTML = visibleItems.map(item => `
-      <div
-        class="online-user"
-        style="${!item.is_read ? 'border-color:rgba(73,215,255,0.18);background:rgba(73,215,255,0.05);' : ''}"
-      >
-        <div class="online-user-main" style="align-items:flex-start;">
-          <div style="display:flex; gap:12px; flex:1; min-width:0;">
-            <div style="font-size:20px; line-height:1;">${getNotificationVisual(item.type)}</div>
-            <div style="flex:1; min-width:0;">
-              <div class="online-user-name">${escapeHtml(item.title || "Уведомление")}</div>
-              ${item.message ? `<div class="online-user-meta" style="font-size:12px;margin-top:6px;">${escapeHtml(item.message)}</div>` : ""}
-              <div class="online-user-meta" style="margin-top:8px;">${formatDateTime(item.created_at)}</div>
+    box.innerHTML = visibleItems.map(item => {
+      const payload = item.payload && typeof item.payload === "object" ? item.payload : {};
+      const imageUrl = normalizeText(payload.image_url, "");
+      const richText = normalizeText(payload.rich_text, "");
+      const ctaText = normalizeText(payload.cta_text, "");
+      const ctaUrl = normalizeText(payload.cta_url, "");
+      const icon = normalizeText(payload.icon, getNotificationVisual(item.type));
+    
+      return `
+        <div
+          class="online-user"
+          style="${!item.is_read ? 'border-color:rgba(73,215,255,0.18);background:rgba(73,215,255,0.05);' : ''}"
+        >
+          <div class="online-user-main" style="align-items:flex-start;">
+            <div style="display:flex; gap:12px; flex:1; min-width:0;">
+              <div style="font-size:20px; line-height:1;">${escapeHtml(icon)}</div>
+              <div style="flex:1; min-width:0;">
+                <div class="online-user-name">${escapeHtml(item.title || "Уведомление")}</div>
+    
+                ${imageUrl ? `
+                  <div style="margin-top:10px;">
+                    <img
+                      src="${escapeHtml(imageUrl)}"
+                      alt="notification image"
+                      style="width:100%;max-width:420px;border-radius:16px;display:block;border:1px solid rgba(255,255,255,.08);"
+                    />
+                  </div>
+                ` : ""}
+    
+                ${item.message ? `<div class="online-user-meta" style="font-size:12px;margin-top:8px;">${escapeHtml(item.message)}</div>` : ""}
+    
+                ${richText ? `<div class="online-user-meta" style="font-size:12px;margin-top:8px;line-height:1.5;color:#dbe8ff;">${escapeHtml(richText)}</div>` : ""}
+    
+                ${ctaText && ctaUrl ? `
+                  <div style="margin-top:10px;">
+                    <a
+                      href="${escapeHtml(ctaUrl)}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn btn-dark"
+                      style="padding:8px 12px;font-size:11px;text-decoration:none;"
+                    >
+                      ${escapeHtml(ctaText)}
+                    </a>
+                  </div>
+                ` : ""}
+    
+                <div class="online-user-meta" style="margin-top:8px;">${formatDateTime(item.created_at)}</div>
+              </div>
             </div>
+    
+            ${!item.is_read
+              ? `<button class="btn btn-dark" type="button" style="padding:8px 10px;font-size:11px;" onclick="markNotificationRead(${safeNumber(item.id)})">Прочитать</button>`
+              : ""
+            }
           </div>
-          ${!item.is_read
-            ? `<button class="btn btn-dark" type="button" style="padding:8px 10px;font-size:11px;" onclick="markNotificationRead(${safeNumber(item.id)})">Прочитать</button>`
-            : ""
-          }
         </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   async function loadNotifications(force = false) {
