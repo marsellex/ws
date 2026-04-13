@@ -3938,24 +3938,21 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding: 32px 18px;
+      padding: 24px;
       overflow-y: auto;
-      background: rgba(4, 8, 20, 0.72);
+      background: rgba(5, 10, 20, 0.78);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
     
     .modal-bg.hidden {
-      display: none;
+      display: none !important;
     }
     
-    .modal {
+    .modal-bg .modal {
       position: relative;
       z-index: 100000;
-      width: min(920px, 100%);
-      margin: auto;
-      border-radius: 26px;
-      max-height: none;
+      margin: auto 0;
     }
     
     body.modal-open{
@@ -6442,35 +6439,6 @@
         </div>
       </div>
     </div>
-
-    <div id="avatarRequiredModalBg" class="modal-bg hidden">
-    <div class="modal" style="max-width:920px;">
-      <h3 class="confirm-title">Выбери аватарку</h3>
-      <div class="confirm-text" style="margin-bottom:14px;">
-        Для продолжения нужно выбрать стандартную аватарку или загрузить свою.
-      </div>
-  
-      <div id="requiredAvatarGrid" class="default-avatar-grid"></div>
-  
-      <div class="avatar-upload-line" style="margin-top:14px;">
-        <label class="btn btn-dark" for="requiredAvatarFileInput">📁 Загрузить свою</label>
-        <input id="requiredAvatarFileInput" type="file" accept="image/*" class="hidden" />
-        <div id="requiredAvatarFileName" class="muted">Файл не выбран</div>
-      </div>
-  
-      <div id="requiredAvatarPreviewWrap" class="register-avatar-preview hidden">
-        <div class="register-avatar-preview-title">Предпросмотр</div>
-        <div class="register-avatar-preview-box">
-          <img id="requiredAvatarPreview" alt="preview" />
-        </div>
-      </div>
-  
-      <div class="modal-actions">
-        <button id="saveRequiredAvatarBtn" class="btn btn-cyan" type="button" onclick="submitRequiredAvatarChoice()">Сохранить аватарку</button>
-      </div>
-    </div>
-  </div>
-    
   </div>
 <script>
   const API_BASE = "https://world-script-api.onrender.com";
@@ -8801,14 +8769,25 @@
   }
 
   function openRequiredAvatarModal() {
+    const bg = document.getElementById("avatarRequiredModalBg");
+    if (!bg) return;
+  
+    bg.classList.remove("hidden");
     document.body.style.overflow = "hidden";
-    document.getElementById("avatarRequiredModalBg")?.classList.remove("hidden");
+  
     renderDefaultAvatarGrid("required");
   }
   
-  function closeRequiredAvatarModal() {
+  function closeRequiredAvatarModal(force = false) {
+    if (!force && !userHasAvatar(currentWsUser)) {
+      return;
+    }
+  
+    const bg = document.getElementById("avatarRequiredModalBg");
+    if (!bg) return;
+  
+    bg.classList.add("hidden");
     document.body.style.overflow = "";
-    document.getElementById("avatarRequiredModalBg")?.classList.add("hidden");
   }
   
   function userHasAvatar(user) {
@@ -8834,7 +8813,11 @@
           image_base64: payload.avatar_base64
         });
   
-        if (res.status === 401) return logoutWs();
+        if (res.status === 401) {
+          showToast("Сессия истекла. Войди снова", "error");
+          return logoutWs();
+        }
+  
         if (!data.ok) {
           showToast(data.error || "Не удалось сохранить аватарку", "error");
           return;
@@ -8846,7 +8829,11 @@
           avatar_url: payload.avatar_url
         });
   
-        if (res.status === 401) return logoutWs();
+        if (res.status === 401) {
+          showToast("Сессия истекла. Войди снова", "error");
+          return logoutWs();
+        }
+  
         if (!data.ok) {
           showToast(data.error || "Не удалось сохранить аватарку", "error");
           return;
@@ -8861,10 +8848,20 @@
       };
   
       renderWsUser(currentWsUser);
-      closeRequiredAvatarModal();
+  
       resetAvatarChoiceState("required");
+  
+      const previewWrap = document.getElementById("requiredAvatarPreviewWrap");
+      const previewImg = document.getElementById("requiredAvatarPreview");
+      const fileName = document.getElementById("requiredAvatarFileName");
+  
+      if (previewWrap) previewWrap.classList.add("hidden");
+      if (previewImg) previewImg.removeAttribute("src");
+      if (fileName) fileName.textContent = "Файл не выбран";
+  
       renderDefaultAvatarGrid("required");
   
+      closeRequiredAvatarModal(true);
       showToast("Аватарка сохранена", "success");
   
       await refreshAffectedData(["profile", "dashboard", "activity"], true);
@@ -9069,7 +9066,8 @@
       };
   
       renderWsUser(currentWsUser);
-      if (!userHasAvatar(currentWsUser)) {
+
+      if (wsGetToken() && !userHasAvatar(currentWsUser)) {
         openRequiredAvatarModal();
       }
   
