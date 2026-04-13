@@ -8322,16 +8322,16 @@
     }
   
     box.innerHTML = safeItems.slice(0, 15).map(item => {
-      const login = normalizeText(item?.login || item?.nickname || item?.game_nick, "Пользователь");
-      const actionText = normalizeText(item?.action_text || item?.actionType, "Событие");
-      const avatarUrl = resolveActivityAvatar(item);
+      const login = item.login || item.nickname || "Пользователь";
+      const actionText = item.action_text || item.actionType || "Событие";
+      const avatarUrl = normalizeText(item.avatar_url, "");
       const initials = getInitials(login);
   
       return `
         <div class="activity-item">
           <div class="activity-avatar">
             ${avatarUrl
-              ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(login)}" />`
+              ? `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(login)}" onerror="this.parentNode.innerHTML='${escapeHtml(initials)}'" />`
               : escapeHtml(initials)
             }
           </div>
@@ -8342,14 +8342,6 @@
         </div>
       `;
     }).join("");
-  
-    box.querySelectorAll(".activity-avatar img").forEach((img) => {
-      img.addEventListener("error", () => {
-        const parent = img.parentElement;
-        const alt = img.getAttribute("alt") || "WS";
-        if (parent) parent.textContent = getInitials(alt);
-      });
-    });
   }
 
   async function loadActivityFeed(force = false) {
