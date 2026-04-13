@@ -11,65 +11,97 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --txt: rgba(245,248,255,.94);
-      --muted: rgba(215,230,255,.62);
-      --muted2: rgba(215,230,255,.44);
-      --stroke: rgba(140,170,255,.18);
+      --txt: rgba(245,248,255,.96);
+      --muted: rgba(215,230,255,.66);
+      --muted2: rgba(215,230,255,.46);
+      --stroke: rgba(140,170,255,.16);
+      --stroke-strong: rgba(140,170,255,.24);
       --accent1:#3d7dff;
       --accent2:#7c3aed;
       --glow:#ff64d7;
       --danger:#ff5a7a;
+      --success:#41d68a;
+      --gold:#ffcf66;
+      --cardA: rgba(12,18,40,.84);
+      --cardB: rgba(7,12,30,.94);
+      --r16:16px;
+      --r22:22px;
       --r28:28px;
-      --shadow: 0 28px 90px rgba(0,0,0,.46);
-      --shadowSoft: 0 16px 52px rgba(0,0,0,.30);
+      --shadow: 0 28px 90px rgba(0,0,0,.44);
+      --shadowSoft: 0 16px 52px rgba(0,0,0,.28);
       --sidebarW: 308px;
       --pageBgBlurPx: 0px;
       --pageBgOpacity: 0.55;
+      --anim: cubic-bezier(.22,.74,0,1);
     }
+
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
     body{
       margin:0;
       font-family: Inter, system-ui, Arial, sans-serif;
       color: var(--txt);
-      background: linear-gradient(180deg, #020411, #01030c);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(61,125,255,.10), transparent 32%),
+        radial-gradient(circle at 90% 0%, rgba(124,58,237,.10), transparent 34%),
+        linear-gradient(180deg, #020411, #01030c);
       overflow-x:hidden;
     }
+
     .page-bg{
       position:fixed;
       inset:-50px;
-      z-index:-4;
+      z-index:-5;
       background-size:cover;
       background-position:center;
       background-repeat:no-repeat;
-      transform: scale(1.06);
+      transform: scale(1.08);
       opacity: var(--pageBgOpacity);
       filter: blur(var(--pageBgBlurPx));
+      transition: filter .45s var(--anim), opacity .45s var(--anim), background-image .3s ease;
     }
     .page-bg-overlay{
       position:fixed;
       inset:0;
-      z-index:-3;
+      z-index:-4;
       pointer-events:none;
       background:
         radial-gradient(circle at 18% 14%, color-mix(in oklab, var(--accent1) 18%, transparent), transparent 34%),
         radial-gradient(circle at 82% 10%, color-mix(in oklab, var(--accent2) 16%, transparent), transparent 36%),
         radial-gradient(circle at 50% 100%, color-mix(in oklab, var(--glow) 12%, transparent), transparent 38%),
-        linear-gradient(180deg, rgba(2,4,17,.78), rgba(1,3,12,.90));
+        linear-gradient(180deg, rgba(2,4,17,.76), rgba(1,3,12,.92));
     }
     .bg-grid{
-      position:fixed; inset:0; pointer-events:none; opacity:.06;
-      z-index:-2;
+      position:fixed; inset:0; pointer-events:none; opacity:.05;
+      z-index:-3;
       background-image:
         linear-gradient(rgba(120,160,255,.28) 1px, transparent 1px),
         linear-gradient(90deg, rgba(120,160,255,.28) 1px, transparent 1px);
       background-size:32px 32px;
       mask-image: linear-gradient(180deg, rgba(0,0,0,.85), transparent 85%);
       -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.85), transparent 85%);
+      animation: gridFloat 22s linear infinite;
     }
+    @keyframes gridFloat{ from{ transform:translate3d(0,0,0);} to{ transform:translate3d(32px,32px,0);} }
+
+    .bg-orbs{ position:fixed; inset:0; pointer-events:none; z-index:-2; overflow:hidden; }
+    .orb{
+      position:absolute; border-radius:50%; filter: blur(80px); opacity:.28;
+      animation: orbDrift 18s ease-in-out infinite;
+    }
+    .orb.o1{ width:340px; height:340px; top:6%; left:3%; background:rgba(61,125,255,.28); }
+    .orb.o2{ width:280px; height:280px; top:16%; right:8%; background:rgba(124,58,237,.28); animation-delay:-6s; }
+    .orb.o3{ width:240px; height:240px; bottom:8%; left:28%; background:rgba(255,100,215,.20); animation-delay:-10s; }
+    @keyframes orbDrift{
+      0%,100%{ transform:translate3d(0,0,0) scale(1); }
+      30%{ transform:translate3d(18px,-20px,0) scale(1.06); }
+      60%{ transform:translate3d(-14px,16px,0) scale(.96); }
+    }
+
     .app{
       max-width: 1560px;
       margin: 0 auto;
@@ -78,9 +110,17 @@
       grid-template-columns: var(--sidebarW) 1fr;
       gap: 14px;
       align-items:start;
-      animation: pageIn .22s ease-out both;
+      animation: pageIn .34s var(--anim) both;
     }
-    @keyframes pageIn{ from{opacity:.7; transform: translateY(10px);} to{opacity:1; transform:none;} }
+    @keyframes pageIn{ from{opacity:.72; transform: translateY(10px);} to{opacity:1; transform:none;} }
+
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadowSoft);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
 
     .sidebar{
       position: sticky;
@@ -96,16 +136,18 @@
       box-shadow: var(--shadowSoft);
       display:flex;
       flex-direction:column;
+      transition: transform .28s var(--anim), border-color .28s var(--anim), box-shadow .28s var(--anim);
     }
+    .sidebar:hover{
+      border-color: rgba(140,170,255,.18);
+      box-shadow: 0 24px 70px rgba(0,0,0,.30);
+    }
+
     .side-top{
       padding: 14px 14px 12px;
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
-    .me{
-      display:flex;
-      gap: 12px;
-      align-items:center;
-    }
+    .me{ display:flex; gap: 12px; align-items:center; }
     .me-ava{
       width:56px; height:56px;
       border-radius: 16px;
@@ -113,6 +155,7 @@
       border:1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.18);
       flex:none;
+      box-shadow: 0 10px 24px rgba(0,0,0,.20);
     }
     .me-ava img{ width:100%; height:100%; object-fit:cover; display:block; }
     .me-meta{ min-width:0; }
@@ -144,23 +187,18 @@
       text-transform: uppercase;
     }
 
-    .side-actions{
-      display:flex;
-      gap: 10px;
-      margin-top: 12px;
-      flex-wrap:wrap;
-    }
+    .side-actions{ display:flex; gap: 10px; margin-top: 12px; flex-wrap:wrap; }
     .btn{
       appearance:none;
-      border:1px solid rgba(140,170,255,.22);
-      background: linear-gradient(180deg, rgba(18,31,67,.92), rgba(10,19,46,.94));
+      border:1px solid rgba(140,170,255,.20);
+      background: linear-gradient(180deg, rgba(18,31,67,.90), rgba(10,19,46,.95));
       color:#fff;
       padding: 12px 14px;
       border-radius: 16px;
       font-weight: 900;
       letter-spacing: .01em;
       cursor:pointer;
-      transition:.16s ease;
+      transition: transform .22s var(--anim), border-color .22s var(--anim), box-shadow .22s var(--anim), background .22s var(--anim), opacity .2s ease;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 18px 42px rgba(0,0,0,.18);
       text-decoration:none;
       display:inline-flex;
@@ -169,10 +207,23 @@
       gap:10px;
       min-height: 42px;
       user-select:none;
+      position:relative;
+      overflow:hidden;
     }
-    .btn:hover{ transform: translateY(-1px); border-color: rgba(140,170,255,.34); }
+    .btn::after{
+      content:"";
+      position:absolute; top:0; left:-140%; width:60%; height:100%;
+      transform: skewX(-24deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+      opacity:0;
+    }
+    .btn:hover{ transform: translateY(-2px); border-color: rgba(140,170,255,.34); }
+    .btn:hover::after{ opacity:1; animation: btnShine .7s ease; }
+    .btn:disabled{ opacity:.58; cursor:default; transform:none !important; }
+    @keyframes btnShine{ from{ left:-140%; } to{ left:155%; } }
     .btn.primary{
       background: linear-gradient(180deg, var(--accent1) 0%, color-mix(in oklab, var(--accent1) 55%, #000) 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 18px 42px rgba(61,125,255,.24);
     }
     .btn.ghost{
       background: rgba(255,255,255,.04);
@@ -206,7 +257,7 @@
       padding: 12px 12px;
       border-radius: 16px;
       position:relative;
-      transition: .16s ease;
+      transition: transform .2s var(--anim), opacity .2s ease;
       user-select:none;
       font-weight: 900;
     }
@@ -220,7 +271,7 @@
         radial-gradient(circle at 90% 0%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 60%),
         rgba(255,255,255,.03);
       opacity: 0;
-      transition: .16s ease;
+      transition: opacity .22s var(--anim), border-color .22s var(--anim), box-shadow .22s var(--anim);
       border: 1px solid rgba(255,255,255,.08);
     }
     .nav-btn::after{
@@ -234,7 +285,7 @@
       background: linear-gradient(180deg, var(--accent1), var(--accent2));
       opacity: 0;
       transform: scaleY(.6);
-      transition: .16s ease;
+      transition: opacity .22s var(--anim), transform .22s var(--anim);
     }
     .nav-btn:hover{ transform: translateY(-1px); }
     .nav-btn:hover::before{
@@ -249,46 +300,24 @@
     }
     .nav-btn.active::after{ opacity: 1; transform: scaleY(1); }
 
-    .nav-left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-      position:relative;
-      z-index:1;
-    }
+    .nav-left{ display:flex; align-items:center; gap:10px; min-width:0; position:relative; z-index:1; }
     .nav-ico{
-      width: 26px;
-      height: 26px;
-      border-radius: 10px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
+      width: 26px; height: 26px; border-radius: 10px;
+      display:inline-flex; align-items:center; justify-content:center;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       flex:none;
     }
-    .nav-label{
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .nav-label{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .badge{
-      position:relative;
-      z-index:1;
-      min-width: 24px;
-      height: 22px;
-      padding: 0 8px;
+      position:relative; z-index:1;
+      min-width: 24px; height: 22px; padding: 0 8px;
       border-radius: 999px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      font-size: 12px;
-      font-weight: 950;
+      display:inline-flex; align-items:center; justify-content:center;
+      font-size: 12px; font-weight: 950;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.12);
-      color:#fff;
-      flex:none;
+      color:#fff; flex:none;
     }
     .badge.red{ background: rgba(255,90,122,.28); border-color: rgba(255,90,122,.24); }
     .badge.blue{ background: rgba(61,125,255,.28); border-color: rgba(120,160,255,.22); }
@@ -303,9 +332,7 @@
       min-height: 44px;
     }
     .spinner{
-      width:16px;
-      height:16px;
-      border-radius: 999px;
+      width:16px; height:16px; border-radius: 999px;
       border: 2px solid rgba(255,255,255,.18);
       border-top-color: var(--accent1);
       animation: spin .9s linear infinite;
@@ -316,7 +343,6 @@
     @keyframes spin{ to { transform: rotate(360deg); } }
 
     .main{ min-width:0; }
-
     .hero{
       position:relative;
       border-radius: var(--r28);
@@ -327,6 +353,7 @@
         radial-gradient(circle at 80% 0%, color-mix(in oklab, var(--accent2) 20%, transparent), transparent 45%),
         linear-gradient(180deg, rgba(10,18,42,.92), rgba(5,10,26,.96));
       box-shadow: var(--shadow);
+      isolation:isolate;
     }
     .hero::before{
       content:"";
@@ -345,6 +372,17 @@
       opacity:.55;
       pointer-events:none;
     }
+    .hero::after{
+      content:"";
+      position:absolute; inset:auto -12% -48% auto;
+      width:320px; height:320px; border-radius:50%;
+      background: radial-gradient(circle, color-mix(in oklab, var(--glow) 18%, transparent), transparent 68%);
+      filter: blur(10px);
+      opacity:.65;
+      pointer-events:none;
+      z-index:0;
+    }
+
     .hero-banner{
       height: 220px;
       background:
@@ -354,7 +392,19 @@
       background-size: cover;
       background-position: center;
       border-bottom: 1px solid rgba(255,255,255,.08);
+      position:relative;
+      overflow:hidden;
     }
+    .hero-banner::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+      transform: translateX(-100%);
+      animation: heroSheen 9s ease-in-out infinite;
+      opacity:.55;
+    }
+    @keyframes heroSheen{ 0%,65%,100%{ transform:translateX(-100%);} 82%{ transform:translateX(120%);} }
+
     .hero-top{
       display:flex;
       justify-content:space-between;
@@ -365,6 +415,7 @@
       z-index: 1;
     }
     .hero-left{ display:flex; gap:14px; align-items:center; min-width:0; }
+
     .level-badge{
       --fill: 30%;
       --tierA: rgba(61,125,255,.85);
@@ -378,7 +429,9 @@
       background: rgba(0,0,0,.22);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 18px 52px rgba(0,0,0,.38);
       flex:none;
+      transition: transform .24s var(--anim), box-shadow .24s var(--anim);
     }
+    .level-badge:hover{ transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 22px 60px rgba(0,0,0,.42); }
     .level-badge::after{
       content:"";
       position:absolute; inset:0;
@@ -393,55 +446,35 @@
       pointer-events:none;
     }
     .water{
-      position:absolute;
-      left:0; right:0;
-      bottom:0;
+      position:absolute; left:0; right:0; bottom:0;
       height: var(--fill);
       background: linear-gradient(180deg,
         color-mix(in oklab, var(--tierA) 55%, #000),
         color-mix(in oklab, var(--tierB) 40%, #000)
       );
       box-shadow: 0 -16px 40px color-mix(in oklab, var(--tierA) 34%, transparent);
-      transition: height .38s ease;
+      transition: height .42s var(--anim);
     }
     .wave{
-      position:absolute;
-      left:-20%;
-      width:140%;
-      height: 24px;
+      position:absolute; left:-20%; width:140%; height: 24px;
       bottom: calc(var(--fill) - 12px);
       background:
         radial-gradient(circle at 10px 12px, rgba(255,255,255,.22) 0 10px, transparent 11px),
         radial-gradient(circle at 34px 10px, rgba(255,255,255,.14) 0 10px, transparent 11px);
       background-size: 44px 24px;
-      opacity:.55;
-      filter: blur(.2px);
-      animation: waveMove 2.0s linear infinite;
-      transition: bottom .38s ease;
+      opacity:.55; filter: blur(.2px);
+      animation: waveMove 2.2s linear infinite;
+      transition: bottom .42s var(--anim);
     }
     @keyframes waveMove{ from{ transform: translateX(0); } to{ transform: translateX(-44px);} }
     .level-content{
       position:absolute; inset:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      z-index:2;
-      text-shadow: 0 10px 30px rgba(0,0,0,.55);
+      display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+      z-index:2; text-shadow: 0 10px 30px rgba(0,0,0,.55);
     }
-    .level-label{
-      font-weight: 950;
-      letter-spacing: .12em;
-      font-size: 11px;
-      opacity:.9;
-    }
-    .level-num{
-      margin-top:4px;
-      font-weight: 950;
-      font-size: 26px;
-      letter-spacing: -0.03em;
-    }
+    .level-label{ font-weight: 950; letter-spacing: .12em; font-size: 11px; opacity:.9; }
+    .level-num{ margin-top:4px; font-weight: 950; font-size: 26px; letter-spacing: -0.03em; }
+
     .hero-id{ min-width:0; }
     .hero-login{
       font-weight: 950;
@@ -459,75 +492,39 @@
     }
     .hero-pills{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; }
     .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height: 34px;
-      padding: 0 14px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      font-weight: 950;
-      font-size: 12px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.90);
+      display:inline-flex; align-items:center; justify-content:center;
+      min-height: 34px; padding: 0 14px; border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.06);
+      font-weight: 950; font-size: 12px; letter-spacing: .08em;
+      text-transform: uppercase; color: rgba(255,255,255,.90);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
     .pill.role{
       background: linear-gradient(180deg, rgba(124,58,237,.35), rgba(61,125,255,.20));
       border-color: rgba(140,170,255,.24);
     }
-    .hero-right{
-      text-align:right;
-      padding-top: 42px;
-      flex:none;
-    }
-    .hero-rating-value{
-      margin-top: 6px;
-      font-weight: 950;
-      font-size: 36px;
-      letter-spacing: -0.03em;
-    }
-    .hero-xp{
-      padding: 6px 18px 14px;
-      position:relative;
-      z-index:1;
-    }
-    .hero-xp-row{
-      display:flex;
-      justify-content:space-between;
-      gap: 12px;
-      flex-wrap:wrap;
-      align-items:flex-end;
-    }
-    .hero-xp-text{
-      font-weight: 950;
-      font-size: 18px;
-    }
-    .hero-xp-next{
-      color: rgba(215,230,255,.62);
-      font-weight: 850;
-      font-size: 14px;
-    }
+    .hero-right{ text-align:right; padding-top: 42px; flex:none; }
+    .hero-rating-value{ margin-top: 6px; font-weight: 950; font-size: 36px; letter-spacing: -0.03em; }
+
+    .hero-xp{ padding: 6px 18px 14px; position:relative; z-index:1; }
+    .hero-xp-row{ display:flex; justify-content:space-between; gap: 12px; flex-wrap:wrap; align-items:flex-end; }
+    .hero-xp-text{ font-weight: 950; font-size: 18px; }
+    .hero-xp-next{ color: rgba(215,230,255,.62); font-weight: 850; font-size: 14px; }
     .xp-bar{
-      height: 14px;
-      border-radius: 999px;
-      overflow:hidden;
+      height: 14px; border-radius: 999px; overflow:hidden;
       background: rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.10);
-      margin-top: 12px;
-      position:relative;
+      margin-top: 12px; position:relative;
     }
     .xp-fill{
-      height:100%;
-      width:0%;
+      height:100%; width:0%;
       background: linear-gradient(90deg,
         color-mix(in oklab, var(--accent1) 90%, #fff),
         color-mix(in oklab, var(--accent2) 75%, #fff),
         color-mix(in oklab, var(--glow) 55%, transparent)
       );
       box-shadow: 0 0 18px rgba(79,141,255,.30);
-      transition: width .35s ease;
+      transition: width .38s var(--anim);
     }
     .hero-stats{
       display:grid;
@@ -543,27 +540,18 @@
       border:1px solid rgba(140,170,255,.14);
       background: linear-gradient(180deg, rgba(6,16,41,.76), rgba(4,10,27,.96));
       min-height: 92px;
-      transition: .18s ease;
+      transition: transform .22s var(--anim), border-color .22s var(--anim), box-shadow .22s var(--anim);
       position:relative;
       overflow:hidden;
     }
-    .stat:hover{
-      transform: translateY(-1px);
-      border-color: rgba(140,170,255,.22);
-      box-shadow: 0 22px 60px rgba(0,0,0,.28);
+    .stat::before{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), transparent 50%);
+      pointer-events:none;
     }
-    .stat .k{
-      color: rgba(215,230,255,.58);
-      font-weight: 850;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-    }
-    .stat .v{
-      margin-top: 10px;
-      font-weight: 950;
-      font-size: 28px;
-    }
+    .stat:hover{ transform: translateY(-2px); border-color: rgba(140,170,255,.22); box-shadow: 0 22px 60px rgba(0,0,0,.28); }
+    .stat .k{ color: rgba(215,230,255,.58); font-weight: 850; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+    .stat .v{ margin-top: 10px; font-weight: 950; font-size: 28px; }
 
     .content{
       margin-top: 14px;
@@ -575,6 +563,11 @@
       position:relative;
       min-height: 220px;
     }
+    .content::before{
+      content:""; position:absolute; inset:0;
+      background: radial-gradient(circle at 100% 0%, rgba(255,255,255,.04), transparent 30%);
+      pointer-events:none;
+    }
     .content-head{
       padding: 18px 18px 0;
       display:flex;
@@ -584,22 +577,10 @@
       position:relative;
       z-index:1;
     }
-    .h-title{
-      margin:0;
-      font-size: clamp(22px, 2.0vw, 32px);
-      font-weight: 950;
-      letter-spacing: -0.03em;
-    }
-    .content-body{
-      padding: 16px 18px 18px;
-      position:relative;
-      z-index:1;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, minmax(0,1fr));
-      gap: 12px;
-    }
+    .h-title{ margin:0; font-size: clamp(22px, 2.0vw, 32px); font-weight: 950; letter-spacing: -0.03em; }
+    .content-body{ padding: 16px 18px 18px; position:relative; z-index:1; }
+
+    .grid{ display:grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 12px; }
     .widget{
       border:1px solid rgba(140,170,255,.14);
       background: linear-gradient(180deg, rgba(6,16,41,.76), rgba(4,10,27,.96));
@@ -607,43 +588,35 @@
       min-height: 120px;
       position:relative;
       overflow:hidden;
-      transition:.18s ease;
+      transition: transform .22s var(--anim), border-color .22s var(--anim), box-shadow .22s var(--anim);
     }
-    .widget:hover{
-      transform: translateY(-1px);
-      border-color: rgba(140,170,255,.24);
-      box-shadow: 0 26px 70px rgba(0,0,0,.30);
+    .widget::before{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent 42%);
+      pointer-events:none;
     }
+    .widget:hover{ transform: translateY(-2px); border-color: rgba(140,170,255,.24); box-shadow: 0 26px 70px rgba(0,0,0,.30); }
     .widget-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
       padding: 12px 12px 10px;
       border-bottom: 1px solid rgba(255,255,255,.06);
     }
     .widget-title{
       display:flex; align-items:center; gap:10px;
-      font-weight: 950;
-      letter-spacing:.08em;
-      text-transform: uppercase;
-      font-size: 12px;
-      color: rgba(255,255,255,.92);
-      min-width:0;
-      user-select:none;
+      font-weight: 950; letter-spacing:.08em; text-transform: uppercase;
+      font-size: 12px; color: rgba(255,255,255,.92); min-width:0; user-select:none;
     }
     .widget-body{ padding: 12px; }
     .mini-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
       padding: 10px 10px;
       border:1px solid rgba(140,170,255,.12);
       background: rgba(255,255,255,.03);
       border-radius: 14px;
       margin-bottom: 10px;
+      transition: transform .18s var(--anim), border-color .18s var(--anim), background .18s var(--anim);
     }
+    .mini-row:hover{ transform: translateY(-1px); border-color: rgba(140,170,255,.18); background: rgba(255,255,255,.05); }
     .mini-row .a{ font-weight: 900; }
     .mini-row .m{ color: rgba(255,255,255,.62); font-size: 13px; font-weight: 800; margin-top: 4px; }
     .widget-error{
@@ -656,99 +629,73 @@
       line-height:1.4;
       white-space: pre-wrap;
     }
-    .hr{ height:1px; background: rgba(255,255,255,.08); margin: 12px 0; }
-    .inv-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 12px;
-    }
+
+    .inv-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
     .inv{
       border:1px solid rgba(140,170,255,.14);
       background: linear-gradient(180deg, rgba(12,22,48,.82), rgba(6,10,25,.92));
       border-radius: 16px;
       padding: 12px;
-      transition:.18s ease;
+      transition: transform .22s var(--anim), border-color .22s var(--anim), box-shadow .22s var(--anim);
     }
-    .inv:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 26px 70px rgba(0,0,0,.28);
-      border-color: rgba(140,170,255,.22);
-    }
-    .inv .img{
-      width:100%;
-      aspect-ratio: 1/1;
-      border-radius: 14px;
-      overflow:hidden;
-      background: rgba(255,255,255,.03);
-      margin-bottom: 10px;
-    }
+    .inv:hover{ transform: translateY(-2px); box-shadow: 0 26px 70px rgba(0,0,0,.28); border-color: rgba(140,170,255,.22); }
+    .inv .img{ width:100%; aspect-ratio: 1/1; border-radius: 14px; overflow:hidden; background: rgba(255,255,255,.03); margin-bottom: 10px; }
     .inv .img img{ width:100%; height:100%; object-fit:cover; display:block; }
     .inv .name{ font-weight: 950; font-size: 14px; }
     .inv .meta{ margin-top: 4px; font-weight: 850; font-size: 12px; color: rgba(255,255,255,.58); }
     .inv .count{
       margin-top: 10px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 8px 10px;
-      border-radius: 12px;
-      background: rgba(61,125,255,.18);
-      border:1px solid rgba(120,160,255,.22);
-      font-weight: 950;
-      font-size: 13px;
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 8px 10px; border-radius: 12px;
+      background: rgba(61,125,255,.18); border:1px solid rgba(120,160,255,.22);
+      font-weight: 950; font-size: 13px;
     }
 
-    .modal-backdrop{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,.55);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index: 60;
-      padding: 18px;
-    }
-    .modal{
-      width: min(860px, 100%);
+    .setting-card{
+      grid-column: span 6;
+      border:1px solid rgba(140,170,255,.14);
+      background:
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,.04), transparent 32%),
+        linear-gradient(180deg, rgba(10,18,42,.86), rgba(6,12,31,.96));
       border-radius: 22px;
-      border:1px solid rgba(140,170,255,.18);
-      background: linear-gradient(135deg, rgba(17,29,63,.92), rgba(8,16,40,.96));
-      box-shadow: 0 36px 120px rgba(0,0,0,.60);
-      overflow:hidden;
+      padding: 16px;
       position:relative;
+      overflow:hidden;
+      transition: transform .22s var(--anim), border-color .22s var(--anim), box-shadow .22s var(--anim);
     }
-    .modal-head{
-      padding: 14px 16px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
+    .setting-card:hover{ transform: translateY(-2px); border-color: rgba(140,170,255,.22); box-shadow: 0 26px 70px rgba(0,0,0,.26); }
+    .setting-card.full{ grid-column: span 12; }
+    .setting-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .setting-title{ font-size: 16px; font-weight: 950; letter-spacing:-.02em; }
+    .setting-sub{ color: var(--muted); font-size:13px; line-height:1.6; margin-top:5px; }
+    .setting-icon{
+      width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.05); font-size:20px; flex:none;
     }
-    .modal-title{ font-weight: 950; letter-spacing: .02em; }
-    .modal-close{
-      width: 38px; height: 38px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color:#fff;
-      cursor:pointer;
-      font-weight: 950;
+    .setting-grid{ display:grid; gap:12px; }
+    .setting-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .setting-chip{
+      display:inline-flex; align-items:center; gap:8px;
+      min-height: 34px; padding: 0 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.06);
+      font-weight:900; font-size:12px;
     }
-    .modal-body{ padding: 14px 16px 16px; }
-    .modal-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 12px;
-      justify-content:flex-end;
+    .switch-row{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 12px 14px; border-radius:16px;
+      border:1px solid rgba(140,170,255,.12); background: rgba(255,255,255,.03);
+      transition: transform .18s var(--anim), border-color .18s var(--anim), background .18s var(--anim);
     }
+    .switch-row:hover{ transform: translateY(-1px); border-color: rgba(140,170,255,.18); background: rgba(255,255,255,.05); }
+    .switch-left{ min-width:0; }
+    .switch-title{ font-weight:900; }
+    .switch-sub{ color: var(--muted); font-size:12px; line-height:1.5; margin-top:4px; }
+
     .field{
       border:1px solid rgba(140,170,255,.14);
       background: rgba(255,255,255,.03);
-      border-radius: 14px;
-      padding: 10px 12px;
-      margin-bottom: 12px;
+      border-radius: 16px;
+      padding: 12px 14px;
     }
     .field label{
       display:block;
@@ -759,61 +706,109 @@
       color: rgba(255,255,255,.86);
       margin-bottom: 8px;
     }
-    .field input[type="password"], .field input[type="text"]{
-      width:100%;
-      border:0;
-      outline:0;
-      background: transparent;
-      color: rgba(255,255,255,.92);
-      font-weight: 800;
-      font-size: 14px;
+    .field input[type="password"], .field input[type="text"], .field input[type="color"]{
+      width:100%; border:0; outline:0; background: transparent; color: rgba(255,255,255,.92);
+      font-weight: 800; font-size: 14px;
     }
     .field input[type="range"]{ width:100%; }
+    .color-row{ display:grid; grid-template-columns: 62px 1fr; gap:12px; align-items:center; }
+    .color-box{
+      width:62px; height:44px; border-radius: 14px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04);
+    }
+    .color-box input{ width:100%; height:100%; padding:0; border:0; background:transparent; cursor:pointer; }
+
     .preview{
       border:1px solid rgba(140,170,255,.14);
       background: rgba(255,255,255,.03);
       border-radius: 16px;
       padding: 12px;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      flex-wrap:wrap;
+      display:flex; gap: 12px; align-items:center; flex-wrap:wrap;
     }
     .preview .pimg{
-      width: 160px;
-      height: 160px;
-      border-radius: 18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
+      width: 160px; height: 160px; border-radius: 18px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.18);
     }
     .preview .pimg img{width:100%;height:100%;object-fit:cover;display:block}
 
+    .code-card-grid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; }
+    .code-card{
+      border:1px solid rgba(140,170,255,.14);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .code-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+    .code-name{ font-weight:950; }
+    .code-value{ font-weight:900; color: var(--gold); word-break:break-all; }
+    .code-meta{ color: var(--muted); font-size:12px; line-height:1.5; margin-top:6px; }
+
+    .modal-backdrop{
+      position:fixed; inset:0; background: rgba(0,0,0,.62);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display:none; align-items:center; justify-content:center; z-index: 60; padding: 18px;
+      animation: modalBgIn .2s ease;
+    }
+    @keyframes modalBgIn{ from{ opacity:0; } to{ opacity:1; } }
+    .modal{
+      width: min(860px, 100%);
+      border-radius: 22px;
+      border:1px solid rgba(140,170,255,.18);
+      background: linear-gradient(135deg, rgba(17,29,63,.92), rgba(8,16,40,.96));
+      box-shadow: 0 36px 120px rgba(0,0,0,.60);
+      overflow:hidden;
+      position:relative;
+      animation: modalIn .24s var(--anim);
+    }
+    @keyframes modalIn{ from{ transform:translateY(10px) scale(.98); opacity:.7; } to{ transform:none; opacity:1; } }
+    .modal-head{
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+    }
+    .modal-title{ font-weight: 950; letter-spacing: .02em; }
+    .modal-close{
+      width: 38px; height: 38px; border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.04);
+      color:#fff; cursor:pointer; font-weight: 950;
+      transition: transform .18s var(--anim), background .18s var(--anim), border-color .18s var(--anim);
+    }
+    .modal-close:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); }
+    .modal-body{ padding: 14px 16px 16px; }
+    .modal-actions{ display:flex; gap: 10px; flex-wrap:wrap; margin-top: 12px; justify-content:flex-end; }
+
     .toast{
       position: fixed;
-      right: 14px;
-      bottom: 14px;
-      max-width: 560px;
-      padding: 12px 14px;
-      border-radius: 16px;
+      right: 14px; bottom: 14px; max-width: 560px;
+      padding: 12px 14px; border-radius: 16px;
       border: 1px solid rgba(140,170,255,.18);
-      background: rgba(10,16,38,.92);
+      background: rgba(10,16,38,.94);
       box-shadow: 0 28px 70px rgba(0,0,0,.40);
-      color: rgba(255,255,255,.90);
-      font-weight: 850;
-      display:none;
-      z-index: 70;
-      white-space: pre-wrap;
+      color: rgba(255,255,255,.90); font-weight: 850;
+      display:none; z-index: 70; white-space: pre-wrap;
     }
 
     @media (max-width: 1150px){
       .app{ grid-template-columns: 1fr; }
       .sidebar{ position: relative; height:auto; }
+      .setting-card{ grid-column: span 12; }
     }
     @media (max-width: 980px){
       .hero-top{ flex-direction: column; align-items:flex-start; }
       .hero-right{ text-align:left; padding-top: 0; }
       .hero-stats{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .code-card-grid{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px){
+      .app{ padding:12px; }
+      .hero-stats{ grid-template-columns: 1fr; }
+      .setting-card{ padding:14px; }
+      .color-row{ grid-template-columns: 1fr; }
+      .preview .pimg{ width:100%; max-width:220px; height:auto; aspect-ratio:1/1; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{ animation:none !important; transition:none !important; }
+      html{ scroll-behavior:auto; }
     }
   </style>
 </head>
@@ -822,6 +817,11 @@
   <div id="pageBg" class="page-bg"></div>
   <div class="page-bg-overlay"></div>
   <div class="bg-grid"></div>
+  <div class="bg-orbs">
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+  </div>
 
   <div class="app">
     <aside class="sidebar">
@@ -971,12 +971,11 @@
   </div>
 
 <script>
-
 const urlParams = new URLSearchParams(location.search);
 const viewUserId = Number(urlParams.get("user_id") || 0);
 let isPublicView = false;
-let myUserId = 0;  
-  
+let myUserId = 0;
+
 function apiBase(){
   const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
   return isLocal ? "http://localhost:3000" : "https://world-script-api.onrender.com";
@@ -1001,8 +1000,13 @@ function toast(text){
   clearTimeout(window.__toast_t);
   window.__toast_t = setTimeout(()=> el.style.display = "none", 3500);
 }
-function widgetError(text){
-  return `<div class="widget-error">${esc(text)}</div>`;
+function widgetError(text){ return `<div class="widget-error">${esc(text)}</div>`; }
+function resolveImg(src, fallback = "https://placehold.co/160x160?text=WS"){
+  const value = String(src || "").trim();
+  return value || fallback;
+}
+function roleLabel(role){
+  return String(role || "user").toLowerCase() === "admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
 }
 
 let loadingCount = 0;
@@ -1032,9 +1036,8 @@ async function withRetry(task, { maxAttempts=5 } = {}){
   let attempt = 0;
   while(true){
     attempt++;
-    try{
-      return await task();
-    }catch(err){
+    try{ return await task(); }
+    catch(err){
       if(!isRetryableError(err) || attempt >= maxAttempts) throw err;
       await sleep(calcBackoff(attempt));
     }
@@ -1093,13 +1096,8 @@ async function fetchJson(path, {method="GET", body=null, timeoutMs=15000} = {}){
     setLoading(false);
   }
 }
-
-async function apiGet(path){
-  return withRetry(()=>fetchJson(path, {method:"GET"}), { maxAttempts: 5 });
-}
-async function apiPost(path, body){
-  return fetchJson(path, {method:"POST", body});
-}
+async function apiGet(path){ return withRetry(()=>fetchJson(path, {method:"GET"}), { maxAttempts: 5 }); }
+async function apiPost(path, body){ return fetchJson(path, {method:"POST", body}); }
 
 async function compressToDataURL(file, {maxW=1920, maxH=1080, mime="image/jpeg", quality=0.82} = {}){
   const bmp = await createImageBitmap(file);
@@ -1123,11 +1121,9 @@ function modalClose(){
   document.getElementById("modalBody").innerHTML = "";
 }
 document.getElementById("modalClose").addEventListener("click", modalClose);
-document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
-  if(e.target.id === "modalBackdrop") modalClose();
-});
+document.getElementById("modalBackdrop").addEventListener("click", (e)=>{ if(e.target.id === "modalBackdrop") modalClose(); });
 
-const THEME_KEY = "ws_profile_theme_min_v1";
+const THEME_KEY = "ws_profile_theme_min_v2";
 let themeDraft = (()=>{ try { return JSON.parse(localStorage.getItem(THEME_KEY) || "null"); } catch { return null; } })() || { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
 function applyTheme(t){
   const s = document.documentElement.style;
@@ -1136,21 +1132,9 @@ function applyTheme(t){
   if(t.glow) s.setProperty("--glow", t.glow);
 }
 applyTheme(themeDraft);
-
-function setTheme(key, value){
-  themeDraft = {...themeDraft, [key]: String(value||"").trim() };
-  applyTheme(themeDraft);
-}
-function saveThemeNow(){
-  localStorage.setItem(THEME_KEY, JSON.stringify(themeDraft));
-  toast("Сохранено");
-}
-function resetThemeNow(){
-  themeDraft = { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" };
-  localStorage.setItem(THEME_KEY, JSON.stringify(themeDraft));
-  applyTheme(themeDraft);
-  openTab("settings");
-}
+function setTheme(key, value){ themeDraft = {...themeDraft, [key]: String(value||"").trim() }; applyTheme(themeDraft); }
+function saveThemeNow(){ localStorage.setItem(THEME_KEY, JSON.stringify(themeDraft)); toast("Тема сохранена"); }
+function resetThemeNow(){ themeDraft = { accent1:"#3d7dff", accent2:"#7c3aed", glow:"#ff64d7" }; localStorage.setItem(THEME_KEY, JSON.stringify(themeDraft)); applyTheme(themeDraft); openTab("settings"); }
 
 function applyPageBg({image_url="", blur=0, opacity=55} = {}){
   const el = document.getElementById("pageBg");
@@ -1179,7 +1163,6 @@ function getLevelTier(level){
   if(lvl >= 8)  return { a:"#ffcc66", b:"#7c3aed" };
   return { a:"#3d7dff", b:"#7c3aed" };
 }
-
 function normalizeInventory(items){
   const arr = Array.isArray(items) ? items : [];
   return arr.map(x=>{
@@ -1201,12 +1184,12 @@ function applyHero(dash, prog){
   const invCount = inv.reduce((s,x)=>s+Number(x.count||0),0);
 
   const meAvatar = document.getElementById("meAvatar");
-  meAvatar.src = user.avatar_url || "https://placehold.co/160x160?text=WS";
+  meAvatar.src = resolveImg(user.avatar_url);
   meAvatar.onerror = ()=> meAvatar.src = "https://placehold.co/160x160?text=WS";
 
   document.getElementById("meLogin").textContent = user.login || "unknown";
   document.getElementById("meNick").textContent = user.game_nick || user.nickname || "—";
-  document.getElementById("meRole").textContent = String(user.role||"user").toLowerCase()==="admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
+  document.getElementById("meRole").textContent = roleLabel(user.role);
 
   const banner = document.getElementById("heroBanner");
   if(user.profile_banner_url){
@@ -1219,7 +1202,7 @@ function applyHero(dash, prog){
 
   document.getElementById("heroLogin").textContent = user.login || "unknown";
   document.getElementById("heroName").textContent = user.game_nick || user.nickname || user.login || "—";
-  document.getElementById("heroRole").textContent = String(user.role||"user").toLowerCase()==="admin" ? "АДМИНИСТРАТОР" : "ПОЛЬЗОВАТЕЛЬ";
+  document.getElementById("heroRole").textContent = roleLabel(user.role);
   document.getElementById("heroVk").textContent = user.vk_id ? `VK: ${user.vk_id}` : "VK: —";
   document.getElementById("heroNick").textContent = user.game_nick ? `NICK: ${user.game_nick}` : "NICK: —";
 
@@ -1230,15 +1213,15 @@ function applyHero(dash, prog){
   const rating = totalXp > 0 ? Math.round(totalXp / 10) : Math.round(capital / 100);
   document.getElementById("heroRating").textContent = formatNum(rating);
 
-  document.getElementById("heroBal").textContent = formatNum(binder.game_balance||0);
-  document.getElementById("heroOut").textContent = formatNum(binder.to_output||0);
-  document.getElementById("heroWsb").textContent = formatNum(binder.wsbuild_balance||0);
-  document.getElementById("heroInv").textContent = formatNum(invCount);
+  document.getElementById("heroBal").textContent = isPublicView ? "—" : formatNum(binder.game_balance||0);
+  document.getElementById("heroOut").textContent = isPublicView ? "—" : formatNum(binder.to_output||0);
+  document.getElementById("heroWsb").textContent = isPublicView ? "—" : formatNum(binder.wsbuild_balance||0);
+  document.getElementById("heroInv").textContent = isPublicView ? "—" : formatNum(invCount);
 
-  document.getElementById("bdWsb").textContent = formatNum(binder.wsbuild_balance || 0);
-  document.getElementById("bdInv").textContent = formatNum(invCount);
-  document.getElementById("bdNotif").textContent = formatNum(dash.notifications_unread_count || 0);
-  document.getElementById("bdContracts").textContent = String((dash.contracts_in_progress||[]).length);
+  document.getElementById("bdWsb").textContent = isPublicView ? "—" : formatNum(binder.wsbuild_balance || 0);
+  document.getElementById("bdInv").textContent = isPublicView ? "—" : formatNum(invCount);
+  document.getElementById("bdNotif").textContent = isPublicView ? "0" : formatNum(dash.notifications_unread_count || 0);
+  document.getElementById("bdContracts").textContent = isPublicView ? "—" : String((dash.contracts_in_progress||[]).length);
 
   const lvl = Number(prog?.profile?.level || 1);
   const xp = Number(prog?.profile?.xp || 0);
@@ -1249,8 +1232,8 @@ function applyHero(dash, prog){
   document.getElementById("levelNum").textContent = String(lvl);
   document.getElementById("heroXpText").textContent = `${formatNum(xp)} / ${formatNum(toNext)}`;
   document.getElementById("heroXpNext").textContent = `${formatNum(Math.max(0, toNext - xp))}`;
-
   document.getElementById("heroXpFill").style.width = pct + "%";
+
   const fill = Math.max(10, Math.min(100, pct));
   const badge = document.getElementById("levelBadge");
   badge.style.setProperty("--fill", fill + "%");
@@ -1263,10 +1246,52 @@ function applyHero(dash, prog){
 function setActiveTab(tab){
   state.tab = tab;
   document.querySelectorAll(".nav-btn").forEach(b=> b.classList.toggle("active", b.dataset.tab === tab));
-  document.getElementById("btnReadAll").style.display = tab === "notifications" ? "inline-flex" : "none";
+  document.getElementById("btnReadAll").style.display = tab === "notifications" && !isPublicView ? "inline-flex" : "none";
 }
 
-async function loadCore(){
+async function initProfileMode() {
+  const me = await apiGet("/api/ws/me").catch(() => null);
+  if (!me?.ok || !me.user?.id) {
+    localStorage.removeItem("ws_token");
+    location.href = "index.html";
+    return false;
+  }
+  myUserId = Number(me.user.id || 0);
+  isPublicView = viewUserId > 0 && viewUserId !== myUserId;
+
+  if (isPublicView) {
+    const nav = document.getElementById("nav");
+    if (nav) {
+      nav.innerHTML = `
+        <button class="nav-btn active" data-tab="overview" type="button">
+          <span class="nav-left"><span class="nav-ico">👤</span><span class="nav-label">Профиль</span></span>
+          <span class="badge" id="bdOverview"></span>
+        </button>
+      `;
+    }
+    document.getElementById("btnReadAll").style.display = "none";
+  }
+  return true;
+}
+
+async function loadCore(force = false){
+  if (isPublicView) {
+    const pub = await apiGet("/api/ws/users/public/" + viewUserId);
+    const dashLike = {
+      user: pub.user,
+      binder: { game_balance: 0, to_output: 0, wsbuild_balance: 0 },
+      inventory: [],
+      notifications_unread_count: 0,
+      activity_feed: []
+    };
+    const progLike = { profile: pub.progress, achievements: [] };
+    state.core.dash = dashLike;
+    state.core.prog = progLike;
+    state.core.pageBg = null;
+    applyHero(dashLike, progLike);
+    return;
+  }
+
   const [dash, prog, bg] = await Promise.all([
     apiGet("/api/ws/dashboard-bundle"),
     apiGet("/api/ws/profile/progress"),
@@ -1280,6 +1305,10 @@ async function loadCore(){
 }
 
 async function loadOverview(){
+  if (isPublicView) {
+    state.overview = { bonus:null, chest:null, roulette:null, transfers:null, chestHistory:null };
+    return;
+  }
   const tasks = await Promise.allSettled([
     apiGet("/api/ws/bonus/status"),
     apiGet("/api/ws/chest/status"),
@@ -1294,10 +1323,10 @@ async function loadOverview(){
   state.overview.transfers = get(3);
   state.overview.chestHistory = get(4);
 }
-
-async function loadContracts(){ state.contracts = await apiGet("/api/ws/contracts/bundle"); }
-async function loadNotifications(){ state.notifications = await apiGet("/api/ws/notifications?limit=60"); }
+async function loadContracts(){ if (!isPublicView) state.contracts = await apiGet("/api/ws/contracts/bundle"); }
+async function loadNotifications(){ if (!isPublicView) state.notifications = await apiGet("/api/ws/notifications?limit=60"); }
 async function loadWsbuild(){
+  if (isPublicView) return;
   const tasks = await Promise.allSettled([
     apiGet("/api/ws/wsbuild/packages"),
     apiGet("/api/ws/payment-requests/active"),
@@ -1311,6 +1340,7 @@ async function loadWsbuild(){
   state.wsbuild.auto = get(3);
 }
 async function loadSettings(){
+  if (isPublicView) return;
   const tasks = await Promise.allSettled([
     apiGet("/api/ws/notify/settings"),
     apiGet("/api/ws/profile/link-codes"),
@@ -1327,29 +1357,44 @@ async function loadSettings(){
 }
 
 function renderOverview(){
+  if (isPublicView) {
+    const dash = state.core.dash || {};
+    const user = dash.user || {};
+    return `
+      <div class="grid">
+        <div class="widget" style="grid-column: span 12; min-height:auto">
+          <div class="widget-head"><div class="widget-title">👤 Профиль пользователя</div></div>
+          <div class="widget-body">
+            <div class="mini-row"><div><div class="a">Логин</div><div class="m">${esc(user.login || "—")}</div></div></div>
+            <div class="mini-row"><div><div class="a">Игровой ник</div><div class="m">${esc(user.game_nick || user.nickname || "—")}</div></div></div>
+            <div class="mini-row"><div><div class="a">VK</div><div class="m">${user.vk_id ? esc(String(user.vk_id)) : "—"}</div></div></div>
+            <div class="mini-row"><div><div class="a">Роль</div><div class="m">${esc(roleLabel(user.role))}</div></div></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   const b = state.overview.bonus;
   const c = state.overview.chest;
   const t = state.overview.transfers;
   const h = state.overview.chestHistory;
   const dash = state.core.dash || {};
 
+  const bonusLabel = !b ? "—" : (b.can_claim ? "Доступен сейчас" : (b.next_claim_at ? `До открытия: ${esc(safeDate(b.next_claim_at))}` : "Недоступен"));
+  const chestLabel = !c ? "—" : (c.can_open ? "Доступен сейчас" : (c.next_claim_at ? `До открытия: ${esc(safeDate(c.next_claim_at))}` : "Недоступен"));
+
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">⚡</div></div>
+        <div class="widget-head"><div class="widget-title">⚡ Быстрые действия</div></div>
         <div class="widget-body">
           <div class="mini-row">
-            <div style="min-width:0">
-              <div class="a">Бонус</div>
-              <div class="m">${b ? (b.can_claim ? "Доступен" : "—") : "—"}</div>
-            </div>
+            <div style="min-width:0"><div class="a">Бонус</div><div class="m">${bonusLabel}</div></div>
             <button class="btn primary small" type="button" onclick="claimBonus()" ${b?.can_claim ? "" : "disabled"}>Забрать</button>
           </div>
           <div class="mini-row">
-            <div style="min-width:0">
-              <div class="a">Сундук</div>
-              <div class="m">${c ? (c.can_open ? "Доступен" : "—") : "—"}</div>
-            </div>
+            <div style="min-width:0"><div class="a">Сундук</div><div class="m">${chestLabel}</div></div>
             <button class="btn primary small" type="button" onclick="openChest()" ${c?.can_open ? "" : "disabled"}>Открыть</button>
           </div>
           <div class="mini-row">
@@ -1364,31 +1409,26 @@ function renderOverview(){
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">💸</div></div>
+        <div class="widget-head"><div class="widget-title">💸 Переводы к выводу</div></div>
         <div class="widget-body">
-          ${
-            t ? `
-              <div class="mini-row">
-                <div class="a">Сумма</div>
-                <div class="a">${formatNum(t.total_pending||0)}</div>
-              </div>
-              ${
-                (t.items||[]).slice(0,5).map(x=>`
-                  <div class="mini-row">
-                    <div style="min-width:0">
-                      <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.source_text||"")}</div>
-                      <div class="m">${formatNum(x.amount||0)} • ${safeDate(x.available_at)}</div>
-                    </div>
+          ${t ? `
+            <div class="mini-row"><div class="a">Сумма в очереди</div><div class="a">${formatNum(t.total_pending||0)}</div></div>
+            ${
+              (t.items||[]).slice(0,5).map(x=>`
+                <div class="mini-row">
+                  <div style="min-width:0">
+                    <div class="a" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.source_text||"")}</div>
+                    <div class="m">${formatNum(x.amount||0)} • ${safeDate(x.available_at)}</div>
                   </div>
-                `).join("")
-              }
-            ` : widgetError("Недоступно")
-          }
+                </div>
+              `).join("") || `<div class="m">Нет ожидающих переводов</div>`
+            }
+          ` : widgetError("Недоступно")}
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🧰</div></div>
+        <div class="widget-head"><div class="widget-title">🧰 История сундука</div></div>
         <div class="widget-body">
           ${
             h ? (
@@ -1399,14 +1439,14 @@ function renderOverview(){
                     <div class="m">#${formatNum(x.day_number||0)} • ${safeDate(x.created_at)}</div>
                   </div>
                 </div>
-              `).join("") || `<div class="m">${"—"}</div>`
+              `).join("") || `<div class="m">Пока пусто</div>`
             ) : widgetError("Недоступно")
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🕒</div></div>
+        <div class="widget-head"><div class="widget-title">🕒 Последние действия</div></div>
         <div class="widget-body">
           ${
             (dash.activity_feed||[]).slice(0,12).map(x=>`
@@ -1416,7 +1456,7 @@ function renderOverview(){
                   <div class="m">${safeDate(x.created_at)}</div>
                 </div>
               </div>
-            `).join("") || `<div class="m">—</div>`
+            `).join("") || `<div class="m">Пока пусто</div>`
           }
         </div>
       </div>
@@ -1442,16 +1482,16 @@ function renderContracts(){
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">📌</div></div>
-        <div class="widget-body">${inProgress.length ? inProgress.map(c=>card(c)).join("") : `<div class="m">—</div>`}</div>
+        <div class="widget-head"><div class="widget-title">📌 Активные</div></div>
+        <div class="widget-body">${inProgress.length ? inProgress.map(c=>card(c)).join("") : `<div class="m">Нет активных контрактов</div>`}</div>
       </div>
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">✨</div></div>
-        <div class="widget-body">${available.length ? available.map(c=>card(c, `<button class="btn primary small" type="button" onclick="takeContract(${Number(c.id||0)})">Взять</button>`)).join("") : `<div class="m">—</div>`}</div>
+        <div class="widget-head"><div class="widget-title">✨ Доступные</div></div>
+        <div class="widget-body">${available.length ? available.map(c=>card(c, `<button class="btn primary small" type="button" onclick="takeContract(${Number(c.id||0)})">Взять</button>`)).join("") : `<div class="m">Нет доступных контрактов</div>`}</div>
       </div>
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">✅</div></div>
-        <div class="widget-body">${completed.length ? completed.slice(0,10).map(c=>card(c)).join("") : `<div class="m">—</div>`}</div>
+        <div class="widget-head"><div class="widget-title">✅ Завершённые</div></div>
+        <div class="widget-body">${completed.length ? completed.slice(0,10).map(c=>card(c)).join("") : `<div class="m">Пока пусто</div>`}</div>
       </div>
     </div>
   `;
@@ -1461,7 +1501,7 @@ function renderInventory(){
   const inv = normalizeInventory(state.core.dash?.inventory || []);
   return `
     <div class="widget" style="min-height:auto">
-      <div class="widget-head"><div class="widget-title">🎒</div></div>
+      <div class="widget-head"><div class="widget-title">🎒 Инвентарь</div></div>
       <div class="widget-body">
         ${
           inv.length ? `
@@ -1469,7 +1509,7 @@ function renderInventory(){
               ${inv.slice(0,80).map(it=>`
                 <div class="inv">
                   <div class="img">
-                    <img src="${esc(it.image_url || "https://placehold.co/140x140?text=ITEM")}" onerror="this.src='https://placehold.co/140x140?text=ITEM'" alt="">
+                    <img src="${esc(resolveImg(it.image_url, "https://placehold.co/140x140?text=ITEM"))}" onerror="this.src='https://placehold.co/140x140?text=ITEM'" alt="">
                   </div>
                   <div class="name">${esc(it.title||"")}</div>
                   <div class="meta">${esc(it.rarity||"")}</div>
@@ -1477,7 +1517,7 @@ function renderInventory(){
                 </div>
               `).join("")}
             </div>
-          ` : `<div class="m">—</div>`
+          ` : `<div class="m">Инвентарь пуст</div>`
         }
       </div>
     </div>
@@ -1490,7 +1530,7 @@ function renderProgress(){
   const ach = p.achievements || [];
   return `
     <div class="widget" style="min-height:auto">
-      <div class="widget-head"><div class="widget-title">🏆</div></div>
+      <div class="widget-head"><div class="widget-title">🏆 Достижения</div></div>
       <div class="widget-body">
         ${
           ach.length ? ach.slice(0,70).map(a=>`
@@ -1500,7 +1540,7 @@ function renderProgress(){
                 <div class="m">${formatNum(a.current_value||0)} / ${formatNum(a.target_value||0)}</div>
               </div>
             </div>
-          `).join("") : `<div class="m">—</div>`
+          `).join("") : `<div class="m">Пока достижений нет</div>`
         }
       </div>
     </div>
@@ -1513,7 +1553,7 @@ function renderNotifications(){
   const items = n.items || [];
   return `
     <div class="widget" style="min-height:auto">
-      <div class="widget-head"><div class="widget-title">🔔</div><div class="badge red">${formatNum(n.unread_count||0)}</div></div>
+      <div class="widget-head"><div class="widget-title">🔔 Уведомления</div><div class="badge red">${formatNum(n.unread_count||0)}</div></div>
       <div class="widget-body">
         ${
           items.length ? items.map(x=>`
@@ -1524,7 +1564,7 @@ function renderNotifications(){
               </div>
               <button class="btn ghost small" type="button" onclick="readNotif(${Number(x.id||0)})">✓</button>
             </div>
-          `).join("") : `<div class="m">—</div>`
+          `).join("") : `<div class="m">Уведомлений нет</div>`
         }
       </div>
     </div>
@@ -1539,7 +1579,7 @@ function renderWsbuild(){
   return `
     <div class="grid">
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🧾</div></div>
+        <div class="widget-head"><div class="widget-title">🧾 Активная заявка</div></div>
         <div class="widget-body">
           ${
             active ? `
@@ -1553,13 +1593,13 @@ function renderWsbuild(){
                 <button class="btn ghost small" type="button" onclick="markPaid(${Number(active.id||0)})">Оплатил</button>
                 <button class="btn small" type="button" onclick="cancelPay(${Number(active.id||0)})">Отмена</button>
               </div>
-            ` : `<div class="m">—</div>`
+            ` : `<div class="m">Нет активной заявки</div>`
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">⏱</div></div>
+        <div class="widget-head"><div class="widget-title">⏱ Автопополнения</div></div>
         <div class="widget-body">
           ${
             auto.length ? auto.slice(0,6).map(x=>`
@@ -1569,13 +1609,13 @@ function renderWsbuild(){
                   <div class="m">${safeDate(x.next_topup_at)}</div>
                 </div>
               </div>
-            `).join("") : `<div class="m">—</div>`
+            `).join("") : `<div class="m">Нет автопополнений</div>`
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🛒</div></div>
+        <div class="widget-head"><div class="widget-title">🛒 Пакеты</div></div>
         <div class="widget-body">
           ${
             pkgs?.packages?.length ? `
@@ -1585,20 +1625,18 @@ function renderWsbuild(){
                     <div class="widget-body">
                       <div class="a">${esc(p.title||"")}</div>
                       <div class="m">${formatNum(p.amount||0)} • ${formatNum(p.price_rub||0)} ₽</div>
-                      <div style="margin-top:12px">
-                        <button class="btn primary small" type="button" onclick="createPay(${Number(p.amount||0)})">+</button>
-                      </div>
+                      <div style="margin-top:12px"><button class="btn primary small" type="button" onclick="createPay(${Number(p.amount||0)})">Купить</button></div>
                     </div>
                   </div>
                 `).join("")}
               </div>
-            ` : `<div class="m">—</div>`
+            ` : `<div class="m">Нет доступных пакетов</div>`
           }
         </div>
       </div>
 
       <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">📜</div></div>
+        <div class="widget-head"><div class="widget-title">📜 История заявок</div></div>
         <div class="widget-body">
           ${
             my.length ? my.slice(0,25).map(x=>`
@@ -1608,7 +1646,7 @@ function renderWsbuild(){
                   <div class="m">${formatNum(x.wsbuild_amount||0)} • ${formatNum(x.amount_rub||0)} ₽</div>
                 </div>
               </div>
-            `).join("") : `<div class="m">—</div>`
+            `).join("") : `<div class="m">История пуста</div>`
           }
         </div>
       </div>
@@ -1622,14 +1660,11 @@ async function bgSavePatch(patch){
   bgDebounceT = setTimeout(async ()=>{
     try{
       const current = state.core.pageBg || { image_url:"", blur:0, opacity:55 };
-      const payload = {
-        blur: patch.blur ?? current.blur ?? 0,
-        opacity: patch.opacity ?? current.opacity ?? 55
-      };
+      const payload = { blur: patch.blur ?? current.blur ?? 0, opacity: patch.opacity ?? current.opacity ?? 55 };
       const res = await apiPost("/api/ws/profile/page-bg/set", payload);
       state.core.pageBg = res;
       applyPageBg({ image_url: res.image_url || "", blur: res.blur ?? 0, opacity: res.opacity ?? 55 });
-    }catch(e){}
+    }catch(e){ console.log("bgSavePatch error:", e.message); }
   }, 350);
 }
 
@@ -1638,40 +1673,67 @@ function renderSettings(){
   const codes = state.settings.codes || null;
   const bg = state.core.pageBg || { image_url:"", blur:0, opacity:55 };
 
-  const row = (k, label) => `
-    <div class="mini-row">
-      <div class="a">${esc(label)}</div>
+  const row = (k, label, sub="") => `
+    <div class="switch-row">
+      <div class="switch-left">
+        <div class="switch-title">${esc(label)}</div>
+        ${sub ? `<div class="switch-sub">${esc(sub)}</div>` : ""}
+      </div>
       <input type="checkbox" ${notify?.[k] ? "checked" : ""} onchange="toggleNotify('${k}', this.checked)">
     </div>
   `;
 
   return `
     <div class="grid">
-      <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🎨</div></div>
-        <div class="widget-body">
+      <div class="setting-card">
+        <div class="setting-head">
+          <div>
+            <div class="setting-title">Живые цвета профиля</div>
+            <div class="setting-sub">Настрой атмосферу страницы под себя: основной цвет, дополнительный и свечение.</div>
+          </div>
+          <div class="setting-icon">🎨</div>
+        </div>
+
+        <div class="setting-grid">
           <div class="field">
-            <label>Accent1</label>
-            <input type="text" value="${esc(themeDraft.accent1)}" oninput="setTheme('accent1', this.value)">
+            <label>Accent 1</label>
+            <div class="color-row">
+              <div class="color-box"><input type="color" value="${esc(themeDraft.accent1)}" oninput="syncColor(this, 'themeAccent1Text'); setTheme('accent1', this.value)"></div>
+              <input id="themeAccent1Text" type="text" value="${esc(themeDraft.accent1)}" oninput="syncColorText(this, 'themeAccent1Picker'); setTheme('accent1', this.value)">
+            </div>
           </div>
           <div class="field">
-            <label>Accent2</label>
-            <input type="text" value="${esc(themeDraft.accent2)}" oninput="setTheme('accent2', this.value)">
+            <label>Accent 2</label>
+            <div class="color-row">
+              <div class="color-box"><input id="themeAccent2Picker" type="color" value="${esc(themeDraft.accent2)}" oninput="syncColor(this, 'themeAccent2Text'); setTheme('accent2', this.value)"></div>
+              <input id="themeAccent2Text" type="text" value="${esc(themeDraft.accent2)}" oninput="syncColorText(this, 'themeAccent2Picker'); setTheme('accent2', this.value)">
+            </div>
           </div>
           <div class="field">
             <label>Glow</label>
-            <input type="text" value="${esc(themeDraft.glow)}" oninput="setTheme('glow', this.value)">
+            <div class="color-row">
+              <div class="color-box"><input id="themeGlowPicker" type="color" value="${esc(themeDraft.glow)}" oninput="syncColor(this, 'themeGlowText'); setTheme('glow', this.value)"></div>
+              <input id="themeGlowText" type="text" value="${esc(themeDraft.glow)}" oninput="syncColorText(this, 'themeGlowPicker'); setTheme('glow', this.value)">
+            </div>
           </div>
-          <div class="modal-actions" style="justify-content:flex-start">
-            <button class="btn ghost small" type="button" onclick="saveThemeNow()">OK</button>
-            <button class="btn small" type="button" onclick="resetThemeNow()">Reset</button>
-          </div>
+        </div>
+
+        <div class="setting-actions">
+          <button class="btn primary small" type="button" onclick="saveThemeNow()">Сохранить тему</button>
+          <button class="btn ghost small" type="button" onclick="resetThemeNow()">Сбросить</button>
         </div>
       </div>
 
-      <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🖼</div></div>
-        <div class="widget-body">
+      <div class="setting-card">
+        <div class="setting-head">
+          <div>
+            <div class="setting-title">Фон страницы</div>
+            <div class="setting-sub">Добавь собственный фон, настрой мягкость размытия и прозрачность.</div>
+          </div>
+          <div class="setting-icon">🖼</div>
+        </div>
+
+        <div class="setting-grid">
           <div class="field">
             <label>Blur</label>
             <input type="range" min="0" max="100" value="${Number(bg.blur||0)}" oninput="bgBlur(this.value)">
@@ -1681,115 +1743,128 @@ function renderSettings(){
             <input type="range" min="0" max="100" value="${Number(bg.opacity||55)}" oninput="bgOpacity(this.value)">
           </div>
           <div class="mini-row">
-            <div class="a">Фон</div>
+            <div>
+              <div class="a">Изображение фона</div>
+              <div class="m">Подходит для всей страницы профиля</div>
+            </div>
             <input id="bgFile" type="file" accept="image/*">
           </div>
-          <div class="modal-actions" style="justify-content:flex-start">
-            <button class="btn ghost small" type="button" onclick="bgClear()">Clear</button>
-          </div>
+        </div>
+
+        <div class="setting-actions">
+          <button class="btn ghost small" type="button" onclick="bgClear()">Убрать фон</button>
         </div>
       </div>
 
-      <div class="widget" style="grid-column: span 12; min-height:auto">
-        <div class="widget-head"><div class="widget-title">👤</div></div>
-        <div class="widget-body">
+      <div class="setting-card full">
+        <div class="setting-head">
+          <div>
+            <div class="setting-title">Профиль и оформление</div>
+            <div class="setting-sub">Управляй аватаркой, баннером и быстрыми действиями оформления.</div>
+          </div>
+          <div class="setting-icon">👤</div>
+        </div>
+
+        <div class="setting-grid">
           <div class="mini-row">
-            <div class="a">Профиль</div>
+            <div>
+              <div class="a">Аватарка</div>
+              <div class="m">Загрузи новую или очисти текущую</div>
+            </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
-              <button class="btn ghost small" type="button" onclick="openUpload('avatar')">Аватар</button>
-              <button class="btn ghost small" type="button" onclick="openUpload('banner')">Баннер</button>
-              <button class="btn small" type="button" onclick="clearBanner()">Баннер ✕</button>
-              <button class="btn small" type="button" onclick="openPassword()">Пароль</button>
+              <button class="btn ghost small" type="button" onclick="openUpload('avatar')">Загрузить</button>
+              <button class="btn small" type="button" onclick="clearAvatar()">Убрать</button>
             </div>
           </div>
+          <div class="mini-row">
+            <div>
+              <div class="a">Баннер</div>
+              <div class="m">Изображение в шапке профиля</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
+              <button class="btn ghost small" type="button" onclick="openUpload('banner')">Загрузить</button>
+              <button class="btn small" type="button" onclick="clearBanner()">Убрать</button>
+            </div>
+          </div>
+          <div class="mini-row">
+            <div>
+              <div class="a">Пароль</div>
+              <div class="m">Измени пароль от аккаунта</div>
+            </div>
+            <button class="btn primary small" type="button" onclick="openPassword()">Сменить</button>
+          </div>
         </div>
       </div>
 
-      <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🔔</div></div>
-        <div class="widget-body">
-          ${
-            notify ? `
-              ${row("notify_site_bonus_ready","Бонус")}
-              ${row("notify_site_chest_ready","Сундук")}
-              ${row("notify_site_roulette_ready","Рулетка")}
-              ${row("notify_site_contract_available","Контракты")}
-              <div class="modal-actions">
-                <button class="btn primary small" type="button" onclick="saveNotify()">OK</button>
-              </div>
-            ` : `<div class="m">—</div>`
-          }
+      <div class="setting-card">
+        <div class="setting-head">
+          <div>
+            <div class="setting-title">Уведомления</div>
+            <div class="setting-sub">Выбери, какие события должны быть активны на сайте.</div>
+          </div>
+          <div class="setting-icon">🔔</div>
+        </div>
+
+        <div class="setting-grid">
+          ${ notify ? `
+            ${row("notify_site_bonus_ready","Бонус готов","Сообщение о доступном ежедневном бонусе")}
+            ${row("notify_site_chest_ready","Сундук готов","Уведомление о дневном сундуке")}
+            ${row("notify_site_roulette_ready","Рулетка готова","Когда прокрут снова доступен")}
+            ${row("notify_site_contract_available","Появился контракт","Новые задания в системе")}
+          ` : `<div class="m">Настройки недоступны</div>` }
+        </div>
+
+        <div class="setting-actions">
+          <button class="btn primary small" type="button" onclick="saveNotify()">Сохранить</button>
         </div>
       </div>
 
-      <div class="widget" style="grid-column: span 6; min-height:auto">
-        <div class="widget-head"><div class="widget-title">🔗</div></div>
-        <div class="widget-body">
-          ${
-            codes ? `
-              <div class="mini-row">
-                <div style="min-width:0">
-                  <div class="a">LINK</div>
-                  <div class="m">${codes.link_active ? esc(codes.link_code) : "—"}</div>
-                </div>
-                <button class="btn ghost small" type="button" onclick="genCode('link')">↻</button>
-              </div>
-              <div class="mini-row">
-                <div style="min-width:0">
-                  <div class="a">VK</div>
-                  <div class="m">${codes.vk_active ? esc(codes.vk_code) : "—"}</div>
-                </div>
-                <button class="btn ghost small" type="button" onclick="genCode('vk')">↻</button>
-              </div>
-              <div class="mini-row">
-                <div style="min-width:0">
-                  <div class="a">NICK</div>
-                  <div class="m">${codes.nick_active ? esc(codes.nick_code) : "—"}</div>
-                </div>
-                <button class="btn ghost small" type="button" onclick="genCode('nick')">↻</button>
-              </div>
-            ` : `<div class="m">—</div>`
-          }
+      <div class="setting-card">
+        <div class="setting-head">
+          <div>
+            <div class="setting-title">Коды привязки</div>
+            <div class="setting-sub">Быстрое управление кодами для привязки аккаунтов и никнейма.</div>
+          </div>
+          <div class="setting-icon">🔗</div>
+        </div>
+
+        <div class="code-card-grid">
+          <div class="code-card">
+            <div class="code-top"><div class="code-name">LINK</div><button class="btn ghost small" type="button" onclick="genCode('link')">↻</button></div>
+            <div class="code-value">${codes?.link_active ? esc(codes.link_code) : "—"}</div>
+            <div class="code-meta">Общий код привязки</div>
+          </div>
+          <div class="code-card">
+            <div class="code-top"><div class="code-name">VK</div><button class="btn ghost small" type="button" onclick="genCode('vk')">↻</button></div>
+            <div class="code-value">${codes?.vk_active ? esc(codes.vk_code) : "—"}</div>
+            <div class="code-meta">Для привязки VK</div>
+          </div>
+          <div class="code-card">
+            <div class="code-top"><div class="code-name">NICK</div><button class="btn ghost small" type="button" onclick="genCode('nick')">↻</button></div>
+            <div class="code-value">${codes?.nick_active ? esc(codes.nick_code) : "—"}</div>
+            <div class="code-meta">Для привязки никнейма</div>
+          </div>
         </div>
       </div>
     </div>
   `;
 }
 
-async function initProfileMode() {
-  // проверим токен + получим мой id
-  const me = await apiGet("/api/ws/me").catch(() => null);
-  if (!me?.ok || !me.user?.id) {
-    localStorage.removeItem("ws_token");
-    location.href = "index.html";
-    return false;
-  }
-  myUserId = Number(me.user.id || 0);
-
-  isPublicView = viewUserId > 0 && viewUserId !== myUserId;
-
-  if (isPublicView) {
-    // оставляем только Overview в меню
-    const nav = document.getElementById("nav");
-    if (nav) {
-      nav.innerHTML = `
-        <button class="nav-btn active" data-tab="overview" type="button">
-          <span class="nav-left"><span class="nav-ico">👤</span><span class="nav-label">Профиль</span></span>
-          <span class="badge" id="bdOverview"></span>
-        </button>
-      `;
-    }
-    document.getElementById("btnReadAll").style.display = "none";
-  }
-
-  return true;
+function syncColor(input, textId){
+  const el = document.getElementById(textId);
+  if (el) el.value = input.value;
+}
+function syncColorText(input, pickerId){
+  const value = String(input.value || "").trim();
+  if (!/^#[0-9a-fA-F]{6}$/.test(value)) return;
+  const el = document.getElementById(pickerId);
+  if (el) el.value = value;
 }
 
 async function openTab(tab){
-  if (isPublicView && tab !== "overview") {
-    tab = "overview";
-  }
+  if (isPublicView && tab !== "overview") tab = "overview";
   setActiveTab(tab);
+
   document.getElementById("viewTitle").textContent = tab === "overview" ? "Обзор" :
     tab === "contracts" ? "Контракты" :
     tab === "inventory" ? "Инвентарь" :
@@ -1802,112 +1877,62 @@ async function openTab(tab){
   try{
     await loadCore();
 
-    if(tab === "overview"){ await loadOverview(); document.getElementById("view").innerHTML = renderOverview(); }
-    else if(tab === "contracts"){ await loadContracts(); document.getElementById("view").innerHTML = renderContracts(); }
-    else if(tab === "inventory"){ document.getElementById("view").innerHTML = renderInventory(); }
-    else if(tab === "progress"){ document.getElementById("view").innerHTML = renderProgress(); }
-    else if(tab === "notifications"){ await loadNotifications(); document.getElementById("view").innerHTML = renderNotifications(); }
-    else if(tab === "wsbuild"){ await loadWsbuild(); document.getElementById("view").innerHTML = renderWsbuild(); }
-    else if(tab === "settings"){ await loadSettings(); document.getElementById("view").innerHTML = renderSettings(); bindBgFile(); }
-
+    if(tab === "overview"){
+      await loadOverview();
+      document.getElementById("view").innerHTML = renderOverview();
+    }
+    else if(tab === "contracts"){
+      await loadContracts();
+      document.getElementById("view").innerHTML = renderContracts();
+    }
+    else if(tab === "inventory"){
+      document.getElementById("view").innerHTML = renderInventory();
+    }
+    else if(tab === "progress"){
+      document.getElementById("view").innerHTML = renderProgress();
+    }
+    else if(tab === "notifications"){
+      await loadNotifications();
+      document.getElementById("view").innerHTML = renderNotifications();
+    }
+    else if(tab === "wsbuild"){
+      await loadWsbuild();
+      document.getElementById("view").innerHTML = renderWsbuild();
+    }
+    else if(tab === "settings"){
+      await loadSettings();
+      document.getElementById("view").innerHTML = renderSettings();
+      bindBgFile();
+    }
   }catch(e){
-    toast("Не удалось загрузить");
+    console.log("openTab error:", e.message);
+    toast("Не удалось загрузить данные");
     document.getElementById("view").innerHTML = widgetError("Недоступно");
   }
 }
 
-async function takeContract(id){
-  try{ await apiPost("/api/ws/contracts/take", { contract_id: id }); toast("Готово"); openTab("contracts"); }catch(e){ toast("Ошибка"); }
-}
-async function readNotif(id){
-  try{ await apiPost("/api/ws/notifications/read", { notification_id: id }); openTab("notifications"); }catch(e){}
-}
-async function readAllNotifs(){
-  try{ await apiPost("/api/ws/notifications/read-all", {}); openTab("notifications"); }catch(e){}
-}
-async function claimBonus(){
-  try{ await apiPost("/api/ws/bonus/claim", {}); openTab("overview"); }catch(e){}
-}
-async function openChest(){
-  try{ await apiPost("/api/ws/chest/open", {}); openTab("overview"); }catch(e){}
-}
-async function createPay(amount){
-  try{ await apiPost("/api/ws/payment-requests/create", { wsbuild_amount: amount }); openTab("wsbuild"); }catch(e){}
-}
-async function markPaid(id){
-  try{ await apiPost("/api/ws/payment-requests/mark-paid", { request_id: id }); openTab("wsbuild"); }catch(e){}
-}
-async function cancelPay(id){
-  try{ await apiPost("/api/ws/payment-requests/cancel", { request_id: id }); openTab("wsbuild"); }catch(e){}
-}
-async function wsbuildResetBonus(){
-  try{ await apiPost("/api/ws/wsbuild/reset-bonus", {}); openTab("overview"); }catch(e){}
-}
-async function wsbuildResetChest(){
-  try{ await apiPost("/api/ws/wsbuild/reset-chest", {}); openTab("overview"); }catch(e){}
-}
-async function wsbuildResetRoulette(){
-  try{ await apiPost("/api/ws/wsbuild/reset-roulette", {}); openTab("overview"); }catch(e){}
-}
+async function takeContract(id){ try{ await apiPost("/api/ws/contracts/take", { contract_id: id }); toast("Контракт взят"); openTab("contracts"); }catch(e){ console.log("takeContract error:", e.message); toast("Ошибка"); } }
+async function readNotif(id){ try{ await apiPost("/api/ws/notifications/read", { notification_id: id }); openTab("notifications"); }catch(e){ console.log("readNotif error:", e.message); } }
+async function readAllNotifs(){ try{ await apiPost("/api/ws/notifications/read-all", {}); openTab("notifications"); }catch(e){ console.log("readAllNotifs error:", e.message); } }
+async function claimBonus(){ try{ await apiPost("/api/ws/bonus/claim", {}); openTab("overview"); }catch(e){ console.log("claimBonus error:", e.message); } }
+async function openChest(){ try{ await apiPost("/api/ws/chest/open", {}); openTab("overview"); }catch(e){ console.log("openChest error:", e.message); } }
+async function createPay(amount){ try{ await apiPost("/api/ws/payment-requests/create", { wsbuild_amount: amount }); openTab("wsbuild"); }catch(e){ console.log("createPay error:", e.message); } }
+async function markPaid(id){ try{ await apiPost("/api/ws/payment-requests/mark-paid", { request_id: id }); openTab("wsbuild"); }catch(e){ console.log("markPaid error:", e.message); } }
+async function cancelPay(id){ try{ await apiPost("/api/ws/payment-requests/cancel", { request_id: id }); openTab("wsbuild"); }catch(e){ console.log("cancelPay error:", e.message); } }
+async function wsbuildResetBonus(){ try{ await apiPost("/api/ws/wsbuild/reset-bonus", {}); openTab("overview"); }catch(e){ console.log("wsbuildResetBonus error:", e.message); } }
+async function wsbuildResetChest(){ try{ await apiPost("/api/ws/wsbuild/reset-chest", {}); openTab("overview"); }catch(e){ console.log("wsbuildResetChest error:", e.message); } }
+async function wsbuildResetRoulette(){ try{ await apiPost("/api/ws/wsbuild/reset-roulette", {}); openTab("overview"); }catch(e){ console.log("wsbuildResetRoulette error:", e.message); } }
 
 function toggleNotify(key, val){ state.settings.draft[key] = !!val; }
-async function saveNotify(){
-  try{ await apiPost("/api/ws/notify/settings/update", state.settings.draft); state.settings.draft = {}; openTab("settings"); }catch(e){}
-}
+async function saveNotify(){ try{ await apiPost("/api/ws/notify/settings/update", state.settings.draft); state.settings.draft = {}; toast("Настройки уведомлений сохранены"); openTab("settings"); }catch(e){ console.log("saveNotify error:", e.message); } }
 async function genCode(type){
   try{
     if(type==="link") await apiPost("/api/ws/profile/generate-link-code", {});
     if(type==="vk") await apiPost("/api/ws/profile/generate-vk-link-code", {});
     if(type==="nick") await apiPost("/api/ws/profile/generate-nick-link-code", {});
+    toast("Код обновлён");
     openTab("settings");
-  }catch(e){}
-}
-
-
-async function loadCore(){
-  if (isPublicView) {
-    const pub = await apiGet("/api/ws/users/public/" + viewUserId);
-    // соберём данные в формат, который использует hero
-    const dashLike = {
-      user: pub.user,
-      binder: { game_balance: 0, to_output: 0, wsbuild_balance: 0 },
-      inventory: [],
-      notifications_unread_count: 0,
-      activity_feed: []
-    };
-    const progLike = { profile: pub.progress, achievements: [] };
-
-    state.core.dash = dashLike;
-    state.core.prog = progLike;
-    state.core.pageBg = null;
-
-    applyHero(dashLike, progLike);
-
-    // убираем лишние цифры, чтобы не вводить в заблуждение
-    document.getElementById("heroBal").textContent = "—";
-    document.getElementById("heroOut").textContent = "—";
-    document.getElementById("heroWsb").textContent = "—";
-
-    // бейджи
-    document.getElementById("bdNotif").textContent = "0";
-    document.getElementById("bdInv").textContent = "—";
-    document.getElementById("bdWsb").textContent = "—";
-    document.getElementById("bdLvl").textContent = String(pub.progress?.level || 1);
-    document.getElementById("bdContracts").textContent = "—";
-    return;
-  }
-
-  // обычный режим (как было)
-  const [dash, prog, bg] = await Promise.all([
-    apiGet("/api/ws/dashboard-bundle"),
-    apiGet("/api/ws/profile/progress"),
-    apiGet("/api/ws/profile/page-bg").catch(()=>null)
-  ]);
-  state.core.dash = dash;
-  state.core.prog = prog;
-  state.core.pageBg = bg;
-  if (bg) applyPageBg({ image_url: bg.image_url || "", blur: bg.blur ?? 0, opacity: bg.opacity ?? 55 });
-  applyHero(dash, prog);
+  }catch(e){ console.log("genCode error:", e.message); }
 }
 
 function bgBlur(v){
@@ -1929,12 +1954,14 @@ async function bgClear(){
     const res = await apiPost("/api/ws/profile/page-bg/clear", {});
     state.core.pageBg = res;
     applyPageBg({ image_url:"", blur:0, opacity:55 });
+    toast("Фон страницы очищен");
     openTab("settings");
-  }catch(e){}
+  }catch(e){ console.log("bgClear error:", e.message); }
 }
 function bindBgFile(){
   const input = document.getElementById("bgFile");
-  if(!input) return;
+  if(!input || input.dataset.bound === "1") return;
+  input.dataset.bound = "1";
   input.addEventListener("change", async ()=>{
     try{
       const file = input.files?.[0];
@@ -1945,23 +1972,28 @@ function bindBgFile(){
       const res = await apiPost("/api/ws/profile/page-bg/set", { image_base64, blur: cur.blur ?? 0, opacity: cur.opacity ?? 55 });
       state.core.pageBg = res;
       applyPageBg({ image_url: res.image_url || "", blur: res.blur ?? 0, opacity: res.opacity ?? 55 });
+      toast("Фон обновлён");
       openTab("settings");
-    }catch(e){}
-  }, { once:true });
+    }catch(e){ console.log("bindBgFile error:", e.message); }
+  });
 }
 
 function openUpload(kind){
   const isAvatar = kind === "avatar";
-  modalOpen(isAvatar ? "Аватар" : "Баннер", `
+  modalOpen(isAvatar ? "Обновить аватарку" : "Обновить баннер", `
     <div class="preview">
       <div class="pimg"><img id="upPreview" alt="preview" src="https://placehold.co/300x300?text=PREVIEW"></div>
-      <div style="min-width:260px">
-        <input id="upFile" type="file" accept="image/*" />
+      <div style="min-width:260px; flex:1;">
+        <div class="field">
+          <label>Изображение</label>
+          <input id="upFile" type="file" accept="image/*">
+        </div>
+        <div class="switch-sub">Поддерживаются обычные изображения. Перед отправкой файл будет сжат.</div>
       </div>
     </div>
     <div class="modal-actions">
       <button class="btn ghost" type="button" onclick="modalClose()">Отмена</button>
-      <button class="btn primary" type="button" id="upSave" disabled>OK</button>
+      <button class="btn primary" type="button" id="upSave" disabled>Сохранить</button>
     </div>
   `);
 
@@ -1971,11 +2003,13 @@ function openUpload(kind){
   let base64 = "";
 
   file.addEventListener("change", async ()=>{
-    const f = file.files?.[0];
-    if(!f){ base64=""; save.disabled=true; return; }
-    base64 = await compressToDataURL(f, {maxW: isAvatar ? 600 : 1920, maxH: isAvatar ? 600 : 1080, quality:0.86});
-    preview.src = base64;
-    save.disabled = false;
+    try{
+      const f = file.files?.[0];
+      if(!f){ base64=""; save.disabled=true; return; }
+      base64 = await compressToDataURL(f, {maxW: isAvatar ? 600 : 1920, maxH: isAvatar ? 600 : 1080, quality:0.86});
+      preview.src = base64;
+      save.disabled = false;
+    }catch(e){ console.log("openUpload preview error:", e.message); }
   });
 
   save.addEventListener("click", async ()=>{
@@ -1983,42 +2017,43 @@ function openUpload(kind){
       save.disabled = true;
       if(isAvatar) await apiPost("/api/ws/profile/upload-avatar", { image_base64: base64 });
       else await apiPost("/api/ws/profile/upload-banner", { image_base64: base64 });
+      toast(isAvatar ? "Аватарка обновлена" : "Баннер обновлён");
       modalClose();
       openTab(state.tab);
     }catch(e){
+      console.log("openUpload save error:", e.message);
       save.disabled = false;
     }
   });
 }
-
-async function clearBanner(){
-  try{ await apiPost("/api/ws/profile/clear-banner", {}); openTab(state.tab); }catch(e){}
-}
+async function clearBanner(){ try{ await apiPost("/api/ws/profile/clear-banner", {}); toast("Баннер очищен"); openTab(state.tab); }catch(e){ console.log("clearBanner error:", e.message); } }
+async function clearAvatar(){ try{ await apiPost("/api/ws/profile/clear-avatar", {}); toast("Аватарка очищена"); openTab(state.tab); }catch(e){ console.log("clearAvatar error:", e.message); } }
 
 function openPassword(){
-  modalOpen("Пароль", `
+  modalOpen("Смена пароля", `
     <div class="field">
-      <label>Старый</label>
+      <label>Старый пароль</label>
       <input id="oldPass" type="password">
     </div>
     <div class="field">
-      <label>Новый</label>
+      <label>Новый пароль</label>
       <input id="newPass" type="password">
     </div>
     <div class="modal-actions">
       <button class="btn ghost" type="button" onclick="modalClose()">Отмена</button>
-      <button class="btn primary" type="button" id="passSave">OK</button>
+      <button class="btn primary" type="button" id="passSave">Сохранить</button>
     </div>
   `);
 
   document.getElementById("passSave").addEventListener("click", async ()=>{
     const oldp = String(document.getElementById("oldPass").value || "");
     const newp = String(document.getElementById("newPass").value || "");
-    if(!oldp || !newp) return;
+    if(!oldp || !newp) return toast("Заполни оба поля");
     try{
       await apiPost("/api/ws/profile/change-password", { old_password: oldp, new_password: newp });
+      toast("Пароль изменён");
       modalClose();
-    }catch(e){}
+    }catch(e){ console.log("openPassword error:", e.message); }
   });
 }
 
@@ -2033,6 +2068,8 @@ document.getElementById("btnLogout").addEventListener("click", ()=>{
   location.href = "index.html";
 });
 document.getElementById("btnReadAll").addEventListener("click", readAllNotifs);
+
+document.addEventListener("keydown", (e)=>{ if (e.key === "Escape") modalClose(); });
 
 window.openTab = openTab;
 window.takeContract = takeContract;
@@ -2057,8 +2094,11 @@ window.bgOpacity = bgOpacity;
 window.bgClear = bgClear;
 window.openUpload = openUpload;
 window.clearBanner = clearBanner;
+window.clearAvatar = clearAvatar;
 window.openPassword = openPassword;
 window.modalClose = modalClose;
+window.syncColor = syncColor;
+window.syncColorText = syncColorText;
 
 (async () => {
   const ok = await initProfileMode();
