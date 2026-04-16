@@ -704,11 +704,11 @@
     <div class="modal">
       <h3 class="modal-title">Инструкция по Искре</h3>
       <div class="modal-text">
-Искра питается репутацией автоматически.
-Если долго не кормить её, сытость падает.
-Чем лучше уход, тем выше награда за одну репутацию.
-Если Искра погибнет, её можно восстановить за брюлики.
-Также можно пропускать дни кормления за брюлики, чтобы сохранить прогресс.
+Искра питается репутацией автоматически
+Если долго не кормить её, сытость падает
+Чем лучше уход, тем выше награда за одну репутацию
+Если Искра погибнет, её можно восстановить за брюлики
+Также можно пропускать дни кормления за брюлики, чтобы сохранить прогресс
       </div>
       <div class="modal-actions">
         <button class="btn btn-dark" type="button" onclick="closeGuideModal()">Закрыть</button>
@@ -716,371 +716,484 @@
     </div>
   </div>
 
-  <script>
-    const API_BASE = "https://world-script-api.onrender.com";
+<script>
+  const API_BASE = "https://world-script-api.onrender.com";
 
-    const ENDPOINTS = {
-      state: "/api/ws/iskra/state",
-      rename: "/api/ws/iskra/rename",
-      restore: "/api/ws/iskra/restore",
-      skipDay: "/api/ws/iskra/skip-day"
-    };
+  const ENDPOINTS = {
+    state: "/api/ws/iskra/state",
+    rename: "/api/ws/iskra/rename",
+    restore: "/api/ws/iskra/restore",
+    skipDay: "/api/ws/iskra/skip-day"
+  };
 
-    let iskraState = null;
+  const AUTO_REFRESH_MS = 10 * 60 * 1000;
 
-    function wsGetToken() {
-      return localStorage.getItem("ws_token") || "";
+  let iskraState = null;
+  let iskraAutoRefreshTimer = null;
+  let iskraLoading = false;
+
+  function wsGetToken() {
+    return localStorage.getItem("ws_token") || "";
+  }
+
+  async function wsRequest(path, options = {}) {
+    const token = wsGetToken();
+    const headers = { ...(options.headers || {}) };
+
+    if (token) headers.Authorization = "Bearer " + token;
+
+    const response = await fetch(API_BASE + path, {
+      ...options,
+      headers
+    });
+
+    const data = await response.json().catch(() => ({
+      ok: false,
+      error: "Bad JSON"
+    }));
+
+    return { res: response, data };
+  }
+
+  async function wsGet(path) {
+    return wsRequest(path, { method: "GET" });
+  }
+
+  async function wsPost(path, body) {
+    return wsRequest(path, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body || {})
+    });
+  }
+
+  function safeNumber(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function normalizeText(value, fallback = "") {
+    const str = String(value ?? fallback);
+    return str.trim();
+  }
+
+  function formatMoney(n) {
+    return "$" + safeNumber(n).toLocaleString("ru-RU");
+  }
+
+  function setLoadState(text, type = "loading") {
+    const box = document.getElementById("iskraLoadState");
+    if (!box) return;
+
+    box.textContent = text || "";
+    box.className = "state-box " + type;
+  }
+
+  function setActionState(text, type = "") {
+    const box = document.getElementById("iskraActionState");
+    if (!box) return;
+
+    box.textContent = text || "";
+    box.className = "state-box" + (type ? " " + type : "");
+  }
+
+  function setButtonsDisabled(disabled) {
+    const saveNameBtn = document.getElementById("saveNameBtn");
+    const skipDayBtn = document.getElementById("skipDayBtn");
+    const restoreBtn = document.getElementById("restoreBtn");
+
+    if (saveNameBtn) saveNameBtn.disabled = !!disabled;
+    if (skipDayBtn) skipDayBtn.disabled = !!disabled;
+    if (restoreBtn) {
+      restoreBtn.disabled = !!disabled || !iskraState?.is_dead;
     }
+  }
 
-    async function wsRequest(path, options = {}) {
-      const token = wsGetToken();
-      const headers = { ...(options.headers || {}) };
-
-      if (token) headers.Authorization = "Bearer " + token;
-
-      const response = await fetch(API_BASE + path, {
-        ...options,
-        headers
-      });
-
-      const data = await response.json().catch(() => ({
-        ok: false,
-        error: "Bad JSON"
-      }));
-
-      return { res: response, data };
-    }
-
-    async function wsGet(path) {
-      return wsRequest(path, { method: "GET" });
-    }
-
-    async function wsPost(path, body) {
-      return wsRequest(path, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body || {})
-      });
-    }
-
-    function safeNumber(value, fallback = 0) {
-      const n = Number(value);
-      return Number.isFinite(n) ? n : fallback;
-    }
-
-    function normalizeText(value, fallback = "") {
-      const str = String(value ?? fallback);
-      return str.trim();
-    }
-
-    function formatMoney(n) {
-      return "$" + safeNumber(n).toLocaleString("ru-RU");
-    }
-
-    function setLoadState(text, type = "loading") {
-      const box = document.getElementById("iskraLoadState");
-      if (!box) return;
-
-      box.textContent = text || "";
-      box.className = "state-box " + type;
-    }
-
-    function setActionState(text, type = "") {
-      const box = document.getElementById("iskraActionState");
-      if (!box) return;
-
-      box.textContent = text || "";
-      box.className = "state-box" + (type ? " " + type : "");
-    }
-
-    function getIskraMoodBySatiety(satiety, isDead) {
-      if (isDead) {
-        return {
-          text: "Искра погибла",
-          pillClass: "danger",
-          valueClass: "red",
-          image: "./default-avatars/iskra_hungry.png",
-          hint: "Требуется восстановление"
-        };
-      }
-
-      const s = Math.max(0, Math.min(100, safeNumber(satiety)));
-
-      if (s <= 33) {
-        return {
-          text: "Голодная",
-          pillClass: "danger",
-          valueClass: "red",
-          image: "./default-avatars/iskra_hungry.png",
-          hint: "Нужно покормить"
-        };
-      }
-
-      if (s <= 66) {
-        return {
-          text: "Нестабильная",
-          pillClass: "warn",
-          valueClass: "gold",
-          image: "./default-avatars/iskra_mid.png",
-          hint: "Желательно покормить"
-        };
-      }
-
+  function getIskraMoodBySatiety(satiety, isDead) {
+    if (isDead) {
       return {
-        text: "Сияет",
-        pillClass: "ok",
-        valueClass: "green",
-        image: "./default-avatars/iskra.png",
-        hint: "Всё отлично"
+        text: "Искра погибла",
+        pillClass: "danger",
+        valueClass: "red",
+        image: "./default-avatars/iskra_hungry.png",
+        hint: "Требуется восстановление"
       };
     }
 
-    function renderIskraState(state) {
-      iskraState = state || null;
+    const s = Math.max(0, Math.min(100, safeNumber(satiety)));
 
-      const satiety = safeNumber(state?.satiety, 0);
-      const careRating = safeNumber(state?.care_rating, 0);
-      const rewardPerRep = safeNumber(state?.reward_per_rep, 0);
-      const isDead = !!state?.is_dead;
-      const name = normalizeText(state?.pet_name, "Без имени");
+    if (s <= 33) {
+      return {
+        text: "Голодная",
+        pillClass: "danger",
+        valueClass: "red",
+        image: "./default-avatars/iskra_hungry.png",
+        hint: "Нужно покормить"
+      };
+    }
 
-      const mood = getIskraMoodBySatiety(satiety, isDead);
+    if (s <= 66) {
+      return {
+        text: "Нестабильная",
+        pillClass: "warn",
+        valueClass: "gold",
+        image: "./default-avatars/iskra_mid.png",
+        hint: "Желательно покормить"
+      };
+    }
 
-      const statusPill = document.getElementById("iskraStatusPill");
-      const namePill = document.getElementById("iskraNamePill");
-      const rewardPill = document.getElementById("iskraRewardPill");
+    return {
+      text: "Сияет",
+      pillClass: "ok",
+      valueClass: "green",
+      image: "./default-avatars/iskra.png",
+      hint: "Всё отлично"
+    };
+  }
 
-      const nameValue = document.getElementById("iskraNameValue");
-      const moodValue = document.getElementById("iskraMoodValue");
-      const careValue = document.getElementById("iskraCareValue");
-      const rewardValue = document.getElementById("iskraRewardValue");
+  function renderIskraState(rawState) {
+    const state = rawState || {};
+    iskraState = state;
 
-      const satietyFill = document.getElementById("iskraSatietyFill");
-      const satietyText = document.getElementById("iskraSatietyText");
-      const feedHint = document.getElementById("iskraFeedHint");
-      const image = document.getElementById("iskraImage");
-      const nameInput = document.getElementById("iskraNameInput");
-      const restoreBtn = document.getElementById("restoreBtn");
+    const satiety = Math.max(0, Math.min(100, safeNumber(state.satiety, 0)));
+    const careRating = Math.max(0, Math.min(100, safeNumber(state.care_rating, 0)));
+    const rewardPerRep = Math.max(0, safeNumber(state.reward_per_rep, 0));
+    const isDead = !!state.is_dead;
+    const name = normalizeText(state.pet_name, "Без имени");
 
-      if (statusPill) {
-        statusPill.className = "pill " + mood.pillClass;
-        statusPill.textContent = isDead ? "💀 Искра погибла" : "✨ " + mood.text;
-      }
+    const mood = getIskraMoodBySatiety(satiety, isDead);
 
-      if (namePill) namePill.textContent = "Имя: " + name;
-      if (rewardPill) rewardPill.textContent = "Награда: " + formatMoney(rewardPerRep);
+    const statusPill = document.getElementById("iskraStatusPill");
+    const namePill = document.getElementById("iskraNamePill");
+    const rewardPill = document.getElementById("iskraRewardPill");
 
-      if (nameValue) nameValue.textContent = name;
-      if (moodValue) {
-        moodValue.textContent = mood.text;
-        moodValue.className = "stat-value " + mood.valueClass;
-      }
-      if (careValue) careValue.textContent = careRating + "/100";
-      if (rewardValue) rewardValue.textContent = formatMoney(rewardPerRep);
+    const nameValue = document.getElementById("iskraNameValue");
+    const moodValue = document.getElementById("iskraMoodValue");
+    const careValue = document.getElementById("iskraCareValue");
+    const rewardValue = document.getElementById("iskraRewardValue");
 
-      if (satietyFill) satietyFill.style.width = Math.max(0, Math.min(100, satiety)) + "%";
-      if (satietyText) satietyText.textContent = satiety + "/100";
-      if (feedHint) feedHint.textContent = mood.hint;
+    const satietyFill = document.getElementById("iskraSatietyFill");
+    const satietyText = document.getElementById("iskraSatietyText");
+    const feedHint = document.getElementById("iskraFeedHint");
+    const image = document.getElementById("iskraImage");
+    const nameInput = document.getElementById("iskraNameInput");
+    const restoreBtn = document.getElementById("restoreBtn");
 
-      if (image) {
-        image.src = mood.image;
-        image.onerror = () => {
-          image.src = "./default-avatars/iskra.png";
-        };
-      }
+    if (statusPill) {
+      statusPill.className = "pill " + mood.pillClass;
+      statusPill.textContent = isDead ? "💀 Искра погибла" : "✨ " + mood.text;
+    }
 
-      if (nameInput && !nameInput.value.trim()) {
+    if (namePill) namePill.textContent = "Имя: " + name;
+    if (rewardPill) rewardPill.textContent = "Награда: " + formatMoney(rewardPerRep);
+
+    if (nameValue) nameValue.textContent = name;
+
+    if (moodValue) {
+      moodValue.textContent = mood.text;
+      moodValue.className = "stat-value " + mood.valueClass;
+    }
+
+    if (careValue) {
+      careValue.textContent = careRating + "/100";
+      careValue.className = "stat-value gold";
+    }
+
+    if (rewardValue) {
+      rewardValue.textContent = formatMoney(rewardPerRep);
+      rewardValue.className = "stat-value green";
+    }
+
+    if (satietyFill) satietyFill.style.width = satiety + "%";
+    if (satietyText) satietyText.textContent = satiety + "/100";
+    if (feedHint) feedHint.textContent = mood.hint;
+
+    if (image) {
+      image.src = mood.image;
+      image.onerror = () => {
+        image.src = "./default-avatars/iskra.png";
+      };
+    }
+
+    if (nameInput) {
+      const currentInput = normalizeText(nameInput.value, "");
+      if (!currentInput || currentInput === "Без имени") {
         nameInput.value = name === "Без имени" ? "" : name;
       }
-
-      if (restoreBtn) restoreBtn.disabled = !isDead;
-
-      setLoadState("Данные Искры успешно загружены.", "loading");
     }
 
-    function renderLoadError(message = "Ошибка загрузки") {
-      const text = message || "Ошибка загрузки";
+    if (restoreBtn) {
+      restoreBtn.disabled = !isDead;
+    }
+  }
 
-      const statusPill = document.getElementById("iskraStatusPill");
-      const rewardPill = document.getElementById("iskraRewardPill");
-      const nameValue = document.getElementById("iskraNameValue");
-      const moodValue = document.getElementById("iskraMoodValue");
-      const careValue = document.getElementById("iskraCareValue");
-      const rewardValue = document.getElementById("iskraRewardValue");
-      const satietyText = document.getElementById("iskraSatietyText");
-      const feedHint = document.getElementById("iskraFeedHint");
-      const satietyFill = document.getElementById("iskraSatietyFill");
+  function renderLoadError(message = "Ошибка загрузки") {
+    const text = message || "Ошибка загрузки";
 
-      if (statusPill) {
-        statusPill.className = "pill danger";
-        statusPill.textContent = "⚠ Ошибка загрузки";
-      }
+    const statusPill = document.getElementById("iskraStatusPill");
+    const namePill = document.getElementById("iskraNamePill");
+    const rewardPill = document.getElementById("iskraRewardPill");
 
-      if (rewardPill) rewardPill.textContent = "Награда: Ошибка загрузки";
-      if (nameValue) nameValue.textContent = text;
-      if (moodValue) {
-        moodValue.textContent = text;
-        moodValue.className = "stat-value red";
-      }
-      if (careValue) careValue.textContent = text;
-      if (rewardValue) rewardValue.textContent = text;
-      if (satietyText) satietyText.textContent = text;
-      if (feedHint) feedHint.textContent = "—";
-      if (satietyFill) satietyFill.style.width = "0%";
+    const nameValue = document.getElementById("iskraNameValue");
+    const moodValue = document.getElementById("iskraMoodValue");
+    const careValue = document.getElementById("iskraCareValue");
+    const rewardValue = document.getElementById("iskraRewardValue");
 
-      setLoadState(text, "error");
+    const satietyText = document.getElementById("iskraSatietyText");
+    const feedHint = document.getElementById("iskraFeedHint");
+    const satietyFill = document.getElementById("iskraSatietyFill");
+
+    if (statusPill) {
+      statusPill.className = "pill danger";
+      statusPill.textContent = "⚠ Ошибка загрузки";
     }
 
-    async function loadIskraState() {
+    if (namePill) namePill.textContent = "Имя: —";
+    if (rewardPill) rewardPill.textContent = "Награда: Ошибка загрузки";
+
+    if (nameValue) nameValue.textContent = text;
+
+    if (moodValue) {
+      moodValue.textContent = text;
+      moodValue.className = "stat-value red";
+    }
+
+    if (careValue) {
+      careValue.textContent = text;
+      careValue.className = "stat-value gold";
+    }
+
+    if (rewardValue) {
+      rewardValue.textContent = text;
+      rewardValue.className = "stat-value green";
+    }
+
+    if (satietyText) satietyText.textContent = text;
+    if (feedHint) feedHint.textContent = "—";
+    if (satietyFill) satietyFill.style.width = "0%";
+
+    iskraState = null;
+  }
+
+  async function loadIskraState(options = {}) {
+    const silent = !!options.silent;
+    const preserveActionState = !!options.preserveActionState;
+
+    if (iskraLoading) return;
+    iskraLoading = true;
+
+    if (!silent) {
       setLoadState("Загружаем данные Искры...", "loading");
-
-      try {
-        const { res, data } = await wsGet(ENDPOINTS.state);
-
-        if (res.status === 401) {
-          renderLoadError("Нужна авторизация");
-          return;
-        }
-
-        if (!data?.ok) {
-          renderLoadError(data?.error || "Ошибка загрузки");
-          return;
-        }
-
-        renderIskraState(data.item || data.state || data);
-      } catch (e) {
-        renderLoadError("Ошибка загрузки");
-      }
     }
 
-    async function reloadAll() {
-      await loadIskraState();
-    }
+    try {
+      const { res, data } = await wsGet(ENDPOINTS.state);
 
-    async function saveIskraName() {
-      const input = document.getElementById("iskraNameInput");
-      const btn = document.getElementById("saveNameBtn");
-      const value = normalizeText(input?.value, "");
-
-      if (!value) {
-        setActionState("Введите имя для Искры.", "error");
+      if (res.status === 401) {
+        renderLoadError("Нужна авторизация");
+        if (!silent) setLoadState("Нужна авторизация", "error");
         return;
       }
 
-      try {
-        if (btn) btn.disabled = true;
-        setActionState("Сохраняем имя...");
-
-        const { res, data } = await wsPost(ENDPOINTS.rename, {
-          pet_name: value
-        });
-
-        if (res.status === 401) {
-          setActionState("Нужна авторизация.", "error");
-          return;
-        }
-
-        if (!data?.ok) {
-          setActionState(data?.error || "Ошибка сохранения", "error");
-          return;
-        }
-
-        setActionState("Имя Искры успешно сохранено.");
-        await loadIskraState();
-      } catch (e) {
-        setActionState("Ошибка сохранения", "error");
-      } finally {
-        if (btn) btn.disabled = false;
-      }
-    }
-
-    async function skipIskraDay() {
-      const btn = document.getElementById("skipDayBtn");
-
-      try {
-        if (btn) btn.disabled = true;
-        setActionState("Пропускаем день кормления...");
-
-        const { res, data } = await wsPost(ENDPOINTS.skipDay, {});
-
-        if (res.status === 401) {
-          setActionState("Нужна авторизация.", "error");
-          return;
-        }
-
-        if (!data?.ok) {
-          setActionState(data?.error || "Ошибка действия", "error");
-          return;
-        }
-
-        setActionState("День кормления успешно пропущен.");
-        await loadIskraState();
-      } catch (e) {
-        setActionState("Ошибка действия", "error");
-      } finally {
-        if (btn) btn.disabled = false;
-      }
-    }
-
-    async function restoreIskra() {
-      const btn = document.getElementById("restoreBtn");
-
-      try {
-        if (btn) btn.disabled = true;
-        setActionState("Восстанавливаем Искру...");
-
-        const { res, data } = await wsPost(ENDPOINTS.restore, {});
-
-        if (res.status === 401) {
-          setActionState("Нужна авторизация.", "error");
-          return;
-        }
-
-        if (!data?.ok) {
-          setActionState(data?.error || "Ошибка восстановления", "error");
-          return;
-        }
-
-        setActionState("Искра успешно восстановлена.");
-        await loadIskraState();
-      } catch (e) {
-        setActionState("Ошибка восстановления", "error");
-      } finally {
-        if (btn) btn.disabled = false;
-      }
-    }
-
-    function confirmRestoreIskra() {
-      if (!iskraState?.is_dead) {
-        setActionState("Восстановление доступно только если Искра погибла.", "error");
+      if (!data?.ok) {
+        renderLoadError(data?.error || "Ошибка загрузки");
+        if (!silent) setLoadState(data?.error || "Ошибка загрузки", "error");
         return;
       }
 
-      const ok = window.confirm("Восстановить Искру за 15 брюликов?");
-      if (!ok) return;
+      const state = data.item || data.state || data;
+      renderIskraState(state);
 
-      restoreIskra();
+      if (!silent) {
+        setLoadState("Данные Искры успешно загружены.", "loading");
+      }
+
+      if (!preserveActionState && !silent) {
+        setActionState("Здесь будут появляться результаты действий.");
+      }
+    } catch (e) {
+      renderLoadError("Ошибка загрузки");
+      if (!silent) setLoadState("Ошибка загрузки", "error");
+    } finally {
+      iskraLoading = false;
+      setButtonsDisabled(false);
+    }
+  }
+
+  async function reloadAll() {
+    await loadIskraState({
+      silent: false,
+      preserveActionState: true
+    });
+  }
+
+  async function saveIskraName() {
+    const input = document.getElementById("iskraNameInput");
+    const btn = document.getElementById("saveNameBtn");
+    const value = normalizeText(input?.value, "");
+
+    if (!value) {
+      setActionState("Введите имя для Искры.", "error");
+      return;
     }
 
-    function openGuideModal() {
-      document.getElementById("guideModalBg")?.classList.remove("hidden");
+    try {
+      if (btn) btn.disabled = true;
+      setActionState("Сохраняем имя...");
+
+      const { res, data } = await wsPost(ENDPOINTS.rename, {
+        pet_name: value
+      });
+
+      if (res.status === 401) {
+        setActionState("Нужна авторизация.", "error");
+        return;
+      }
+
+      if (!data?.ok) {
+        setActionState(data?.error || "Ошибка сохранения", "error");
+        return;
+      }
+
+      setActionState("Имя Искры успешно сохранено.");
+      await loadIskraState({
+        silent: false,
+        preserveActionState: true
+      });
+    } catch (e) {
+      setActionState("Ошибка сохранения", "error");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function skipIskraDay() {
+    const btn = document.getElementById("skipDayBtn");
+
+    try {
+      if (btn) btn.disabled = true;
+      setActionState("Пропускаем день кормления...");
+
+      const { res, data } = await wsPost(ENDPOINTS.skipDay, {});
+
+      if (res.status === 401) {
+        setActionState("Нужна авторизация.", "error");
+        return;
+      }
+
+      if (!data?.ok) {
+        setActionState(data?.error || "Ошибка действия", "error");
+        return;
+      }
+
+      setActionState("День кормления успешно пропущен.");
+      await loadIskraState({
+        silent: false,
+        preserveActionState: true
+      });
+    } catch (e) {
+      setActionState("Ошибка действия", "error");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  async function restoreIskra() {
+    const btn = document.getElementById("restoreBtn");
+
+    try {
+      if (btn) btn.disabled = true;
+      setActionState("Восстанавливаем Искру...");
+
+      const { res, data } = await wsPost(ENDPOINTS.restore, {});
+
+      if (res.status === 401) {
+        setActionState("Нужна авторизация.", "error");
+        return;
+      }
+
+      if (!data?.ok) {
+        setActionState(data?.error || "Ошибка восстановления", "error");
+        return;
+      }
+
+      setActionState("Искра успешно восстановлена.");
+      await loadIskraState({
+        silent: false,
+        preserveActionState: true
+      });
+    } catch (e) {
+      setActionState("Ошибка восстановления", "error");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function confirmRestoreIskra() {
+    if (!iskraState?.is_dead) {
+      setActionState("Восстановление доступно только если Искра погибла.", "error");
+      return;
     }
 
-    function closeGuideModal() {
-      document.getElementById("guideModalBg")?.classList.add("hidden");
+    const ok = window.confirm("Восстановить Искру за 15 брюликов?");
+    if (!ok) return;
+
+    restoreIskra();
+  }
+
+  function openGuideModal() {
+    document.getElementById("guideModalBg")?.classList.remove("hidden");
+  }
+
+  function closeGuideModal() {
+    document.getElementById("guideModalBg")?.classList.add("hidden");
+  }
+
+  function startIskraAutoRefresh() {
+    if (iskraAutoRefreshTimer) {
+      clearInterval(iskraAutoRefreshTimer);
+      iskraAutoRefreshTimer = null;
     }
 
-    document.getElementById("guideModalBg")?.addEventListener("click", (e) => {
-      if (e.target.id === "guideModalBg") closeGuideModal();
+    iskraAutoRefreshTimer = setInterval(() => {
+      loadIskraState({
+        silent: true,
+        preserveActionState: true
+      });
+    }, AUTO_REFRESH_MS);
+  }
+
+  function stopIskraAutoRefresh() {
+    if (iskraAutoRefreshTimer) {
+      clearInterval(iskraAutoRefreshTimer);
+      iskraAutoRefreshTimer = null;
+    }
+  }
+
+  document.getElementById("guideModalBg")?.addEventListener("click", (e) => {
+    if (e.target.id === "guideModalBg") closeGuideModal();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeGuideModal();
+  });
+
+  window.addEventListener("beforeunload", () => {
+    stopIskraAutoRefresh();
+  });
+
+  async function initIskraPage() {
+    await loadIskraState({
+      silent: false,
+      preserveActionState: false
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeGuideModal();
-    });
+    startIskraAutoRefresh();
+  }
 
-    loadIskraState();
-  </script>
+  initIskraPage();
+</script>
 </body>
 </html>
