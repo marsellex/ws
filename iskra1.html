@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Искра — World Script</title>
   <link rel="icon" href="./ws_logo.ico" type="image/x-icon" />
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
@@ -13,9 +14,9 @@
     :root {
       --bg-body: #060912;
       --bg-body-2: #0b1020;
-      --bg-card: rgba(16, 23, 38, 0.78);
+      --bg-card: rgba(16, 23, 38, 0.80);
       --bg-card-2: rgba(10, 16, 28, 0.92);
-      --bg-input: rgba(7, 10, 18, 0.86);
+      --bg-soft: rgba(255,255,255,0.04);
 
       --border: rgba(255,255,255,0.08);
       --border-strong: rgba(255,255,255,0.12);
@@ -25,25 +26,27 @@
       --text-muted: #7f8ba8;
 
       --pink: #ff3e9d;
+      --pink-2: #cf267a;
       --cyan: #49d7ff;
-      --violet: #8d5cff;
+      --cyan-2: #2b90ff;
       --green: #48e57b;
       --green-2: #1dbf62;
-      --yellow: #fbbf24;
       --gold: #f59e0b;
+      --gold-2: #f6c857;
       --red: #ff6b6b;
+      --red-2: #ee4444;
 
       --success: #98ffc0;
       --warning: #ffe08a;
       --danger: #ff9a9a;
       --info: #95eeff;
 
-      --shadow: 0 12px 40px rgba(0,0,0,0.34);
+      --shadow: 0 16px 40px rgba(0,0,0,0.34);
       --shadow-lg: 0 22px 70px rgba(0,0,0,0.46);
 
-      --radius: 20px;
+      --radius: 22px;
       --radius-lg: 28px;
-      --radius-sm: 14px;
+      --radius-sm: 16px;
 
       --font: "Inter", sans-serif;
     }
@@ -56,45 +59,21 @@
       font-family: var(--font);
       min-height: 100vh;
       background:
-        radial-gradient(circle at top left, rgba(72,229,123,0.08), transparent 30%),
+        radial-gradient(circle at top left, rgba(72,229,123,0.10), transparent 30%),
         radial-gradient(circle at top right, rgba(73,215,255,0.08), transparent 28%),
-        radial-gradient(circle at bottom center, rgba(141,92,255,0.10), transparent 36%),
+        radial-gradient(circle at bottom center, rgba(255,62,157,0.06), transparent 30%),
         linear-gradient(180deg, var(--bg-body), var(--bg-body-2));
       overflow-x: hidden;
     }
 
     .hidden { display: none !important; }
 
-    .bg-animated {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .bg-animated::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(72,229,123,0.12), transparent 36%),
-        radial-gradient(circle at 80% 28%, rgba(73,215,255,0.10), transparent 34%),
-        radial-gradient(circle at 50% 70%, rgba(141,92,255,0.10), transparent 36%);
-      animation: bgRotate 56s linear infinite;
-    }
-
-    @keyframes bgRotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
     .page {
       position: relative;
       z-index: 1;
-      max-width: 1440px;
+      max-width: 1240px;
       margin: 0 auto;
-      padding: 22px;
+      padding: 24px;
     }
 
     .glass {
@@ -114,10 +93,10 @@
       inset: 0;
       background: linear-gradient(
         140deg,
-        rgba(255,255,255,0.07),
-        transparent 22%,
-        transparent 76%,
-        rgba(255,255,255,0.025)
+        rgba(255,255,255,0.06),
+        transparent 24%,
+        transparent 78%,
+        rgba(255,255,255,0.02)
       );
       pointer-events: none;
     }
@@ -131,7 +110,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 16px;
       padding: 18px 22px;
       margin-bottom: 18px;
     }
@@ -143,16 +122,40 @@
       min-width: 0;
     }
 
-    .brand-logo-image {
-      display: block;
-      height: 64px;
-      width: auto;
-      max-width: 280px;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 24px rgba(73, 215, 255, 0.14));
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(72,229,123,0.12);
     }
 
-    .top-actions {
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      margin: 0 0 4px;
+    }
+
+    .brand-sub {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .topbar-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -161,18 +164,19 @@
     .btn {
       border: none;
       border-radius: 14px;
-      padding: 12px 16px;
+      padding: 11px 16px;
       font-size: 13px;
       font-weight: 800;
       color: white;
       cursor: pointer;
       font-family: var(--font);
+      transition: .18s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: .2s ease;
       text-decoration: none;
+      white-space: nowrap;
     }
 
     .btn:hover { transform: translateY(-2px); }
@@ -184,30 +188,29 @@
 
     .btn-green {
       background: linear-gradient(135deg, var(--green), var(--green-2));
-      box-shadow: 0 10px 30px rgba(72,229,123,0.22);
+      box-shadow: 0 10px 28px rgba(72,229,123,0.20);
     }
 
     .btn-cyan {
-      background: linear-gradient(135deg, var(--cyan), #2b90ff);
-      box-shadow: 0 10px 30px rgba(73,215,255,0.22);
+      background: linear-gradient(135deg, var(--cyan), var(--cyan-2));
+      box-shadow: 0 10px 28px rgba(73,215,255,0.20);
     }
 
     .btn-gold {
-      background: linear-gradient(135deg, #f6c857, #f59e0b);
-      color: #1a1305;
-      box-shadow: 0 10px 30px rgba(245,158,11,0.24);
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      color: #1d1402;
+      box-shadow: 0 10px 28px rgba(245,158,11,0.22);
     }
 
     .btn-red {
-      background: linear-gradient(135deg, var(--red), #ee4444);
-      box-shadow: 0 10px 30px rgba(255,107,107,0.22);
+      background: linear-gradient(135deg, var(--red), var(--red-2));
+      box-shadow: 0 10px 28px rgba(255,107,107,0.20);
     }
 
     .btn-dark {
       color: var(--text-secondary);
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: none;
     }
 
     .btn-dark:hover {
@@ -216,43 +219,14 @@
       border-color: rgba(255,255,255,0.12);
     }
 
-    .field {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: var(--bg-input);
-      color: var(--text);
-      font-size: 13px;
-      outline: none;
-      transition: .18s ease;
-      font-family: var(--font);
-    }
-
-    .field:focus {
-      border-color: rgba(73,215,255,0.22);
-      box-shadow: 0 0 0 3px rgba(73,215,255,0.08);
-    }
-
-    .muted {
-      color: var(--text-muted);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .hero-card {
+    .hero {
       padding: 28px;
-      min-height: 700px;
+      margin-bottom: 18px;
+      min-height: 420px;
       display: grid;
-      align-content: start;
-      overflow: hidden;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+      align-items: center;
     }
 
     .hero-kicker {
@@ -264,231 +238,125 @@
       font-weight: 900;
       letter-spacing: .08em;
       text-transform: uppercase;
-      color: #b8ffd1;
+      color: #9dffc0;
       background: rgba(72,229,123,0.08);
       border: 1px solid rgba(72,229,123,0.16);
       margin-bottom: 14px;
     }
 
     .hero-title {
-      font-size: clamp(32px, 5vw, 56px);
+      font-size: clamp(34px, 5vw, 58px);
       font-weight: 900;
       line-height: .95;
       letter-spacing: -.05em;
       margin: 0 0 14px;
     }
 
-    .hero-title .accent {
-      background: linear-gradient(135deg, #fff, #a4ffd0 45%, #95eeff 75%, #8d5cff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
     .hero-text {
-      color: var(--text-secondary);
       font-size: 15px;
       line-height: 1.75;
-      max-width: 760px;
-      margin-bottom: 26px;
-    }
-
-    .iskra-stage {
-      position: relative;
-      min-height: 380px;
-      display: grid;
-      place-items: center;
-      overflow: visible;
+      color: var(--text-secondary);
+      max-width: 620px;
       margin-bottom: 18px;
     }
 
-    .iskra-aura {
-      position: absolute;
-      width: 360px;
-      height: 360px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle, rgba(72,229,123,0.20), rgba(73,215,255,0.12), transparent 70%);
-      filter: blur(18px);
-      animation: auraPulse 4s ease-in-out infinite;
-    }
-
-    .iskra-particles {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .iskra-particle {
-      position: absolute;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #d7fff1 0%, #65ffc0 52%, transparent 100%);
-      box-shadow: 0 0 14px rgba(101,255,192,0.55);
-      animation: floatSpark 5.4s ease-in-out infinite;
-      opacity: .7;
-    }
-
-    .iskra-particle:nth-child(1) { left: 24%; top: 58%; animation-delay: 0s; }
-    .iskra-particle:nth-child(2) { left: 32%; top: 24%; animation-delay: -.8s; }
-    .iskra-particle:nth-child(3) { left: 68%; top: 22%; animation-delay: -1.6s; }
-    .iskra-particle:nth-child(4) { left: 74%; top: 58%; animation-delay: -2.4s; }
-    .iskra-particle:nth-child(5) { left: 50%; top: 16%; animation-delay: -3.2s; }
-    .iskra-particle:nth-child(6) { left: 18%; top: 38%; animation-delay: -4s; }
-    .iskra-particle:nth-child(7) { left: 82%; top: 38%; animation-delay: -4.8s; }
-
-    @keyframes auraPulse {
-      0%,100% { transform: scale(1); opacity: .7; }
-      50% { transform: scale(1.12); opacity: 1; }
-    }
-
-    @keyframes floatSpark {
-      0%,100% { transform: translateY(0) scale(1); opacity: .4; }
-      50% { transform: translateY(-22px) scale(1.28); opacity: 1; }
-    }
-
-    .iskra-image-wrap {
-      position: relative;
-      width: min(420px, 90%);
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      animation: floatPet 3.8s ease-in-out infinite;
-      filter: drop-shadow(0 26px 60px rgba(72,229,123,0.16));
-    }
-
-    .iskra-image-wrap.dead {
-      filter: grayscale(1) brightness(.72) drop-shadow(0 18px 42px rgba(255,107,107,0.14));
-      animation-duration: 6s;
-    }
-
-    @keyframes floatPet {
-      0%,100% { transform: translateY(0px); }
-      50% { transform: translateY(-14px); }
-    }
-
-    .iskra-image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    .iskra-name-row {
+    .hero-status-line {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 16px;
     }
 
-    .name-badge {
+    .pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 10px 14px;
       border-radius: 999px;
-      font-size: 13px;
-      font-weight: 900;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: #fff;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: 999px;
       font-size: 12px;
       font-weight: 800;
       border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
     }
 
-    .status-pill.ok {
+    .pill.ok {
       color: var(--success);
       border-color: rgba(72,229,123,0.18);
       background: rgba(72,229,123,0.08);
     }
 
-    .status-pill.warn {
+    .pill.warn {
       color: var(--warning);
       border-color: rgba(251,191,36,0.18);
       background: rgba(251,191,36,0.08);
     }
 
-    .status-pill.danger {
+    .pill.danger {
       color: var(--danger);
       border-color: rgba(255,107,107,0.18);
       background: rgba(255,107,107,0.08);
     }
 
-    .satiety-box {
-      padding: 18px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
+    .pill.info {
+      color: var(--info);
+      border-color: rgba(73,215,255,0.18);
+      background: rgba(73,215,255,0.08);
     }
 
-    .satiety-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
+    .iskra-scene {
+      display: grid;
+      place-items: center;
+      position: relative;
+      min-height: 340px;
     }
 
-    .satiety-title {
-      font-size: 14px;
-      font-weight: 900;
-      color: #fff;
+    .iskra-aura {
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(72,229,123,0.22), transparent 68%);
+      filter: blur(8px);
+      animation: auraPulse 3.2s ease-in-out infinite;
+      pointer-events: none;
     }
 
-    .satiety-value {
-      font-size: 20px;
-      font-weight: 900;
+    @keyframes auraPulse {
+      0%,100% { transform: scale(1); opacity: .55; }
+      50% { transform: scale(1.18); opacity: .95; }
     }
 
-    .satiety-value.good { color: var(--success); }
-    .satiety-value.warn { color: var(--warning); }
-    .satiety-value.bad { color: var(--danger); }
-
-    .bar {
-      height: 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.06);
+    .iskra-image-wrap {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      border-radius: 28px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28), 0 0 30px rgba(72,229,123,0.10);
+      animation: iskraFloat 3.6s ease-in-out infinite;
     }
 
-    .bar-fill {
+    @keyframes iskraFloat {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .iskra-image-wrap img {
+      width: 100%;
       height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      transition: width .35s ease, background .35s ease;
-      background: linear-gradient(90deg, #48e57b, #95eeff);
-      box-shadow: 0 0 18px rgba(72,229,123,0.24);
+      object-fit: cover;
+      display: block;
     }
 
-    .bar-fill.warn {
-      background: linear-gradient(90deg, #fbbf24, #f59e0b);
-      box-shadow: 0 0 18px rgba(245,158,11,0.24);
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
     }
 
-    .bar-fill.danger {
-      background: linear-gradient(90deg, #ff6b6b, #ee4444);
-      box-shadow: 0 0 18px rgba(255,107,107,0.24);
-    }
-
-    .stats-card,
-    .info-card,
-    .feed-card,
-    .bonus-card {
+    .card {
       padding: 22px;
     }
 
@@ -502,10 +370,10 @@
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
     }
 
-    .stat-item {
+    .stat-box {
       padding: 16px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.08);
@@ -523,195 +391,168 @@
     }
 
     .stat-value {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 900;
       color: #fff;
-      line-height: 1.1;
+      line-height: 1.15;
       word-break: break-word;
     }
 
-    .stat-sub {
-      margin-top: 6px;
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.55;
+    .stat-value.green { color: #b8ffd1; }
+    .stat-value.gold { color: #ffe08a; }
+    .stat-value.cyan { color: #9cefff; }
+    .stat-value.red { color: #ffb2b2; }
+
+    .feeding-bar-wrap {
+      margin-top: 8px;
     }
 
-    .bonus-highlight {
-      padding: 18px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, rgba(72,229,123,0.12), rgba(73,215,255,0.08));
-      border: 1px solid rgba(72,229,123,0.18);
-      margin-bottom: 14px;
-    }
-
-    .bonus-main-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .10em;
-      color: var(--text-muted);
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .bonus-main-value {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 900;
-      color: #d8ffe6;
-      line-height: 1;
-      margin-bottom: 8px;
-      text-shadow: 0 0 18px rgba(72,229,123,0.18);
-    }
-
-    .bonus-note {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-
-    .info-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .info-row {
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.03);
+    .feeding-bar {
+      position: relative;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
       border: 1px solid rgba(255,255,255,0.08);
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.7;
     }
 
-    .info-row strong {
-      color: #fff;
+    .feeding-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #48e57b, #49d7ff);
+      transition: width .3s ease;
+      box-shadow: 0 0 16px rgba(72,229,123,0.25);
     }
 
-    .feed-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .feed-item {
-      display: grid;
-      gap: 6px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .feed-top {
+    .feeding-bar-meta {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .feed-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .feed-date {
+      margin-top: 8px;
       font-size: 12px;
       color: var(--text-muted);
+      font-weight: 700;
     }
 
-    .feed-meta {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    .empty-box {
-      padding: 22px;
-      border-radius: 18px;
-      border: 1px dashed rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.02);
-      text-align: center;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
-
-    .actions-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .inline-form {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .inline-form .field {
-      flex: 1 1 220px;
-    }
-
-    .formula-box {
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(141,92,255,0.08);
-      border: 1px solid rgba(141,92,255,0.14);
-      color: #e9ddff;
-      font-size: 13px;
-      line-height: 1.7;
-      margin-top: 12px;
-    }
-
-    .toast-wrap {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      z-index: 3000;
+    .actions-grid {
       display: grid;
+      gap: 12px;
+    }
+
+    .action-row {
+      display: flex;
       gap: 10px;
-      width: min(380px, calc(100vw - 24px));
+      flex-wrap: wrap;
     }
 
-    .toast {
-      border-radius: 16px;
-      padding: 14px 16px;
-      font-size: 13px;
-      font-weight: 800;
-      line-height: 1.45;
-      box-shadow: var(--shadow-lg);
+    .state-box {
+      padding: 16px 18px;
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(16px);
-      animation: toastIn .24s ease;
+      background: rgba(255,255,255,0.03);
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
     }
 
-    .toast.success {
-      background: rgba(72,229,123,0.14);
-      color: var(--success);
-      border-color: rgba(72,229,123,0.18);
-    }
-
-    .toast.error {
-      background: rgba(255,107,107,0.14);
-      color: var(--danger);
-      border-color: rgba(255,107,107,0.18);
-    }
-
-    .toast.info {
-      background: rgba(73,215,255,0.14);
+    .state-box.loading {
       color: var(--info);
-      border-color: rgba(73,215,255,0.18);
+      border-color: rgba(73,215,255,0.16);
+      background: rgba(73,215,255,0.06);
     }
 
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(18px); }
-      to { opacity: 1; transform: translateX(0); }
+    .state-box.error {
+      color: var(--danger);
+      border-color: rgba(255,107,107,0.16);
+      background: rgba(255,107,107,0.06);
     }
 
-    @media (max-width: 1100px) {
+    .name-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(7, 10, 18, 0.86);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: .18s ease;
+      font-family: var(--font);
+    }
+
+    .field:focus {
+      border-color: rgba(73,215,255,0.22);
+      box-shadow: 0 0 0 3px rgba(73,215,255,0.08);
+    }
+
+    .field.small {
+      max-width: 320px;
+    }
+
+    .section-note {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(5, 10, 20, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .modal-bg.hidden {
+      display: none !important;
+    }
+
+    .modal {
+      width: min(720px, 100%);
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(16, 23, 38, 0.96);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 900;
+      margin: 0 0 12px;
+      letter-spacing: -.03em;
+    }
+
+    .modal-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
       .layout {
         grid-template-columns: 1fr;
       }
@@ -719,173 +560,209 @@
 
     @media (max-width: 760px) {
       .page { padding: 14px; }
-      .topbar { padding: 16px; flex-direction: column; align-items: flex-start; }
-      .hero-card, .stats-card, .info-card, .feed-card, .bonus-card { padding: 16px; }
-      .stats-grid { grid-template-columns: 1fr; }
-      .hero-title { font-size: 34px; }
-      .iskra-stage { min-height: 280px; }
+      .topbar,
+      .hero,
+      .card,
+      .modal {
+        padding: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .iskra-image-wrap {
+        width: 220px;
+        height: 220px;
+      }
+
+      .hero-title {
+        font-size: 34px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="bg-animated" aria-hidden="true"></div>
-  <div id="toastWrap" class="toast-wrap"></div>
-
   <div class="page">
-    <header class="topbar glass">
+    <header class="glass topbar">
       <div class="brand">
-        <img class="brand-logo-image" src="./botlogo.png" alt="World Script" />
+        <div class="brand-logo">
+          <img src="./default-avatars/iskra.png" alt="Искра" />
+        </div>
+        <div>
+          <div class="brand-title">Искра</div>
+          <div class="brand-sub">Система ухода, сытости и бонуса за репутацию</div>
+        </div>
       </div>
 
-      <div class="top-actions">
+      <div class="topbar-actions">
         <a class="btn btn-dark" href="./index.html">← Назад</a>
-        <button class="btn btn-cyan" type="button" onclick="feedIskra(1)">🍃 Покормить 1 репутацией</button>
+        <button class="btn btn-cyan" type="button" onclick="reloadAll()">↺ Обновить</button>
       </div>
     </header>
 
-    <div class="layout">
-      <section class="glass hero-card">
-        <div class="hero-kicker">Серия и забота</div>
-        <h1 class="hero-title">Это твоя <span class="accent">Искра</span></h1>
+    <section class="glass hero">
+      <div>
+        <div class="hero-kicker">Искра World Script</div>
+        <h1 class="hero-title">Следи за состоянием своей Искры</h1>
         <div class="hero-text">
-          Давай ей имя, корми репутациями и не дай погаснуть.  
-          Если Искра остаётся без еды дольше 2 дней — она умирает от голода.  
-          Но пока ты заботишься о ней, она приносит приятный бонус на игровой баланс ✨
+          Искра кормится автоматически, когда тебе зачисляется репутация. Чем лучше уход — тем выше награда за одну репутацию.
         </div>
 
-        <div class="iskra-stage">
-          <div class="iskra-aura"></div>
-
-          <div class="iskra-particles">
-            <div class="iskra-particle"></div>
-            <div class="iskra-particle"></div>
-            <div class="iskra-particle"></div>
-            <div class="iskra-particle"></div>
-            <div class="iskra-particle"></div>
-            <div class="iskra-particle"></div>
-            <div class="iskra-particle"></div>
-          </div>
-
-          <div id="iskraImageWrap" class="iskra-image-wrap">
-            <img src="./default-avatars/iskra.png" alt="Искра" />
-          </div>
+        <div class="hero-status-line">
+          <div id="iskraStatusPill" class="pill info">⌛ Загрузка...</div>
+          <div id="iskraNamePill" class="pill">Имя: —</div>
+          <div id="iskraRewardPill" class="pill">Награда: Ошибка загрузки</div>
         </div>
+      </div>
 
-        <div class="iskra-name-row">
-          <div class="name-badge">💚 Имя: <span id="iskraNameText">Искра</span></div>
-          <div id="iskraStatusPill" class="status-pill ok">Сыта и довольна</div>
+      <div class="iskra-scene">
+        <div class="iskra-aura"></div>
+        <div class="iskra-image-wrap">
+          <img id="iskraImage" src="./default-avatars/iskra.png" alt="Искра" />
         </div>
+      </div>
+    </section>
 
-        <div class="inline-form">
-          <input id="iskraNameInput" class="field" maxlength="24" placeholder="Дай имя своей Искре" />
-          <button class="btn btn-green" type="button" onclick="saveIskraName()">Сохранить имя</button>
-        </div>
+    <div class="layout">
+      <section class="glass card">
+        <h2 class="card-title">Состояние</h2>
 
-        <div class="satiety-box">
-          <div class="satiety-head">
-            <div class="satiety-title">Сытость</div>
-            <div id="satietyValue" class="satiety-value good">100%</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-label">Имя Искры</div>
+            <div id="iskraNameValue" class="stat-value">Ошибка загрузки</div>
           </div>
 
-          <div class="bar">
-            <div id="satietyBar" class="bar-fill"></div>
+          <div class="stat-box">
+            <div class="stat-label">Общее состояние</div>
+            <div id="iskraMoodValue" class="stat-value cyan">Ошибка загрузки</div>
           </div>
 
-          <div id="satietyHint" class="muted" style="margin-top:10px;">
-            Всё отлично. Искра накормлена и светится.
+          <div class="stat-box">
+            <div class="stat-label">Рейтинг ухода</div>
+            <div id="iskraCareValue" class="stat-value gold">Ошибка загрузки</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-label">Награда за 1 репутацию</div>
+            <div id="iskraRewardValue" class="stat-value green">Ошибка загрузки</div>
           </div>
         </div>
 
-        <div class="actions-row">
-          <button class="btn btn-cyan" type="button" onclick="feedIskra(5)">🌿 Покормить 5 репутациями</button>
-          <button class="btn btn-gold" type="button" onclick="restoreIskra()">⚙️ Восстановить за 15 брюликов</button>
-          <button class="btn btn-dark" type="button" onclick="resetDemo()">↺ Сбросить демо</button>
+        <div style="margin-top:16px;">
+          <div class="stat-label">Сытость</div>
+
+          <div class="feeding-bar-wrap">
+            <div class="feeding-bar">
+              <div id="iskraSatietyFill" class="feeding-bar-fill"></div>
+            </div>
+
+            <div class="feeding-bar-meta">
+              <span id="iskraSatietyText">Ошибка загрузки</span>
+              <span id="iskraFeedHint">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="iskraLoadState" class="state-box loading" style="margin-top:16px;">
+          Загружаем данные Искры...
         </div>
       </section>
 
-      <section style="display:grid; gap:18px;">
-        <div class="glass stats-card">
-          <h2 class="card-title">Данные Искры</h2>
+      <section class="glass card">
+        <h2 class="card-title">Управление</h2>
 
-          <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-label">Всего скормлено репутаций</div>
-              <div id="totalReputationValue" class="stat-value">0</div>
-              <div class="stat-sub">Общее количество репутаций, которыми кормили Искру</div>
-            </div>
-
-            <div class="stat-item">
-              <div class="stat-label">До голода</div>
-              <div id="timeToDeathValue" class="stat-value">48ч 0м</div>
-              <div class="stat-sub">Через сколько сытость упадёт до нуля</div>
-            </div>
-
-            <div class="stat-item">
-              <div class="stat-label">Последнее кормление</div>
-              <div id="lastFeedValue" class="stat-value" style="font-size:18px;">—</div>
-              <div class="stat-sub">После кормления бонус уходит на сайт с задержкой 30 минут</div>
-            </div>
-
-            <div class="stat-item">
-              <div class="stat-label">Бонусных шагов</div>
-              <div id="bonusStepsValue" class="stat-value">0</div>
-              <div class="stat-sub">Каждые 5 репутаций = +1 шаг бонуса</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="glass bonus-card">
-          <h2 class="card-title">Текущий бонус</h2>
-
-          <div class="bonus-highlight">
-            <div class="bonus-main-label">Следующее начисление на игровой баланс</div>
-            <div id="bonusAmountValue" class="bonus-main-value">$1,000</div>
-            <div class="bonus-note">
-              За каждые <b>5 репутаций</b> сумма увеличивается на <b>20%</b> от текущего значения.
+        <div class="actions-grid">
+          <div>
+            <div class="stat-label">Новое имя</div>
+            <div class="name-box">
+              <input id="iskraNameInput" class="field small" type="text" maxlength="32" placeholder="Например: Искра, Лучик, Флэш..." />
+              <button id="saveNameBtn" class="btn btn-cyan" type="button" onclick="saveIskraName()">Сохранить имя</button>
             </div>
           </div>
 
-          <div class="formula-box">
-            Формула сейчас такая:<br>
-            <b>bonus = 1000 × 1.2^N</b>, где <b>N</b> — количество полных шагов по 5 репутаций.
+          <div class="action-row">
+            <button id="openGuideBtn" class="btn btn-dark" type="button" onclick="openGuideModal()">Инструкция по Искре</button>
+            <button id="skipDayBtn" class="btn btn-gold" type="button" onclick="skipIskraDay()">Пропустить день — 3⚙️</button>
+            <button id="restoreBtn" class="btn btn-red" type="button" onclick="confirmRestoreIskra()">Восстановить — 15⚙️</button>
           </div>
-        </div>
 
-        <div class="glass info-card">
-          <h2 class="card-title">Как работает система</h2>
-
-          <div class="info-list">
-            <div class="info-row"><strong>Имя:</strong> Искре можно дать своё имя.</div>
-            <div class="info-row"><strong>Сытость:</strong> от 0 до 100, полностью падает за 2 дня без кормления.</div>
-            <div class="info-row"><strong>Кормление:</strong> минимум 1 репутация раз в 2 дня, чтобы она не умерла.</div>
-            <div class="info-row"><strong>Бонус:</strong> каждые 5 репутаций повышают награду на 20%.</div>
-            <div class="info-row"><strong>Начальная сумма:</strong> $1 000 на игровой баланс.</div>
-            <div class="info-row"><strong>Смерть:</strong> если сытость упала до 0, Искра погибает от голода.</div>
-            <div class="info-row"><strong>Восстановление:</strong> вернуть прошлый прогресс можно за 15 брюликов.</div>
-            <div class="info-row"><strong>AHK-логика:</strong> после прихода репутации зачисление на сайт делается через 30 минут.</div>
+          <div class="section-note">
+            Здесь оставлены только важные действия. Всё остальное Искра делает автоматически после начисления репутации.
           </div>
-        </div>
 
-        <div class="glass feed-card">
-          <h2 class="card-title">История кормления</h2>
-          <div id="feedList" class="feed-list"></div>
+          <div id="iskraActionState" class="state-box">
+            Здесь будут появляться результаты действий.
+          </div>
         </div>
       </section>
     </div>
   </div>
 
+  <div id="guideModalBg" class="modal-bg hidden">
+    <div class="modal">
+      <h3 class="modal-title">Инструкция по Искре</h3>
+      <div class="modal-text">
+Искра питается репутацией автоматически.
+Если долго не кормить её, сытость падает.
+Чем лучше уход, тем выше награда за одну репутацию.
+Если Искра погибнет, её можно восстановить за брюлики.
+Также можно пропускать дни кормления за брюлики, чтобы сохранить прогресс.
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-dark" type="button" onclick="closeGuideModal()">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const STORAGE_KEY = "ws_iskra_demo_state_v1";
-    const FULL_HUNGER_MS = 48 * 60 * 60 * 1000;
-    const BONUS_BASE = 1000;
-    const BONUS_STEP_REP = 5;
-    const BONUS_GROWTH = 1.2;
-    const RESTORE_COST = 15;
+    const API_BASE = "https://world-script-api.onrender.com";
 
-    const toastWrap = document.getElementById("toastWrap");
+    const ENDPOINTS = {
+      state: "/api/ws/iskra/state",
+      rename: "/api/ws/iskra/rename",
+      restore: "/api/ws/iskra/restore",
+      skipDay: "/api/ws/iskra/skip-day"
+    };
 
-    function nowTs() {
-      return Date.now();
+    let iskraState = null;
+
+    function wsGetToken() {
+      return localStorage.getItem("ws_token") || "";
+    }
+
+    async function wsRequest(path, options = {}) {
+      const token = wsGetToken();
+      const headers = { ...(options.headers || {}) };
+
+      if (token) headers.Authorization = "Bearer " + token;
+
+      const response = await fetch(API_BASE + path, {
+        ...options,
+        headers
+      });
+
+      const data = await response.json().catch(() => ({
+        ok: false,
+        error: "Bad JSON"
+      }));
+
+      return { res: response, data };
+    }
+
+    async function wsGet(path) {
+      return wsRequest(path, { method: "GET" });
+    }
+
+    async function wsPost(path, body) {
+      return wsRequest(path, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body || {})
+      });
     }
 
     function safeNumber(value, fallback = 0) {
@@ -893,318 +770,317 @@
       return Number.isFinite(n) ? n : fallback;
     }
 
-    function clamp(num, min, max) {
-      return Math.max(min, Math.min(max, num));
-    }
-
-    function escapeHtml(str) {
-      return String(str || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    function normalizeText(value, fallback = "") {
+      const str = String(value ?? fallback);
+      return str.trim();
     }
 
     function formatMoney(n) {
       return "$" + safeNumber(n).toLocaleString("ru-RU");
     }
 
-    function formatDateTime(value) {
-      if (!value) return "—";
-      try {
-        return new Date(value).toLocaleString("ru-RU", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        });
-      } catch {
-        return "—";
+    function setLoadState(text, type = "loading") {
+      const box = document.getElementById("iskraLoadState");
+      if (!box) return;
+
+      box.textContent = text || "";
+      box.className = "state-box " + type;
+    }
+
+    function setActionState(text, type = "") {
+      const box = document.getElementById("iskraActionState");
+      if (!box) return;
+
+      box.textContent = text || "";
+      box.className = "state-box" + (type ? " " + type : "");
+    }
+
+    function getIskraMoodBySatiety(satiety, isDead) {
+      if (isDead) {
+        return {
+          text: "Искра погибла",
+          pillClass: "danger",
+          valueClass: "red",
+          image: "./default-avatars/iskra_hungry.png",
+          hint: "Требуется восстановление"
+        };
       }
-    }
 
-    function formatTimeLeft(ms) {
-      const total = Math.max(0, Math.floor(ms / 1000));
-      const d = Math.floor(total / 86400);
-      const h = Math.floor((total % 86400) / 3600);
-      const m = Math.floor((total % 3600) / 60);
+      const s = Math.max(0, Math.min(100, safeNumber(satiety)));
 
-      if (d > 0) return `${d}д ${h}ч ${m}м`;
-      return `${h}ч ${m}м`;
-    }
+      if (s <= 33) {
+        return {
+          text: "Голодная",
+          pillClass: "danger",
+          valueClass: "red",
+          image: "./default-avatars/iskra_hungry.png",
+          hint: "Нужно покормить"
+        };
+      }
 
-    function showToast(message, type = "info", duration = 2500) {
-      if (!toastWrap) return;
+      if (s <= 66) {
+        return {
+          text: "Нестабильная",
+          pillClass: "warn",
+          valueClass: "gold",
+          image: "./default-avatars/iskra_mid.png",
+          hint: "Желательно покормить"
+        };
+      }
 
-      const el = document.createElement("div");
-      el.className = "toast " + type;
-      el.textContent = String(message || "");
-      toastWrap.appendChild(el);
-
-      setTimeout(() => {
-        el.style.transition = ".22s ease";
-        el.style.opacity = "0";
-        el.style.transform = "translateX(18px)";
-        setTimeout(() => el.remove(), 220);
-      }, duration);
-    }
-
-    function getDefaultState() {
       return {
-        name: "Искра",
-        total_reputation: 0,
-        last_feed_at: nowTs(),
-        is_dead: false,
-        dead_at: null,
-        preserved_progress: null,
-        feed_log: []
+        text: "Сияет",
+        pillClass: "ok",
+        valueClass: "green",
+        image: "./default-avatars/iskra.png",
+        hint: "Всё отлично"
       };
     }
 
-    function loadState() {
+    function renderIskraState(state) {
+      iskraState = state || null;
+
+      const satiety = safeNumber(state?.satiety, 0);
+      const careRating = safeNumber(state?.care_rating, 0);
+      const rewardPerRep = safeNumber(state?.reward_per_rep, 0);
+      const isDead = !!state?.is_dead;
+      const name = normalizeText(state?.pet_name, "Без имени");
+
+      const mood = getIskraMoodBySatiety(satiety, isDead);
+
+      const statusPill = document.getElementById("iskraStatusPill");
+      const namePill = document.getElementById("iskraNamePill");
+      const rewardPill = document.getElementById("iskraRewardPill");
+
+      const nameValue = document.getElementById("iskraNameValue");
+      const moodValue = document.getElementById("iskraMoodValue");
+      const careValue = document.getElementById("iskraCareValue");
+      const rewardValue = document.getElementById("iskraRewardValue");
+
+      const satietyFill = document.getElementById("iskraSatietyFill");
+      const satietyText = document.getElementById("iskraSatietyText");
+      const feedHint = document.getElementById("iskraFeedHint");
+      const image = document.getElementById("iskraImage");
+      const nameInput = document.getElementById("iskraNameInput");
+      const restoreBtn = document.getElementById("restoreBtn");
+
+      if (statusPill) {
+        statusPill.className = "pill " + mood.pillClass;
+        statusPill.textContent = isDead ? "💀 Искра погибла" : "✨ " + mood.text;
+      }
+
+      if (namePill) namePill.textContent = "Имя: " + name;
+      if (rewardPill) rewardPill.textContent = "Награда: " + formatMoney(rewardPerRep);
+
+      if (nameValue) nameValue.textContent = name;
+      if (moodValue) {
+        moodValue.textContent = mood.text;
+        moodValue.className = "stat-value " + mood.valueClass;
+      }
+      if (careValue) careValue.textContent = careRating + "/100";
+      if (rewardValue) rewardValue.textContent = formatMoney(rewardPerRep);
+
+      if (satietyFill) satietyFill.style.width = Math.max(0, Math.min(100, satiety)) + "%";
+      if (satietyText) satietyText.textContent = satiety + "/100";
+      if (feedHint) feedHint.textContent = mood.hint;
+
+      if (image) {
+        image.src = mood.image;
+        image.onerror = () => {
+          image.src = "./default-avatars/iskra.png";
+        };
+      }
+
+      if (nameInput && !nameInput.value.trim()) {
+        nameInput.value = name === "Без имени" ? "" : name;
+      }
+
+      if (restoreBtn) restoreBtn.disabled = !isDead;
+
+      setLoadState("Данные Искры успешно загружены.", "loading");
+    }
+
+    function renderLoadError(message = "Ошибка загрузки") {
+      const text = message || "Ошибка загрузки";
+
+      const statusPill = document.getElementById("iskraStatusPill");
+      const rewardPill = document.getElementById("iskraRewardPill");
+      const nameValue = document.getElementById("iskraNameValue");
+      const moodValue = document.getElementById("iskraMoodValue");
+      const careValue = document.getElementById("iskraCareValue");
+      const rewardValue = document.getElementById("iskraRewardValue");
+      const satietyText = document.getElementById("iskraSatietyText");
+      const feedHint = document.getElementById("iskraFeedHint");
+      const satietyFill = document.getElementById("iskraSatietyFill");
+
+      if (statusPill) {
+        statusPill.className = "pill danger";
+        statusPill.textContent = "⚠ Ошибка загрузки";
+      }
+
+      if (rewardPill) rewardPill.textContent = "Награда: Ошибка загрузки";
+      if (nameValue) nameValue.textContent = text;
+      if (moodValue) {
+        moodValue.textContent = text;
+        moodValue.className = "stat-value red";
+      }
+      if (careValue) careValue.textContent = text;
+      if (rewardValue) rewardValue.textContent = text;
+      if (satietyText) satietyText.textContent = text;
+      if (feedHint) feedHint.textContent = "—";
+      if (satietyFill) satietyFill.style.width = "0%";
+
+      setLoadState(text, "error");
+    }
+
+    async function loadIskraState() {
+      setLoadState("Загружаем данные Искры...", "loading");
+
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return getDefaultState();
+        const { res, data } = await wsGet(ENDPOINTS.state);
 
-        const parsed = JSON.parse(raw);
-        return {
-          ...getDefaultState(),
-          ...parsed,
-          feed_log: Array.isArray(parsed.feed_log) ? parsed.feed_log : []
-        };
-      } catch {
-        return getDefaultState();
+        if (res.status === 401) {
+          renderLoadError("Нужна авторизация");
+          return;
+        }
+
+        if (!data?.ok) {
+          renderLoadError(data?.error || "Ошибка загрузки");
+          return;
+        }
+
+        renderIskraState(data.item || data.state || data);
+      } catch (e) {
+        renderLoadError("Ошибка загрузки");
       }
     }
 
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    async function reloadAll() {
+      await loadIskraState();
     }
 
-    function getSatietyPercent() {
-      if (state.is_dead) return 0;
-
-      const diff = nowTs() - safeNumber(state.last_feed_at, nowTs());
-      const left = clamp(1 - (diff / FULL_HUNGER_MS), 0, 1);
-      return Math.round(left * 100);
-    }
-
-    function getIskraBonusSteps() {
-      return Math.floor(safeNumber(state.total_reputation) / BONUS_STEP_REP);
-    }
-
-    function getCurrentBonusAmount() {
-      const steps = getIskraBonusSteps();
-      return Math.round(BONUS_BASE * Math.pow(BONUS_GROWTH, steps));
-    }
-
-    function pushFeedLog(count, note) {
-      state.feed_log.unshift({
-        rep_count: safeNumber(count),
-        note: String(note || ""),
-        created_at: nowTs()
-      });
-
-      state.feed_log = state.feed_log.slice(0, 20);
-    }
-
-    function updateDeathStateIfNeeded() {
-      if (state.is_dead) return;
-
-      const satiety = getSatietyPercent();
-      if (satiety <= 0) {
-        state.is_dead = true;
-        state.dead_at = nowTs();
-        state.preserved_progress = {
-          total_reputation: state.total_reputation,
-          feed_log: [...state.feed_log],
-          name: state.name
-        };
-        saveState();
-      }
-    }
-
-    function saveIskraName() {
+    async function saveIskraName() {
       const input = document.getElementById("iskraNameInput");
-      const value = String(input?.value || "").trim();
+      const btn = document.getElementById("saveNameBtn");
+      const value = normalizeText(input?.value, "");
 
       if (!value) {
-        showToast("Введи имя для Искры", "error");
+        setActionState("Введите имя для Искры.", "error");
         return;
       }
 
-      state.name = value.slice(0, 24);
-      saveState();
-      render();
-      showToast("Имя сохранено ✨", "success");
+      try {
+        if (btn) btn.disabled = true;
+        setActionState("Сохраняем имя...");
+
+        const { res, data } = await wsPost(ENDPOINTS.rename, {
+          pet_name: value
+        });
+
+        if (res.status === 401) {
+          setActionState("Нужна авторизация.", "error");
+          return;
+        }
+
+        if (!data?.ok) {
+          setActionState(data?.error || "Ошибка сохранения", "error");
+          return;
+        }
+
+        setActionState("Имя Искры успешно сохранено.");
+        await loadIskraState();
+      } catch (e) {
+        setActionState("Ошибка сохранения", "error");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
     }
 
-    function feedIskra(repCount = 1) {
-      updateDeathStateIfNeeded();
+    async function skipIskraDay() {
+      const btn = document.getElementById("skipDayBtn");
 
-      if (state.is_dead) {
-        showToast("Искра погасла. Сначала восстанови её", "error");
+      try {
+        if (btn) btn.disabled = true;
+        setActionState("Пропускаем день кормления...");
+
+        const { res, data } = await wsPost(ENDPOINTS.skipDay, {});
+
+        if (res.status === 401) {
+          setActionState("Нужна авторизация.", "error");
+          return;
+        }
+
+        if (!data?.ok) {
+          setActionState(data?.error || "Ошибка действия", "error");
+          return;
+        }
+
+        setActionState("День кормления успешно пропущен.");
+        await loadIskraState();
+      } catch (e) {
+        setActionState("Ошибка действия", "error");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    async function restoreIskra() {
+      const btn = document.getElementById("restoreBtn");
+
+      try {
+        if (btn) btn.disabled = true;
+        setActionState("Восстанавливаем Искру...");
+
+        const { res, data } = await wsPost(ENDPOINTS.restore, {});
+
+        if (res.status === 401) {
+          setActionState("Нужна авторизация.", "error");
+          return;
+        }
+
+        if (!data?.ok) {
+          setActionState(data?.error || "Ошибка восстановления", "error");
+          return;
+        }
+
+        setActionState("Искра успешно восстановлена.");
+        await loadIskraState();
+      } catch (e) {
+        setActionState("Ошибка восстановления", "error");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function confirmRestoreIskra() {
+      if (!iskraState?.is_dead) {
+        setActionState("Восстановление доступно только если Искра погибла.", "error");
         return;
       }
 
-      const amount = Math.max(1, safeNumber(repCount, 1));
+      const ok = window.confirm("Восстановить Искру за 15 брюликов?");
+      if (!ok) return;
 
-      state.total_reputation += amount;
-      state.last_feed_at = nowTs();
-
-      const bonus = getCurrentBonusAmount();
-
-      pushFeedLog(
-        amount,
-        `Скормлено ${amount} репутац${amount === 1 ? "ия" : amount < 5 ? "ии" : "ий"} · текущий бонус ${formatMoney(bonus)}`
-      );
-
-      saveState();
-      render();
-
-      showToast(`Искра накормлена: +${amount} репутация 💚`, "success");
+      restoreIskra();
     }
 
-    function restoreIskra() {
-      updateDeathStateIfNeeded();
-
-      if (!state.is_dead) {
-        showToast("Искра жива, восстановление не нужно", "info");
-        return;
-      }
-
-      if (!state.preserved_progress) {
-        showToast("Нет сохранённого прогресса для восстановления", "error");
-        return;
-      }
-
-      state.is_dead = false;
-      state.dead_at = null;
-      state.total_reputation = safeNumber(state.preserved_progress.total_reputation);
-      state.feed_log = Array.isArray(state.preserved_progress.feed_log)
-        ? [...state.preserved_progress.feed_log]
-        : [];
-      state.name = state.preserved_progress.name || state.name || "Искра";
-      state.last_feed_at = nowTs();
-
-      saveState();
-      render();
-
-      showToast(`Искра восстановлена за ${RESTORE_COST} брюликов ⚙️`, "success", 3200);
+    function openGuideModal() {
+      document.getElementById("guideModalBg")?.classList.remove("hidden");
     }
 
-    function resetDemo() {
-      state = getDefaultState();
-      saveState();
-      render();
-      showToast("Демо-состояние сброшено", "info");
+    function closeGuideModal() {
+      document.getElementById("guideModalBg")?.classList.add("hidden");
     }
 
-    function renderFeedLog() {
-      const box = document.getElementById("feedList");
-      if (!box) return;
+    document.getElementById("guideModalBg")?.addEventListener("click", (e) => {
+      if (e.target.id === "guideModalBg") closeGuideModal();
+    });
 
-      if (!state.feed_log.length) {
-        box.innerHTML = `<div class="empty-box">История кормления пока пуста.</div>`;
-        return;
-      }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeGuideModal();
+    });
 
-      box.innerHTML = state.feed_log.map(item => `
-        <div class="feed-item">
-          <div class="feed-top">
-            <div class="feed-title">🍃 +${safeNumber(item.rep_count)} репутация</div>
-            <div class="feed-date">${formatDateTime(item.created_at)}</div>
-          </div>
-          <div class="feed-meta">${escapeHtml(item.note || "")}</div>
-        </div>
-      `).join("");
-    }
-
-    function render() {
-      updateDeathStateIfNeeded();
-
-      const satiety = getSatietyPercent();
-      const bonusSteps = getIskraBonusSteps();
-      const bonusAmount = getCurrentBonusAmount();
-      const timeLeftMs = Math.max(0, FULL_HUNGER_MS - (nowTs() - safeNumber(state.last_feed_at, nowTs())));
-      const dead = !!state.is_dead;
-
-      const iskraNameText = document.getElementById("iskraNameText");
-      const iskraNameInput = document.getElementById("iskraNameInput");
-      const iskraStatusPill = document.getElementById("iskraStatusPill");
-      const satietyValue = document.getElementById("satietyValue");
-      const satietyBar = document.getElementById("satietyBar");
-      const satietyHint = document.getElementById("satietyHint");
-      const totalReputationValue = document.getElementById("totalReputationValue");
-      const timeToDeathValue = document.getElementById("timeToDeathValue");
-      const lastFeedValue = document.getElementById("lastFeedValue");
-      const bonusStepsValue = document.getElementById("bonusStepsValue");
-      const bonusAmountValue = document.getElementById("bonusAmountValue");
-      const imageWrap = document.getElementById("iskraImageWrap");
-
-      if (iskraNameText) iskraNameText.textContent = state.name || "Искра";
-      if (iskraNameInput) iskraNameInput.value = state.name || "Искра";
-
-      if (totalReputationValue) totalReputationValue.textContent = String(safeNumber(state.total_reputation));
-      if (timeToDeathValue) timeToDeathValue.textContent = dead ? "0ч 0м" : formatTimeLeft(timeLeftMs);
-      if (lastFeedValue) lastFeedValue.textContent = formatDateTime(state.last_feed_at);
-      if (bonusStepsValue) bonusStepsValue.textContent = String(bonusSteps);
-      if (bonusAmountValue) bonusAmountValue.textContent = formatMoney(bonusAmount);
-
-      if (imageWrap) imageWrap.classList.toggle("dead", dead);
-
-      if (satietyValue) {
-        satietyValue.textContent = satiety + "%";
-        satietyValue.className = "satiety-value " + (satiety > 60 ? "good" : satiety > 25 ? "warn" : "bad");
-      }
-
-      if (satietyBar) {
-        satietyBar.style.width = satiety + "%";
-        satietyBar.className = "bar-fill " + (satiety > 60 ? "" : satiety > 25 ? "warn" : "danger");
-      }
-
-      if (dead) {
-        if (iskraStatusPill) {
-          iskraStatusPill.className = "status-pill danger";
-          iskraStatusPill.textContent = "Погасла от голода";
-        }
-        if (satietyHint) {
-          satietyHint.textContent = "Искра умерла от голода. Прогресс можно восстановить за 15 брюликов.";
-        }
-      } else if (satiety > 60) {
-        if (iskraStatusPill) {
-          iskraStatusPill.className = "status-pill ok";
-          iskraStatusPill.textContent = "Сыта и светится";
-        }
-        if (satietyHint) {
-          satietyHint.textContent = "Всё отлично. Искра накормлена и чувствует себя прекрасно.";
-        }
-      } else if (satiety > 25) {
-        if (iskraStatusPill) {
-          iskraStatusPill.className = "status-pill warn";
-          iskraStatusPill.textContent = "Нужно покормить";
-        }
-        if (satietyHint) {
-          satietyHint.textContent = "Сытость заметно упала. Лучше покормить Искру раньше, чем она ослабнет.";
-        }
-      } else {
-        if (iskraStatusPill) {
-          iskraStatusPill.className = "status-pill danger";
-          iskraStatusPill.textContent = "Почти голодна";
-        }
-        if (satietyHint) {
-          satietyHint.textContent = "Срочно покорми Искру. До смерти от голода осталось совсем немного.";
-        }
-      }
-
-      renderFeedLog();
-    }
-
-    let state = loadState();
-    render();
-    setInterval(render, 1000);
+    loadIskraState();
   </script>
 </body>
 </html>
