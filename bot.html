@@ -5296,6 +5296,21 @@
       }
     }
 
+    .section-image-card-iskra {
+      border-color: rgba(72,229,123,0.18);
+      box-shadow:
+        0 12px 30px rgba(72,229,123,0.10),
+        0 0 0 1px rgba(72,229,123,0.04);
+    }
+    
+    .section-image-card-iskra:hover,
+    .section-image-card-iskra.active {
+      border-color: rgba(72,229,123,0.28);
+      box-shadow:
+        0 18px 38px rgba(72,229,123,0.16),
+        0 0 22px rgba(72,229,123,0.10);
+    }
+
         
   </style>
 </head>
@@ -6204,6 +6219,17 @@
             <!-- RIGHT COLUMN -->
             <aside class="right-column">
               <div class="right-menu-stack">
+
+                <button class="section-image-card section-image-card-iskra" type="button" onclick="openIskraPage()">
+                  <img src="./default-avatars/iskra.png" alt="Искра" class="section-image-card-bg" />
+                  <div class="section-image-card-overlay"></div>
+                  <div class="section-image-card-content">
+                    <div class="section-image-card-kicker">Серия</div>
+                    <div class="section-image-card-title">Искра</div>
+                    <div class="section-image-card-sub">Забота и репутация</div>
+                  </div>
+                </button>
+                
                 <button class="section-image-card section-image-card-market active" type="button" onclick="openMarketPage()">
                   <img src="./market.png" alt="Магазин брюликов" class="section-image-card-bg" />
                   <div class="section-image-card-overlay"></div>
@@ -7294,6 +7320,10 @@
 
   async function wsGet(path) {
     return wsRequest(path, { method: "GET" });
+  }
+
+  function openIskraPage() {
+    window.open("./iskra.html", "_blank", "noopener,noreferrer");
   }
 
   async function wsPost(path, body) {
