@@ -922,6 +922,7 @@
     skipDay: "/api/ws/iskra/skip-day",
     history: "/api/ws/iskra/feed/history"
   };
+  loadIskraPageBundle();
 
   const AUTO_REFRESH_MS = 10 * 60 * 1000;
 
@@ -1046,6 +1047,13 @@
     } catch (e) {
       renderIskraFeedHistory({ pending: [], processed: [] });
     }
+  }
+
+  async function loadIskraPageBundle() {
+    await Promise.allSettled([
+      loadIskraState(),
+      loadIskraFeedHistory()
+    ]);
   }
 
   async function wsRequest(path, options = {}) {
@@ -1507,6 +1515,10 @@
 
     startIskraAutoRefresh();
   }
+
+  setInterval(() => {
+    loadIskraPageBundle();
+  }, 10 * 60 * 1000);
 
   initIskraPage();
 </script>
