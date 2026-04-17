@@ -6481,6 +6481,9 @@
   let currentShopView = "inventory";
   let currentContractsSubTab = "available";
 
+  let rouletteRenderSequence = [];
+  let rouletteStripBuilt = false;
+
   let glitchPhrases = [];
   let glitchTimer = null;
   let vkCodeTimer = null;
@@ -9817,11 +9820,13 @@
     `;
   }
 
-  function renderRouletteStrip(items, duplicateRounds = 16) {
+  function renderRouletteStrip(items) {
     const strip = document.getElementById("rouletteStrip");
     if (!strip) return;
-
+  
     if (!items.length) {
+      rouletteRenderSequence = [];
+      rouletteStripBuilt = false;
       strip.innerHTML = `
         <div class="roulette-card">
           <div class="roulette-card-img-wrap"><div class="roulette-card-noimg">🎁</div></div>
@@ -9833,15 +9838,13 @@
       strip.style.transform = "translate3d(0,0,0)";
       return;
     }
-
-    const rendered = [];
-    for (let i = 0; i < duplicateRounds; i++) {
-      for (const prize of items) rendered.push(getPrizeCardHtml(prize));
-    }
-
+  
+    rouletteRenderSequence = buildWeightedSequence(items, 5); // было жирно, теперь компактно
+    rouletteStripBuilt = true;
+  
     strip.style.transition = "none";
     strip.style.transform = "translate3d(0,0,0)";
-    strip.innerHTML = rendered.join("");
+    strip.innerHTML = rouletteRenderSequence.map((item) => getPrizeCardHtml(item)).join("");
   }
 
   function getCardMetrics() {
@@ -9858,23 +9861,25 @@
     return { cardWidth, gap };
   }
 
-  function buildWeightedSequence(prizes, minLength = 90) {
-    const result = [];
-    const normalized = prizes
-      .map((p) => ({
-        prize: p,
-        weight: Math.max(1, Math.round(safeNumber(p.probability, 1)))
-      }))
-      .filter((x) => x.prize);
-
-    if (!normalized.length) return [];
-
-    while (result.length < minLength) {
-      for (const item of normalized) {
-        for (let i = 0; i < item.weight; i++) result.push(item.prize);
+  function buildWeightedSequence(prizes, rounds = 6) {
+    const pool = [];
+  
+    for (const prize of safeArray(prizes)) {
+      const weight = Math.max(1, Math.round(safeNumber(prize.probability, 1)));
+      for (let i = 0; i < weight; i++) {
+        pool.push(prize);
       }
     }
-
+  
+    if (!pool.length) return [];
+  
+    const result = [];
+    for (let r = 0; r < rounds; r++) {
+      for (let i = 0; i < pool.length; i++) {
+        result.push(pool[i]);
+      }
+    }
+  
     return result;
   }
 
@@ -9886,23 +9891,31 @@
     return sequence.findIndex((x, idx) => idx >= minIndex && String(x?.id) === String(prizeId));
   }
 
-  function animateRouletteToPrize(prize, durationMs = 6200) {
+  function animateRouletteToPrize(prize, durationMs = 2600) {
     return new Promise((resolve) => {
       const strip = document.getElementById("rouletteStrip");
       const shell = document.querySelector(".roulette-strip-shell");
-      if (!strip || !shell || !roulettePrizes.length) return resolve();
   
-      const weightedSequence = buildWeightedSequence(roulettePrizes, 120);
-      if (!weightedSequence.length) return resolve();
-  
-      strip.innerHTML = weightedSequence.map((item) => getPrizeCardHtml(item)).join("");
+      if (!strip || !shell || !rouletteStripBuilt || !rouletteRenderSequence.length) {
+        return resolve();
+      }
   
       const viewportWidth = shell.getBoundingClientRect().width;
       const { cardWidth, gap } = getCardMetrics();
   
-      const minIndex = Math.max(20, Math.floor(weightedSequence.length * 0.55));
-      let stopIndex = findBestWeightedStopIndex(weightedSequence, prize.id, minIndex);
-      if (stopIndex < 0) stopIndex = minIndex;
+      const minIndex = Math.max(8, Math.floor(rouletteRenderSequence.length * 0.45));
+  
+      let stopIndex = -1;
+      for (let i = minIndex; i < rouletteRenderSequence.length; i++) {
+        if (String(rouletteRenderSequence[i]?.id) === String(prize.id)) {
+          stopIndex = i;
+          break;
+        }
+      }
+  
+      if (stopIndex < 0) {
+        stopIndex = minIndex;
+      }
   
       const cardFull = cardWidth + gap;
       const centerOffset = (viewportWidth / 2) - (cardWidth / 2);
@@ -9913,11 +9926,11 @@
       strip.offsetHeight;
   
       requestAnimationFrame(() => {
-        strip.style.transition = `transform ${Math.max(300, durationMs) / 1000}s cubic-bezier(.08,.72,0,1)`;
+        strip.style.transition = `transform ${Math.max(800, durationMs) / 1000}s cubic-bezier(.12,.72,0,1)`;
         strip.style.transform = `translate3d(${targetX}px,0,0)`;
       });
   
-      setTimeout(resolve, durationMs + 150);
+      setTimeout(resolve, durationMs + 80);
     });
   }
 
@@ -10043,18 +10056,24 @@
   }
 
   async function loadRoulettePrizes(force = false) {
+    if (!force && hasLoadedRoulettePrizes && !canRunByCooldown(lastRouletteLoadAt, 300000)) {
+      return;
+    }
+    preloadRouletteImages(roulettePrizes);
     setInlineLoading("rouletteLoading", true);
-
+  
     try {
       const { res, data } = await wsGet("/api/ws/roulette/prizes");
-
+  
       if (res.status === 401) return logoutWs();
       if (!data.ok) return showToast(data.error || "Ошибка загрузки рулетки", "error");
-
+  
       roulettePrizes = safeArray(data.items);
       renderRouletteStrip(roulettePrizes);
+  
       setCachedData("roulette_prizes", { items: cloneJson(roulettePrizes) });
       lastRouletteLoadAt = nowTs();
+      hasLoadedRoulettePrizes = true;
     } catch {
       showToast("Ошибка загрузки рулетки", "error");
     } finally {
@@ -10072,6 +10091,15 @@
       applyRouletteLimitsToUi(data);
       setCachedData("roulette_limits", cloneJson(data));
     } catch {}
+  }
+
+  function preloadRouletteImages(items) {
+    for (const item of safeArray(items)) {
+      const url = normalizeText(item?.image_url, "");
+      if (!url) continue;
+      const img = new Image();
+      img.src = url;
+    }
   }
 
   async function spinRoulette() {
@@ -10103,7 +10131,7 @@
         return;
       }
 
-      await animateRouletteToPrize(prize);
+      await animateRouletteToPrize(prize, 2200);
 
       toOutput = safeNumber(data.to_output, toOutput);
       updateToOutput();
@@ -10127,13 +10155,10 @@
 
       showToast(`Приз получен: ${prize.title}`, "success", 4200);
 
-      await refreshAffectedData([
-        "profile",
-        "dashboard",
-        "notifications",
-        "activity",
-        "roulette"
-      ], true);
+      await Promise.allSettled([
+        loadRouletteLimits(true),
+        loadActivityFeed(true)
+      ]);
     } catch {
       showToast("Ошибка рулетки", "error");
     } finally {
