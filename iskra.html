@@ -582,107 +582,144 @@
 
       .iskra-history-wrap {
         margin-top: 6px;
+        display: grid;
+        gap: 18px;
       }
       
       .iskra-history-block {
         display: grid;
-        gap: 10px;
+        gap: 12px;
       }
       
       .iskra-history-list {
         display: grid;
-        gap: 10px;
-        max-height: 260px;
+        gap: 12px;
+        max-height: 280px;
         overflow-y: auto;
-        padding-right: 4px;
+        padding-right: 6px;
       }
       
       .iskra-history-list::-webkit-scrollbar {
-        width: 4px;
+        width: 5px;
       }
       
       .iskra-history-list::-webkit-scrollbar-track {
-        background: rgba(255,255,255,0.02);
-        border-radius: 4px;
+        background: rgba(255,255,255,0.03);
+        border-radius: 999px;
       }
       
       .iskra-history-list::-webkit-scrollbar-thumb {
-        background: rgba(255,255,255,0.10);
-        border-radius: 4px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 999px;
       }
       
       .iskra-history-item {
-        padding: 12px 14px;
-        border-radius: 16px;
+        padding: 14px 16px;
+        border-radius: 18px;
         border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.03);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+          rgba(255,255,255,0.02);
         display: grid;
-        gap: 6px;
+        gap: 10px;
+        transition: .2s ease;
+        box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+      }
+      
+      .iskra-history-item:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255,255,255,0.12);
       }
       
       .iskra-history-item.pending {
-        border-color: rgba(251,191,36,0.14);
-        background: rgba(251,191,36,0.05);
+        border-color: rgba(251,191,36,0.16);
+        background:
+          linear-gradient(180deg, rgba(251,191,36,0.06), rgba(255,255,255,0.015)),
+          rgba(255,255,255,0.02);
       }
       
       .iskra-history-item.done {
-        border-color: rgba(72,229,123,0.14);
-        background: rgba(72,229,123,0.05);
+        border-color: rgba(72,229,123,0.16);
+        background:
+          linear-gradient(180deg, rgba(72,229,123,0.06), rgba(255,255,255,0.015)),
+          rgba(255,255,255,0.02);
       }
       
       .iskra-history-top {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 10px;
         flex-wrap: wrap;
       }
       
       .iskra-history-title {
-        font-size: 13px;
-        font-weight: 800;
+        font-size: 15px;
+        font-weight: 900;
         color: #fff;
+        line-height: 1.2;
+        letter-spacing: -.01em;
       }
       
       .iskra-history-badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 6px 10px;
+        padding: 7px 10px;
         border-radius: 999px;
         font-size: 11px;
         font-weight: 900;
+        white-space: nowrap;
+        letter-spacing: .04em;
+        text-transform: uppercase;
       }
       
       .iskra-history-badge.pending {
         background: rgba(251,191,36,0.12);
         color: #ffe08a;
+        border: 1px solid rgba(251,191,36,0.16);
       }
       
       .iskra-history-badge.done {
         background: rgba(72,229,123,0.12);
         color: #b8ffd1;
+        border: 1px solid rgba(72,229,123,0.16);
       }
       
-      .iskra-history-meta {
-        font-size: 12px;
+      .iskra-history-meta-grid {
+        display: grid;
+        gap: 8px;
+      }
+      
+      .iskra-history-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        font-size: 13px;
         color: var(--text-secondary);
-        line-height: 1.6;
+        line-height: 1.5;
+      }
+      
+      .iskra-history-line strong {
+        color: #fff;
+        font-weight: 800;
       }
       
       .iskra-history-date {
-        font-size: 11px;
+        font-size: 12px;
         color: var(--text-muted);
+        line-height: 1.5;
       }
       
       .iskra-history-empty {
-        padding: 14px 16px;
-        border-radius: 16px;
-        border: 1px dashed rgba(255,255,255,0.08);
+        padding: 16px 18px;
+        border-radius: 18px;
+        border: 1px dashed rgba(255,255,255,0.10);
         background: rgba(255,255,255,0.02);
         color: var(--text-muted);
         font-size: 13px;
-        line-height: 1.6;
+        line-height: 1.7;
       }
       
       .iskra-reward-plus {
@@ -692,9 +729,36 @@
       
       .iskra-time-left {
         color: #ffe08a;
-        font-weight: 800;
+        font-weight: 900;
+      }
+      
+      @media (max-width: 760px) {
+        .iskra-history-item {
+          padding: 12px 14px;
+        }
+      
+        .iskra-history-title {
+          font-size: 14px;
+        }
+      
+        .iskra-history-line {
+          font-size: 12px;
+        }
+
       }
 
+      #iskraActionState {
+        margin-top: 14px;
+        border-radius: 18px;
+        padding: 16px 18px;
+        background:
+          linear-gradient(90deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02)),
+          rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.6;
+      }
       
     }
   </style>
@@ -913,13 +977,16 @@
               <div class="iskra-history-title">Репутация ×${safeNumber(item.reputation_count, 1)}</div>
               <div class="iskra-history-badge pending">⏳ В очереди</div>
             </div>
-  
-            <div class="iskra-history-meta">
-              Будет зачислено через <span class="iskra-time-left">${escapeHtml(formatSecondsLeft(item.seconds_left || 0))}</span>
-            </div>
-  
-            <div class="iskra-history-date">
-              Добавлено: ${escapeHtml(formatDateTime(item.created_at))}
+        
+            <div class="iskra-history-meta-grid">
+              <div class="iskra-history-line">
+                <span>Будет зачислено через</span>
+                <span class="iskra-time-left">${escapeHtml(formatSecondsLeft(item.seconds_left || 0))}</span>
+              </div>
+        
+              <div class="iskra-history-date">
+                Добавлено: ${escapeHtml(formatDateTime(item.created_at))}
+              </div>
             </div>
           </div>
         `).join("");
@@ -936,13 +1003,16 @@
               <div class="iskra-history-title">Репутация ×${safeNumber(item.reputation_count, 1)}</div>
               <div class="iskra-history-badge done">✅ Зачислено</div>
             </div>
-  
-            <div class="iskra-history-meta">
-              На баланс: <span class="iskra-reward-plus">+${formatMoney(item.reward_amount || 0)}</span>
-            </div>
-  
-            <div class="iskra-history-date">
-              Зачислено: ${escapeHtml(formatDateTime(item.processed_at))}
+        
+            <div class="iskra-history-meta-grid">
+              <div class="iskra-history-line">
+                <span>На баланс:</span>
+                <strong class="iskra-reward-plus">+${formatMoney(item.reward_amount || 0)}</strong>
+              </div>
+        
+              <div class="iskra-history-date">
+                Зачислено: ${escapeHtml(formatDateTime(item.processed_at))}
+              </div>
             </div>
           </div>
         `).join("");
