@@ -887,10 +887,6 @@
               </div>
             </div>
           </div>
-          
-          <div id="iskraActionState" class="state-box" style="margin-top:14px;">
-            Действия...
-          </div>
         </div>
       </section>
     </div>
@@ -949,15 +945,13 @@
     }
   }
   
-  function formatSecondsLeft(secondsLeft) {
-    const sec = Math.max(0, safeNumber(secondsLeft, 0));
-    const h = Math.floor(sec / 3600);
-    const m = Math.floor((sec % 3600) / 60);
-    const s = sec % 60;
+  function formatSecondsLeft(seconds) {
+    const sec = Math.max(0, safeNumber(seconds));
+    if (sec <= 0) return "меньше минуты";
   
-    if (h > 0) return `${h}ч ${m}м ${s}с`;
-    if (m > 0) return `${m}м ${s}с`;
-    return `${s}с`;
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}м ${s}с`;
   }
   
   function renderIskraFeedHistory(data = {}) {
@@ -1113,8 +1107,23 @@
 
   function setActionState(text, type = "") {
     const box = document.getElementById("iskraActionState");
-    if (!box) return;
-
+  
+    if (!box) {
+      if (text) {
+        const toastType =
+          type === "error" ? "error" :
+          type === "success" ? "success" :
+          "info";
+  
+        if (typeof showToast === "function") {
+          showToast(text, toastType);
+        } else {
+          console.log("[ISKRA ACTION]", text);
+        }
+      }
+      return;
+    }
+  
     box.textContent = text || "";
     box.className = "state-box" + (type ? " " + type : "");
   }
@@ -1378,6 +1387,7 @@
       }
 
       setActionState("Имя Искры успешно сохранено.");
+      await loadIskraPageBundle();
       await loadIskraState({
         silent: false,
         preserveActionState: true
@@ -1409,6 +1419,7 @@
       }
 
       setActionState("День кормления успешно пропущен.");
+      await loadIskraPageBundle();
       await loadIskraState({
         silent: false,
         preserveActionState: true
@@ -1440,6 +1451,7 @@
       }
 
       setActionState("Искра успешно восстановлена.");
+      await loadIskraPageBundle();
       await loadIskraState({
         silent: false,
         preserveActionState: true
@@ -1505,6 +1517,7 @@
   });
 
   async function initIskraPage() {
+    await loadIskraPageBundle();
     await loadIskraState({
       silent: false,
       preserveActionState: false
