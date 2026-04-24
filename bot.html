@@ -5555,7 +5555,7 @@
                   <span id="notificationsUnreadBadge" class="notify-badge hidden">0</span>
                 </button>
 
-                <button class="account-icon-btn" type="button" onclick="toggleRatingPanel()" title="Рейтинг">
+                <button class="account-icon-btn" type="button" onclick="openRatingPage()" title="Рейтинг">
                   📊
                 </button>
 
@@ -8708,6 +8708,10 @@
         </div>
       `;
     }).join("");
+  }
+
+  function openRatingPage() {
+    window.open("./ratinguser.html", "_blank", "noopener,noreferrer");
   }
 
   async function loadActivityFeed(force = false) {
