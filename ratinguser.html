@@ -3,104 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Рейтинг игроков</title>
+  <title>Рейтинг игроков | World Script</title>
   <link rel="icon" href="./ws_logo.ico" type="image/x-icon" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-    * { box-sizing: border-box; }
-
     :root {
-      --bg-1: #030815;
-      --bg-2: #071226;
-      --card: rgba(7, 16, 34, 0.92);
-      --card-2: rgba(10, 20, 42, 0.94);
+      --bg-1: #030711;
+      --bg-2: #071224;
+      --bg-3: #0a1730;
 
-      --border: rgba(255,255,255,0.08);
-      --border-soft: rgba(255,255,255,0.05);
+      --card: rgba(8, 16, 34, 0.78);
+      --card-2: rgba(10, 18, 40, 0.92);
+      --line: rgba(255,255,255,0.08);
+      --line-soft: rgba(255,255,255,0.05);
 
-      --text: #eef4ff;
-      --text-2: #b7c5df;
-      --text-3: #8392af;
+      --text: #eef6ff;
+      --text-2: #b7c8e8;
+      --muted: #7e91b9;
 
-      --cyan: #2cdcff;
-      --cyan-2: #2290ff;
-      --violet: #b05dff;
-      --gold: #ffbf42;
-      --gold-2: #ff961f;
-      --red: #ff7d9c;
-      --blue: #8ebdff;
+      --cyan: #3fe2ff;
+      --cyan-2: #1aa8ff;
+      --violet: #9b5cff;
+      --pink: #ff4db8;
+      --gold: #f6c857;
+      --gold-2: #f59e0b;
+      --green: #46e98f;
+      --red: #ff7575;
 
-      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+      --shadow: 0 16px 40px rgba(0,0,0,.34);
+      --shadow-lg: 0 24px 64px rgba(0,0,0,.48);
+
       --radius: 22px;
-      --font: "Inter", sans-serif;
+      --radius-lg: 28px;
+      --radius-sm: 16px;
+
+      --podium-gold: linear-gradient(180deg, rgba(246,200,87,0.22), rgba(246,200,87,0.05));
+      --podium-silver: linear-gradient(180deg, rgba(190,215,255,0.16), rgba(190,215,255,0.04));
+      --podium-bronze: linear-gradient(180deg, rgba(255,139,102,0.16), rgba(255,139,102,0.04));
     }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: var(--font);
       color: var(--text);
+      font-family: "Inter", sans-serif;
       background:
-        radial-gradient(circle at 20% 0%, rgba(44,220,255,0.08), transparent 24%),
-        radial-gradient(circle at 80% 0%, rgba(176,93,255,0.08), transparent 24%),
-        radial-gradient(circle at 50% 20%, rgba(255,191,66,0.05), transparent 22%),
-        linear-gradient(180deg, #020611 0%, #06101f 45%, #020713 100%);
+        radial-gradient(circle at 12% 10%, rgba(255,77,184,.14), transparent 24%),
+        radial-gradient(circle at 88% 12%, rgba(63,226,255,.12), transparent 22%),
+        radial-gradient(circle at 50% 40%, rgba(155,92,255,.08), transparent 28%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2) 45%, var(--bg-3));
       overflow-x: hidden;
     }
 
-    .bg {
+    .bg-layer {
       position: fixed;
       inset: 0;
-      z-index: 0;
       pointer-events: none;
+      z-index: 0;
       overflow: hidden;
     }
 
-    .bg::before {
+    .bg-layer::before {
       content: "";
       position: absolute;
-      inset: -30%;
+      inset: -20%;
       background:
-        radial-gradient(circle at 18% 20%, rgba(44,220,255,0.10), transparent 24%),
-        radial-gradient(circle at 75% 18%, rgba(176,93,255,0.10), transparent 22%),
-        radial-gradient(circle at 50% 65%, rgba(255,191,66,0.05), transparent 20%);
-      animation: rotateBg 48s linear infinite;
+        radial-gradient(circle at 20% 20%, rgba(63,226,255,.10), transparent 24%),
+        radial-gradient(circle at 75% 25%, rgba(255,77,184,.10), transparent 24%),
+        radial-gradient(circle at 52% 72%, rgba(155,92,255,.09), transparent 28%);
+      filter: blur(30px);
+      animation: bgDrift 24s ease-in-out infinite alternate;
     }
 
-    .bg::after {
-      content: "";
+    .bg-grid {
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 46px 46px;
-      opacity: .23;
+        linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(circle at center, rgba(0,0,0,1), rgba(0,0,0,.3) 70%, transparent 100%);
+      opacity: .5;
+      animation: gridMove 18s linear infinite;
     }
 
-    @keyframes rotateBg {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      opacity: .03;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .bg-emoji {
+      position: fixed;
+      right: 12px;
+      bottom: 8px;
+      z-index: 0;
+      font-size: 180px;
+      line-height: 1;
+      opacity: .08;
+      filter: grayscale(1) brightness(.25) blur(.6px);
+      transform: rotate(-10deg);
+      user-select: none;
+      pointer-events: none;
+      animation: emojiFloat 8s ease-in-out infinite;
+    }
+
+    @keyframes bgDrift {
+      from { transform: translate3d(-20px, -10px, 0) scale(1); }
+      to { transform: translate3d(24px, 18px, 0) scale(1.06); }
+    }
+
+    @keyframes gridMove {
+      from { transform: translate3d(0,0,0); }
+      to { transform: translate3d(48px,48px,0); }
+    }
+
+    @keyframes emojiFloat {
+      0%,100% { transform: rotate(-10deg) translateY(0); }
+      50% { transform: rotate(-13deg) translateY(-10px); }
     }
 
     .page {
       position: relative;
       z-index: 1;
-      max-width: 1600px;
+      max-width: 1680px;
       margin: 0 auto;
-      padding: 14px;
+      padding: 20px;
     }
 
     .glass {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015)),
-        var(--card);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
     }
@@ -110,7 +153,9 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 18%, transparent 78%, rgba(255,255,255,0.02));
+      background:
+        linear-gradient(140deg, rgba(255,255,255,.06), transparent 20%, transparent 76%, rgba(255,255,255,.03));
+      opacity: .8;
     }
 
     .glass > * {
@@ -118,657 +163,831 @@
       z-index: 1;
     }
 
+    .hidden { display: none !important; }
+
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      padding: 14px 18px;
-      margin-bottom: 10px;
-      border-radius: 22px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
     }
 
     .topbar-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
+      min-width: 0;
     }
 
-    .title-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, rgba(44,220,255,0.18), rgba(34,144,255,0.14));
-      border: 1px solid rgba(44,220,255,0.18);
-      box-shadow: 0 0 18px rgba(44,220,255,0.14);
+    .topbar-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(63,226,255,.16), rgba(26,168,255,.16));
+      border: 1px solid rgba(63,226,255,.22);
+      box-shadow: 0 0 24px rgba(63,226,255,.12);
+      overflow: hidden;
+      flex-shrink: 0;
     }
 
-    .title-icon img {
-      width: 24px;
-      height: 24px;
+    .topbar-icon img {
+      width: 34px;
+      height: 34px;
       object-fit: contain;
       display: block;
+      filter: drop-shadow(0 0 14px rgba(63,226,255,.35));
+    }
+
+    .title-wrap {
+      min-width: 0;
     }
 
     .page-title {
-      font-size: 21px;
-      font-weight: 900;
-      letter-spacing: -.03em;
       margin: 0;
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 900;
+      letter-spacing: -.05em;
+      line-height: 1;
+    }
+
+    .page-sub {
+      margin-top: 8px;
+      color: var(--text-2);
+      font-size: 14px;
+      line-height: 1.6;
     }
 
     .close-btn {
-      width: 42px;
-      height: 42px;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      font-size: 24px;
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
       color: #fff;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: .2s ease;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 800;
+      transition: .22s ease;
+      flex-shrink: 0;
     }
 
     .close-btn:hover {
       transform: translateY(-2px);
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
     }
 
-    .tabs-wrap {
+    .tabs-shell {
+      padding: 12px;
+      margin-bottom: 18px;
+    }
+
+    .tabs {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 12px;
     }
 
     .tab-btn {
-      min-height: 76px;
+      position: relative;
+      min-height: 96px;
+      border: 1px solid rgba(255,255,255,.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+        rgba(9,16,32,.72);
+      color: #fff;
+      border-radius: 20px;
+      cursor: pointer;
+      padding: 14px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
+      gap: 14px;
       text-align: left;
-      cursor: pointer;
-      border-radius: 18px;
-      color: var(--text-2);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)),
-        rgba(7,16,34,0.92);
-      border: 1px solid rgba(255,255,255,0.07);
-      transition: .22s ease;
-      font-family: var(--font);
+      transition:
+        transform .26s cubic-bezier(.22,.68,0,1),
+        border-color .26s ease,
+        box-shadow .26s ease,
+        background .26s ease,
+        filter .26s ease;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .tab-btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 110%, rgba(63,226,255,.18), transparent 60%);
+      opacity: 0;
+      transition: opacity .28s ease;
+      pointer-events: none;
     }
 
     .tab-btn:hover {
-      transform: translateY(-2px);
-      color: #fff;
-      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,.14);
+      box-shadow: 0 16px 34px rgba(0,0,0,.24);
+      filter: brightness(1.03);
+    }
+
+    .tab-btn:hover::after,
+    .tab-btn.active::after {
+      opacity: 1;
     }
 
     .tab-btn.active {
-      color: #fff;
-      border-color: rgba(44,220,255,0.34);
-      box-shadow:
-        0 0 0 1px rgba(44,220,255,0.08),
-        0 0 22px rgba(44,220,255,0.14),
-        0 14px 34px rgba(0,0,0,0.24);
+      border-color: rgba(63,226,255,.38);
       background:
-        linear-gradient(135deg, rgba(44,220,255,0.16), rgba(34,144,255,0.10)),
-        rgba(8,18,36,0.96);
-    }
-
-    .tab-btn.is-disabled {
-      opacity: .65;
+        linear-gradient(135deg, rgba(63,226,255,.18), rgba(155,92,255,.10)),
+        rgba(8,20,38,.88);
+      box-shadow:
+        0 0 0 1px rgba(63,226,255,.10),
+        0 0 26px rgba(63,226,255,.14),
+        0 16px 38px rgba(0,0,0,.28);
     }
 
     .tab-icon-wrap {
-      width: 40px;
-      height: 40px;
-      min-width: 40px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
       overflow: hidden;
     }
 
     .tab-icon-wrap img {
-      width: 25px;
-      height: 25px;
+      width: 34px;
+      height: 34px;
       object-fit: contain;
       display: block;
+      filter: drop-shadow(0 0 16px rgba(255,255,255,.16));
+    }
+
+    .tab-text {
+      min-width: 0;
     }
 
     .tab-title {
-      font-size: 15px;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 4px;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+      margin-bottom: 6px;
     }
 
     .tab-sub {
-      font-size: 12px;
-      color: var(--text-3);
-      line-height: 1.3;
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.35;
     }
 
     .hero {
-      padding: 8px 4px 0;
-      margin-bottom: 8px;
+      padding: 20px 22px 10px;
+      margin-bottom: 18px;
     }
 
-    .hero-title {
-      text-align: center;
-      font-size: clamp(30px, 4vw, 44px);
+    .hero-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .hero-title-wrap {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .glitch-title {
+      position: relative;
+      display: inline-block;
+      font-size: clamp(30px, 5vw, 50px);
       font-weight: 900;
       letter-spacing: -.05em;
-      color: #66e7ff;
-      margin: 0 0 6px;
-      text-shadow: 0 0 18px rgba(44,220,255,0.16);
+      line-height: .96;
+      margin: 0 0 10px;
+      color: #8cefff;
+      text-shadow:
+        0 0 12px rgba(63,226,255,.20),
+        0 0 28px rgba(63,226,255,.08);
+      animation: titlePulse 5s ease-in-out infinite;
+    }
+
+    .glitch-title.glitching::before,
+    .glitch-title.glitching::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .glitch-title.glitching::before {
+      color: rgba(255,77,184,.9);
+      transform: translate(2px, 0);
+      mix-blend-mode: screen;
+      clip-path: inset(0 0 52% 0);
+      animation: glitchA .34s linear 2;
+    }
+
+    .glitch-title.glitching::after {
+      color: rgba(63,226,255,.95);
+      transform: translate(-2px, 0);
+      mix-blend-mode: screen;
+      clip-path: inset(42% 0 0 0);
+      animation: glitchB .34s linear 2;
     }
 
     .hero-sub {
-      text-align: center;
-      color: #f3c463;
-      font-size: 17px;
+      color: #e0ebff;
+      font-size: 15px;
       font-weight: 700;
-      margin-bottom: 14px;
+      line-height: 1.6;
     }
 
-    .hero-meta {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 10px;
+    .hero-badge {
+      display: inline-grid;
+      gap: 4px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      min-width: 170px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.18);
     }
 
-    .refresh-box {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text-2);
-      font-size: 13px;
-      font-weight: 700;
+    .hero-badge-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
     }
 
-    .refresh-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 12px rgba(44,220,255,0.45);
-      animation: pulse 1.3s ease-in-out infinite;
+    .hero-badge-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
     }
 
-    @keyframes pulse {
-      0%,100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.35); opacity: .6; }
+    @keyframes titlePulse {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-1px); }
     }
 
-    .podium-grid {
+    @keyframes glitchA {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(4px,-1px); }
+      50% { transform: translate(-3px,1px); }
+      75% { transform: translate(3px,0); }
+      100% { transform: translate(0,0); }
+    }
+
+    @keyframes glitchB {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(-4px,1px); }
+      50% { transform: translate(3px,-1px); }
+      75% { transform: translate(-2px,0); }
+      100% { transform: translate(0,0); }
+    }
+
+    .podium {
       display: grid;
-      grid-template-columns: 1fr 1.18fr 1fr;
-      gap: 12px;
+      grid-template-columns: 1fr 1.08fr 1fr;
+      gap: 18px;
       align-items: end;
-      margin-bottom: 10px;
+      margin-bottom: 18px;
     }
 
     .podium-card {
       position: relative;
-      padding: 18px 18px 22px;
-      border-radius: 24px;
-      min-height: 284px;
-      text-align: center;
+      min-height: 320px;
+      border-radius: 28px;
       overflow: hidden;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
-        rgba(5,13,27,0.96);
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: var(--shadow);
+      transition: transform .28s cubic-bezier(.22,.68,0,1), box-shadow .28s ease, border-color .28s ease;
+    }
+
+    .podium-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
     }
 
     .podium-card.place-1 {
-      min-height: 340px;
-      border-color: rgba(255,191,66,0.32);
-      box-shadow:
-        0 0 0 1px rgba(255,191,66,0.08),
-        0 0 28px rgba(255,191,66,0.16),
-        0 20px 46px rgba(0,0,0,0.28);
-      background:
-        radial-gradient(circle at 50% 8%, rgba(255,191,66,0.12), transparent 30%),
-        linear-gradient(180deg, rgba(255,191,66,0.06), rgba(255,255,255,0.015)),
-        rgba(7,14,27,0.98);
+      min-height: 372px;
+      background: var(--podium-gold), rgba(16, 14, 6, .78);
+      border-color: rgba(246,200,87,.34);
+      box-shadow: 0 0 34px rgba(246,200,87,.16), var(--shadow-lg);
     }
 
     .podium-card.place-2 {
-      border-color: rgba(142,189,255,0.24);
-      box-shadow: 0 0 22px rgba(142,189,255,0.10), 0 18px 42px rgba(0,0,0,0.26);
+      background: var(--podium-silver), rgba(9, 18, 34, .82);
+      border-color: rgba(180,215,255,.22);
     }
 
     .podium-card.place-3 {
-      border-color: rgba(255,125,156,0.24);
-      box-shadow: 0 0 22px rgba(255,125,156,0.10), 0 18px 42px rgba(0,0,0,0.26);
+      background: var(--podium-bronze), rgba(18, 10, 12, .82);
+      border-color: rgba(255,139,102,.24);
     }
 
-    .place-badge {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 72px;
-      height: 72px;
+    .podium-inner {
+      padding: 26px 20px 22px;
+      text-align: center;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .medal-badge {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 16px;
       border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-size: 34px;
-      font-weight: 900;
-      line-height: 1;
-      z-index: 2;
-      border: 2px solid rgba(255,255,255,0.2);
-    }
-
-    .place-1 .place-badge {
-      background: radial-gradient(circle at 30% 30%, #ffd86e, #ffac1e);
-      color: #3f2800;
-      box-shadow: 0 0 26px rgba(255,191,66,0.34);
-    }
-
-    .place-2 .place-badge {
-      background: radial-gradient(circle at 30% 30%, #d7ebff, #82abff);
-      color: #142540;
-      box-shadow: 0 0 22px rgba(142,189,255,0.26);
-    }
-
-    .place-3 .place-badge {
-      background: radial-gradient(circle at 30% 30%, #ffc2d1, #ff7397);
-      color: #431322;
-      box-shadow: 0 0 22px rgba(255,125,156,0.26);
-    }
-
-    .player-avatar {
-      width: 108px;
-      height: 108px;
-      border-radius: 50%;
-      margin: 58px auto 14px;
-      overflow: hidden;
-      border: 2px solid rgba(255,255,255,0.16);
-      background: linear-gradient(135deg, rgba(44,220,255,0.18), rgba(176,93,255,0.16));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
+      font-size: 40px;
       font-weight: 900;
-      color: #fff;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+      line-height: 1;
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 10px 28px rgba(0,0,0,.26);
+      position: relative;
     }
 
-    .player-avatar img {
+    .place-1 .medal-badge {
+      background: linear-gradient(135deg, #ffe08a, #f59e0b);
+      color: #2a1b00;
+      box-shadow: 0 0 26px rgba(246,200,87,.26), 0 12px 32px rgba(0,0,0,.26);
+    }
+
+    .place-2 .medal-badge {
+      background: linear-gradient(135deg, #dfe9ff, #94b8ff);
+      color: #102342;
+    }
+
+    .place-3 .medal-badge {
+      background: linear-gradient(135deg, #ffb68a, #ff7a49);
+      color: #3c1305;
+    }
+
+    .avatar {
+      width: 108px;
+      height: 108px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,.15);
+      background: linear-gradient(135deg, rgba(63,226,255,.14), rgba(255,77,184,.14));
+      box-shadow: 0 10px 26px rgba(0,0,0,.26);
+      flex-shrink: 0;
+    }
+
+    .avatar img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
+    .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      font-weight: 900;
+      color: #fff;
+    }
+
     .player-login {
-      font-size: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-width: 0;
+      margin-bottom: 8px;
+    }
+
+    .player-login-text {
+      font-size: 28px;
       font-weight: 900;
       letter-spacing: -.04em;
-      line-height: 1.05;
-      margin-bottom: 10px;
+      line-height: 1.08;
       word-break: break-word;
     }
 
-    .podium-card.place-2 .player-login,
-    .podium-card.place-3 .player-login {
+    .podium .place-2 .player-login-text,
+    .podium .place-3 .player-login-text {
       font-size: 24px;
+    }
+
+    .vk-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #4d88ff, #5ed1ff);
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(77,136,255,.24);
+      transition: .2s ease;
+    }
+
+    .vk-link:hover {
+      transform: translateY(-2px) scale(1.05);
+      filter: brightness(1.08);
     }
 
     .nick-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      width: fit-content;
+      max-width: 100%;
       padding: 8px 14px;
+      margin: 0 auto 14px;
       border-radius: 999px;
       font-size: 13px;
       font-weight: 800;
-      margin-bottom: 14px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
+      line-height: 1.2;
+      color: #fff;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .nick-pill.gold {
-      background: rgba(255,191,66,0.10);
-      border-color: rgba(255,191,66,0.18);
-      color: #ffd56e;
+    .place-1 .nick-pill {
+      color: #ffe39a;
+      border-color: rgba(246,200,87,.22);
+      background: rgba(246,200,87,.08);
     }
 
-    .nick-pill.blue {
-      background: rgba(142,189,255,0.10);
-      border-color: rgba(142,189,255,0.16);
-      color: #b0d0ff;
-    }
-
-    .nick-pill.red {
-      background: rgba(255,125,156,0.10);
-      border-color: rgba(255,125,156,0.16);
-      color: #ffb1c5;
-    }
-
-    .divider {
+    .balance-divider {
+      width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-      margin: 4px 0 14px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.24), transparent);
+      margin: 14px 0;
     }
 
-    .balance-title {
-      font-size: 14px;
+    .big-balance-label {
       color: var(--text-2);
-      margin-bottom: 8px;
+      font-size: 15px;
+      margin-bottom: 6px;
       font-weight: 700;
     }
 
-    .balance-value {
-      font-size: 34px;
+    .big-balance-value {
+      font-size: 38px;
       font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 12px;
+      letter-spacing: -.04em;
+      margin-bottom: 10px;
     }
 
-    .place-1 .balance-value {
-      color: #ffd15c;
-      text-shadow: 0 0 18px rgba(255,191,66,0.18);
+    .place-1 .big-balance-value {
+      color: #ffd86c;
+      text-shadow: 0 0 18px rgba(246,200,87,.18);
     }
 
-    .place-2 .balance-value {
-      color: #bfdcff;
+    .place-2 .big-balance-value {
+      color: #dcecff;
     }
 
-    .place-3 .balance-value {
-      color: #ffb8ca;
+    .place-3 .big-balance-value {
+      color: #ffb48e;
     }
 
     .podium-meta {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
-      font-size: 14px;
       color: var(--text-2);
-    }
-
-    .podium-meta strong { color: #fff; }
-
-    .table-shell {
-      overflow: hidden;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)),
-        rgba(4,10,22,0.96);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
-    }
-
-    .table-head,
-    .table-row {
-      display: grid;
-      grid-template-columns: 92px 1.55fr 1.25fr 1fr 1fr 110px;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 18px;
-    }
-
-    .table-head {
       font-size: 13px;
-      font-weight: 800;
-      color: var(--text-3);
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      line-height: 1.55;
     }
 
-    .table-row {
-      min-height: 74px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: .18s ease;
-    }
-
-    .table-row:last-child {
-      border-bottom: none;
-    }
-
-    .table-row:hover {
-      background: rgba(255,255,255,0.03);
-    }
-
-    .place-cell {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 30px;
-      font-weight: 900;
-      color: #dce8ff;
-    }
-
-    .row-mini-avatar {
-      width: 42px;
-      height: 42px;
-      min-width: 42px;
-      border-radius: 50%;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(44,220,255,0.18), rgba(176,93,255,0.16));
-      border: 1px solid rgba(255,255,255,0.10);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 900;
+    .podium-meta strong {
       color: #fff;
     }
 
-    .row-mini-avatar img {
+    .list-card {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .list-head,
+    .list-row {
+      display: grid;
+      grid-template-columns: 78px 1.7fr 1.25fr 1fr 1fr 1fr 1fr;
+      gap: 14px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .list-head {
+      padding: 18px 18px 14px;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      background: rgba(255,255,255,.02);
+    }
+
+    .list-body {
+      display: grid;
+    }
+
+    .list-row {
+      padding: 15px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      transition: background .22s ease, transform .22s ease;
+      animation: rowFade .45s ease both;
+    }
+
+    .list-row:last-child {
+      border-bottom: none;
+    }
+
+    .list-row:hover {
+      background: rgba(255,255,255,.03);
+    }
+
+    .place-bubble {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 10px 22px rgba(0,0,0,.14);
+    }
+
+    .player-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .player-avatar-sm {
+      width: 52px;
+      height: 52px;
+      min-width: 52px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(135deg, rgba(63,226,255,.12), rgba(255,77,184,.12));
+      box-shadow: 0 8px 20px rgba(0,0,0,.16);
+    }
+
+    .player-avatar-sm img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .player-cell {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-
-    .player-main {
-      min-width: 0;
-    }
-
-    .player-main-login {
-      font-size: 27px;
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .nick-chip {
-      display: inline-flex;
-      align-items: center;
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #8adfff;
-      background: rgba(44,220,255,0.08);
-      border: 1px solid rgba(44,220,255,0.14);
-      white-space: nowrap;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .summary-cell {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-
-    .summary-divider {
-      width: 1px;
-      height: 28px;
-      background: rgba(255,255,255,0.12);
-      flex-shrink: 0;
-    }
-
-    .summary-main {
-      min-width: 0;
+    .player-avatar-sm .avatar-fallback {
       font-size: 18px;
-      color: var(--text-2);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    .summary-main strong {
-      color: #fff;
-      font-size: 21px;
+    .player-meta {
+      min-width: 0;
+      display: grid;
+      gap: 6px;
     }
 
-    .num-cell {
-      font-size: 18px;
-      font-weight: 800;
-      color: #edf3ff;
-    }
-
-    .num-cell.soft {
-      color: var(--text-2);
-      font-weight: 700;
-    }
-
-    .deal-cell {
+    .player-line {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
       gap: 8px;
-      font-size: 21px;
-      font-weight: 900;
-      color: #dff7ff;
+      flex-wrap: wrap;
+      min-width: 0;
     }
 
-    .deal-icon {
-      width: 18px;
-      height: 18px;
-      object-fit: contain;
-      display: block;
-      opacity: .9;
+    .player-line .player-login-text {
+      font-size: 17px;
+      letter-spacing: -.02em;
+    }
+
+    .player-label-sep {
+      color: rgba(255,255,255,.18);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .balance-main {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .cell-strong {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .cell-muted {
+      font-size: 14px;
+      color: var(--text-2);
+    }
+
+    .cell-success {
+      color: #97ffc5;
+    }
+
+    .cell-gold {
+      color: #ffe08a;
+    }
+
+    .state-box {
+      padding: 42px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
     }
 
     .footer-note {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 10px 4px;
-      color: #88a6cb;
-      font-size: 15px;
-      font-weight: 700;
+      padding: 16px 20px;
+      margin-top: 18px;
       text-align: center;
-    }
-
-    .footer-stars {
-      color: #44dcff;
-      text-shadow: 0 0 10px rgba(44,220,255,0.22);
-    }
-
-    .section-panel { display: none; }
-    .section-panel.active {
-      display: block;
-      animation: fadeUp .2s ease;
-    }
-
-    .coming-box {
-      min-height: 420px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 28px;
-      border-radius: 24px;
-      border: 1px dashed rgba(255,255,255,0.12);
-      background:
-        radial-gradient(circle at 50% 20%, rgba(176,93,255,0.08), transparent 26%),
-        rgba(7,16,34,0.92);
-    }
-
-    .coming-inner {
-      max-width: 680px;
-    }
-
-    .coming-icon {
-      width: 86px;
-      height: 86px;
-      margin: 0 auto 18px;
-      border-radius: 24px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-
-    .coming-icon img {
-      width: 52px;
-      height: 52px;
-      object-fit: contain;
-      display: block;
-    }
-
-    .coming-title {
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: -.04em;
-      margin: 0 0 12px;
-    }
-
-    .coming-text {
-      font-size: 17px;
+      color: var(--muted);
+      font-size: 14px;
       line-height: 1.7;
-      color: var(--text-2);
     }
 
-    .loading-box,
-    .error-box,
-    .empty-box {
-      padding: 26px;
-      border-radius: 22px;
+    .footer-note strong {
+      color: #d8ebff;
+    }
+
+    .tab-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: panelIn .42s cubic-bezier(.22,.68,0,1) forwards;
+    }
+
+    @keyframes panelIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(.995);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes rowFade {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .placeholder-box {
+      padding: 48px 22px;
       text-align: center;
-      font-size: 16px;
-      font-weight: 700;
+    }
+
+    .placeholder-icon {
+      font-size: 76px;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 0 20px rgba(63,226,255,.12));
+      animation: iconFloat 2.6s ease-in-out infinite;
+    }
+
+    .placeholder-title {
+      font-size: 28px;
+      font-weight: 900;
+      margin: 0 0 10px;
+      letter-spacing: -.03em;
+    }
+
+    .placeholder-text {
       color: var(--text-2);
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes iconFloat {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
-    @media (max-width: 1320px) {
-      .tabs-wrap {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .refresh-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #dff6ff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .refresh-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--cyan);
+      box-shadow: 0 0 12px rgba(63,226,255,.6);
+      animation: pulseDot 1.3s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.45); opacity: .6; }
+    }
+
+    .loading-overlay {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(8,16,32,.92);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow-lg);
+      color: #eaf8ff;
+      font-size: 13px;
+      font-weight: 800;
+      backdrop-filter: blur(14px);
+    }
+
+    .loading-spinner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.14);
+      border-top-color: var(--cyan);
+      border-right-color: var(--pink);
+      animation: spin .85s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1380px) {
+      .tabs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      .podium-grid {
+      .list-head,
+      .list-row {
+        grid-template-columns: 74px 1.7fr 1.25fr 1fr 1fr 1fr;
+      }
+
+      .hide-lg { display: none !important; }
+    }
+
+    @media (max-width: 1100px) {
+      .podium {
         grid-template-columns: 1fr;
       }
 
@@ -778,205 +997,366 @@
         min-height: auto;
       }
 
-      .table-head,
-      .table-row {
-        grid-template-columns: 84px 1.2fr 1fr .9fr .9fr 90px;
-      }
-    }
-
-    @media (max-width: 980px) {
-      .table-head { display: none; }
-
-      .table-row {
-        grid-template-columns: 1fr;
-        gap: 10px;
+      .list-head,
+      .list-row {
+        grid-template-columns: 70px 1.9fr 1.2fr 1fr 1fr;
       }
 
-      .summary-divider { display: none; }
-      .summary-cell,
-      .deal-cell,
-      .num-cell,
-      .player-cell,
-      .place-cell {
-        justify-content: flex-start;
-      }
+      .hide-md { display: none !important; }
     }
 
     @media (max-width: 760px) {
-      .tabs-wrap { grid-template-columns: 1fr; }
-      .player-login,
-      .player-main-login { font-size: 22px; }
-      .balance-value { font-size: 28px; }
-      .summary-main strong { font-size: 18px; }
+      .page {
+        padding: 14px;
+      }
+
+      .topbar {
+        padding: 16px;
+      }
+
+      .tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-btn {
+        min-height: 88px;
+      }
+
+      .tab-title {
+        font-size: 18px;
+      }
+
+      .hero,
+      .podium-inner {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .list-head,
+      .list-row {
+        grid-template-columns: 64px 1.6fr 1fr;
+        gap: 10px;
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .hide-sm { display: none !important; }
+
+      .player-line .player-login-text {
+        font-size: 15px;
+      }
+
+      .balance-main,
+      .cell-strong {
+        font-size: 15px;
+      }
+
+      .bg-emoji {
+        font-size: 118px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="bg"></div>
+  <div class="bg-layer" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+  </div>
+
+  <div class="bg-emoji" aria-hidden="true">🖤</div>
 
   <div class="page">
     <header class="glass topbar">
       <div class="topbar-left">
-        <div class="title-icon">
-          <img src="./png-to-rating/all_active.png" alt="Рейтинг">
+        <div class="topbar-icon">
+          <img src="./png-to-rating/all_active.png" alt="rating" />
         </div>
-        <h1 class="page-title">Рейтинг игроков</h1>
+
+        <div class="title-wrap">
+          <h1 class="page-title">Рейтинг игроков</h1>
+          <div class="page-sub">Топ пользователей World Script по активности, балансу и игровым событиям ✨</div>
+        </div>
       </div>
 
-      <button class="close-btn" type="button" onclick="goBackPage()">×</button>
+      <button class="close-btn" type="button" onclick="goBack()">×</button>
     </header>
 
-    <section class="tabs-wrap">
-      <button class="tab-btn" type="button" onclick="switchRatingTab('roulette', this)">
-        <div class="tab-icon-wrap"><img src="./png-to-rating/ruletka_active.png" alt="Рулетка"></div>
-        <div>
-          <div class="tab-title">Рулетка</div>
-          <div class="tab-sub">Топ по вращениям</div>
-        </div>
-      </button>
+    <section class="glass tabs-shell">
+      <div class="tabs">
+        <button class="tab-btn" id="tabBtn-roulette" type="button" onclick="switchTab('roulette')">
+          <div class="tab-icon-wrap">
+            <img src="./png-to-rating/ruletka_active.png" alt="Рулетка" />
+          </div>
+          <div class="tab-text">
+            <div class="tab-title">🎰 Рулетка</div>
+            <div class="tab-sub">Топ по вращениям</div>
+          </div>
+        </button>
 
-      <button class="tab-btn" type="button" onclick="switchRatingTab('bonus', this)">
-        <div class="tab-icon-wrap"><img src="./png-to-rating/bonus_active.png" alt="Бонус"></div>
-        <div>
-          <div class="tab-title">Бонус</div>
-          <div class="tab-sub">Топ по активациям</div>
-        </div>
-      </button>
+        <button class="tab-btn" id="tabBtn-bonus" type="button" onclick="switchTab('bonus')">
+          <div class="tab-icon-wrap">
+            <img src="./png-to-rating/bonus_active.png" alt="Бонус" />
+          </div>
+          <div class="tab-text">
+            <div class="tab-title">💸 Бонус</div>
+            <div class="tab-sub">Топ по активациям</div>
+          </div>
+        </button>
 
-      <button class="tab-btn active" type="button" onclick="switchRatingTab('all', this)">
-        <div class="tab-icon-wrap"><img src="./png-to-rating/all_active.png" alt="Общая активность"></div>
-        <div>
-          <div class="tab-title">Общая активность</div>
-          <div class="tab-sub">Топ по общему балансу</div>
-        </div>
-      </button>
+        <button class="tab-btn active" id="tabBtn-overall" type="button" onclick="switchTab('overall')">
+          <div class="tab-icon-wrap">
+            <img src="./png-to-rating/all_active.png" alt="Общая активность" />
+          </div>
+          <div class="tab-text">
+            <div class="tab-title">📊 Общая активность</div>
+            <div class="tab-sub">Топ по общему балансу</div>
+          </div>
+        </button>
 
-      <button class="tab-btn" type="button" onclick="switchRatingTab('chest', this)">
-        <div class="tab-icon-wrap"><img src="./png-to-rating/sunduk_active.png" alt="Сундук"></div>
-        <div>
-          <div class="tab-title">Сундук</div>
-          <div class="tab-sub">Топ по открытиям</div>
-        </div>
-      </button>
+        <button class="tab-btn" id="tabBtn-chest" type="button" onclick="switchTab('chest')">
+          <div class="tab-icon-wrap">
+            <img src="./png-to-rating/sunduk_active.png" alt="Сундук" />
+          </div>
+          <div class="tab-text">
+            <div class="tab-title">🎁 Сундук</div>
+            <div class="tab-sub">Топ по открытиям</div>
+          </div>
+        </button>
 
-      <button class="tab-btn is-disabled" type="button" onclick="switchRatingTab('contracts', this)">
-        <div class="tab-icon-wrap"><img src="./png-to-rating/contract_active.png" alt="Контракты"></div>
-        <div>
-          <div class="tab-title">Контракты</div>
-          <div class="tab-sub">В разработке</div>
-        </div>
-      </button>
+        <button class="tab-btn" id="tabBtn-contracts" type="button" onclick="switchTab('contracts')">
+          <div class="tab-icon-wrap">
+            <img src="./png-to-rating/contract_active.png" alt="Контракты" />
+          </div>
+          <div class="tab-text">
+            <div class="tab-title">🛠 Контракты</div>
+            <div class="tab-sub">В разработке</div>
+          </div>
+        </button>
+      </div>
     </section>
 
-    <section id="panel-all" class="section-panel active">
-      <div class="hero">
-        <h2 class="hero-title">Общая активность</h2>
-        <div class="hero-sub">Общий баланс = игровой баланс + к выводу</div>
+    <!-- OVERALL -->
+    <section id="panel-overall" class="tab-panel active">
+      <div class="glass hero">
+        <div class="hero-top">
+          <div class="hero-title-wrap">
+            <h2 class="glitch-title" id="glitchTitle" data-text="Общая активность">Общая активность</h2>
+            <div class="hero-sub">Общий баланс = игровой баланс + к выводу 💎</div>
+          </div>
 
-        <div class="hero-meta">
-          <div class="refresh-box">
+          <div class="refresh-chip">
             <span class="refresh-dot"></span>
-            <span id="refreshTimerText">Обновление...</span>
+            <span>Автообновление каждые 30 минут</span>
           </div>
         </div>
-      </div>
 
-      <div id="overallLoading" class="loading-box">Загрузка рейтинга...</div>
-      <div id="overallError" class="error-box" style="display:none;">Не удалось загрузить рейтинг</div>
-      <div id="overallEmpty" class="empty-box" style="display:none;">Пока нет игроков с балансом</div>
+        <div class="podium" id="overallPodium">
+          <div class="state-box">Загрузка рейтинга...</div>
+        </div>
 
-      <div id="overallContent" style="display:none;">
-        <div id="podiumGrid" class="podium-grid"></div>
-
-        <div class="table-shell glass">
-          <div class="table-head">
+        <div class="glass list-card">
+          <div class="list-head">
             <div>Место</div>
             <div>Игрок</div>
             <div>Общий баланс</div>
-            <div>Игровой баланс</div>
-            <div>К выводу</div>
-            <div style="text-align:right;">Рейтинг</div>
+            <div class="hide-sm">Игровой баланс</div>
+            <div class="hide-md">К выводу</div>
+            <div class="hide-lg">За 30 дней</div>
+            <div class="hide-lg">Всего выведено</div>
+          </div>
+          <div class="list-body" id="overallList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROULETTE -->
+    <section id="panel-roulette" class="tab-panel">
+      <div class="glass hero">
+        <div class="hero-top">
+          <div class="hero-title-wrap">
+            <h2 class="glitch-title" data-text="Рулетка">Рулетка</h2>
+            <div class="hero-sub">Игроки, которые чаще всего крутят рулетку 🎰</div>
           </div>
 
-          <div id="overallList"></div>
+          <div class="hero-badge">
+            <div class="hero-badge-label">Категория</div>
+            <div class="hero-badge-value">Рулетка</div>
+          </div>
         </div>
 
-        <div class="footer-note">
-          <span class="footer-stars">✦ ✦</span>
-          <span>Рейтинг обновляется автоматически</span>
-          <span class="footer-stars">✦ ✦</span>
+        <div class="podium" id="roulettePodium">
+          <div class="state-box">Загрузка рейтинга...</div>
+        </div>
+
+        <div class="glass list-card">
+          <div class="list-head">
+            <div>Место</div>
+            <div>Игрок</div>
+            <div>Прокрутов</div>
+            <div class="hide-sm">Игровой баланс</div>
+            <div class="hide-md">К выводу</div>
+            <div class="hide-lg">Общий баланс</div>
+            <div class="hide-lg">За 30 дней</div>
+          </div>
+          <div class="list-body" id="rouletteList"></div>
         </div>
       </div>
     </section>
 
-    <section id="panel-roulette" class="section-panel">
-      <div class="coming-box glass">
-        <div class="coming-inner">
-          <div class="coming-icon"><img src="./png-to-rating/ruletka_active.png" alt="Рулетка"></div>
-          <h2 class="coming-title">Рейтинг по рулетке</h2>
-          <div class="coming-text">Когда скинешь структуру таблицы или логов по рулетке — сразу подключим живой топ.</div>
+    <!-- BONUS -->
+    <section id="panel-bonus" class="tab-panel">
+      <div class="glass hero">
+        <div class="hero-top">
+          <div class="hero-title-wrap">
+            <h2 class="glitch-title" data-text="Бонус">Бонус</h2>
+            <div class="hero-sub">Игроки, которые чаще всего активируют бонус 💸</div>
+          </div>
+
+          <div class="hero-badge">
+            <div class="hero-badge-label">Категория</div>
+            <div class="hero-badge-value">Бонус</div>
+          </div>
+        </div>
+
+        <div class="podium" id="bonusPodium">
+          <div class="state-box">Загрузка рейтинга...</div>
+        </div>
+
+        <div class="glass list-card">
+          <div class="list-head">
+            <div>Место</div>
+            <div>Игрок</div>
+            <div>Активаций</div>
+            <div class="hide-sm">Игровой баланс</div>
+            <div class="hide-md">К выводу</div>
+            <div class="hide-lg">Общий баланс</div>
+            <div class="hide-lg">За неделю</div>
+          </div>
+          <div class="list-body" id="bonusList"></div>
         </div>
       </div>
     </section>
 
-    <section id="panel-bonus" class="section-panel">
-      <div class="coming-box glass">
-        <div class="coming-inner">
-          <div class="coming-icon"><img src="./png-to-rating/bonus_active.png" alt="Бонус"></div>
-          <h2 class="coming-title">Рейтинг по бонусу</h2>
-          <div class="coming-text">Когда дашь таблицу, где хранится количество активаций бонуса, я сразу соберу этот топ.</div>
+    <!-- CHEST -->
+    <section id="panel-chest" class="tab-panel">
+      <div class="glass hero">
+        <div class="hero-top">
+          <div class="hero-title-wrap">
+            <h2 class="glitch-title" data-text="Сундук">Сундук</h2>
+            <div class="hero-sub">Игроки, которые активнее всего открывают сундук 🎁</div>
+          </div>
+
+          <div class="hero-badge">
+            <div class="hero-badge-label">Категория</div>
+            <div class="hero-badge-value">Сундук</div>
+          </div>
+        </div>
+
+        <div class="podium" id="chestPodium">
+          <div class="state-box">Загрузка рейтинга...</div>
+        </div>
+
+        <div class="glass list-card">
+          <div class="list-head">
+            <div>Место</div>
+            <div>Игрок</div>
+            <div>Открытий</div>
+            <div class="hide-sm">Серия</div>
+            <div class="hide-md">Игровой баланс</div>
+            <div class="hide-lg">К выводу</div>
+            <div class="hide-lg">Общий баланс</div>
+          </div>
+          <div class="list-body" id="chestList"></div>
         </div>
       </div>
     </section>
 
-    <section id="panel-chest" class="section-panel">
-      <div class="coming-box glass">
-        <div class="coming-inner">
-          <div class="coming-icon"><img src="./png-to-rating/sunduk_active.png" alt="Сундук"></div>
-          <h2 class="coming-title">Рейтинг по сундуку</h2>
-          <div class="coming-text">Для живого рейтинга сундука нужна таблица истории открытий или счётчик открытий.</div>
+    <!-- CONTRACTS -->
+    <section id="panel-contracts" class="tab-panel">
+      <div class="glass placeholder-box">
+        <div class="placeholder-icon">🛠</div>
+        <h2 class="placeholder-title">Контракты</h2>
+        <div class="placeholder-text">
+          Этот раздел пока находится в разработке.<br />
+          Позже здесь будет отдельный рейтинг по выполненным контрактам, наградам и активности игроков 🚧
         </div>
       </div>
     </section>
 
-    <section id="panel-contracts" class="section-panel">
-      <div class="coming-box glass">
-        <div class="coming-inner">
-          <div class="coming-icon"><img src="./png-to-rating/contract_active.png" alt="Контракты"></div>
-          <h2 class="coming-title">Контракты</h2>
-          <div class="coming-text">Раздел пока оставлен как заглушка, как и договаривались.</div>
-        </div>
-      </div>
-    </section>
+    <div class="glass footer-note">
+      🏆 Рейтинг обновляется автоматически.  
+      <strong>Место игрока</strong> зависит от выбранной вкладки и её показателей.
+    </div>
+  </div>
+
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-spinner"></div>
+    <div>Загрузка рейтинга...</div>
   </div>
 
   <script>
     const API_BASE = "https://world-script-api.onrender.com";
+    const AUTO_REFRESH_MS = 30 * 60 * 1000;
+
+    let currentTab = "overall";
+    let autoRefreshTimer = null;
+    let glitchTimer = null;
+
+    const tabConfigs = {
+      overall: {
+        endpoint: "/api/ws/ratings/overall?limit=100",
+        podiumId: "overallPodium",
+        listId: "overallList",
+        kind: "overall"
+      },
+      roulette: {
+        endpoint: "/api/ws/ratings/roulette?limit=100",
+        podiumId: "roulettePodium",
+        listId: "rouletteList",
+        kind: "roulette"
+      },
+      bonus: {
+        endpoint: "/api/ws/ratings/bonus?limit=100",
+        podiumId: "bonusPodium",
+        listId: "bonusList",
+        kind: "bonus"
+      },
+      chest: {
+        endpoint: "/api/ws/ratings/chest?limit=100",
+        podiumId: "chestPodium",
+        listId: "chestList",
+        kind: "chest"
+      }
+    };
+
+    const glitchPhrases = [
+      "Активность пользователей WS",
+      "Балансы WS",
+      "Попадай в рейтинг",
+      "Играй и забирай топ-1"
+    ];
 
     function wsGetToken() {
       return localStorage.getItem("ws_token") || "";
     }
 
-    async function wsRequest(path, options = {}) {
-      const token = wsGetToken();
-      const headers = { ...(options.headers || {}) };
-      if (token) headers.Authorization = "Bearer " + token;
-
-      const response = await fetch(API_BASE + path, {
-        ...options,
-        headers
-      });
-
-      const data = await response.json().catch(() => ({
-        ok: false,
-        error: "Bad JSON"
-      }));
-
-      return { res: response, data };
+    function safeNumber(v, fallback = 0) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : fallback;
     }
 
-    async function wsGet(path) {
-      return wsRequest(path, { method: "GET" });
+    function safeArray(v) {
+      return Array.isArray(v) ? v : [];
     }
 
     function escapeHtml(str) {
@@ -988,189 +1368,401 @@
         .replace(/'/g, "&#039;");
     }
 
-    function safeNumber(value, fallback = 0) {
-      const n = Number(value);
-      return Number.isFinite(n) ? n : fallback;
-    }
-
     function formatMoney(n) {
-      return "$ " + safeNumber(n).toLocaleString("ru-RU");
+      return "$" + safeNumber(n).toLocaleString("ru-RU");
     }
 
     function getInitials(value) {
       const text = String(value || "WS").trim().toUpperCase();
-      return text.slice(0, 2) || "WS";
+      return text ? text.slice(0, 2) : "WS";
     }
 
-    function getNick(value, fallback) {
-      const nick = String(value || "").trim();
-      if (nick) return nick;
-      return String(fallback || "Без ника");
+    function openVkUrl(vkId) {
+      if (!vkId) return "#";
+      return "https://vk.com/id" + encodeURIComponent(String(vkId));
     }
 
-    function switchRatingTab(tab, btn) {
-      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
-      if (btn) btn.classList.add("active");
-
-      document.querySelectorAll(".section-panel").forEach(el => el.classList.remove("active"));
-      const panel = document.getElementById("panel-" + tab);
-      if (panel) panel.classList.add("active");
+    function setLoading(show) {
+      document.getElementById("loadingOverlay")?.classList.toggle("hidden", !show);
     }
 
-    function goBackPage() {
-      if (window.history.length > 1) window.history.back();
-      else window.location.href = "./";
-    }
-
-    function renderAvatar(avatarUrl, login) {
-      if (avatarUrl) {
-        return `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(login)}" />`;
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "./";
       }
-      return escapeHtml(getInitials(login));
     }
 
-    function renderPodiumCard(player, place) {
-      if (!player) {
-        return `<div class="podium-card place-${place} glass"><div class="balance-title">Пусто</div></div>`;
+    async function apiGet(path) {
+      const token = wsGetToken();
+      const headers = {};
+      if (token) headers.Authorization = "Bearer " + token;
+
+      const res = await fetch(API_BASE + path, {
+        method: "GET",
+        headers
+      });
+
+      const data = await res.json().catch(() => ({ ok: false, error: "Bad JSON" }));
+      return { res, data };
+    }
+
+    function renderAvatar(url, login) {
+      if (url) {
+        return `
+          <img
+            src="${escapeHtml(url)}"
+            alt="${escapeHtml(login || "player")}"
+            onerror="this.parentNode.innerHTML='<div class=&quot;avatar-fallback&quot;>${escapeHtml(getInitials(login))}</div>'"
+          />
+        `;
       }
 
-      const nick = getNick(player.nickname, player.game_nick);
-      const nickClass = place === 1 ? "gold" : place === 2 ? "blue" : "red";
+      return `<div class="avatar-fallback">${escapeHtml(getInitials(login))}</div>`;
+    }
+
+    function renderVkIcon(vkId) {
+      if (!vkId) return "";
+      return `
+        <a
+          class="vk-link"
+          href="${escapeHtml(openVkUrl(vkId))}"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Открыть страницу ВКонтакте"
+          aria-label="Открыть страницу ВКонтакте"
+        >VK</a>
+      `;
+    }
+
+    function getNick(row) {
+      return row.nickname || row.game_nick || "Без ника";
+    }
+
+    function getPrimaryValue(row, kind) {
+      if (kind === "roulette") return safeNumber(row.spins_count || row.roulette_spins || row.total_spins || 0);
+      if (kind === "bonus") return safeNumber(row.bonus_claims || row.bonus_count || row.activations_count || 0);
+      if (kind === "chest") return safeNumber(row.chest_opens || row.chest_count || row.open_count || 0);
+      return safeNumber(row.total_balance || 0);
+    }
+
+    function getPrimaryLabel(kind) {
+      if (kind === "roulette") return "Прокрутов";
+      if (kind === "bonus") return "Активаций";
+      if (kind === "chest") return "Открытий";
+      return "Общий баланс";
+    }
+
+    function renderPodiumCard(row, place, kind) {
+      if (!row) {
+        return `<div class="podium-card place-${place}"><div class="podium-inner"><div class="state-box">Пусто</div></div></div>`;
+      }
+
+      const primaryValue = getPrimaryValue(row, kind);
+      const primaryLabel = getPrimaryLabel(kind);
 
       return `
-        <div class="podium-card place-${place} glass">
-          <div class="place-badge">${place}</div>
-          <div class="player-avatar">${renderAvatar(player.avatar_url, player.login)}</div>
-          <div class="player-login">${escapeHtml(player.login)}</div>
-          <div class="nick-pill ${nickClass}">${escapeHtml(nick)}</div>
-          <div class="divider"></div>
-          <div class="balance-title">Общий баланс:</div>
-          <div class="balance-value">${formatMoney(player.total_balance)}</div>
-          <div class="podium-meta">
-            <span>Игровой: <strong>${formatMoney(player.game_balance)}</strong></span>
-            <span>|</span>
-            <span>К выводу: <strong>${formatMoney(player.to_output)}</strong></span>
+        <div class="podium-card place-${place}">
+          <div class="podium-inner">
+            <div class="medal-badge">${place}</div>
+
+            <div class="avatar">
+              ${renderAvatar(row.avatar_url, row.login)}
+            </div>
+
+            <div class="player-login">
+              <div class="player-login-text">${escapeHtml(row.login || "user")}</div>
+              ${renderVkIcon(row.vk_id)}
+            </div>
+
+            <div class="nick-pill">${escapeHtml(getNick(row))}</div>
+
+            <div class="balance-divider"></div>
+
+            <div class="big-balance-label">${escapeHtml(primaryLabel)}</div>
+            <div class="big-balance-value">${kind === "overall" ? formatMoney(primaryValue) : primaryValue.toLocaleString("ru-RU") + " 🏆"}</div>
+
+            <div class="podium-meta">
+              <span>Игровой: <strong>${formatMoney(row.game_balance || 0)}</strong></span>
+              <span>|</span>
+              <span>К выводу: <strong>${formatMoney(row.to_output || 0)}</strong></span>
+            </div>
           </div>
         </div>
       `;
     }
 
-    function renderOverallRows(players) {
-      const list = document.getElementById("overallList");
-      if (!list) return;
+    function renderOverallRow(row) {
+      return `
+        <div class="list-row">
+          <div><div class="place-bubble">${safeNumber(row.place)}</div></div>
 
-      list.innerHTML = players.map(player => {
-        const nick = getNick(player.nickname, player.game_nick);
-
-        return `
-          <div class="table-row">
-            <div class="place-cell">
-              <span>${safeNumber(player.place)}</span>
-              <div class="row-mini-avatar">${renderAvatar(player.avatar_url, player.login)}</div>
+          <div class="player-cell">
+            <div class="player-avatar-sm">
+              ${renderAvatar(row.avatar_url, row.login)}
             </div>
 
-            <div class="player-cell">
-              <div class="player-main">
-                <div class="player-main-login">${escapeHtml(player.login)}</div>
-                <div class="nick-chip">${escapeHtml(nick)}</div>
+            <div class="player-meta">
+              <div class="player-line">
+                <div class="player-login-text">${escapeHtml(row.login || "user")}</div>
+                ${renderVkIcon(row.vk_id)}
+              </div>
+
+              <div class="player-line">
+                <span class="nick-pill" style="margin:0;padding:6px 10px;font-size:12px;">${escapeHtml(getNick(row))}</span>
+                <span class="player-label-sep">|</span>
+                <span class="cell-muted">Игрок WS ✨</span>
               </div>
             </div>
+          </div>
 
-            <div class="summary-cell">
-              <div class="summary-divider"></div>
-              <div class="summary-main">Общий баланс: <strong>${formatMoney(player.total_balance)}</strong></div>
+          <div class="balance-main">${formatMoney(row.total_balance || 0)}</div>
+          <div class="cell-muted hide-sm">${formatMoney(row.game_balance || 0)}</div>
+          <div class="cell-muted hide-md">${formatMoney(row.to_output || 0)}</div>
+          <div class="cell-gold hide-lg">${formatMoney(row.earned_30d || 0)}</div>
+          <div class="cell-success hide-lg">${formatMoney(row.total_withdrawn || 0)}</div>
+        </div>
+      `;
+    }
+
+    function renderRouletteRow(row) {
+      const value = getPrimaryValue(row, "roulette");
+      return `
+        <div class="list-row">
+          <div><div class="place-bubble">${safeNumber(row.place)}</div></div>
+
+          <div class="player-cell">
+            <div class="player-avatar-sm">
+              ${renderAvatar(row.avatar_url, row.login)}
             </div>
 
-            <div class="num-cell soft">${formatMoney(player.game_balance)}</div>
-            <div class="num-cell soft">${formatMoney(player.to_output)}</div>
-
-            <div class="deal-cell">
-              ${safeNumber(player.place)}
-              <img class="deal-icon" src="./png-to-rating/all_active.png" alt="rating">
+            <div class="player-meta">
+              <div class="player-line">
+                <div class="player-login-text">${escapeHtml(row.login || "user")}</div>
+                ${renderVkIcon(row.vk_id)}
+              </div>
+              <div class="player-line">
+                <span class="nick-pill" style="margin:0;padding:6px 10px;font-size:12px;">${escapeHtml(getNick(row))}</span>
+              </div>
             </div>
           </div>
+
+          <div class="cell-strong">${value.toLocaleString("ru-RU")} 🎰</div>
+          <div class="cell-muted hide-sm">${formatMoney(row.game_balance || 0)}</div>
+          <div class="cell-muted hide-md">${formatMoney(row.to_output || 0)}</div>
+          <div class="cell-gold hide-lg">${formatMoney(row.total_balance || 0)}</div>
+          <div class="cell-success hide-lg">${formatMoney(row.earned_30d || 0)}</div>
+        </div>
+      `;
+    }
+
+    function renderBonusRow(row) {
+      const value = getPrimaryValue(row, "bonus");
+      return `
+        <div class="list-row">
+          <div><div class="place-bubble">${safeNumber(row.place)}</div></div>
+
+          <div class="player-cell">
+            <div class="player-avatar-sm">
+              ${renderAvatar(row.avatar_url, row.login)}
+            </div>
+
+            <div class="player-meta">
+              <div class="player-line">
+                <div class="player-login-text">${escapeHtml(row.login || "user")}</div>
+                ${renderVkIcon(row.vk_id)}
+              </div>
+              <div class="player-line">
+                <span class="nick-pill" style="margin:0;padding:6px 10px;font-size:12px;">${escapeHtml(getNick(row))}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cell-strong">${value.toLocaleString("ru-RU")} 💸</div>
+          <div class="cell-muted hide-sm">${formatMoney(row.game_balance || 0)}</div>
+          <div class="cell-muted hide-md">${formatMoney(row.to_output || 0)}</div>
+          <div class="cell-gold hide-lg">${formatMoney(row.total_balance || 0)}</div>
+          <div class="cell-success hide-lg">${formatMoney(row.earned_week || 0)}</div>
+        </div>
+      `;
+    }
+
+    function renderChestRow(row) {
+      const value = getPrimaryValue(row, "chest");
+      const streak = safeNumber(row.chest_streak || row.streak || 0);
+
+      return `
+        <div class="list-row">
+          <div><div class="place-bubble">${safeNumber(row.place)}</div></div>
+
+          <div class="player-cell">
+            <div class="player-avatar-sm">
+              ${renderAvatar(row.avatar_url, row.login)}
+            </div>
+
+            <div class="player-meta">
+              <div class="player-line">
+                <div class="player-login-text">${escapeHtml(row.login || "user")}</div>
+                ${renderVkIcon(row.vk_id)}
+              </div>
+              <div class="player-line">
+                <span class="nick-pill" style="margin:0;padding:6px 10px;font-size:12px;">${escapeHtml(getNick(row))}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cell-strong">${value.toLocaleString("ru-RU")} 🎁</div>
+          <div class="cell-muted hide-sm">${streak.toLocaleString("ru-RU")} 🔥</div>
+          <div class="cell-muted hide-md">${formatMoney(row.game_balance || 0)}</div>
+          <div class="cell-gold hide-lg">${formatMoney(row.to_output || 0)}</div>
+          <div class="cell-success hide-lg">${formatMoney(row.total_balance || 0)}</div>
+        </div>
+      `;
+    }
+
+    function renderRows(items, kind) {
+      if (kind === "roulette") return items.map(renderRouletteRow).join("");
+      if (kind === "bonus") return items.map(renderBonusRow).join("");
+      if (kind === "chest") return items.map(renderChestRow).join("");
+      return items.map(renderOverallRow).join("");
+    }
+
+    function renderRatingBlock(kind, items) {
+      const config = tabConfigs[kind];
+      const podiumEl = document.getElementById(config.podiumId);
+      const listEl = document.getElementById(config.listId);
+
+      const rows = safeArray(items);
+
+      if (!rows.length) {
+        if (podiumEl) podiumEl.innerHTML = `<div class="state-box">Нет данных для отображения.</div>`;
+        if (listEl) listEl.innerHTML = `<div class="state-box">Список пуст.</div>`;
+        return;
+      }
+
+      const first = rows[0] || null;
+      const second = rows[1] || null;
+      const third = rows[2] || null;
+      const rest = rows.slice(3);
+
+      if (podiumEl) {
+        podiumEl.innerHTML = `
+          ${renderPodiumCard(second, 2, kind)}
+          ${renderPodiumCard(first, 1, kind)}
+          ${renderPodiumCard(third, 3, kind)}
         `;
-      }).join("");
-    }
+      }
 
-    function setOverallState({ loading = false, error = false, empty = false, content = false }) {
-      const loadingEl = document.getElementById("overallLoading");
-      const errorEl = document.getElementById("overallError");
-      const emptyEl = document.getElementById("overallEmpty");
-      const contentEl = document.getElementById("overallContent");
-
-      if (loadingEl) loadingEl.style.display = loading ? "block" : "none";
-      if (errorEl) errorEl.style.display = error ? "block" : "none";
-      if (emptyEl) emptyEl.style.display = empty ? "block" : "none";
-      if (contentEl) contentEl.style.display = content ? "block" : "none";
-    }
-
-    async function loadOverallRating() {
-      try {
-        setOverallState({ loading: true });
-
-        const { res, data } = await wsGet("/api/ws/ratings/overall?limit=100");
-
-        if (res.status === 401) {
-          setOverallState({ error: true });
-          return;
+      if (listEl) {
+        if (!rest.length) {
+          listEl.innerHTML = `<div class="state-box">Есть только топ-3 игроков.</div>`;
+        } else {
+          listEl.innerHTML = renderRows(rest, kind);
         }
-
-        if (!data.ok) {
-          setOverallState({ error: true });
-          return;
-        }
-
-        const top3 = Array.isArray(data.top3) ? data.top3 : [];
-        const list = Array.isArray(data.list) ? data.list : [];
-
-        if (!top3.length && !list.length) {
-          setOverallState({ empty: true });
-          return;
-        }
-
-        const podiumGrid = document.getElementById("podiumGrid");
-        if (podiumGrid) {
-          const place1 = top3.find(x => safeNumber(x.place) === 1) || null;
-          const place2 = top3.find(x => safeNumber(x.place) === 2) || null;
-          const place3 = top3.find(x => safeNumber(x.place) === 3) || null;
-
-          podiumGrid.innerHTML = `
-            ${renderPodiumCard(place2, 2)}
-            ${renderPodiumCard(place1, 1)}
-            ${renderPodiumCard(place3, 3)}
-          `;
-        }
-
-        renderOverallRows(list);
-        setOverallState({ content: true });
-      } catch (e) {
-        console.log("loadOverallRating error:", e.message);
-        setOverallState({ error: true });
       }
     }
 
-    function startRefreshTimer() {
-      const el = document.getElementById("refreshTimerText");
-      if (!el) return;
+    function showError(kind, message) {
+      const config = tabConfigs[kind];
+      const podiumEl = document.getElementById(config.podiumId);
+      const listEl = document.getElementById(config.listId);
+      const safeMessage = escapeHtml(message || "Ошибка загрузки");
 
-      let left = 30;
-      setInterval(() => {
-        const sec = String(left).padStart(2, "0");
-        el.textContent = `Обновление через 00:00:${sec}`;
-        left--;
+      if (podiumEl) {
+        podiumEl.innerHTML = `<div class="state-box">⚠ ${safeMessage}</div>`;
+      }
 
-        if (left < 0) {
-          left = 30;
-          loadOverallRating();
+      if (listEl) {
+        listEl.innerHTML = `<div class="state-box">Попробуй позже или проверь роут для этой вкладки.</div>`;
+      }
+    }
+
+    async function loadTabData(tab, force = false) {
+      if (!tabConfigs[tab]) return;
+
+      setLoading(true);
+
+      try {
+        const { res, data } = await apiGet(tabConfigs[tab].endpoint);
+
+        if (res.status === 401) {
+          showError(tab, "Сессия истекла. Войди заново.");
+          return;
         }
-      }, 1000);
+
+        if (!data?.ok) {
+          showError(tab, data?.error || "Не удалось загрузить данные.");
+          return;
+        }
+
+        renderRatingBlock(tab, data.items || []);
+      } catch (e) {
+        showError(tab, e.message || "Сетевая ошибка");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+
+      ["overall", "roulette", "bonus", "chest", "contracts"].forEach((name) => {
+        document.getElementById("tabBtn-" + name)?.classList.toggle("active", name === tab);
+        document.getElementById("panel-" + name)?.classList.toggle("active", name === tab);
+      });
+
+      if (tabConfigs[tab]) {
+        loadTabData(tab, true);
+      }
+    }
+
+    function startAutoRefresh() {
+      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+
+      autoRefreshTimer = setInterval(() => {
+        if (tabConfigs[currentTab]) {
+          loadTabData(currentTab, true);
+        }
+      }, AUTO_REFRESH_MS);
+    }
+
+    function startGlitchRotation() {
+      const titleEl = document.getElementById("glitchTitle");
+      if (!titleEl) return;
+
+      let index = 0;
+
+      const applyPhrase = (text) => {
+        titleEl.classList.remove("glitching");
+        void titleEl.offsetWidth;
+        titleEl.textContent = text;
+        titleEl.setAttribute("data-text", text);
+        titleEl.classList.add("glitching");
+
+        setTimeout(() => {
+          titleEl.classList.remove("glitching");
+        }, 900);
+      };
+
+      applyPhrase(glitchPhrases[0]);
+
+      if (glitchTimer) clearInterval(glitchTimer);
+      glitchTimer = setInterval(() => {
+        index = (index + 1) % glitchPhrases.length;
+        applyPhrase(glitchPhrases[index]);
+      }, 10000);
     }
 
     async function init() {
-      await loadOverallRating();
-      startRefreshTimer();
+      startGlitchRotation();
+      startAutoRefresh();
+      await loadTabData("overall", true);
     }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") goBack();
+    });
 
     init();
   </script>
