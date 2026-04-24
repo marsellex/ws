@@ -11,38 +11,30 @@
     * { box-sizing: border-box; }
 
     :root {
-      --bg-1: #040816;
-      --bg-2: #071225;
-      --card: rgba(8, 18, 38, 0.88);
+      --bg-1: #030815;
+      --bg-2: #071226;
+      --card: rgba(7, 16, 34, 0.92);
       --card-2: rgba(10, 20, 42, 0.94);
-      --card-soft: rgba(255,255,255,0.03);
 
       --border: rgba(255,255,255,0.08);
       --border-soft: rgba(255,255,255,0.05);
 
       --text: #eef4ff;
       --text-2: #b7c5df;
-      --text-3: #8090b2;
+      --text-3: #8392af;
 
-      --cyan: #27d7ff;
-      --cyan-2: #1c86ff;
-      --violet: #b15cff;
-      --violet-2: #7a3cff;
-      --gold: #ffbe3b;
-      --gold-2: #ff8c1a;
-      --red: #ff7f9e;
-      --red-2: #ff4f6f;
-      --green: #4cffad;
+      --cyan: #2cdcff;
+      --cyan-2: #2290ff;
+      --violet: #b05dff;
+      --gold: #ffbf42;
+      --gold-2: #ff961f;
+      --red: #ff7d9c;
+      --blue: #8ebdff;
 
       --shadow: 0 18px 50px rgba(0,0,0,0.35);
       --radius: 22px;
-      --radius-lg: 28px;
-      --radius-sm: 16px;
-
       --font: "Inter", sans-serif;
     }
-
-    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -50,18 +42,18 @@
       font-family: var(--font);
       color: var(--text);
       background:
-        radial-gradient(circle at 20% 0%, rgba(39,215,255,0.10), transparent 26%),
-        radial-gradient(circle at 80% 0%, rgba(177,92,255,0.08), transparent 24%),
-        radial-gradient(circle at 50% 18%, rgba(255,190,59,0.06), transparent 22%),
-        linear-gradient(180deg, #030712 0%, #051224 40%, #030915 100%);
+        radial-gradient(circle at 20% 0%, rgba(44,220,255,0.08), transparent 24%),
+        radial-gradient(circle at 80% 0%, rgba(176,93,255,0.08), transparent 24%),
+        radial-gradient(circle at 50% 20%, rgba(255,191,66,0.05), transparent 22%),
+        linear-gradient(180deg, #020611 0%, #06101f 45%, #020713 100%);
       overflow-x: hidden;
     }
 
     .bg {
       position: fixed;
       inset: 0;
-      pointer-events: none;
       z-index: 0;
+      pointer-events: none;
       overflow: hidden;
     }
 
@@ -70,10 +62,10 @@
       position: absolute;
       inset: -30%;
       background:
-        radial-gradient(circle at 20% 30%, rgba(39,215,255,0.08), transparent 25%),
-        radial-gradient(circle at 70% 20%, rgba(177,92,255,0.08), transparent 25%),
-        radial-gradient(circle at 50% 70%, rgba(255,190,59,0.05), transparent 25%);
-      animation: rotateBg 42s linear infinite;
+        radial-gradient(circle at 18% 20%, rgba(44,220,255,0.10), transparent 24%),
+        radial-gradient(circle at 75% 18%, rgba(176,93,255,0.10), transparent 22%),
+        radial-gradient(circle at 50% 65%, rgba(255,191,66,0.05), transparent 20%);
+      animation: rotateBg 48s linear infinite;
     }
 
     .bg::after {
@@ -84,8 +76,7 @@
         linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
       background-size: 46px 46px;
-      opacity: .25;
-      mask-image: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.2));
+      opacity: .23;
     }
 
     @keyframes rotateBg {
@@ -98,11 +89,13 @@
       z-index: 1;
       max-width: 1600px;
       margin: 0 auto;
-      padding: 18px;
+      padding: 14px;
     }
 
     .glass {
-      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015)), var(--card);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015)),
+        var(--card);
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
@@ -116,8 +109,8 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent 18%, transparent 78%, rgba(255,255,255,0.03));
       pointer-events: none;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 18%, transparent 78%, rgba(255,255,255,0.02));
     }
 
     .glass > * {
@@ -131,32 +124,36 @@
       justify-content: space-between;
       gap: 14px;
       padding: 14px 18px;
-      margin-bottom: 14px;
-      border-radius: 24px;
+      margin-bottom: 10px;
+      border-radius: 22px;
     }
 
     .topbar-left {
       display: flex;
       align-items: center;
-      gap: 14px;
-      min-width: 0;
+      gap: 12px;
     }
 
     .title-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, rgba(39,215,255,0.18), rgba(28,134,255,0.16));
-      border: 1px solid rgba(39,215,255,0.18);
-      box-shadow: 0 0 18px rgba(39,215,255,0.12);
-      font-size: 22px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(44,220,255,0.18), rgba(34,144,255,0.14));
+      border: 1px solid rgba(44,220,255,0.18);
+      box-shadow: 0 0 18px rgba(44,220,255,0.14);
+    }
+
+    .title-icon img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      display: block;
     }
 
     .page-title {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 900;
       letter-spacing: -.03em;
       margin: 0;
@@ -168,7 +165,7 @@
       border: none;
       border-radius: 14px;
       cursor: pointer;
-      font-size: 22px;
+      font-size: 24px;
       color: #fff;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
@@ -185,22 +182,23 @@
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .tab-btn {
-      min-height: 78px;
+      min-height: 76px;
       display: flex;
       align-items: center;
       gap: 12px;
       padding: 14px 16px;
       text-align: left;
-      color: var(--text-2);
       cursor: pointer;
       border-radius: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)), rgba(8,18,36,0.84);
+      color: var(--text-2);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)),
+        rgba(7,16,34,0.92);
       border: 1px solid rgba(255,255,255,0.07);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
       transition: .22s ease;
       font-family: var(--font);
     }
@@ -209,19 +207,18 @@
       transform: translateY(-2px);
       color: #fff;
       border-color: rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05);
     }
 
     .tab-btn.active {
       color: #fff;
-      border-color: rgba(39,215,255,0.35);
+      border-color: rgba(44,220,255,0.34);
       box-shadow:
-        0 0 0 1px rgba(39,215,255,0.10),
-        0 0 24px rgba(39,215,255,0.16),
+        0 0 0 1px rgba(44,220,255,0.08),
+        0 0 22px rgba(44,220,255,0.14),
         0 14px 34px rgba(0,0,0,0.24);
       background:
-        linear-gradient(135deg, rgba(39,215,255,0.16), rgba(28,134,255,0.12)),
-        rgba(7,18,35,0.92);
+        linear-gradient(135deg, rgba(44,220,255,0.16), rgba(34,144,255,0.10)),
+        rgba(8,18,36,0.96);
     }
 
     .tab-btn.is-disabled {
@@ -232,28 +229,24 @@
       width: 40px;
       height: 40px;
       min-width: 40px;
-      border-radius: 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
       overflow: hidden;
     }
 
     .tab-icon-wrap img {
-      width: 26px;
-      height: 26px;
+      width: 25px;
+      height: 25px;
       object-fit: contain;
       display: block;
     }
 
-    .tab-content-line {
-      min-width: 0;
-    }
-
     .tab-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       line-height: 1.2;
       margin-bottom: 4px;
@@ -262,54 +255,44 @@
     .tab-sub {
       font-size: 12px;
       color: var(--text-3);
-      line-height: 1.35;
+      line-height: 1.3;
     }
 
     .hero {
-      padding: 10px 6px 0;
-      margin-bottom: 12px;
+      padding: 8px 4px 0;
+      margin-bottom: 8px;
     }
 
     .hero-title {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      font-size: clamp(28px, 4vw, 48px);
+      text-align: center;
+      font-size: clamp(30px, 4vw, 44px);
       font-weight: 900;
       letter-spacing: -.05em;
-      text-align: center;
-      color: #6fe6ff;
-      text-shadow: 0 0 18px rgba(39,215,255,0.18);
+      color: #66e7ff;
       margin: 0 0 6px;
-    }
-
-    .hero-spark {
-      color: #48dbff;
-      font-size: 18px;
-      text-shadow: 0 0 14px rgba(39,215,255,0.4);
+      text-shadow: 0 0 18px rgba(44,220,255,0.16);
     }
 
     .hero-sub {
       text-align: center;
-      color: #f4c66e;
-      font-size: 18px;
+      color: #f3c463;
+      font-size: 17px;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
 
     .hero-meta {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .refresh-box {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       padding: 10px 14px;
-      border-radius: 16px;
+      border-radius: 14px;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.08);
       color: var(--text-2);
@@ -322,126 +305,109 @@
       height: 10px;
       border-radius: 50%;
       background: var(--cyan);
-      box-shadow: 0 0 14px rgba(39,215,255,0.5);
-      animation: pulse 1.25s ease-in-out infinite;
+      box-shadow: 0 0 12px rgba(44,220,255,0.45);
+      animation: pulse 1.3s ease-in-out infinite;
     }
 
     @keyframes pulse {
       0%,100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.4); opacity: .6; }
+      50% { transform: scale(1.35); opacity: .6; }
     }
 
     .podium-grid {
       display: grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
-      gap: 14px;
+      grid-template-columns: 1fr 1.18fr 1fr;
+      gap: 12px;
       align-items: end;
       margin-bottom: 10px;
     }
 
     .podium-card {
       position: relative;
-      padding: 18px 18px 20px;
-      border-radius: 26px;
+      padding: 18px 18px 22px;
+      border-radius: 24px;
+      min-height: 284px;
+      text-align: center;
       overflow: hidden;
-      min-height: 300px;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
-        rgba(6,14,28,0.92);
+        rgba(5,13,27,0.96);
       border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
-      text-align: center;
-    }
-
-    .podium-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.02), transparent 30%);
     }
 
     .podium-card.place-1 {
-      min-height: 350px;
-      border-color: rgba(255,190,59,0.36);
+      min-height: 340px;
+      border-color: rgba(255,191,66,0.32);
       box-shadow:
-        0 0 0 1px rgba(255,190,59,0.10),
-        0 0 30px rgba(255,190,59,0.18),
-        0 24px 50px rgba(0,0,0,0.3);
+        0 0 0 1px rgba(255,191,66,0.08),
+        0 0 28px rgba(255,191,66,0.16),
+        0 20px 46px rgba(0,0,0,0.28);
       background:
-        radial-gradient(circle at 50% 14%, rgba(255,190,59,0.12), transparent 28%),
-        linear-gradient(180deg, rgba(255,190,59,0.07), rgba(255,255,255,0.015)),
-        rgba(10,16,28,0.96);
+        radial-gradient(circle at 50% 8%, rgba(255,191,66,0.12), transparent 30%),
+        linear-gradient(180deg, rgba(255,191,66,0.06), rgba(255,255,255,0.015)),
+        rgba(7,14,27,0.98);
     }
 
     .podium-card.place-2 {
-      border-color: rgba(126,181,255,0.28);
-      box-shadow: 0 0 24px rgba(126,181,255,0.12), 0 18px 40px rgba(0,0,0,0.26);
+      border-color: rgba(142,189,255,0.24);
+      box-shadow: 0 0 22px rgba(142,189,255,0.10), 0 18px 42px rgba(0,0,0,0.26);
     }
 
     .podium-card.place-3 {
-      border-color: rgba(255,128,153,0.28);
-      box-shadow: 0 0 24px rgba(255,128,153,0.12), 0 18px 40px rgba(0,0,0,0.26);
+      border-color: rgba(255,125,156,0.24);
+      box-shadow: 0 0 22px rgba(255,125,156,0.10), 0 18px 42px rgba(0,0,0,0.26);
     }
 
     .place-badge {
       position: absolute;
-      top: 12px;
+      top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      width: 76px;
-      height: 76px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       display: grid;
       place-items: center;
       font-size: 34px;
       font-weight: 900;
       line-height: 1;
-      letter-spacing: -.04em;
-      border: 2px solid rgba(255,255,255,0.2);
       z-index: 2;
+      border: 2px solid rgba(255,255,255,0.2);
     }
 
     .place-1 .place-badge {
-      background: radial-gradient(circle at 30% 30%, #ffd86d, #ffaf1f);
-      color: #3a2300;
-      box-shadow: 0 0 26px rgba(255,190,59,0.35);
-      border-color: rgba(255,233,170,0.45);
+      background: radial-gradient(circle at 30% 30%, #ffd86e, #ffac1e);
+      color: #3f2800;
+      box-shadow: 0 0 26px rgba(255,191,66,0.34);
     }
 
     .place-2 .place-badge {
-      background: radial-gradient(circle at 30% 30%, #cfe8ff, #6e9dff);
-      color: #10213a;
-      box-shadow: 0 0 24px rgba(126,181,255,0.24);
-      border-color: rgba(212,234,255,0.4);
+      background: radial-gradient(circle at 30% 30%, #d7ebff, #82abff);
+      color: #142540;
+      box-shadow: 0 0 22px rgba(142,189,255,0.26);
     }
 
     .place-3 .place-badge {
-      background: radial-gradient(circle at 30% 30%, #ffb2c3, #ff6d95);
-      color: #3a1120;
-      box-shadow: 0 0 24px rgba(255,128,153,0.24);
-      border-color: rgba(255,198,212,0.4);
+      background: radial-gradient(circle at 30% 30%, #ffc2d1, #ff7397);
+      color: #431322;
+      box-shadow: 0 0 22px rgba(255,125,156,0.26);
     }
 
     .player-avatar {
-      width: 112px;
-      height: 112px;
+      width: 108px;
+      height: 108px;
       border-radius: 50%;
-      margin: 58px auto 16px;
+      margin: 58px auto 14px;
       overflow: hidden;
       border: 2px solid rgba(255,255,255,0.16);
-      background:
-        linear-gradient(135deg, rgba(39,215,255,0.18), rgba(177,92,255,0.16)),
-        rgba(255,255,255,0.04);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.26);
+      background: linear-gradient(135deg, rgba(44,220,255,0.18), rgba(176,93,255,0.16));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 34px;
+      font-size: 30px;
       font-weight: 900;
       color: #fff;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.24);
     }
 
     .player-avatar img {
@@ -452,16 +418,17 @@
     }
 
     .player-login {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 900;
       letter-spacing: -.04em;
       line-height: 1.05;
       margin-bottom: 10px;
+      word-break: break-word;
     }
 
     .podium-card.place-2 .player-login,
     .podium-card.place-3 .player-login {
-      font-size: 25px;
+      font-size: 24px;
     }
 
     .nick-pill {
@@ -470,32 +437,29 @@
       justify-content: center;
       padding: 8px 14px;
       border-radius: 999px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
-      line-height: 1;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       border: 1px solid rgba(255,255,255,0.12);
       background: rgba(255,255,255,0.04);
-      color: #dfeaff;
-      white-space: nowrap;
     }
 
     .nick-pill.gold {
-      background: rgba(255,190,59,0.10);
-      border-color: rgba(255,190,59,0.20);
-      color: #ffd981;
+      background: rgba(255,191,66,0.10);
+      border-color: rgba(255,191,66,0.18);
+      color: #ffd56e;
     }
 
     .nick-pill.blue {
-      background: rgba(126,181,255,0.10);
-      border-color: rgba(126,181,255,0.18);
-      color: #a7ceff;
+      background: rgba(142,189,255,0.10);
+      border-color: rgba(142,189,255,0.16);
+      color: #b0d0ff;
     }
 
     .nick-pill.red {
-      background: rgba(255,128,153,0.10);
-      border-color: rgba(255,128,153,0.18);
-      color: #ffadc2;
+      background: rgba(255,125,156,0.10);
+      border-color: rgba(255,125,156,0.16);
+      color: #ffb1c5;
     }
 
     .divider {
@@ -512,31 +476,29 @@
     }
 
     .balance-value {
-      font-size: 36px;
+      font-size: 34px;
       font-weight: 900;
       line-height: 1.1;
       margin-bottom: 12px;
     }
 
     .place-1 .balance-value {
-      color: #ffd15b;
-      text-shadow: 0 0 18px rgba(255,190,59,0.2);
+      color: #ffd15c;
+      text-shadow: 0 0 18px rgba(255,191,66,0.18);
     }
 
     .place-2 .balance-value {
-      color: #b6d6ff;
-      text-shadow: 0 0 18px rgba(126,181,255,0.16);
+      color: #bfdcff;
     }
 
     .place-3 .balance-value {
-      color: #ffadc2;
-      text-shadow: 0 0 18px rgba(255,128,153,0.16);
+      color: #ffb8ca;
     }
 
     .podium-meta {
       display: flex;
       justify-content: center;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
       font-size: 14px;
       color: var(--text-2);
@@ -546,34 +508,33 @@
 
     .table-shell {
       overflow: hidden;
-      border-radius: 22px;
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.08);
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.012)),
-        rgba(5,12,25,0.94);
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)),
+        rgba(4,10,22,0.96);
       box-shadow: 0 18px 40px rgba(0,0,0,0.28);
     }
 
     .table-head,
     .table-row {
       display: grid;
-      grid-template-columns: 90px 1.55fr 1.25fr 1fr 1fr 120px;
+      grid-template-columns: 92px 1.55fr 1.25fr 1fr 1fr 110px;
       gap: 12px;
       align-items: center;
-      padding: 16px 18px;
+      padding: 14px 18px;
     }
 
     .table-head {
       font-size: 13px;
       font-weight: 800;
       color: var(--text-3);
-      text-transform: none;
       background: rgba(255,255,255,0.03);
       border-bottom: 1px solid rgba(255,255,255,0.07);
     }
 
     .table-row {
-      min-height: 78px;
+      min-height: 74px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       transition: .18s ease;
     }
@@ -590,9 +551,9 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 900;
-      color: #dfe9ff;
+      color: #dce8ff;
     }
 
     .row-mini-avatar {
@@ -601,7 +562,7 @@
       min-width: 42px;
       border-radius: 50%;
       overflow: hidden;
-      background: linear-gradient(135deg, rgba(39,215,255,0.18), rgba(177,92,255,0.16));
+      background: linear-gradient(135deg, rgba(44,220,255,0.18), rgba(176,93,255,0.16));
       border: 1px solid rgba(255,255,255,0.10);
       display: flex;
       align-items: center;
@@ -630,11 +591,10 @@
     }
 
     .player-main-login {
-      font-size: 28px;
+      font-size: 27px;
       font-weight: 800;
       line-height: 1.1;
       margin-bottom: 6px;
-      color: #f2f6ff;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -645,12 +605,11 @@
       align-items: center;
       padding: 7px 12px;
       border-radius: 999px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-      line-height: 1;
-      color: #80d7ff;
-      background: rgba(39,215,255,0.08);
-      border: 1px solid rgba(39,215,255,0.14);
+      color: #8adfff;
+      background: rgba(44,220,255,0.08);
+      border: 1px solid rgba(44,220,255,0.14);
       white-space: nowrap;
       max-width: 100%;
       overflow: hidden;
@@ -673,11 +632,11 @@
 
     .summary-main {
       min-width: 0;
+      font-size: 18px;
+      color: var(--text-2);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 19px;
-      color: var(--text-2);
     }
 
     .summary-main strong {
@@ -686,9 +645,9 @@
     }
 
     .num-cell {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
-      color: #f3f7ff;
+      color: #edf3ff;
     }
 
     .num-cell.soft {
@@ -701,7 +660,7 @@
       align-items: center;
       justify-content: flex-end;
       gap: 8px;
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 900;
       color: #dff7ff;
     }
@@ -710,8 +669,8 @@
       width: 18px;
       height: 18px;
       object-fit: contain;
-      opacity: .9;
       display: block;
+      opacity: .9;
     }
 
     .footer-note {
@@ -719,39 +678,35 @@
       justify-content: center;
       align-items: center;
       gap: 12px;
-      padding: 14px 10px 6px;
-      color: #86a4c7;
-      font-size: 16px;
+      padding: 14px 10px 4px;
+      color: #88a6cb;
+      font-size: 15px;
       font-weight: 700;
       text-align: center;
     }
 
     .footer-stars {
-      color: #3fdfff;
-      text-shadow: 0 0 10px rgba(39,215,255,0.24);
+      color: #44dcff;
+      text-shadow: 0 0 10px rgba(44,220,255,0.22);
     }
 
-    .section-panel {
-      display: none;
-    }
-
+    .section-panel { display: none; }
     .section-panel.active {
       display: block;
-      animation: fadeUp .22s ease;
+      animation: fadeUp .2s ease;
     }
 
     .coming-box {
-      min-height: 440px;
+      min-height: 420px;
       display: grid;
       place-items: center;
       text-align: center;
-      padding: 32px;
-      border-radius: 26px;
+      padding: 28px;
+      border-radius: 24px;
       border: 1px dashed rgba(255,255,255,0.12);
       background:
-        radial-gradient(circle at 50% 20%, rgba(177,92,255,0.08), transparent 26%),
-        rgba(8,18,36,0.86);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.26);
+        radial-gradient(circle at 50% 20%, rgba(176,93,255,0.08), transparent 26%),
+        rgba(7,16,34,0.92);
     }
 
     .coming-inner {
@@ -767,13 +722,11 @@
       place-items: center;
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.10);
-      box-shadow: 0 0 24px rgba(177,92,255,0.10);
-      overflow: hidden;
     }
 
     .coming-icon img {
-      width: 54px;
-      height: 54px;
+      width: 52px;
+      height: 52px;
       object-fit: contain;
       display: block;
     }
@@ -791,8 +744,22 @@
       color: var(--text-2);
     }
 
+    .loading-box,
+    .error-box,
+    .empty-box {
+      padding: 26px;
+      border-radius: 22px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-2);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-top: 10px;
+    }
+
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -813,74 +780,34 @@
 
       .table-head,
       .table-row {
-        grid-template-columns: 74px 1.2fr 1fr .9fr .9fr 90px;
+        grid-template-columns: 84px 1.2fr 1fr .9fr .9fr 90px;
       }
     }
 
     @media (max-width: 980px) {
-      .table-head {
-        display: none;
-      }
+      .table-head { display: none; }
 
       .table-row {
         grid-template-columns: 1fr;
         gap: 10px;
-        padding: 16px;
       }
 
-      .place-cell,
-      .player-cell,
+      .summary-divider { display: none; }
       .summary-cell,
+      .deal-cell,
       .num-cell,
-      .deal-cell {
+      .player-cell,
+      .place-cell {
         justify-content: flex-start;
-      }
-
-      .summary-divider {
-        display: none;
-      }
-
-      .summary-cell {
-        flex-wrap: wrap;
       }
     }
 
     @media (max-width: 760px) {
-      .page {
-        padding: 12px;
-      }
-
-      .topbar,
-      .tab-btn {
-        border-radius: 18px;
-      }
-
-      .tabs-wrap {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-title {
-        font-size: 28px;
-      }
-
-      .hero-sub {
-        font-size: 14px;
-      }
-
+      .tabs-wrap { grid-template-columns: 1fr; }
       .player-login,
-      .player-main-login {
-        font-size: 22px;
-      }
-
-      .balance-value {
-        font-size: 28px;
-      }
-
-      .summary-main strong,
-      .num-cell,
-      .deal-cell {
-        font-size: 18px;
-      }
+      .player-main-login { font-size: 22px; }
+      .balance-value { font-size: 28px; }
+      .summary-main strong { font-size: 18px; }
     }
   </style>
 </head>
@@ -890,7 +817,9 @@
   <div class="page">
     <header class="glass topbar">
       <div class="topbar-left">
-        <div class="title-icon">📊</div>
+        <div class="title-icon">
+          <img src="./png-to-rating/all_active.png" alt="Рейтинг">
+        </div>
         <h1 class="page-title">Рейтинг игроков</h1>
       </div>
 
@@ -899,365 +828,186 @@
 
     <section class="tabs-wrap">
       <button class="tab-btn" type="button" onclick="switchRatingTab('roulette', this)">
-        <div class="tab-icon-wrap">
-          <img src="./png-to-rating/ruletka_active.png" alt="Рулетка" />
-        </div>
-        <div class="tab-content-line">
+        <div class="tab-icon-wrap"><img src="./png-to-rating/ruletka_active.png" alt="Рулетка"></div>
+        <div>
           <div class="tab-title">Рулетка</div>
           <div class="tab-sub">Топ по вращениям</div>
         </div>
       </button>
 
       <button class="tab-btn" type="button" onclick="switchRatingTab('bonus', this)">
-        <div class="tab-icon-wrap">
-          <img src="./png-to-rating/bonus_active.png" alt="Бонус" />
-        </div>
-        <div class="tab-content-line">
+        <div class="tab-icon-wrap"><img src="./png-to-rating/bonus_active.png" alt="Бонус"></div>
+        <div>
           <div class="tab-title">Бонус</div>
           <div class="tab-sub">Топ по активациям</div>
         </div>
       </button>
 
       <button class="tab-btn active" type="button" onclick="switchRatingTab('all', this)">
-        <div class="tab-icon-wrap">
-          <img src="./png-to-rating/all_active.png" alt="Общая активность" />
-        </div>
-        <div class="tab-content-line">
+        <div class="tab-icon-wrap"><img src="./png-to-rating/all_active.png" alt="Общая активность"></div>
+        <div>
           <div class="tab-title">Общая активность</div>
           <div class="tab-sub">Топ по общему балансу</div>
         </div>
       </button>
 
       <button class="tab-btn" type="button" onclick="switchRatingTab('chest', this)">
-        <div class="tab-icon-wrap">
-          <img src="./png-to-rating/sunduk_active.png" alt="Сундук" />
-        </div>
-        <div class="tab-content-line">
+        <div class="tab-icon-wrap"><img src="./png-to-rating/sunduk_active.png" alt="Сундук"></div>
+        <div>
           <div class="tab-title">Сундук</div>
           <div class="tab-sub">Топ по открытиям</div>
         </div>
       </button>
 
       <button class="tab-btn is-disabled" type="button" onclick="switchRatingTab('contracts', this)">
-        <div class="tab-icon-wrap">
-          <img src="./png-to-rating/contract_active.png" alt="Контракты" />
-        </div>
-        <div class="tab-content-line">
+        <div class="tab-icon-wrap"><img src="./png-to-rating/contract_active.png" alt="Контракты"></div>
+        <div>
           <div class="tab-title">Контракты</div>
           <div class="tab-sub">В разработке</div>
         </div>
       </button>
     </section>
 
-    <!-- ALL -->
     <section id="panel-all" class="section-panel active">
       <div class="hero">
-        <h2 class="hero-title">
-          <span class="hero-spark">✦</span>
-          Общая активность
-          <span class="hero-spark">✦</span>
-        </h2>
+        <h2 class="hero-title">Общая активность</h2>
         <div class="hero-sub">Общий баланс = игровой баланс + к выводу</div>
 
         <div class="hero-meta">
           <div class="refresh-box">
             <span class="refresh-dot"></span>
-            Обновление через 00:12:45
+            <span id="refreshTimerText">Обновление...</span>
           </div>
         </div>
       </div>
 
-      <div class="podium-grid">
-        <div class="podium-card place-2 glass">
-          <div class="place-badge">2</div>
-          <div class="player-avatar">SS</div>
-          <div class="player-login">SteelStorm</div>
-          <div class="nick-pill blue">Стальной шторм</div>
-          <div class="divider"></div>
-          <div class="balance-title">Общий баланс:</div>
-          <div class="balance-value">$ 10 542.30</div>
-          <div class="podium-meta">
-            <span>Игровой: <strong>$ 8 732.10</strong></span>
-            <span>|</span>
-            <span>К выводу: <strong>$ 1 810.20</strong></span>
+      <div id="overallLoading" class="loading-box">Загрузка рейтинга...</div>
+      <div id="overallError" class="error-box" style="display:none;">Не удалось загрузить рейтинг</div>
+      <div id="overallEmpty" class="empty-box" style="display:none;">Пока нет игроков с балансом</div>
+
+      <div id="overallContent" style="display:none;">
+        <div id="podiumGrid" class="podium-grid"></div>
+
+        <div class="table-shell glass">
+          <div class="table-head">
+            <div>Место</div>
+            <div>Игрок</div>
+            <div>Общий баланс</div>
+            <div>Игровой баланс</div>
+            <div>К выводу</div>
+            <div style="text-align:right;">Рейтинг</div>
           </div>
+
+          <div id="overallList"></div>
         </div>
 
-        <div class="podium-card place-1 glass">
-          <div class="place-badge">1</div>
-          <div class="player-avatar">DH</div>
-          <div class="player-login">DarkHunter</div>
-          <div class="nick-pill gold">Охотник ночи</div>
-          <div class="divider"></div>
-          <div class="balance-title">Общий баланс:</div>
-          <div class="balance-value">$ 15 732.50</div>
-          <div class="podium-meta">
-            <span>Игровой: <strong>$ 12 450.30</strong></span>
-            <span>|</span>
-            <span>К выводу: <strong>$ 3 282.20</strong></span>
-          </div>
+        <div class="footer-note">
+          <span class="footer-stars">✦ ✦</span>
+          <span>Рейтинг обновляется автоматически</span>
+          <span class="footer-stars">✦ ✦</span>
         </div>
-
-        <div class="podium-card place-3 glass">
-          <div class="place-badge">3</div>
-          <div class="player-avatar">NF</div>
-          <div class="player-login">NeonFox</div>
-          <div class="nick-pill red">Лисица неон</div>
-          <div class="divider"></div>
-          <div class="balance-title">Общий баланс:</div>
-          <div class="balance-value">$ 7 823.60</div>
-          <div class="podium-meta">
-            <span>Игровой: <strong>$ 6 312.40</strong></span>
-            <span>|</span>
-            <span>К выводу: <strong>$ 1 511.20</strong></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="table-shell glass">
-        <div class="table-head">
-          <div>Место</div>
-          <div>Игрок</div>
-          <div>Общий баланс</div>
-          <div>Игровой баланс</div>
-          <div>К выводу</div>
-          <div style="text-align:right;">Сделки</div>
-        </div>
-
-        <div class="table-row">
-          <div class="place-cell">
-            <span>4</span>
-            <div class="row-mini-avatar">ID</div>
-          </div>
-          <div class="player-cell">
-            <div class="player-main">
-              <div class="player-main-login">IceDragon</div>
-              <div class="nick-chip">Ледяной дракон</div>
-            </div>
-          </div>
-          <div class="summary-cell">
-            <div class="summary-divider"></div>
-            <div class="summary-main">Общий баланс: <strong>$ 6 412.70</strong></div>
-          </div>
-          <div class="num-cell soft">$ 5 201.40</div>
-          <div class="num-cell soft">$ 1 211.30</div>
-          <div class="deal-cell">
-            1245
-            <img class="deal-icon" src="./png-to-rating/all_active.png" alt="">
-          </div>
-        </div>
-
-        <div class="table-row">
-          <div class="place-cell">
-            <span>5</span>
-            <div class="row-mini-avatar">Q</div>
-          </div>
-          <div class="player-cell">
-            <div class="player-main">
-              <div class="player-main-login">Quantum</div>
-              <div class="nick-chip">Квантовый разум</div>
-            </div>
-          </div>
-          <div class="summary-cell">
-            <div class="summary-divider"></div>
-            <div class="summary-main">Общий баланс: <strong>$ 5 236.80</strong></div>
-          </div>
-          <div class="num-cell soft">$ 4 102.60</div>
-          <div class="num-cell soft">$ 1 134.20</div>
-          <div class="deal-cell">
-            987
-            <img class="deal-icon" src="./png-to-rating/all_active.png" alt="">
-          </div>
-        </div>
-
-        <div class="table-row">
-          <div class="place-cell">
-            <span>6</span>
-            <div class="row-mini-avatar">SK</div>
-          </div>
-          <div class="player-cell">
-            <div class="player-main">
-              <div class="player-main-login">ShadowKill</div>
-              <div class="nick-chip">Тень убийцы</div>
-            </div>
-          </div>
-          <div class="summary-cell">
-            <div class="summary-divider"></div>
-            <div class="summary-main">Общий баланс: <strong>$ 4 782.40</strong></div>
-          </div>
-          <div class="num-cell soft">$ 3 915.10</div>
-          <div class="num-cell soft">$ 867.30</div>
-          <div class="deal-cell">
-            854
-            <img class="deal-icon" src="./png-to-rating/all_active.png" alt="">
-          </div>
-        </div>
-
-        <div class="table-row">
-          <div class="place-cell">
-            <span>7</span>
-            <div class="row-mini-avatar">BW</div>
-          </div>
-          <div class="player-cell">
-            <div class="player-main">
-              <div class="player-main-login">BlazeWarrior</div>
-              <div class="nick-chip">Пламенный воин</div>
-            </div>
-          </div>
-          <div class="summary-cell">
-            <div class="summary-divider"></div>
-            <div class="summary-main">Общий баланс: <strong>$ 4 128.90</strong></div>
-          </div>
-          <div class="num-cell soft">$ 3 251.70</div>
-          <div class="num-cell soft">$ 877.20</div>
-          <div class="deal-cell">
-            732
-            <img class="deal-icon" src="./png-to-rating/all_active.png" alt="">
-          </div>
-        </div>
-
-        <div class="table-row">
-          <div class="place-cell">
-            <span>8</span>
-            <div class="row-mini-avatar">CS</div>
-          </div>
-          <div class="player-cell">
-            <div class="player-main">
-              <div class="player-main-login">CyberSoul</div>
-              <div class="nick-chip">Кибердуша</div>
-            </div>
-          </div>
-          <div class="summary-cell">
-            <div class="summary-divider"></div>
-            <div class="summary-main">Общий баланс: <strong>$ 3 684.50</strong></div>
-          </div>
-          <div class="num-cell soft">$ 2 901.20</div>
-          <div class="num-cell soft">$ 783.30</div>
-          <div class="deal-cell">
-            663
-            <img class="deal-icon" src="./png-to-rating/all_active.png" alt="">
-          </div>
-        </div>
-
-        <div class="table-row">
-          <div class="place-cell">
-            <span>9</span>
-            <div class="row-mini-avatar">ML</div>
-          </div>
-          <div class="player-cell">
-            <div class="player-main">
-              <div class="player-main-login">MrLucky</div>
-              <div class="nick-chip">Везунчик</div>
-            </div>
-          </div>
-          <div class="summary-cell">
-            <div class="summary-divider"></div>
-            <div class="summary-main">Общий баланс: <strong>$ 3 210.80</strong></div>
-          </div>
-          <div class="num-cell soft">$ 2 420.60</div>
-          <div class="num-cell soft">$ 790.20</div>
-          <div class="deal-cell">
-            589
-            <img class="deal-icon" src="./png-to-rating/all_active.png" alt="">
-          </div>
-        </div>
-
-        <div class="table-row">
-          <div class="place-cell">
-            <span>10</span>
-            <div class="row-mini-avatar">AL</div>
-          </div>
-          <div class="player-cell">
-            <div class="player-main">
-              <div class="player-main-login">AstraLight</div>
-              <div class="nick-chip">Звёздный свет</div>
-            </div>
-          </div>
-          <div class="summary-cell">
-            <div class="summary-divider"></div>
-            <div class="summary-main">Общий баланс: <strong>$ 2 876.40</strong></div>
-          </div>
-          <div class="num-cell soft">$ 2 125.30</div>
-          <div class="num-cell soft">$ 751.10</div>
-          <div class="deal-cell">
-            512
-            <img class="deal-icon" src="./png-to-rating/all_active.png" alt="">
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-note">
-        <span class="footer-stars">✦ ✦</span>
-        <span>Рейтинг обновляется в реальном времени</span>
-        <span class="footer-stars">✦ ✦</span>
       </div>
     </section>
 
-    <!-- ROULETTE -->
     <section id="panel-roulette" class="section-panel">
       <div class="coming-box glass">
         <div class="coming-inner">
-          <div class="coming-icon">
-            <img src="./png-to-rating/ruletka_active.png" alt="Рулетка">
-          </div>
+          <div class="coming-icon"><img src="./png-to-rating/ruletka_active.png" alt="Рулетка"></div>
           <h2 class="coming-title">Рейтинг по рулетке</h2>
-          <div class="coming-text">
-            Здесь будет отдельный рейтинг игроков по количеству прокрутов рулетки:
-            <br>топ-3 подиум сверху, ниже полный список игроков.
-          </div>
+          <div class="coming-text">Когда скинешь структуру таблицы или логов по рулетке — сразу подключим живой топ.</div>
         </div>
       </div>
     </section>
 
-    <!-- BONUS -->
     <section id="panel-bonus" class="section-panel">
       <div class="coming-box glass">
         <div class="coming-inner">
-          <div class="coming-icon">
-            <img src="./png-to-rating/bonus_active.png" alt="Бонус">
-          </div>
+          <div class="coming-icon"><img src="./png-to-rating/bonus_active.png" alt="Бонус"></div>
           <h2 class="coming-title">Рейтинг по бонусу</h2>
-          <div class="coming-text">
-            Здесь будет рейтинг по количеству активаций бонуса:
-            <br>топ-3 + общий список игроков ниже.
-          </div>
+          <div class="coming-text">Когда дашь таблицу, где хранится количество активаций бонуса, я сразу соберу этот топ.</div>
         </div>
       </div>
     </section>
 
-    <!-- CHEST -->
     <section id="panel-chest" class="section-panel">
       <div class="coming-box glass">
         <div class="coming-inner">
-          <div class="coming-icon">
-            <img src="./png-to-rating/sunduk_active.png" alt="Сундук">
-          </div>
+          <div class="coming-icon"><img src="./png-to-rating/sunduk_active.png" alt="Сундук"></div>
           <h2 class="coming-title">Рейтинг по сундуку</h2>
-          <div class="coming-text">
-            Здесь будет рейтинг по открытиям сундука:
-            <br>топ-3 игрока и затем таблица остальных мест.
-          </div>
+          <div class="coming-text">Для живого рейтинга сундука нужна таблица истории открытий или счётчик открытий.</div>
         </div>
       </div>
     </section>
 
-    <!-- CONTRACTS -->
     <section id="panel-contracts" class="section-panel">
       <div class="coming-box glass">
         <div class="coming-inner">
-          <div class="coming-icon">
-            <img src="./png-to-rating/contract_active.png" alt="Контракты">
-          </div>
+          <div class="coming-icon"><img src="./png-to-rating/contract_active.png" alt="Контракты"></div>
           <h2 class="coming-title">Контракты</h2>
-          <div class="coming-text">
-            Раздел рейтинга по контрактам пока находится в разработке.
-          </div>
+          <div class="coming-text">Раздел пока оставлен как заглушка, как и договаривались.</div>
         </div>
       </div>
     </section>
   </div>
 
   <script>
+    const API_BASE = "https://world-script-api.onrender.com";
+
+    function wsGetToken() {
+      return localStorage.getItem("ws_token") || "";
+    }
+
+    async function wsRequest(path, options = {}) {
+      const token = wsGetToken();
+      const headers = { ...(options.headers || {}) };
+      if (token) headers.Authorization = "Bearer " + token;
+
+      const response = await fetch(API_BASE + path, {
+        ...options,
+        headers
+      });
+
+      const data = await response.json().catch(() => ({
+        ok: false,
+        error: "Bad JSON"
+      }));
+
+      return { res: response, data };
+    }
+
+    async function wsGet(path) {
+      return wsRequest(path, { method: "GET" });
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function safeNumber(value, fallback = 0) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : fallback;
+    }
+
+    function formatMoney(n) {
+      return "$ " + safeNumber(n).toLocaleString("ru-RU");
+    }
+
+    function getInitials(value) {
+      const text = String(value || "WS").trim().toUpperCase();
+      return text.slice(0, 2) || "WS";
+    }
+
+    function getNick(value, fallback) {
+      const nick = String(value || "").trim();
+      if (nick) return nick;
+      return String(fallback || "Без ника");
+    }
+
     function switchRatingTab(tab, btn) {
       document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
       if (btn) btn.classList.add("active");
@@ -1268,12 +1018,161 @@
     }
 
     function goBackPage() {
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.href = "./";
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = "./";
+    }
+
+    function renderAvatar(avatarUrl, login) {
+      if (avatarUrl) {
+        return `<img src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(login)}" />`;
+      }
+      return escapeHtml(getInitials(login));
+    }
+
+    function renderPodiumCard(player, place) {
+      if (!player) {
+        return `<div class="podium-card place-${place} glass"><div class="balance-title">Пусто</div></div>`;
+      }
+
+      const nick = getNick(player.nickname, player.game_nick);
+      const nickClass = place === 1 ? "gold" : place === 2 ? "blue" : "red";
+
+      return `
+        <div class="podium-card place-${place} glass">
+          <div class="place-badge">${place}</div>
+          <div class="player-avatar">${renderAvatar(player.avatar_url, player.login)}</div>
+          <div class="player-login">${escapeHtml(player.login)}</div>
+          <div class="nick-pill ${nickClass}">${escapeHtml(nick)}</div>
+          <div class="divider"></div>
+          <div class="balance-title">Общий баланс:</div>
+          <div class="balance-value">${formatMoney(player.total_balance)}</div>
+          <div class="podium-meta">
+            <span>Игровой: <strong>${formatMoney(player.game_balance)}</strong></span>
+            <span>|</span>
+            <span>К выводу: <strong>${formatMoney(player.to_output)}</strong></span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOverallRows(players) {
+      const list = document.getElementById("overallList");
+      if (!list) return;
+
+      list.innerHTML = players.map(player => {
+        const nick = getNick(player.nickname, player.game_nick);
+
+        return `
+          <div class="table-row">
+            <div class="place-cell">
+              <span>${safeNumber(player.place)}</span>
+              <div class="row-mini-avatar">${renderAvatar(player.avatar_url, player.login)}</div>
+            </div>
+
+            <div class="player-cell">
+              <div class="player-main">
+                <div class="player-main-login">${escapeHtml(player.login)}</div>
+                <div class="nick-chip">${escapeHtml(nick)}</div>
+              </div>
+            </div>
+
+            <div class="summary-cell">
+              <div class="summary-divider"></div>
+              <div class="summary-main">Общий баланс: <strong>${formatMoney(player.total_balance)}</strong></div>
+            </div>
+
+            <div class="num-cell soft">${formatMoney(player.game_balance)}</div>
+            <div class="num-cell soft">${formatMoney(player.to_output)}</div>
+
+            <div class="deal-cell">
+              ${safeNumber(player.place)}
+              <img class="deal-icon" src="./png-to-rating/all_active.png" alt="rating">
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function setOverallState({ loading = false, error = false, empty = false, content = false }) {
+      const loadingEl = document.getElementById("overallLoading");
+      const errorEl = document.getElementById("overallError");
+      const emptyEl = document.getElementById("overallEmpty");
+      const contentEl = document.getElementById("overallContent");
+
+      if (loadingEl) loadingEl.style.display = loading ? "block" : "none";
+      if (errorEl) errorEl.style.display = error ? "block" : "none";
+      if (emptyEl) emptyEl.style.display = empty ? "block" : "none";
+      if (contentEl) contentEl.style.display = content ? "block" : "none";
+    }
+
+    async function loadOverallRating() {
+      try {
+        setOverallState({ loading: true });
+
+        const { res, data } = await wsGet("/api/ws/ratings/overall?limit=100");
+
+        if (res.status === 401) {
+          setOverallState({ error: true });
+          return;
+        }
+
+        if (!data.ok) {
+          setOverallState({ error: true });
+          return;
+        }
+
+        const top3 = Array.isArray(data.top3) ? data.top3 : [];
+        const list = Array.isArray(data.list) ? data.list : [];
+
+        if (!top3.length && !list.length) {
+          setOverallState({ empty: true });
+          return;
+        }
+
+        const podiumGrid = document.getElementById("podiumGrid");
+        if (podiumGrid) {
+          const place1 = top3.find(x => safeNumber(x.place) === 1) || null;
+          const place2 = top3.find(x => safeNumber(x.place) === 2) || null;
+          const place3 = top3.find(x => safeNumber(x.place) === 3) || null;
+
+          podiumGrid.innerHTML = `
+            ${renderPodiumCard(place2, 2)}
+            ${renderPodiumCard(place1, 1)}
+            ${renderPodiumCard(place3, 3)}
+          `;
+        }
+
+        renderOverallRows(list);
+        setOverallState({ content: true });
+      } catch (e) {
+        console.log("loadOverallRating error:", e.message);
+        setOverallState({ error: true });
       }
     }
+
+    function startRefreshTimer() {
+      const el = document.getElementById("refreshTimerText");
+      if (!el) return;
+
+      let left = 30;
+      setInterval(() => {
+        const sec = String(left).padStart(2, "0");
+        el.textContent = `Обновление через 00:00:${sec}`;
+        left--;
+
+        if (left < 0) {
+          left = 30;
+          loadOverallRating();
+        }
+      }, 1000);
+    }
+
+    async function init() {
+      await loadOverallRating();
+      startRefreshTimer();
+    }
+
+    init();
   </script>
 </body>
 </html>
