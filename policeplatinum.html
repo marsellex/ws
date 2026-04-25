@@ -275,7 +275,7 @@
 
     .dock {
       display: grid;
-      gap: 14px;
+      gap: 16px;
       position: relative;
     }
 
@@ -283,188 +283,190 @@
       position: relative;
       border: none;
       width: 100%;
-      min-height: 142px;
-      border-radius: 28px;
+      min-height: 168px;
+      border-radius: 30px;
       cursor: pointer;
-      overflow: hidden;
+      overflow: visible;
       text-align: left;
       color: var(--text);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)),
-        rgba(5,12,27,0.94);
-      border: 1px solid rgba(120,185,255,0.14);
-      transition:
-        transform .28s cubic-bezier(.22,.68,0,1),
-        border-color .28s ease,
-        box-shadow .28s ease,
-        background .28s ease;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.20);
-    }
-
-    .dock-btn::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(135deg, rgba(52,184,255,0.08), transparent 30%, transparent 70%, rgba(143,126,255,0.05)),
-        radial-gradient(circle at 50% -12%, rgba(120,215,255,0.12), transparent 40%);
-      opacity: .95;
-    }
-
-    .dock-btn::after {
-      content: "";
-      position: absolute;
-      left: -50%;
-      top: 0;
-      width: 40%;
-      height: 100%;
-      transform: skewX(-18deg);
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
-      opacity: 0;
-    }
-
-    .dock-btn:hover::after {
-      animation: shineMove .9s ease;
-      opacity: 1;
-    }
-
-    @keyframes shineMove {
-      from { left: -50%; }
-      to { left: 130%; }
+      background: transparent;
+      box-shadow: none;
+      transition: transform .28s cubic-bezier(.22,.68,0,1);
     }
 
     .dock-btn:hover {
       transform: translateY(-4px) scale(1.01);
-      border-color: rgba(120,215,255,0.30);
-      box-shadow:
-        0 18px 38px rgba(0,0,0,0.28),
-        0 0 22px rgba(52,184,255,0.14);
     }
 
     .dock-btn.active {
-      border-color: rgba(120,220,255,0.42);
-      box-shadow:
-        0 20px 42px rgba(0,0,0,0.30),
-        0 0 26px rgba(52,184,255,0.20),
-        inset 0 0 0 1px rgba(120,220,255,0.08);
-      background:
-        linear-gradient(180deg, rgba(52,184,255,0.10), rgba(255,255,255,0.02)),
-        rgba(7,18,40,0.98);
-    }
-
-    .dock-btn.active .dock-arrow {
-      opacity: 1;
-      transform: translateX(0);
+      transform: translateY(-2px) scale(1.01);
     }
 
     .dock-btn-wrap {
       position: relative;
       z-index: 2;
-      height: 100%;
-      padding: 18px;
-      display: grid;
-      align-content: center;
-      justify-items: center;
-      text-align: center;
-      gap: 12px;
-    }
-
-    .dock-icon-shell {
-      width: 82px;
-      height: 82px;
-      border-radius: 24px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition:
-        transform .34s cubic-bezier(.22,.68,0,1),
-        box-shadow .34s ease,
-        filter .34s ease;
-      animation: iconIdleFloat 3.5s ease-in-out infinite;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-    }
-
-    .dock-btn:hover .dock-icon-shell,
-    .dock-btn.active .dock-icon-shell {
-      transform: translateY(-10px) scale(1.08);
-      box-shadow:
-        0 0 24px rgba(52,184,255,0.22),
-        0 0 42px rgba(52,184,255,0.12);
-      filter: brightness(1.10);
-      animation: iconHoverFloat 1.7s ease-in-out infinite;
-    }
-
-    @keyframes iconIdleFloat {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-    }
-
-    @keyframes iconHoverFloat {
-      0%,100% { transform: translateY(-8px) scale(1.06); }
-      50% { transform: translateY(-14px) scale(1.10); }
-    }
-
-    .dock-icon {
-      width: 56px;
-      height: 56px;
-      object-fit: contain;
+      min-height: 168px;
+      border-radius: 30px;
+      overflow: hidden;
       display: block;
-      filter:
-        drop-shadow(0 0 14px rgba(52,184,255,0.24))
-        drop-shadow(0 0 24px rgba(52,184,255,0.16));
-      transition: transform .3s ease, filter .3s ease;
+      padding: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
+        rgba(5,12,27,0.84);
+      border: 1px solid rgba(120,185,255,0.16);
+      box-shadow:
+        0 12px 28px rgba(0,0,0,0.24),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+      transition:
+        border-color .28s ease,
+        box-shadow .28s ease,
+        background .28s ease,
+        transform .28s cubic-bezier(.22,.68,0,1);
     }
 
-    .dock-btn:hover .dock-icon,
-    .dock-btn.active .dock-icon {
-      transform: scale(1.05);
-      filter:
-        drop-shadow(0 0 16px rgba(111,238,255,0.44))
-        drop-shadow(0 0 32px rgba(52,184,255,0.22));
+    .dock-btn-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(52,184,255,0.10), transparent 28%, transparent 72%, rgba(255,69,104,0.08)),
+        radial-gradient(circle at 50% -10%, rgba(120,215,255,0.16), transparent 36%);
+      opacity: .95;
+      z-index: 2;
     }
 
-    .dock-icon.red-tone {
-      filter:
-        hue-rotate(145deg)
-        saturate(2.3)
-        drop-shadow(0 0 14px rgba(255,85,110,0.30))
-        drop-shadow(0 0 26px rgba(255,85,110,0.18));
+    .dock-btn-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      pointer-events: none;
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.05),
+        inset 0 -2px 0 rgba(255,255,255,0.03);
+      z-index: 2;
     }
 
-    .dock-btn:hover .dock-icon.red-tone,
-    .dock-btn.active .dock-icon.red-tone {
-      filter:
-        hue-rotate(145deg)
-        saturate(2.5)
-        brightness(1.08)
-        drop-shadow(0 0 18px rgba(255,85,110,0.48))
-        drop-shadow(0 0 34px rgba(255,85,110,0.24));
+    .dock-btn:hover .dock-btn-wrap {
+      border-color: rgba(120,215,255,0.30);
+      box-shadow:
+        0 18px 38px rgba(0,0,0,0.30),
+        0 0 24px rgba(52,184,255,0.16),
+        inset 0 0 0 1px rgba(120,220,255,0.04);
     }
 
-    .dock-label {
-      font-size: 18px;
-      font-weight: 800;
+    .dock-btn.active .dock-btn-wrap {
+      border-color: rgba(120,220,255,0.42);
+      box-shadow:
+        0 20px 42px rgba(0,0,0,0.32),
+        0 0 28px rgba(52,184,255,0.20),
+        inset 0 0 0 1px rgba(120,220,255,0.08);
+    }
+
+    .dock-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      z-index: 0;
+      transition:
+        transform .38s cubic-bezier(.22,.68,0,1),
+        filter .34s ease,
+        opacity .28s ease;
+      filter:
+        brightness(.88)
+        saturate(1.02)
+        drop-shadow(0 0 10px rgba(52,184,255,0.06));
+      animation: dockImageIdleFloat 4.6s ease-in-out infinite;
+    }
+
+    .dock-btn:hover .dock-image,
+    .dock-btn.active .dock-image {
+      transform: translateY(-8px) scale(1.045);
+      filter:
+        brightness(1.02)
+        saturate(1.08)
+        drop-shadow(0 0 18px rgba(52,184,255,0.18))
+        drop-shadow(0 0 32px rgba(52,184,255,0.10));
+      animation: dockImageHoverFloat 2.2s ease-in-out infinite;
+    }
+
+    @keyframes dockImageIdleFloat {
+      0%,100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-3px) scale(1.01); }
+    }
+
+    @keyframes dockImageHoverFloat {
+      0%,100% { transform: translateY(-7px) scale(1.035); }
+      50% { transform: translateY(-12px) scale(1.05); }
+    }
+
+    .dock-image-glow {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(111,238,255,0.10), transparent 34%),
+        linear-gradient(to top, rgba(3,8,16,0.76), rgba(3,8,16,0.12) 42%, rgba(3,8,16,0.20));
+      transition: opacity .3s ease;
+      opacity: .9;
+    }
+
+    .dock-btn:hover .dock-image-glow,
+    .dock-btn.active .dock-image-glow {
+      opacity: 1;
+    }
+
+    .dock-caption {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      z-index: 4;
+      max-width: 68%;
+      padding: 10px 14px;
+      border-radius: 16px 16px 16px 10px;
+      background:
+        linear-gradient(135deg, rgba(6,18,38,0.96), rgba(7,24,48,0.92));
+      border: 1px solid rgba(120,215,255,0.20);
+      box-shadow:
+        0 10px 26px rgba(0,0,0,0.28),
+        0 0 18px rgba(52,184,255,0.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(12px) translateX(8px) scale(.96);
+      transition:
+        opacity .26s ease,
+        transform .30s cubic-bezier(.22,.68,0,1),
+        border-color .26s ease,
+        box-shadow .26s ease;
+      pointer-events: none;
+    }
+
+    .dock-btn:hover .dock-caption {
+      opacity: 1;
+      transform: translateY(0) translateX(0) scale(1);
+    }
+
+    .dock-caption-title {
+      font-size: 14px;
+      font-weight: 900;
       line-height: 1.15;
-      transition: color .28s ease, text-shadow .28s ease;
+      color: #f2f9ff;
+      letter-spacing: -.01em;
+      text-shadow: 0 0 10px rgba(52,184,255,0.08);
     }
 
-    .dock-sub {
-      font-size: 12px;
-      color: var(--text-soft);
-      transition: color .28s ease;
-    }
-
-    .dock-btn:hover .dock-label,
-    .dock-btn.active .dock-label {
-      color: #fff;
-      text-shadow: 0 0 16px rgba(120,220,255,0.14);
-    }
-
-    .dock-btn:hover .dock-sub,
-    .dock-btn.active .dock-sub {
-      color: #c4deff;
+    .dock-caption-sub {
+      margin-top: 4px;
+      font-size: 11px;
+      line-height: 1.25;
+      color: #a7c7ef;
+      font-weight: 700;
     }
 
     .dock-arrow {
@@ -478,6 +480,7 @@
       pointer-events: none;
       transition: .28s ease;
       filter: drop-shadow(0 0 10px rgba(52,184,255,0.35));
+      z-index: 5;
     }
 
     .dock-arrow::before {
@@ -486,6 +489,11 @@
       inset: 0;
       clip-path: polygon(0 0, 100% 50%, 0 100%);
       background: linear-gradient(180deg, #7fefff, #26a7ff);
+    }
+
+    .dock-btn.active .dock-arrow {
+      opacity: 1;
+      transform: translateX(0) translateY(-50%);
     }
 
     .stars-panel {
@@ -871,8 +879,10 @@
     .stat-card.red img {
       filter:
         hue-rotate(145deg)
-        saturate(2.3)
-        drop-shadow(0 0 14px rgba(255,90,110,0.28));
+        saturate(2.5)
+        brightness(1.04)
+        drop-shadow(0 0 14px rgba(255,90,110,0.30))
+        drop-shadow(0 0 24px rgba(255,90,110,0.18));
     }
 
     .stat-number {
@@ -1240,7 +1250,6 @@
       color: var(--text-soft);
     }
 
-    /* RESPONSIVE */
     @media (max-width: 1420px) {
       .topbar {
         grid-template-columns: 1fr;
@@ -1273,7 +1282,7 @@
       }
 
       .dock {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr;
       }
 
       .stars-panel {
@@ -1287,7 +1296,6 @@
         gap: 14px;
       }
 
-      .dock,
       .stats-grid {
         grid-template-columns: 1fr;
       }
@@ -1316,6 +1324,12 @@
         flex-wrap: wrap;
         justify-content: flex-start;
       }
+
+      .dock-caption {
+        max-width: 78%;
+        right: 10px;
+        bottom: 10px;
+      }
     }
   </style>
 </head>
@@ -1335,33 +1349,39 @@
       <div class="dock">
         <button class="dock-btn active" type="button" data-target="guide">
           <div class="dock-btn-wrap">
-            <div class="dock-icon-shell">
-              <img class="dock-icon" src="./police_png/rukovodstvo.png" alt="Руководство" />
+            <img class="dock-image" src="./police_png/руководство_полиции.png" alt="Руководство" />
+            <div class="dock-image-glow"></div>
+
+            <div class="dock-caption">
+              <div class="dock-caption-title">Руководство</div>
+              <div class="dock-caption-sub">Основные инструкции</div>
             </div>
-            <div class="dock-label">Руководство</div>
-            <div class="dock-sub">Основные инструкции и регламенты</div>
           </div>
           <div class="dock-arrow"></div>
         </button>
 
         <button class="dock-btn" type="button" data-target="punishments">
           <div class="dock-btn-wrap">
-            <div class="dock-icon-shell">
-              <img class="dock-icon" src="./police_png/punishment_table.png" alt="Таблица наказаний" />
+            <img class="dock-image" src="./police_png/наказания.png" alt="Наказания сотрудников" />
+            <div class="dock-image-glow"></div>
+
+            <div class="dock-caption">
+              <div class="dock-caption-title">Наказания сотрудников</div>
+              <div class="dock-caption-sub">Дисциплинарные меры</div>
             </div>
-            <div class="dock-label">Общая таблица<br>наказаний</div>
-            <div class="dock-sub">Все меры и дисциплинарные нормы</div>
           </div>
           <div class="dock-arrow"></div>
         </button>
 
         <button class="dock-btn" type="button" data-target="leaders">
           <div class="dock-btn-wrap">
-            <div class="dock-icon-shell">
-              <img class="dock-icon" src="./police_png/rating.png" alt="Топ лидеров PD" />
+            <img class="dock-image" src="./police_png/актив_департаментов.png" alt="Топ департаментов" />
+            <div class="dock-image-glow"></div>
+
+            <div class="dock-caption">
+              <div class="dock-caption-title">Топ департаментов</div>
+              <div class="dock-caption-sub">Актив лидеров и PD</div>
             </div>
-            <div class="dock-label">Топ лидеров PD</div>
-            <div class="dock-sub">Лучшие сотрудники и лидеры</div>
           </div>
           <div class="dock-arrow"></div>
         </button>
@@ -1472,7 +1492,7 @@
                 </div>
 
                 <div class="stat-card red">
-                  <img class="red-tone-icon" src="./police_png/arest.png" alt="Аресты" />
+                  <img src="./police_png/arest.png" alt="Аресты" />
                   <div class="stat-number red">46</div>
                   <div class="stat-text">Аресты</div>
                 </div>
@@ -1725,11 +1745,6 @@
           const target = btn.dataset.target || "guide";
           setActiveSection(target);
         });
-      });
-
-      // Красим иконку ареста в более красный
-      document.querySelectorAll('img[src*="arest.png"]').forEach(img => {
-        img.classList.add("red-tone");
       });
     })();
   </script>
