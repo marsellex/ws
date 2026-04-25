@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Police Platinum</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      --bg-1: #020613;
+      --bg-2: #07152f;
+      --panel: rgba(7, 15, 34, 0.82);
+      --panel-2: rgba(6, 12, 28, 0.92);
+      --line: rgba(120, 180, 255, 0.14);
+      --line-strong: rgba(103, 195, 255, 0.34);
+      --text: #eef6ff;
+      --muted: #89a5d6;
+      --blue: #3ab8ff;
+      --blue-2: #1d6fff;
+      --red: #ff3d69;
+      --red-2: #ff5a5a;
+      --glow-blue: 0 0 20px rgba(58, 184, 255, 0.35);
+      --glow-red: 0 0 20px rgba(255, 61, 105, 0.28);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(29,111,255,0.18), transparent 24%),
+        radial-gradient(circle at 85% 18%, rgba(255,61,105,0.16), transparent 25%),
+        radial-gradient(circle at 65% 75%, rgba(58,184,255,0.10), transparent 24%),
+        linear-gradient(135deg, #01040d 0%, #030918 18%, #07152f 55%, #030918 100%);
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background:
+        linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(circle at center, black 38%, transparent 100%);
+      opacity: 0.18;
+      animation: gridShift 18s linear infinite;
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at 15% 90%, rgba(58,184,255,0.18), transparent 18%),
+        radial-gradient(circle at 85% 10%, rgba(255,61,105,0.16), transparent 18%),
+        radial-gradient(circle at 90% 90%, rgba(255,255,255,0.05), transparent 10%);
+      filter: blur(30px);
+      opacity: 0.7;
+    }
+
+    @keyframes gridShift {
+      from { transform: translate3d(0,0,0); }
+      to { transform: translate3d(48px,48px,0); }
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 390px minmax(0, 1fr);
+      gap: 28px;
+      height: 100vh;
+      padding: 18px;
+    }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(11,21,44,0.92), rgba(4,9,23,0.92));
+      border: 1px solid rgba(105, 167, 255, 0.14);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent 24%, transparent 76%, rgba(255,255,255,0.03));
+      pointer-events: none;
+    }
+
+    .sidebar {
+      border-radius: 34px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-color: rgba(58,184,255,0.20);
+      box-shadow: inset 0 0 0 1px rgba(58,184,255,0.10), 0 0 40px rgba(29,111,255,0.12), 0 18px 50px rgba(0,0,0,0.45);
+      background:
+        radial-gradient(circle at top left, rgba(58,184,255,0.14), transparent 25%),
+        radial-gradient(circle at top right, rgba(255,61,105,0.12), transparent 28%),
+        linear-gradient(180deg, rgba(8,18,42,0.96), rgba(3,8,20,0.98));
+    }
+
+    .sidebar-frame {
+      position: absolute;
+      inset: 8px;
+      border-radius: 28px;
+      border: 1px solid rgba(110, 170, 255, 0.14);
+      pointer-events: none;
+      box-shadow: inset 0 0 25px rgba(58,184,255,0.08);
+    }
+
+    .brand {
+      position: relative;
+      border-radius: 28px;
+      padding: 22px 20px 20px;
+      border: 1px solid rgba(125,170,255,0.20);
+      background:
+        radial-gradient(circle at 18% 22%, rgba(49,126,255,0.18), transparent 26%),
+        radial-gradient(circle at 82% 22%, rgba(255,61,105,0.18), transparent 24%),
+        linear-gradient(180deg, rgba(15,24,55,0.95), rgba(7,12,30,0.95));
+      overflow: hidden;
+      box-shadow: inset 0 0 35px rgba(58,184,255,0.08), inset 0 0 25px rgba(255,61,105,0.06);
+      min-height: 180px;
+      display: grid;
+      place-items: center;
+    }
+
+    .brand::before,
+    .brand::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 999px;
+    }
+
+    .brand::before {
+      left: 0;
+      background: linear-gradient(180deg, transparent, var(--blue), transparent);
+      box-shadow: 0 0 20px rgba(58,184,255,0.7);
+      animation: pulseBarBlue 1.8s linear infinite;
+    }
+
+    .brand::after {
+      right: 0;
+      background: linear-gradient(180deg, transparent, var(--red), transparent);
+      box-shadow: 0 0 20px rgba(255,61,105,0.7);
+      animation: pulseBarRed 1.8s linear infinite;
+    }
+
+    @keyframes pulseBarBlue {
+      0%, 100% { opacity: .4; }
+      50% { opacity: 1; }
+    }
+    @keyframes pulseBarRed {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .35; }
+    }
+
+    .brand-title {
+      position: relative;
+      margin: 0;
+      text-align: center;
+      line-height: 0.9;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      text-transform: none;
+      font-size: 66px;
+      text-shadow: 0 0 18px rgba(255,255,255,0.05);
+    }
+
+    .brand-title .blue {
+      display: block;
+      color: #76c7ff;
+      text-shadow: 0 0 16px rgba(58,184,255,0.80), 0 0 46px rgba(29,111,255,0.35);
+      animation: sirenBlue 1.8s ease-in-out infinite;
+    }
+
+    .brand-title .red {
+      display: block;
+      color: #ff7b95;
+      text-shadow: 0 0 16px rgba(255,61,105,0.85), 0 0 46px rgba(255,61,105,0.30);
+      animation: sirenRed 1.8s ease-in-out infinite;
+    }
+
+    @keyframes sirenBlue {
+      0%, 100% { opacity: 1; filter: brightness(1); }
+      50% { opacity: .55; filter: brightness(.85); }
+    }
+    @keyframes sirenRed {
+      0%, 100% { opacity: .55; filter: brightness(.85); }
+      50% { opacity: 1; filter: brightness(1); }
+    }
+
+    .brand-badge {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 84px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      display: grid;
+      place-items: center;
+      color: #cde4ff;
+      font-size: 14px;
+      box-shadow: inset 0 0 14px rgba(255,255,255,0.05);
+    }
+
+    .nav {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+      margin-bottom: 18px;
+    }
+
+    .nav-btn {
+      position: relative;
+      border: 1px solid rgba(91, 159, 255, 0.18);
+      background: linear-gradient(180deg, rgba(8,16,38,0.92), rgba(5,11,28,0.96));
+      color: #f5fbff;
+      border-radius: 28px;
+      min-height: 136px;
+      padding: 18px 22px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 10px;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: inset 0 0 30px rgba(58,184,255,0.04), 0 12px 28px rgba(0,0,0,0.22);
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease, background .28s ease;
+    }
+
+    .nav-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(58,184,255,0.13), transparent 28%, transparent 72%, rgba(58,184,255,0.06));
+      opacity: 0;
+      transition: opacity .28s ease;
+    }
+
+    .nav-btn::after {
+      content: "";
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%) translateX(30px);
+      width: 26px;
+      height: 26px;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      background: linear-gradient(180deg, #95e6ff, #2aa7ff);
+      filter: drop-shadow(0 0 14px rgba(58,184,255,0.8));
+      opacity: 0;
+      transition: opacity .28s ease, transform .28s ease;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      transform: translateX(6px);
+      border-color: rgba(88, 207, 255, 0.55);
+      box-shadow: inset 0 0 36px rgba(58,184,255,0.12), 0 0 30px rgba(58,184,255,0.18), 0 16px 34px rgba(0,0,0,0.34);
+      background: linear-gradient(180deg, rgba(10,28,64,0.96), rgba(7,17,37,0.98));
+    }
+
+    .nav-btn:hover::before,
+    .nav-btn.active::before,
+    .nav-btn:hover::after,
+    .nav-btn.active::after {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+
+    .nav-btn .icon {
+      font-size: 50px;
+      filter: drop-shadow(0 0 14px rgba(73, 170, 255, 0.55));
+    }
+
+    .nav-btn .label {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+      text-align: center;
+      max-width: 240px;
+    }
+
+    .stars-wrap {
+      position: relative;
+      margin-top: auto;
+      border-radius: 26px;
+      padding: 22px 16px 30px;
+      border: 1px solid rgba(94, 148, 255, 0.14);
+      background: linear-gradient(180deg, rgba(8,17,39,0.84), rgba(5,10,25,0.96));
+      box-shadow: inset 0 0 18px rgba(58,184,255,0.05);
+    }
+
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      font-size: 34px;
+      color: #84ddff;
+      text-shadow: 0 0 14px rgba(58,184,255,0.8);
+      letter-spacing: 2px;
+    }
+
+    .stars-label {
+      margin-top: 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .content {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 22px;
+      min-width: 0;
+    }
+
+    .topbar {
+      min-height: 98px;
+      border-radius: 26px;
+      padding: 18px 26px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr)) auto;
+      gap: 16px;
+      align-items: center;
+      border-color: rgba(98, 161, 255, 0.16);
+      background: linear-gradient(180deg, rgba(6,14,35,0.86), rgba(3,8,22,0.96));
+    }
+
+    .top-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-right: 12px;
+      border-right: 1px solid rgba(121, 160, 222, 0.12);
+      min-width: 0;
+    }
+
+    .top-item:last-child { border-right: 0; }
+
+    .top-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(17,40,84,0.95), rgba(8,20,42,0.95));
+      border: 1px solid rgba(82, 170, 255, 0.18);
+      color: #86d6ff;
+      font-size: 26px;
+      box-shadow: inset 0 0 14px rgba(58,184,255,0.08);
+    }
+
+    .top-meta {
+      min-width: 0;
+    }
+
+    .top-kicker {
+      color: #8bacdf;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .top-value {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 20px;
+      border-radius: 30px;
+      min-height: 360px;
+      padding: 28px 34px;
+      border-color: rgba(98, 161, 255, 0.18);
+      background:
+        radial-gradient(circle at 22% 50%, rgba(17,72,171,0.18), transparent 32%),
+        radial-gradient(circle at 85% 28%, rgba(255,61,105,0.20), transparent 30%),
+        linear-gradient(180deg, rgba(8,17,39,0.86), rgba(4,10,23,0.94));
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-kicker {
+      color: #2fbbff;
+      font-size: 30px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      letter-spacing: 0.06em;
+    }
+
+    .hero-title {
+      margin: 0 0 16px;
+      font-size: clamp(46px, 4vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+      font-weight: 900;
+      text-transform: uppercase;
+      max-width: 760px;
+      text-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    .hero-sub {
+      font-size: 28px;
+      color: #7fc3ff;
+      font-weight: 600;
+    }
+
+    .hero-car-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-car {
+      width: 100%;
+      max-width: 620px;
+      filter: drop-shadow(0 18px 50px rgba(0,0,0,0.48));
+      transform: translateY(6px);
+    }
+
+    .hero-light-blue,
+    .hero-light-red {
+      position: absolute;
+      top: 30px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      filter: blur(45px);
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    .hero-light-blue {
+      right: 180px;
+      background: rgba(58,184,255,0.42);
+      animation: sirenPulseBlue 1.6s ease-in-out infinite;
+    }
+
+    .hero-light-red {
+      right: 60px;
+      background: rgba(255,61,105,0.38);
+      animation: sirenPulseRed 1.6s ease-in-out infinite;
+    }
+
+    @keyframes sirenPulseBlue {
+      0%, 100% { opacity: .7; transform: scale(1); }
+      50% { opacity: .2; transform: scale(.92); }
+    }
+
+    @keyframes sirenPulseRed {
+      0%, 100% { opacity: .2; transform: scale(.92); }
+      50% { opacity: .74; transform: scale(1); }
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      border-radius: 26px;
+      padding: 22px;
+      min-height: 260px;
+      border-color: rgba(88, 155, 255, 0.15);
+      background: linear-gradient(180deg, rgba(7,15,35,0.90), rgba(3,8,20,0.96));
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+
+    .panel:hover {
+      transform: translateY(-3px);
+      border-color: rgba(95, 197, 255, 0.24);
+      box-shadow: 0 20px 40px rgba(0,0,0,.28), 0 0 24px rgba(58,184,255,0.08);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .panel-header .mini-icon {
+      font-size: 24px;
+      color: #66ccff;
+      filter: drop-shadow(0 0 8px rgba(58,184,255,0.55));
+    }
+
+    .panel-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .panel-sub {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .stat-card {
+      border-radius: 18px;
+      padding: 16px 12px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(10,20,44,0.96), rgba(6,14,32,0.98));
+      border: 1px solid rgba(89, 153, 255, 0.12);
+      box-shadow: inset 0 0 16px rgba(58,184,255,0.04);
+    }
+
+    .stat-card .ico { font-size: 34px; margin-bottom: 10px; }
+    .stat-card .num { font-size: 42px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+    .stat-card .txt { font-size: 16px; color: var(--muted); }
+
+    .donut-wrap {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 24px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .donut {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(#2fb8ff 0 78%, rgba(255,255,255,0.08) 78% 100%);
+      box-shadow: inset 0 0 20px rgba(58,184,255,0.18), 0 0 24px rgba(58,184,255,0.12);
+      position: relative;
+    }
+
+    .donut::before {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      background: #071227;
+      border-radius: 50%;
+      border: 1px solid rgba(104, 160, 255, 0.12);
+    }
+
+    .donut-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .donut-inner .big { font-size: 42px; font-weight: 900; }
+    .donut-inner .small { color: var(--muted); font-size: 15px; }
+
+    .levels {
+      display: grid;
+      gap: 12px;
+    }
+
+    .level-row { display: grid; grid-template-columns: 1fr 70px; gap: 12px; align-items: center; }
+    .level-label { color: #d8e9ff; font-size: 15px; }
+    .level-bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 6px; }
+    .level-bar > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #34b6ff, #2d7fff); }
+    .level-val { color: #8ecfff; font-weight: 800; text-align: right; }
+
+    .radio-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .radio-item {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: #dbe8ff;
+    }
+
+    .radio-time { color: #84b6ff; font-weight: 700; }
+    .radio-text { color: #d8e7ff; }
+
+    .footer-chart {
+      margin-top: 20px;
+      border-radius: 24px;
+      padding: 18px 22px 12px;
+      min-height: 250px;
+    }
+
+    .chart {
+      position: relative;
+      margin-top: 22px;
+      height: 160px;
+      border-radius: 18px;
+      background:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(10,22,48,0.9), rgba(5,12,28,0.96));
+      background-size: 100% 40px, 70px 100%, auto;
+      overflow: hidden;
+      border: 1px solid rgba(95, 157, 255, 0.12);
+    }
+
+    .chart svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .chart path.line {
+      fill: none;
+      stroke: #43b9ff;
+      stroke-width: 4;
+      filter: drop-shadow(0 0 8px rgba(67,185,255,.75));
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .chart path.area {
+      fill: url(#lineFill);
+    }
+
+    .chart circle {
+      fill: #7bd1ff;
+      filter: drop-shadow(0 0 8px rgba(67,185,255,.8));
+    }
+
+    .mini-ranking {
+      margin-top: 20px;
+      border-radius: 24px;
+      padding: 18px 22px;
+      min-height: 250px;
+    }
+
+    .leader-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .leader-row {
+      display: grid;
+      grid-template-columns: 54px 60px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(10,21,46,0.9), rgba(5,12,28,0.95));
+      border: 1px solid rgba(96, 160, 255, 0.12);
+    }
+
+    .leader-place {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: white;
+      background: linear-gradient(180deg, rgba(39,109,255,0.95), rgba(10,48,130,0.95));
+      box-shadow: inset 0 0 12px rgba(255,255,255,0.08), 0 0 14px rgba(58,184,255,0.22);
+    }
+
+    .leader-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 1px solid rgba(117, 170, 255, 0.18);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.24);
+    }
+
+    .leader-name { font-size: 18px; font-weight: 800; }
+    .leader-role { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .leader-score { font-size: 28px; font-weight: 900; color: #cfe8ff; }
+
+    .black-emoji {
+      position: fixed;
+      right: 18px;
+      bottom: 14px;
+      font-size: 120px;
+      opacity: 0.09;
+      filter: grayscale(1) brightness(0.55);
+      transform: rotate(-10deg);
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+
+    @media (max-width: 1440px) {
+      .app { grid-template-columns: 320px 1fr; gap: 20px; }
+      .brand-title { font-size: 56px; }
+      .nav-btn .label { font-size: 20px; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .dashboard { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 1100px) {
+      body { overflow: auto; }
+      .app { grid-template-columns: 1fr; height: auto; }
+      .sidebar { min-height: auto; }
+      .topbar { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .app { padding: 12px; }
+      .topbar { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .donut-wrap { grid-template-columns: 1fr; justify-items: center; }
+      .leader-row { grid-template-columns: 40px 48px 1fr; }
+      .leader-score { grid-column: 1 / -1; }
+      .brand-title { font-size: 44px; }
+      .hero-title { font-size: 40px; }
+      .nav-btn { min-height: 110px; }
+      .nav-btn .icon { font-size: 40px; }
+      .nav-btn .label { font-size: 18px; }
+      .black-emoji { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="black-emoji">👮🏿</div>
+
+  <div class="app">
+    <aside class="sidebar glass">
+      <div class="sidebar-frame"></div>
+
+      <div>
+        <section class="brand">
+          <div class="brand-badge">★</div>
+          <h1 class="brand-title">
+            <span class="blue">Police</span>
+            <span class="red">Platinum</span>
+          </h1>
+        </section>
+
+        <nav class="nav">
+          <button class="nav-btn" type="button">
+            <div class="icon">👥</div>
+            <div class="label">Руководство</div>
+          </button>
+
+          <button class="nav-btn active" type="button">
+            <div class="icon">📋</div>
+            <div class="label">Общая таблица наказаний</div>
+          </button>
+
+          <button class="nav-btn" type="button">
+            <div class="icon">🏆</div>
+            <div class="label">Топ лидеров PD</div>
+          </button>
+        </nav>
+      </div>
+
+      <div class="stars-wrap">
+        <div class="stars">★ ★ ★ ★ ★</div>
+        <div class="stars-label">Police Website</div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar glass">
+        <div class="top-item">
+          <div class="top-icon">🛡️</div>
+          <div class="top-meta">
+            <div class="top-kicker">Добро пожаловать</div>
+            <div class="top-value">Офицер</div>
+          </div>
+        </div>
+
+        <div class="top-item">
+          <div class="top-icon">📅</div>
+          <div class="top-meta">
+            <div class="top-kicker">Сегодня</div>
+            <div class="top-value">24 мая 2025</div>
+          </div>
+        </div>
+
+        <div class="top-item">
+          <div class="top-icon">🕒</div>
+          <div class="top-meta">
+            <div class="top-kicker">Время</div>
+            <div class="top-value">20:45</div>
+          </div>
+        </div>
+
+        <div class="top-item">
+          <div class="top-icon">🔔</div>
+          <div class="top-meta">
+            <div class="top-kicker">Сигналы</div>
+            <div class="top-value">3 новых</div>
+          </div>
+        </div>
+
+        <div class="top-item" style="border-right:0; justify-content:flex-end;">
+          <img class="leader-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Officer Platinum" />
+          <div class="top-meta">
+            <div class="top-kicker">Officer Platinum</div>
+            <div class="top-value">SWAT Division</div>
+          </div>
+        </div>
+      </header>
+
+      <section style="display:grid; gap:20px; min-width:0;">
+        <section class="hero glass">
+          <div class="hero-copy">
+            <div class="hero-kicker">Служим и защищаем</div>
+            <h2 class="hero-title">Справедливость.<br />Порядок. Безопасность.</h2>
+            <div class="hero-sub">Профессионализм • Честь • Отвага</div>
+          </div>
+
+          <div class="hero-car-wrap">
+            <div class="hero-light-blue"></div>
+            <div class="hero-light-red"></div>
+            <img
+              class="hero-car"
+              src="https://pngimg.com/d/police_car_PNG43.png"
+              alt="Police car"
+            />
+          </div>
+        </section>
+
+        <section class="dashboard">
+          <article class="panel glass">
+            <div class="panel-header">
+              <div class="mini-icon">🛡️</div>
+              <div>
+                <h3 class="panel-title">Оперативная сводка</h3>
+                <div class="panel-sub">За последние 24 часа</div>
+              </div>
+            </div>
+
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="ico">📄</div>
+                <div class="num">128</div>
+                <div class="txt">Новые отчёты</div>
+              </div>
+              <div class="stat-card">
+                <div class="ico">⛓️</div>
+                <div class="num" style="color:#ff667c;">46</div>
+                <div class="txt">Аресты</div>
+              </div>
+              <div class="stat-card">
+                <div class="ico">👤</div>
+                <div class="num">87</div>
+                <div class="txt">Вызовы</div>
+              </div>
+              <div class="stat-card">
+                <div class="ico">🚓</div>
+                <div class="num">24</div>
+                <div class="txt">Патрули</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel glass">
+            <div class="panel-header">
+              <div class="mini-icon">📶</div>
+              <div>
+                <h3 class="panel-title">Уровень общественной безопасности</h3>
+                <div class="panel-sub">Текущий статус по городу</div>
+              </div>
+            </div>
+
+            <div class="donut-wrap">
+              <div class="donut">
+                <div class="donut-inner">
+                  <div class="big">78%</div>
+                  <div class="small">Стабильно</div>
+                </div>
+              </div>
+
+              <div class="levels">
+                <div>
+                  <div class="level-row">
+                    <div>
+                      <div class="level-label">Центр города</div>
+                      <div class="level-bar"><span style="width:82%"></span></div>
+                    </div>
+                    <div class="level-val">82%</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="level-row">
+                    <div>
+                      <div class="level-label">Спальные районы</div>
+                      <div class="level-bar"><span style="width:74%"></span></div>
+                    </div>
+                    <div class="level-val">74%</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="level-row">
+                    <div>
+                      <div class="level-label">Промышленный район</div>
+                      <div class="level-bar"><span style="width:65%"></span></div>
+                    </div>
+                    <div class="level-val">65%</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="level-row">
+                    <div>
+                      <div class="level-label">Пригород</div>
+                      <div class="level-bar"><span style="width:90%"></span></div>
+                    </div>
+                    <div class="level-val">90%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel glass">
+            <div class="panel-header">
+              <div class="mini-icon">📻</div>
+              <div>
+                <h3 class="panel-title">Радиопереговоры</h3>
+                <div class="panel-sub">Канал: 1-А-12</div>
+              </div>
+            </div>
+
+            <div class="radio-list">
+              <div class="radio-item">
+                <div class="radio-time">20:42</div>
+                <div class="radio-text">1-А-12 · Патруль начал дежурство в районе Центральной площади.</div>
+              </div>
+              <div class="radio-item">
+                <div class="radio-time" style="color:#ff8e99;">20:38</div>
+                <div class="radio-text">3-В-07 · Требуется подкрепление на 10-20 в районе Доки.</div>
+              </div>
+              <div class="radio-item">
+                <div class="radio-time">20:36</div>
+                <div class="radio-text">2-С-03 · Код 4, всё спокойно.</div>
+              </div>
+              <div class="radio-item" style="border-bottom:0; padding-bottom:0;">
+                <div class="radio-time">20:31</div>
+                <div class="radio-text">1-А-12 · Проверка транспорта на шоссе 68.</div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section style="display:grid; grid-template-columns: 1.3fr .7fr; gap:20px;">
+          <article class="footer-chart panel glass">
+            <div class="panel-header" style="margin-bottom:0;">
+              <div class="mini-icon">📈</div>
+              <div>
+                <h3 class="panel-title">Статистика департамента</h3>
+                <div class="panel-sub">Динамика активности за неделю</div>
+              </div>
+            </div>
+
+            <div class="chart">
+              <svg viewBox="0 0 1000 220" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lineFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(67,185,255,0.42)" />
+                    <stop offset="100%" stop-color="rgba(67,185,255,0.02)" />
+                  </linearGradient>
+                </defs>
+                <path class="area" d="M40,180 L120,150 L200,170 L280,120 L360,135 L440,85 L520,110 L600,92 L680,108 L760,72 L840,82 L920,58 L920,220 L40,220 Z"></path>
+                <path class="line" d="M40,180 L120,150 L200,170 L280,120 L360,135 L440,85 L520,110 L600,92 L680,108 L760,72 L840,82 L920,58"></path>
+                <circle cx="40" cy="180" r="5"></circle>
+                <circle cx="120" cy="150" r="5"></circle>
+                <circle cx="200" cy="170" r="5"></circle>
+                <circle cx="280" cy="120" r="5"></circle>
+                <circle cx="360" cy="135" r="5"></circle>
+                <circle cx="440" cy="85" r="5"></circle>
+                <circle cx="520" cy="110" r="5"></circle>
+                <circle cx="600" cy="92" r="5"></circle>
+                <circle cx="680" cy="108" r="5"></circle>
+                <circle cx="760" cy="72" r="5"></circle>
+                <circle cx="840" cy="82" r="5"></circle>
+                <circle cx="920" cy="58" r="5"></circle>
+              </svg>
+            </div>
+          </article>
+
+          <article class="mini-ranking panel glass">
+            <div class="panel-header" style="margin-bottom:6px;">
+              <div class="mini-icon">🏆</div>
+              <div>
+                <h3 class="panel-title">Топ сотрудников</h3>
+                <div class="panel-sub">Лучшие результаты недели</div>
+              </div>
+            </div>
+
+            <div class="leader-list">
+              <div class="leader-row">
+                <div class="leader-place">1</div>
+                <img class="leader-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Officer Platinum" />
+                <div>
+                  <div class="leader-name">Officer Platinum</div>
+                  <div class="leader-role">SWAT Division</div>
+                </div>
+                <div class="leader-score">4 560</div>
+              </div>
+
+              <div class="leader-row">
+                <div class="leader-place" style="background:linear-gradient(180deg, rgba(120,136,170,.95), rgba(63,74,101,.95));">2</div>
+                <img class="leader-avatar" src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?auto=format&fit=crop&w=200&q=80" alt="Detective Morse" />
+                <div>
+                  <div class="leader-name">Detective Morse</div>
+                  <div class="leader-role">Detective Bureau</div>
+                </div>
+                <div class="leader-score">3 890</div>
+              </div>
+
+              <div class="leader-row">
+                <div class="leader-place" style="background:linear-gradient(180deg, rgba(177,115,70,.95), rgba(121,70,36,.95));">3</div>
+                <img class="leader-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="Officer Jackson" />
+                <div>
+                  <div class="leader-name">Officer Jackson</div>
+                  <div class="leader-role">Patrol Division</div>
+                </div>
+                <div class="leader-score">3 450</div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
