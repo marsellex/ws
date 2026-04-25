@@ -4,1067 +4,1600 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Police Platinum</title>
+  <link rel="icon" href="./favicon1.ico" type="image/x-icon" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-    :root {
-      --bg-1: #020613;
-      --bg-2: #07152f;
-      --panel: rgba(7, 15, 34, 0.82);
-      --panel-2: rgba(6, 12, 28, 0.92);
-      --line: rgba(120, 180, 255, 0.14);
-      --line-strong: rgba(103, 195, 255, 0.34);
-      --text: #eef6ff;
-      --muted: #89a5d6;
-      --blue: #3ab8ff;
-      --blue-2: #1d6fff;
-      --red: #ff3d69;
-      --red-2: #ff5a5a;
-      --glow-blue: 0 0 20px rgba(58, 184, 255, 0.35);
-      --glow-red: 0 0 20px rgba(255, 61, 105, 0.28);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
-      --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
-    }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      color: var(--text);
-      font-family: Inter, system-ui, sans-serif;
-      background:
-        radial-gradient(circle at 10% 20%, rgba(29,111,255,0.18), transparent 24%),
-        radial-gradient(circle at 85% 18%, rgba(255,61,105,0.16), transparent 25%),
-        radial-gradient(circle at 65% 75%, rgba(58,184,255,0.10), transparent 24%),
-        linear-gradient(135deg, #01040d 0%, #030918 18%, #07152f 55%, #030918 100%);
-      overflow: hidden;
+      padding: 0;
     }
 
-    body::before,
-    body::after {
+    :root {
+      --bg-main: #030713;
+      --bg-panel: rgba(7, 15, 32, 0.82);
+      --bg-card: rgba(8, 18, 38, 0.82);
+      --bg-card-2: rgba(11, 22, 46, 0.88);
+      --bg-soft: rgba(255,255,255,0.04);
+
+      --border: rgba(120, 185, 255, 0.16);
+      --border-strong: rgba(120, 210, 255, 0.28);
+
+      --text: #edf6ff;
+      --text-soft: #9cb0d0;
+      --text-dim: #6e81a5;
+
+      --blue: #32b8ff;
+      --blue-2: #007dff;
+      --cyan: #58e9ff;
+      --red: #ff4567;
+      --red-2: #ff784f;
+      --gold: #ffcb58;
+      --violet: #8c7dff;
+
+      --shadow-blue: 0 0 24px rgba(50,184,255,0.22);
+      --shadow-red: 0 0 24px rgba(255,69,103,0.18);
+      --shadow-soft: 0 16px 42px rgba(0,0,0,0.34);
+
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius: 20px;
+      --radius-sm: 16px;
+
+      --sidebar-width: 340px;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg-main);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(0,130,255,0.18), transparent 26%),
+        radial-gradient(circle at 86% 16%, rgba(255,64,102,0.16), transparent 24%),
+        radial-gradient(circle at 76% 72%, rgba(60,180,255,0.12), transparent 24%),
+        linear-gradient(180deg, #020611 0%, #061121 48%, #030713 100%);
+      position: relative;
+    }
+
+    body::before {
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 0;
-    }
-
-    body::before {
       background:
-        linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(circle at center, black 38%, transparent 100%);
-      opacity: 0.18;
-      animation: gridShift 18s linear infinite;
+        linear-gradient(rgba(75,130,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(75,130,255,0.06) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity: .22;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 100%);
+      animation: gridMove 16s linear infinite;
     }
 
     body::after {
-      background:
-        radial-gradient(circle at 15% 90%, rgba(58,184,255,0.18), transparent 18%),
-        radial-gradient(circle at 85% 10%, rgba(255,61,105,0.16), transparent 18%),
-        radial-gradient(circle at 90% 90%, rgba(255,255,255,0.05), transparent 10%);
-      filter: blur(30px);
-      opacity: 0.7;
+      content: "🖤";
+      position: fixed;
+      right: 28px;
+      bottom: 18px;
+      font-size: 110px;
+      opacity: 0.05;
+      filter: blur(1px);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    @keyframes gridShift {
+    @keyframes gridMove {
       from { transform: translate3d(0,0,0); }
-      to { transform: translate3d(48px,48px,0); }
+      to { transform: translate3d(44px,44px,0); }
     }
 
-    .app {
+    .page {
       position: relative;
       z-index: 1;
+      min-height: 100vh;
       display: grid;
-      grid-template-columns: 390px minmax(0, 1fr);
-      gap: 28px;
-      height: 100vh;
-      padding: 18px;
+      grid-template-columns: var(--sidebar-width) 1fr;
+      gap: 24px;
+      padding: 20px;
     }
 
     .glass {
-      background: linear-gradient(180deg, rgba(11,21,44,0.92), rgba(4,9,23,0.92));
-      border: 1px solid rgba(105, 167, 255, 0.14);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
       position: relative;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02)),
+        var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
       overflow: hidden;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
 
     .glass::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent 24%, transparent 76%, rgba(255,255,255,0.03));
       pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(90, 180, 255, 0.10), transparent 20%, transparent 78%, rgba(255, 90, 120, 0.08));
+      opacity: .95;
     }
 
     .sidebar {
-      border-radius: 34px;
       padding: 18px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      border-color: rgba(58,184,255,0.20);
-      box-shadow: inset 0 0 0 1px rgba(58,184,255,0.10), 0 0 40px rgba(29,111,255,0.12), 0 18px 50px rgba(0,0,0,0.45);
-      background:
-        radial-gradient(circle at top left, rgba(58,184,255,0.14), transparent 25%),
-        radial-gradient(circle at top right, rgba(255,61,105,0.12), transparent 28%),
-        linear-gradient(180deg, rgba(8,18,42,0.96), rgba(3,8,20,0.98));
+      gap: 16px;
+      min-height: calc(100vh - 40px);
     }
 
-    .sidebar-frame {
-      position: absolute;
-      inset: 8px;
-      border-radius: 28px;
-      border: 1px solid rgba(110, 170, 255, 0.14);
-      pointer-events: none;
-      box-shadow: inset 0 0 25px rgba(58,184,255,0.08);
-    }
-
-    .brand {
+    .logo-box {
       position: relative;
-      border-radius: 28px;
-      padding: 22px 20px 20px;
-      border: 1px solid rgba(125,170,255,0.20);
+      min-height: 200px;
+      padding: 18px;
+      border-radius: 30px;
       background:
-        radial-gradient(circle at 18% 22%, rgba(49,126,255,0.18), transparent 26%),
-        radial-gradient(circle at 82% 22%, rgba(255,61,105,0.18), transparent 24%),
-        linear-gradient(180deg, rgba(15,24,55,0.95), rgba(7,12,30,0.95));
-      overflow: hidden;
-      box-shadow: inset 0 0 35px rgba(58,184,255,0.08), inset 0 0 25px rgba(255,61,105,0.06);
-      min-height: 180px;
+        radial-gradient(circle at 15% 30%, rgba(60,180,255,0.18), transparent 35%),
+        radial-gradient(circle at 85% 70%, rgba(255,70,110,0.16), transparent 35%),
+        linear-gradient(180deg, rgba(8,16,34,0.96), rgba(5,10,23,0.94));
+      border: 1px solid rgba(120,185,255,0.20);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.04),
+        0 0 30px rgba(0,0,0,0.32);
       display: grid;
       place-items: center;
+      overflow: hidden;
     }
 
-    .brand::before,
-    .brand::after {
+    .logo-box::before,
+    .logo-box::after {
       content: "";
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 4px;
+      width: 5px;
       border-radius: 999px;
+      filter: blur(1px);
+      opacity: .92;
+      animation: sirenGlow 1.8s ease-in-out infinite alternate;
     }
 
-    .brand::before {
+    .logo-box::before {
       left: 0;
-      background: linear-gradient(180deg, transparent, var(--blue), transparent);
-      box-shadow: 0 0 20px rgba(58,184,255,0.7);
-      animation: pulseBarBlue 1.8s linear infinite;
+      background: linear-gradient(180deg, transparent, var(--blue), var(--cyan), transparent);
+      box-shadow: 0 0 16px rgba(50,184,255,0.8);
     }
 
-    .brand::after {
+    .logo-box::after {
       right: 0;
-      background: linear-gradient(180deg, transparent, var(--red), transparent);
-      box-shadow: 0 0 20px rgba(255,61,105,0.7);
-      animation: pulseBarRed 1.8s linear infinite;
+      background: linear-gradient(180deg, transparent, var(--red), #ff8c54, transparent);
+      box-shadow: 0 0 16px rgba(255,69,103,0.8);
+      animation-delay: .6s;
     }
 
-    @keyframes pulseBarBlue {
-      0%, 100% { opacity: .4; }
-      50% { opacity: 1; }
-    }
-    @keyframes pulseBarRed {
-      0%, 100% { opacity: 1; }
-      50% { opacity: .35; }
+    @keyframes sirenGlow {
+      from { opacity: .38; transform: scaleY(.88); }
+      to { opacity: 1; transform: scaleY(1); }
     }
 
-    .brand-title {
-      position: relative;
-      margin: 0;
-      text-align: center;
-      line-height: 0.9;
-      font-weight: 900;
-      letter-spacing: -0.06em;
-      text-transform: none;
-      font-size: 66px;
-      text-shadow: 0 0 18px rgba(255,255,255,0.05);
-    }
-
-    .brand-title .blue {
-      display: block;
-      color: #76c7ff;
-      text-shadow: 0 0 16px rgba(58,184,255,0.80), 0 0 46px rgba(29,111,255,0.35);
-      animation: sirenBlue 1.8s ease-in-out infinite;
-    }
-
-    .brand-title .red {
-      display: block;
-      color: #ff7b95;
-      text-shadow: 0 0 16px rgba(255,61,105,0.85), 0 0 46px rgba(255,61,105,0.30);
-      animation: sirenRed 1.8s ease-in-out infinite;
-    }
-
-    @keyframes sirenBlue {
-      0%, 100% { opacity: 1; filter: brightness(1); }
-      50% { opacity: .55; filter: brightness(.85); }
-    }
-    @keyframes sirenRed {
-      0%, 100% { opacity: .55; filter: brightness(.85); }
-      50% { opacity: 1; filter: brightness(1); }
-    }
-
-    .brand-badge {
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 84px;
-      height: 28px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.03);
+    .logo-frame {
+      width: 100%;
+      min-height: 148px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(135deg, rgba(50,184,255,0.08), rgba(255,69,103,0.08)),
+        rgba(0,0,0,0.30);
       display: grid;
       place-items: center;
-      color: #cde4ff;
-      font-size: 14px;
-      box-shadow: inset 0 0 14px rgba(255,255,255,0.05);
+      padding: 20px;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.04),
+        0 0 22px rgba(0,0,0,0.22);
     }
 
-    .nav {
+    .logo-title {
+      text-align: center;
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      text-transform: none;
+      user-select: none;
+    }
+
+    .logo-title .blue {
+      display: block;
+      font-size: 62px;
+      color: #8ed8ff;
+      text-shadow:
+        0 0 6px rgba(90,180,255,0.4),
+        0 0 20px rgba(50,184,255,0.65),
+        0 0 40px rgba(50,184,255,0.32);
+      animation: policeBlink 1.35s ease-in-out infinite alternate;
+    }
+
+    .logo-title .red {
+      display: block;
+      font-size: 60px;
+      color: #ffb1b9;
+      text-shadow:
+        0 0 6px rgba(255,100,120,0.35),
+        0 0 20px rgba(255,69,103,0.65),
+        0 0 40px rgba(255,69,103,0.30);
+      animation: platinumBlink 1.35s ease-in-out infinite alternate;
+      animation-delay: .7s;
+      margin-top: 2px;
+    }
+
+    @keyframes policeBlink {
+      from { opacity: .74; filter: brightness(.92); }
+      to { opacity: 1; filter: brightness(1.14); }
+    }
+
+    @keyframes platinumBlink {
+      from { opacity: .74; filter: brightness(.92); }
+      to { opacity: 1; filter: brightness(1.12); }
+    }
+
+    .nav-stack {
       display: grid;
-      gap: 16px;
-      margin-top: 18px;
-      margin-bottom: 18px;
+      gap: 14px;
+      margin-top: 8px;
     }
 
-    .nav-btn {
+    .nav-card {
       position: relative;
-      border: 1px solid rgba(91, 159, 255, 0.18);
-      background: linear-gradient(180deg, rgba(8,16,38,0.92), rgba(5,11,28,0.96));
-      color: #f5fbff;
+      width: 100%;
+      min-height: 142px;
       border-radius: 28px;
-      min-height: 136px;
-      padding: 18px 22px;
-      display: grid;
-      align-content: center;
-      justify-items: center;
-      gap: 10px;
-      cursor: pointer;
+      border: 1px solid rgba(120,185,255,0.16);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
+        rgba(4,10,24,0.92);
       overflow: hidden;
-      box-shadow: inset 0 0 30px rgba(58,184,255,0.04), 0 12px 28px rgba(0,0,0,0.22);
-      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease, background .28s ease;
+      cursor: pointer;
+      transition:
+        transform .28s cubic-bezier(.22,.68,0,1),
+        border-color .28s ease,
+        box-shadow .28s ease,
+        background .28s ease;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.20);
     }
 
-    .nav-btn::before {
+    .nav-card::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(58,184,255,0.13), transparent 28%, transparent 72%, rgba(58,184,255,0.06));
-      opacity: 0;
-      transition: opacity .28s ease;
+      background:
+        linear-gradient(135deg, rgba(60,180,255,0.08), transparent 30%, transparent 70%, rgba(90,120,255,0.04)),
+        radial-gradient(circle at 50% -20%, rgba(80,180,255,0.14), transparent 45%);
+      opacity: .9;
+      pointer-events: none;
     }
 
-    .nav-btn::after {
+    .nav-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      border-color: rgba(100, 210, 255, 0.34);
+      box-shadow:
+        0 18px 36px rgba(0,0,0,0.28),
+        0 0 22px rgba(50,184,255,0.14);
+    }
+
+    .nav-card.active {
+      border-color: rgba(90,220,255,0.42);
+      box-shadow:
+        0 20px 40px rgba(0,0,0,0.30),
+        0 0 28px rgba(50,184,255,0.24),
+        inset 0 0 0 1px rgba(120,220,255,0.10);
+      background:
+        linear-gradient(180deg, rgba(80,160,255,0.10), rgba(255,255,255,0.02)),
+        rgba(5,15,36,0.96);
+    }
+
+    .nav-card-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      padding: 20px 18px;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .nav-icon-wrap {
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-items: center;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      transition:
+        transform .32s cubic-bezier(.22,.68,0,1),
+        box-shadow .32s ease,
+        filter .32s ease;
+      animation: idleFloat 3.8s ease-in-out infinite;
+    }
+
+    .nav-card:hover .nav-icon-wrap,
+    .nav-card.active .nav-icon-wrap {
+      transform: translateY(-10px) scale(1.08);
+      box-shadow:
+        0 0 22px rgba(50,184,255,0.25),
+        0 0 40px rgba(50,184,255,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      filter: brightness(1.10);
+    }
+
+    @keyframes idleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .nav-card:hover .nav-icon-wrap {
+      animation: hoverFloat 1.8s ease-in-out infinite;
+    }
+
+    @keyframes hoverFloat {
+      0%,100% { transform: translateY(-8px) scale(1.05); }
+      50% { transform: translateY(-14px) scale(1.08); }
+    }
+
+    .nav-icon {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      display: block;
+      filter:
+        drop-shadow(0 0 12px rgba(50,184,255,0.30))
+        drop-shadow(0 0 24px rgba(50,184,255,0.18));
+      transition: filter .3s ease, transform .3s ease;
+    }
+
+    .nav-card:hover .nav-icon,
+    .nav-card.active .nav-icon {
+      transform: scale(1.04);
+      filter:
+        drop-shadow(0 0 16px rgba(88,233,255,0.44))
+        drop-shadow(0 0 30px rgba(50,184,255,0.24));
+    }
+
+    .nav-icon.red-arrest {
+      filter:
+        hue-rotate(145deg)
+        saturate(2.2)
+        drop-shadow(0 0 12px rgba(255,75,95,0.36))
+        drop-shadow(0 0 26px rgba(255,75,95,0.20));
+    }
+
+    .nav-card:hover .nav-icon.red-arrest,
+    .nav-card.active .nav-icon.red-arrest {
+      filter:
+        hue-rotate(145deg)
+        saturate(2.35)
+        brightness(1.08)
+        drop-shadow(0 0 16px rgba(255,80,110,0.52))
+        drop-shadow(0 0 32px rgba(255,80,110,0.28));
+    }
+
+    .nav-label {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #f0f7ff;
+      transition: color .28s ease, text-shadow .28s ease;
+    }
+
+    .nav-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.3;
+      transition: color .28s ease;
+    }
+
+    .nav-card:hover .nav-label,
+    .nav-card.active .nav-label {
+      color: #fff;
+      text-shadow: 0 0 14px rgba(90,210,255,0.16);
+    }
+
+    .nav-card:hover .nav-sub,
+    .nav-card.active .nav-sub {
+      color: #bddcff;
+    }
+
+    .stars-box {
+      margin-top: auto;
+      min-height: 118px;
+      border-radius: 30px;
+      border: 1px solid rgba(120,185,255,0.16);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
+        rgba(5,11,26,0.92);
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stars-box::before {
       content: "";
       position: absolute;
-      right: -20px;
-      top: 50%;
-      transform: translateY(-50%) translateX(30px);
-      width: 26px;
-      height: 26px;
-      clip-path: polygon(0 0, 100% 50%, 0 100%);
-      background: linear-gradient(180deg, #95e6ff, #2aa7ff);
-      filter: drop-shadow(0 0 14px rgba(58,184,255,0.8));
-      opacity: 0;
-      transition: opacity .28s ease, transform .28s ease;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(70,160,255,0.12), transparent 55%);
+      pointer-events: none;
     }
 
-    .nav-btn:hover,
-    .nav-btn.active {
-      transform: translateX(6px);
-      border-color: rgba(88, 207, 255, 0.55);
-      box-shadow: inset 0 0 36px rgba(58,184,255,0.12), 0 0 30px rgba(58,184,255,0.18), 0 16px 34px rgba(0,0,0,0.34);
-      background: linear-gradient(180deg, rgba(10,28,64,0.96), rgba(7,17,37,0.98));
+    .stars-img {
+      width: 210px;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+      filter:
+        drop-shadow(0 0 18px rgba(50,184,255,0.18))
+        drop-shadow(0 0 28px rgba(50,184,255,0.12));
+      animation: starsGlow 2.8s ease-in-out infinite alternate;
     }
 
-    .nav-btn:hover::before,
-    .nav-btn.active::before,
-    .nav-btn:hover::after,
-    .nav-btn.active::after {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
+    @keyframes starsGlow {
+      from { transform: translateY(0); opacity: .92; }
+      to { transform: translateY(-2px); opacity: 1; }
     }
 
-    .nav-btn .icon {
-      font-size: 50px;
-      filter: drop-shadow(0 0 14px rgba(73, 170, 255, 0.55));
-    }
-
-    .nav-btn .label {
-      font-size: 22px;
-      font-weight: 800;
-      line-height: 1.2;
-      text-align: center;
-      max-width: 240px;
-    }
-
-    .stars-wrap {
-      position: relative;
-      margin-top: auto;
-      border-radius: 26px;
-      padding: 22px 16px 30px;
-      border: 1px solid rgba(94, 148, 255, 0.14);
-      background: linear-gradient(180deg, rgba(8,17,39,0.84), rgba(5,10,25,0.96));
-      box-shadow: inset 0 0 18px rgba(58,184,255,0.05);
-    }
-
-    .stars {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      font-size: 34px;
-      color: #84ddff;
-      text-shadow: 0 0 14px rgba(58,184,255,0.8);
-      letter-spacing: 2px;
-    }
-
-    .stars-label {
-      margin-top: 10px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .content {
+    .main {
       display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 22px;
+      gap: 20px;
       min-width: 0;
     }
 
     .topbar {
-      min-height: 98px;
-      border-radius: 26px;
-      padding: 18px 26px;
+      min-height: 94px;
+      padding: 18px 22px;
       display: grid;
-      grid-template-columns: repeat(4, minmax(120px, 1fr)) auto;
-      gap: 16px;
+      grid-template-columns: 1.15fr 1.1fr 0.95fr;
+      gap: 18px;
       align-items: center;
-      border-color: rgba(98, 161, 255, 0.16);
-      background: linear-gradient(180deg, rgba(6,14,35,0.86), rgba(3,8,22,0.96));
     }
 
-    .top-item {
+    .welcome-box,
+    .top-center,
+    .top-right {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding-right: 12px;
-      border-right: 1px solid rgba(121, 160, 222, 0.12);
       min-width: 0;
     }
 
-    .top-item:last-child { border-right: 0; }
-
-    .top-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
+    .welcome-icon,
+    .top-icon,
+    .profile-avatar {
+      width: 52px;
+      height: 52px;
+      min-width: 52px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
-      background: linear-gradient(180deg, rgba(17,40,84,0.95), rgba(8,20,42,0.95));
-      border: 1px solid rgba(82, 170, 255, 0.18);
-      color: #86d6ff;
-      font-size: 26px;
-      box-shadow: inset 0 0 14px rgba(58,184,255,0.08);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
-    .top-meta {
+    .welcome-icon img,
+    .top-icon img,
+    .profile-avatar img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .top-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #dff1ff;
+      line-height: 1.25;
+    }
+
+    .top-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 3px;
+    }
+
+    .top-center {
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .top-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       min-width: 0;
     }
 
-    .top-kicker {
-      color: #8bacdf;
-      font-size: 13px;
-      margin-bottom: 5px;
+    .top-right {
+      justify-content: flex-end;
     }
 
-    .top-value {
-      font-size: 17px;
-      font-weight: 800;
-      line-height: 1.2;
+    .notify-dot {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: white;
+      font-size: 11px;
+      font-weight: 900;
+      box-shadow: 0 0 14px rgba(50,184,255,0.35);
+    }
+
+    .profile-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-width: 0;
+    }
+
+    .profile-avatar {
+      overflow: hidden;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-name {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .profile-role {
+      font-size: 12px;
+      color: #afd2ff;
+      margin-top: 4px;
     }
 
     .hero {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 20px;
-      border-radius: 30px;
       min-height: 360px;
-      padding: 28px 34px;
-      border-color: rgba(98, 161, 255, 0.18);
-      background:
-        radial-gradient(circle at 22% 50%, rgba(17,72,171,0.18), transparent 32%),
-        radial-gradient(circle at 85% 28%, rgba(255,61,105,0.20), transparent 30%),
-        linear-gradient(180deg, rgba(8,17,39,0.86), rgba(4,10,23,0.94));
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 14px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .hero-copy {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 74% 38%, rgba(50,184,255,0.14), transparent 18%),
+        radial-gradient(circle at 90% 38%, rgba(255,69,103,0.18), transparent 22%),
+        linear-gradient(90deg, rgba(10,26,56,0.65), rgba(7,12,28,0.18) 45%, rgba(7,12,28,0));
+      pointer-events: none;
       z-index: 1;
     }
 
+    .hero-left,
+    .hero-right {
+      position: relative;
+      z-index: 2;
+    }
+
     .hero-kicker {
-      color: #2fbbff;
-      font-size: 30px;
+      font-size: 18px;
       font-weight: 800;
+      color: #38b7ff;
+      letter-spacing: .08em;
       text-transform: uppercase;
-      margin-bottom: 16px;
-      letter-spacing: 0.06em;
+      margin-bottom: 14px;
     }
 
     .hero-title {
-      margin: 0 0 16px;
-      font-size: clamp(46px, 4vw, 72px);
-      line-height: 0.95;
-      letter-spacing: -0.07em;
+      font-size: clamp(40px, 4vw, 68px);
+      line-height: .96;
       font-weight: 900;
+      letter-spacing: -0.06em;
       text-transform: uppercase;
+      font-style: italic;
+      text-shadow: 0 8px 30px rgba(0,0,0,0.22);
       max-width: 760px;
-      text-shadow: 0 8px 30px rgba(0,0,0,0.4);
     }
 
-    .hero-sub {
-      font-size: 28px;
-      color: #7fc3ff;
-      font-weight: 600;
+    .hero-title span {
+      display: block;
     }
 
-    .hero-car-wrap {
-      position: relative;
+    .hero-meta {
+      margin-top: 18px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #a9c3e9;
+    }
+
+    .hero-line {
+      margin-top: 22px;
+      width: 420px;
+      max-width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(50,184,255,1), rgba(50,184,255,0.08) 34%, rgba(255,69,103,0.08) 66%, rgba(255,69,103,1));
+      box-shadow:
+        0 0 18px rgba(50,184,255,0.22),
+        0 0 18px rgba(255,69,103,0.18);
+    }
+
+    .hero-right {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
     }
 
     .hero-car {
-      width: 100%;
-      max-width: 620px;
-      filter: drop-shadow(0 18px 50px rgba(0,0,0,0.48));
-      transform: translateY(6px);
+      width: min(720px, 100%);
+      object-fit: contain;
+      display: block;
+      filter:
+        drop-shadow(0 0 30px rgba(50,184,255,0.22))
+        drop-shadow(0 0 26px rgba(255,69,103,0.12));
+      animation: carFloat 4s ease-in-out infinite;
     }
 
-    .hero-light-blue,
-    .hero-light-red {
-      position: absolute;
-      top: 30px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      filter: blur(45px);
-      opacity: 0.75;
-      pointer-events: none;
+    @keyframes carFloat {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
 
-    .hero-light-blue {
-      right: 180px;
-      background: rgba(58,184,255,0.42);
-      animation: sirenPulseBlue 1.6s ease-in-out infinite;
-    }
-
-    .hero-light-red {
-      right: 60px;
-      background: rgba(255,61,105,0.38);
-      animation: sirenPulseRed 1.6s ease-in-out infinite;
-    }
-
-    @keyframes sirenPulseBlue {
-      0%, 100% { opacity: .7; transform: scale(1); }
-      50% { opacity: .2; transform: scale(.92); }
-    }
-
-    @keyframes sirenPulseRed {
-      0%, 100% { opacity: .2; transform: scale(.92); }
-      50% { opacity: .74; transform: scale(1); }
-    }
-
-    .dashboard {
+    .dashboard-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 20px;
     }
 
     .panel {
-      border-radius: 26px;
+      min-height: 250px;
       padding: 22px;
-      min-height: 260px;
-      border-color: rgba(88, 155, 255, 0.15);
-      background: linear-gradient(180deg, rgba(7,15,35,0.90), rgba(3,8,20,0.96));
-      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
-    }
-
-    .panel:hover {
-      transform: translateY(-3px);
-      border-color: rgba(95, 197, 255, 0.24);
-      box-shadow: 0 20px 40px rgba(0,0,0,.28), 0 0 24px rgba(58,184,255,0.08);
-    }
-
-    .panel-header {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .panel-header .mini-icon {
-      font-size: 24px;
-      color: #66ccff;
-      filter: drop-shadow(0 0 8px rgba(58,184,255,0.55));
+      flex-direction: column;
+      position: relative;
     }
 
     .panel-title {
-      font-size: 26px;
-      font-weight: 800;
-      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .panel-title-left img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 0 10px rgba(50,184,255,0.18));
+    }
+
+    .panel-name {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.1;
     }
 
     .panel-sub {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 5px;
     }
 
     .stats-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-    }
-
-    .stat-card {
-      border-radius: 18px;
-      padding: 16px 12px;
-      text-align: center;
-      background: linear-gradient(180deg, rgba(10,20,44,0.96), rgba(6,14,32,0.98));
-      border: 1px solid rgba(89, 153, 255, 0.12);
-      box-shadow: inset 0 0 16px rgba(58,184,255,0.04);
-    }
-
-    .stat-card .ico { font-size: 34px; margin-bottom: 10px; }
-    .stat-card .num { font-size: 42px; font-weight: 900; line-height: 1; margin-bottom: 8px; }
-    .stat-card .txt { font-size: 16px; color: var(--muted); }
-
-    .donut-wrap {
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 24px;
-      align-items: center;
       margin-top: 10px;
     }
 
-    .donut {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
+    .stat-box {
+      min-height: 130px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 14px;
       display: grid;
-      place-items: center;
-      background: conic-gradient(#2fb8ff 0 78%, rgba(255,255,255,0.08) 78% 100%);
-      box-shadow: inset 0 0 20px rgba(58,184,255,0.18), 0 0 24px rgba(58,184,255,0.12);
-      position: relative;
-    }
-
-    .donut::before {
-      content: "";
-      position: absolute;
-      inset: 20px;
-      background: #071227;
-      border-radius: 50%;
-      border: 1px solid rgba(104, 160, 255, 0.12);
-    }
-
-    .donut-inner {
-      position: relative;
-      z-index: 1;
+      justify-items: center;
+      align-content: center;
+      gap: 10px;
       text-align: center;
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
     }
 
-    .donut-inner .big { font-size: 42px; font-weight: 900; }
-    .donut-inner .small { color: var(--muted); font-size: 15px; }
-
-    .levels {
-      display: grid;
-      gap: 12px;
+    .stat-box:hover {
+      transform: translateY(-3px);
+      border-color: rgba(100,210,255,0.20);
+      box-shadow: 0 0 20px rgba(50,184,255,0.08);
     }
 
-    .level-row { display: grid; grid-template-columns: 1fr 70px; gap: 12px; align-items: center; }
-    .level-label { color: #d8e9ff; font-size: 15px; }
-    .level-bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 6px; }
-    .level-bar > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #34b6ff, #2d7fff); }
-    .level-val { color: #8ecfff; font-weight: 800; text-align: right; }
+    .stat-box img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 0 14px rgba(50,184,255,0.18));
+    }
 
-    .radio-list {
+    .stat-box.red img {
+      filter:
+        hue-rotate(145deg)
+        saturate(2.2)
+        drop-shadow(0 0 14px rgba(255,70,100,0.28));
+    }
+
+    .stat-value {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .stat-value.red {
+      color: #ff5e72;
+      text-shadow: 0 0 18px rgba(255,80,110,0.12);
+    }
+
+    .stat-label {
+      color: var(--text-soft);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .panel-footer-btn {
+      margin-top: auto;
+      min-height: 56px;
+      border: 1px solid rgba(120,185,255,0.16);
+      background: rgba(255,255,255,0.03);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #d6ebff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .24s ease;
+    }
+
+    .panel-footer-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(100,210,255,0.26);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 0 18px rgba(50,184,255,0.08);
+    }
+
+    .danger-gauge {
+      flex: 1;
       display: grid;
-      gap: 12px;
+      grid-template-columns: 220px 1fr;
+      gap: 18px;
+      align-items: center;
       margin-top: 8px;
     }
 
-    .radio-item {
+    .gauge-circle-wrap {
       display: grid;
-      grid-template-columns: 70px 1fr;
-      gap: 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      color: #dbe8ff;
+      place-items: center;
     }
 
-    .radio-time { color: #84b6ff; font-weight: 700; }
-    .radio-text { color: #d8e7ff; }
-
-    .footer-chart {
-      margin-top: 20px;
-      border-radius: 24px;
-      padding: 18px 22px 12px;
-      min-height: 250px;
-    }
-
-    .chart {
+    .gauge-circle {
       position: relative;
-      margin-top: 22px;
-      height: 160px;
-      border-radius: 18px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
       background:
-        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(10,22,48,0.9), rgba(5,12,28,0.96));
-      background-size: 100% 40px, 70px 100%, auto;
-      overflow: hidden;
-      border: 1px solid rgba(95, 157, 255, 0.12);
+        radial-gradient(circle at center, rgba(5,14,30,0.96) 52%, transparent 53%),
+        conic-gradient(from -90deg, var(--blue) 0 78%, rgba(255,255,255,0.08) 78% 100%);
+      box-shadow:
+        inset 0 0 0 8px rgba(255,255,255,0.03),
+        0 0 30px rgba(50,184,255,0.14);
+      display: grid;
+      place-items: center;
     }
 
-    .chart svg {
+    .gauge-circle::after {
+      content: "";
       position: absolute;
-      inset: 0;
-      width: 100%;
+      inset: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .gauge-value {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .gauge-value strong {
+      display: block;
+      font-size: 46px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .gauge-value span {
+      display: block;
+      margin-top: 6px;
+      color: #87bbff;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .gauge-list {
+      display: grid;
+      gap: 18px;
+    }
+
+    .gauge-line {
+      display: grid;
+      gap: 8px;
+    }
+
+    .gauge-line-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 14px;
+      color: #dbeeff;
+      font-weight: 700;
+    }
+
+    .gauge-track {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .gauge-fill {
       height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      box-shadow: 0 0 14px rgba(50,184,255,0.18);
     }
 
-    .chart path.line {
-      fill: none;
-      stroke: #43b9ff;
-      stroke-width: 4;
-      filter: drop-shadow(0 0 8px rgba(67,185,255,.75));
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .radio-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 6px;
+      flex: 1;
     }
 
-    .chart path.area {
-      fill: url(#lineFill);
+    .radio-item {
+      min-height: 64px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      transition: .22s ease;
     }
 
-    .chart circle {
-      fill: #7bd1ff;
-      filter: drop-shadow(0 0 8px rgba(67,185,255,.8));
+    .radio-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(100,210,255,0.18);
+      background: rgba(255,255,255,0.04);
     }
 
-    .mini-ranking {
-      margin-top: 20px;
+    .radio-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      box-shadow: 0 0 14px currentColor;
+    }
+
+    .radio-dot.blue { color: var(--blue); background: var(--blue); }
+    .radio-dot.red { color: var(--red); background: var(--red); }
+
+    .radio-time {
+      font-size: 13px;
+      color: var(--text-soft);
+      font-weight: 700;
+      min-width: 44px;
+    }
+
+    .radio-text {
+      font-size: 14px;
+      color: #e8f4ff;
+      line-height: 1.35;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .chart-box {
+      min-height: 300px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-wrap {
+      position: relative;
+      flex: 1;
+      margin-top: 14px;
       border-radius: 24px;
-      padding: 18px 22px;
-      min-height: 250px;
+      background:
+        linear-gradient(rgba(80,130,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80,130,255,0.08) 1px, transparent 1px),
+        rgba(255,255,255,0.02);
+      background-size: 48px 48px, 48px 48px, auto;
+      overflow: hidden;
+      padding: 18px 18px 12px;
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 220px;
+      display: block;
+    }
+
+    .chart-path {
+      fill: rgba(50,184,255,0.16);
+      stroke: #42beff;
+      stroke-width: 4;
+      filter: drop-shadow(0 0 12px rgba(50,184,255,0.22));
+    }
+
+    .chart-dot {
+      fill: #7ee9ff;
+      stroke: rgba(255,255,255,0.6);
+      stroke-width: 2;
+    }
+
+    .leaders-box {
+      min-height: 300px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
     }
 
     .leader-list {
       display: grid;
-      gap: 14px;
+      gap: 10px;
       margin-top: 14px;
     }
 
-    .leader-row {
+    .leader-item {
+      min-height: 78px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
       display: grid;
-      grid-template-columns: 54px 60px 1fr auto;
-      gap: 14px;
+      grid-template-columns: 48px 56px 1fr auto;
       align-items: center;
+      gap: 12px;
       padding: 12px 14px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(10,21,46,0.9), rgba(5,12,28,0.95));
-      border: 1px solid rgba(96, 160, 255, 0.12);
+      transition: .22s ease;
     }
 
-    .leader-place {
+    .leader-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(100,210,255,0.18);
+      box-shadow: 0 0 18px rgba(50,184,255,0.06);
+    }
+
+    .leader-rank {
       width: 40px;
       height: 40px;
-      border-radius: 12px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
+      font-size: 18px;
       font-weight: 900;
-      font-size: 20px;
-      color: white;
-      background: linear-gradient(180deg, rgba(39,109,255,0.95), rgba(10,48,130,0.95));
-      box-shadow: inset 0 0 12px rgba(255,255,255,0.08), 0 0 14px rgba(58,184,255,0.22);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .leader-rank.gold {
+      background: linear-gradient(135deg, #ffd25a, #ffb300);
+      color: #281a00;
+      border: none;
+      box-shadow: 0 0 18px rgba(255,203,88,0.24);
+    }
+
+    .leader-rank.silver {
+      background: linear-gradient(135deg, #cbd8ef, #7b8ca9);
+      color: #0d1728;
+      border: none;
+    }
+
+    .leader-rank.bronze {
+      background: linear-gradient(135deg, #ffb08d, #c76a45);
+      color: #241208;
+      border: none;
     }
 
     .leader-avatar {
-      width: 54px;
-      height: 54px;
-      border-radius: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: white;
+    }
+
+    .leader-avatar img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      border: 1px solid rgba(117, 170, 255, 0.18);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.24);
+      display: block;
     }
 
-    .leader-name { font-size: 18px; font-weight: 800; }
-    .leader-role { color: var(--muted); font-size: 14px; margin-top: 4px; }
-    .leader-score { font-size: 28px; font-weight: 900; color: #cfe8ff; }
-
-    .black-emoji {
-      position: fixed;
-      right: 18px;
-      bottom: 14px;
-      font-size: 120px;
-      opacity: 0.09;
-      filter: grayscale(1) brightness(0.55);
-      transform: rotate(-10deg);
-      pointer-events: none;
-      z-index: 0;
-      user-select: none;
+    .leader-main {
+      min-width: 0;
     }
 
-    @media (max-width: 1440px) {
-      .app { grid-template-columns: 320px 1fr; gap: 20px; }
-      .brand-title { font-size: 56px; }
-      .nav-btn .label { font-size: 20px; }
-      .hero { grid-template-columns: 1fr; min-height: auto; }
-      .dashboard { grid-template-columns: 1fr; }
+    .leader-name {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.15;
     }
 
-    @media (max-width: 1100px) {
-      body { overflow: auto; }
-      .app { grid-template-columns: 1fr; height: auto; }
-      .sidebar { min-height: auto; }
-      .topbar { grid-template-columns: 1fr 1fr; }
+    .leader-role {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .leader-score {
+      font-size: 28px;
+      font-weight: 900;
+      color: #dff4ff;
+      white-space: nowrap;
+    }
+
+    .leader-score small {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .badge-channel {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(80,170,255,0.08);
+      border: 1px solid rgba(80,170,255,0.16);
+      color: #9cd9ff;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .mobile-note {
+      display: none;
+    }
+
+    @media (max-width: 1380px) {
+      :root {
+        --sidebar-width: 300px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-grid,
+      .bottom-grid,
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-right {
+        justify-content: center;
+      }
+
+      .danger-gauge {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        min-height: auto;
+      }
+
+      .nav-stack {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stars-box {
+        margin-top: 0;
+      }
     }
 
     @media (max-width: 760px) {
-      .app { padding: 12px; }
-      .topbar { grid-template-columns: 1fr; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .donut-wrap { grid-template-columns: 1fr; justify-items: center; }
-      .leader-row { grid-template-columns: 40px 48px 1fr; }
-      .leader-score { grid-column: 1 / -1; }
-      .brand-title { font-size: 44px; }
-      .hero-title { font-size: 40px; }
-      .nav-btn { min-height: 110px; }
-      .nav-btn .icon { font-size: 40px; }
-      .nav-btn .label { font-size: 18px; }
-      .black-emoji { display: none; }
+      .page {
+        padding: 12px;
+        gap: 14px;
+      }
+
+      .sidebar,
+      .topbar,
+      .hero,
+      .panel,
+      .chart-box,
+      .leaders-box {
+        border-radius: 22px;
+      }
+
+      .nav-stack,
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+
+      .leader-item {
+        grid-template-columns: 40px 52px 1fr;
+      }
+
+      .leader-score {
+        grid-column: 2 / -1;
+        text-align: left;
+      }
+
+      .mobile-note {
+        display: block;
+        color: var(--text-soft);
+        text-align: center;
+        font-size: 12px;
+      }
+
+      .logo-title .blue,
+      .logo-title .red {
+        font-size: 48px;
+      }
+
+      .hero-title {
+        font-size: 34px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="black-emoji">👮🏿</div>
-
-  <div class="app">
+  <div class="page">
+    <!-- LEFT SIDEBAR -->
     <aside class="sidebar glass">
-      <div class="sidebar-frame"></div>
-
-      <div>
-        <section class="brand">
-          <div class="brand-badge">★</div>
-          <h1 class="brand-title">
+      <div class="logo-box">
+        <div class="logo-frame">
+          <div class="logo-title">
             <span class="blue">Police</span>
             <span class="red">Platinum</span>
-          </h1>
-        </section>
-
-        <nav class="nav">
-          <button class="nav-btn" type="button">
-            <div class="icon">👥</div>
-            <div class="label">Руководство</div>
-          </button>
-
-          <button class="nav-btn active" type="button">
-            <div class="icon">📋</div>
-            <div class="label">Общая таблица наказаний</div>
-          </button>
-
-          <button class="nav-btn" type="button">
-            <div class="icon">🏆</div>
-            <div class="label">Топ лидеров PD</div>
-          </button>
-        </nav>
+          </div>
+        </div>
       </div>
 
-      <div class="stars-wrap">
-        <div class="stars">★ ★ ★ ★ ★</div>
-        <div class="stars-label">Police Website</div>
+      <div class="nav-stack">
+        <button class="nav-card" type="button">
+          <div class="nav-card-content">
+            <div class="nav-icon-wrap">
+              <img class="nav-icon" src="./police_png/rukovodstvo.png" alt="Руководство" />
+            </div>
+            <div class="nav-label">Руководство</div>
+            <div class="nav-sub">Основные инструкции и правила</div>
+          </div>
+        </button>
+
+        <button class="nav-card active" type="button">
+          <div class="nav-card-content">
+            <div class="nav-icon-wrap">
+              <img class="nav-icon" src="./police_png/punishment_table.png" alt="Общая таблица наказаний" />
+            </div>
+            <div class="nav-label">Общая таблица<br>наказаний</div>
+            <div class="nav-sub">Все меры и дисциплинарные нормы</div>
+          </div>
+        </button>
+
+        <button class="nav-card" type="button">
+          <div class="nav-card-content">
+            <div class="nav-icon-wrap">
+              <img class="nav-icon" src="./police_png/rating.png" alt="Топ лидеров PD" />
+            </div>
+            <div class="nav-label">Топ лидеров PD</div>
+            <div class="nav-sub">Лучшие сотрудники и лидеры</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="stars-box">
+        <img class="stars-img" src="./police_png/five_zvezd.png" alt="Пять звёзд" />
       </div>
     </aside>
 
-    <main class="content">
-      <header class="topbar glass">
-        <div class="top-item">
-          <div class="top-icon">🛡️</div>
-          <div class="top-meta">
-            <div class="top-kicker">Добро пожаловать</div>
-            <div class="top-value">Офицер</div>
+    <!-- MAIN -->
+    <main class="main">
+      <!-- TOPBAR -->
+      <section class="topbar glass">
+        <div class="welcome-box">
+          <div class="welcome-icon">
+            <img src="./police_png/police_shield.png" alt="Shield" />
+          </div>
+          <div>
+            <div class="top-title">Добро пожаловать,<br>Офицер</div>
+            <div class="top-sub">Police Platinum Department</div>
           </div>
         </div>
 
-        <div class="top-item">
-          <div class="top-icon">📅</div>
-          <div class="top-meta">
-            <div class="top-kicker">Сегодня</div>
-            <div class="top-value">24 мая 2025</div>
+        <div class="top-center">
+          <div class="top-mini">
+            <div class="top-icon">
+              <img src="./police_png/table.png" alt="Дата" />
+            </div>
+            <div>
+              <div class="top-title">Сегодня</div>
+              <div class="top-sub">24 мая 2025</div>
+            </div>
+          </div>
+
+          <div class="top-mini">
+            <div class="top-icon">
+              <img src="./police_png/radio.png" alt="Время" />
+            </div>
+            <div>
+              <div class="top-title">Время</div>
+              <div class="top-sub">20:45</div>
+            </div>
+          </div>
+
+          <div class="top-mini" style="position:relative;">
+            <div class="top-icon">
+              <img src="./police_png/vizov.png" alt="Уведомления" />
+              <span class="notify-dot">3</span>
+            </div>
+            <div>
+              <div class="top-title">Уведомления</div>
+              <div class="top-sub">Новые сигналы и вызовы</div>
+            </div>
           </div>
         </div>
 
-        <div class="top-item">
-          <div class="top-icon">🕒</div>
-          <div class="top-meta">
-            <div class="top-kicker">Время</div>
-            <div class="top-value">20:45</div>
+        <div class="top-right">
+          <div class="profile-wrap">
+            <div class="profile-avatar">
+              <img src="./police_png/police_shield.png" alt="Officer" />
+            </div>
+            <div>
+              <div class="profile-name">Officer Platinum</div>
+              <div class="profile-role">SWAT Division</div>
+            </div>
           </div>
         </div>
-
-        <div class="top-item">
-          <div class="top-icon">🔔</div>
-          <div class="top-meta">
-            <div class="top-kicker">Сигналы</div>
-            <div class="top-value">3 новых</div>
-          </div>
-        </div>
-
-        <div class="top-item" style="border-right:0; justify-content:flex-end;">
-          <img class="leader-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Officer Platinum" />
-          <div class="top-meta">
-            <div class="top-kicker">Officer Platinum</div>
-            <div class="top-value">SWAT Division</div>
-          </div>
-        </div>
-      </header>
-
-      <section style="display:grid; gap:20px; min-width:0;">
-        <section class="hero glass">
-          <div class="hero-copy">
-            <div class="hero-kicker">Служим и защищаем</div>
-            <h2 class="hero-title">Справедливость.<br />Порядок. Безопасность.</h2>
-            <div class="hero-sub">Профессионализм • Честь • Отвага</div>
-          </div>
-
-          <div class="hero-car-wrap">
-            <div class="hero-light-blue"></div>
-            <div class="hero-light-red"></div>
-            <img
-              class="hero-car"
-              src="https://pngimg.com/d/police_car_PNG43.png"
-              alt="Police car"
-            />
-          </div>
-        </section>
-
-        <section class="dashboard">
-          <article class="panel glass">
-            <div class="panel-header">
-              <div class="mini-icon">🛡️</div>
-              <div>
-                <h3 class="panel-title">Оперативная сводка</h3>
-                <div class="panel-sub">За последние 24 часа</div>
-              </div>
-            </div>
-
-            <div class="stats-row">
-              <div class="stat-card">
-                <div class="ico">📄</div>
-                <div class="num">128</div>
-                <div class="txt">Новые отчёты</div>
-              </div>
-              <div class="stat-card">
-                <div class="ico">⛓️</div>
-                <div class="num" style="color:#ff667c;">46</div>
-                <div class="txt">Аресты</div>
-              </div>
-              <div class="stat-card">
-                <div class="ico">👤</div>
-                <div class="num">87</div>
-                <div class="txt">Вызовы</div>
-              </div>
-              <div class="stat-card">
-                <div class="ico">🚓</div>
-                <div class="num">24</div>
-                <div class="txt">Патрули</div>
-              </div>
-            </div>
-          </article>
-
-          <article class="panel glass">
-            <div class="panel-header">
-              <div class="mini-icon">📶</div>
-              <div>
-                <h3 class="panel-title">Уровень общественной безопасности</h3>
-                <div class="panel-sub">Текущий статус по городу</div>
-              </div>
-            </div>
-
-            <div class="donut-wrap">
-              <div class="donut">
-                <div class="donut-inner">
-                  <div class="big">78%</div>
-                  <div class="small">Стабильно</div>
-                </div>
-              </div>
-
-              <div class="levels">
-                <div>
-                  <div class="level-row">
-                    <div>
-                      <div class="level-label">Центр города</div>
-                      <div class="level-bar"><span style="width:82%"></span></div>
-                    </div>
-                    <div class="level-val">82%</div>
-                  </div>
-                </div>
-                <div>
-                  <div class="level-row">
-                    <div>
-                      <div class="level-label">Спальные районы</div>
-                      <div class="level-bar"><span style="width:74%"></span></div>
-                    </div>
-                    <div class="level-val">74%</div>
-                  </div>
-                </div>
-                <div>
-                  <div class="level-row">
-                    <div>
-                      <div class="level-label">Промышленный район</div>
-                      <div class="level-bar"><span style="width:65%"></span></div>
-                    </div>
-                    <div class="level-val">65%</div>
-                  </div>
-                </div>
-                <div>
-                  <div class="level-row">
-                    <div>
-                      <div class="level-label">Пригород</div>
-                      <div class="level-bar"><span style="width:90%"></span></div>
-                    </div>
-                    <div class="level-val">90%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="panel glass">
-            <div class="panel-header">
-              <div class="mini-icon">📻</div>
-              <div>
-                <h3 class="panel-title">Радиопереговоры</h3>
-                <div class="panel-sub">Канал: 1-А-12</div>
-              </div>
-            </div>
-
-            <div class="radio-list">
-              <div class="radio-item">
-                <div class="radio-time">20:42</div>
-                <div class="radio-text">1-А-12 · Патруль начал дежурство в районе Центральной площади.</div>
-              </div>
-              <div class="radio-item">
-                <div class="radio-time" style="color:#ff8e99;">20:38</div>
-                <div class="radio-text">3-В-07 · Требуется подкрепление на 10-20 в районе Доки.</div>
-              </div>
-              <div class="radio-item">
-                <div class="radio-time">20:36</div>
-                <div class="radio-text">2-С-03 · Код 4, всё спокойно.</div>
-              </div>
-              <div class="radio-item" style="border-bottom:0; padding-bottom:0;">
-                <div class="radio-time">20:31</div>
-                <div class="radio-text">1-А-12 · Проверка транспорта на шоссе 68.</div>
-              </div>
-            </div>
-          </article>
-        </section>
-
-        <section style="display:grid; grid-template-columns: 1.3fr .7fr; gap:20px;">
-          <article class="footer-chart panel glass">
-            <div class="panel-header" style="margin-bottom:0;">
-              <div class="mini-icon">📈</div>
-              <div>
-                <h3 class="panel-title">Статистика департамента</h3>
-                <div class="panel-sub">Динамика активности за неделю</div>
-              </div>
-            </div>
-
-            <div class="chart">
-              <svg viewBox="0 0 1000 220" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="lineFill" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stop-color="rgba(67,185,255,0.42)" />
-                    <stop offset="100%" stop-color="rgba(67,185,255,0.02)" />
-                  </linearGradient>
-                </defs>
-                <path class="area" d="M40,180 L120,150 L200,170 L280,120 L360,135 L440,85 L520,110 L600,92 L680,108 L760,72 L840,82 L920,58 L920,220 L40,220 Z"></path>
-                <path class="line" d="M40,180 L120,150 L200,170 L280,120 L360,135 L440,85 L520,110 L600,92 L680,108 L760,72 L840,82 L920,58"></path>
-                <circle cx="40" cy="180" r="5"></circle>
-                <circle cx="120" cy="150" r="5"></circle>
-                <circle cx="200" cy="170" r="5"></circle>
-                <circle cx="280" cy="120" r="5"></circle>
-                <circle cx="360" cy="135" r="5"></circle>
-                <circle cx="440" cy="85" r="5"></circle>
-                <circle cx="520" cy="110" r="5"></circle>
-                <circle cx="600" cy="92" r="5"></circle>
-                <circle cx="680" cy="108" r="5"></circle>
-                <circle cx="760" cy="72" r="5"></circle>
-                <circle cx="840" cy="82" r="5"></circle>
-                <circle cx="920" cy="58" r="5"></circle>
-              </svg>
-            </div>
-          </article>
-
-          <article class="mini-ranking panel glass">
-            <div class="panel-header" style="margin-bottom:6px;">
-              <div class="mini-icon">🏆</div>
-              <div>
-                <h3 class="panel-title">Топ сотрудников</h3>
-                <div class="panel-sub">Лучшие результаты недели</div>
-              </div>
-            </div>
-
-            <div class="leader-list">
-              <div class="leader-row">
-                <div class="leader-place">1</div>
-                <img class="leader-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Officer Platinum" />
-                <div>
-                  <div class="leader-name">Officer Platinum</div>
-                  <div class="leader-role">SWAT Division</div>
-                </div>
-                <div class="leader-score">4 560</div>
-              </div>
-
-              <div class="leader-row">
-                <div class="leader-place" style="background:linear-gradient(180deg, rgba(120,136,170,.95), rgba(63,74,101,.95));">2</div>
-                <img class="leader-avatar" src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?auto=format&fit=crop&w=200&q=80" alt="Detective Morse" />
-                <div>
-                  <div class="leader-name">Detective Morse</div>
-                  <div class="leader-role">Detective Bureau</div>
-                </div>
-                <div class="leader-score">3 890</div>
-              </div>
-
-              <div class="leader-row">
-                <div class="leader-place" style="background:linear-gradient(180deg, rgba(177,115,70,.95), rgba(121,70,36,.95));">3</div>
-                <img class="leader-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="Officer Jackson" />
-                <div>
-                  <div class="leader-name">Officer Jackson</div>
-                  <div class="leader-role">Patrol Division</div>
-                </div>
-                <div class="leader-score">3 450</div>
-              </div>
-            </div>
-          </article>
-        </section>
       </section>
+
+      <!-- HERO -->
+      <section class="hero glass">
+        <div class="hero-left">
+          <div class="hero-kicker">Служим и защищаем</div>
+          <div class="hero-title">
+            <span>СПРАВЕДЛИВОСТЬ.</span>
+            <span>ПОРЯДОК. БЕЗОПАСНОСТЬ.</span>
+          </div>
+          <div class="hero-meta">Профессионализм • Честь • Отвага</div>
+          <div class="hero-line"></div>
+        </div>
+
+        <div class="hero-right">
+          <img class="hero-car" src="./police_png/car.png" alt="Police car" />
+        </div>
+      </section>
+
+      <!-- MIDDLE PANELS -->
+      <section class="dashboard-grid">
+        <div class="panel glass">
+          <div class="panel-title">
+            <div>
+              <div class="panel-title-left">
+                <img src="./police_png/police_shield.png" alt="shield" />
+                <div class="panel-name">Оперативная сводка</div>
+              </div>
+              <div class="panel-sub">За последние 24 часа</div>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <img src="./police_png/report.png" alt="Отчёты" />
+              <div class="stat-value">128</div>
+              <div class="stat-label">Новые отчёты</div>
+            </div>
+
+            <div class="stat-box red">
+              <img src="./police_png/arest.png" alt="Аресты" />
+              <div class="stat-value red">46</div>
+              <div class="stat-label">Аресты</div>
+            </div>
+
+            <div class="stat-box">
+              <img src="./police_png/vizov.png" alt="Вызовы" />
+              <div class="stat-value">87</div>
+              <div class="stat-label">Вызовы</div>
+            </div>
+
+            <div class="stat-box">
+              <img src="./police_png/patrol.png" alt="Патрули" />
+              <div class="stat-value">24</div>
+              <div class="stat-label">Патрули</div>
+            </div>
+          </div>
+
+          <button class="panel-footer-btn" type="button">Перейти к сводке</button>
+        </div>
+
+        <div class="panel glass">
+          <div class="panel-title">
+            <div>
+              <div class="panel-title-left">
+                <img src="./police_png/vizov.png" alt="safety" />
+                <div class="panel-name">Уровень общественной безопасности</div>
+              </div>
+              <div class="panel-sub">Текущий статус по городу</div>
+            </div>
+          </div>
+
+          <div class="danger-gauge">
+            <div class="gauge-circle-wrap">
+              <div class="gauge-circle">
+                <div class="gauge-value">
+                  <strong>78%</strong>
+                  <span>СТАБИЛЬНО</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="gauge-list">
+              <div class="gauge-line">
+                <div class="gauge-line-top">
+                  <span>Центр города</span>
+                  <span>82%</span>
+                </div>
+                <div class="gauge-track"><div class="gauge-fill" style="width:82%"></div></div>
+              </div>
+
+              <div class="gauge-line">
+                <div class="gauge-line-top">
+                  <span>Спальные районы</span>
+                  <span>74%</span>
+                </div>
+                <div class="gauge-track"><div class="gauge-fill" style="width:74%"></div></div>
+              </div>
+
+              <div class="gauge-line">
+                <div class="gauge-line-top">
+                  <span>Промышленный район</span>
+                  <span>65%</span>
+                </div>
+                <div class="gauge-track"><div class="gauge-fill" style="width:65%"></div></div>
+              </div>
+
+              <div class="gauge-line">
+                <div class="gauge-line-top">
+                  <span>Пригород</span>
+                  <span>90%</span>
+                </div>
+                <div class="gauge-track"><div class="gauge-fill" style="width:90%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <button class="panel-footer-btn" type="button">Подробнее</button>
+        </div>
+
+        <div class="panel glass">
+          <div class="panel-title">
+            <div>
+              <div class="panel-title-left">
+                <img src="./police_png/radio.png" alt="Радио" />
+                <div class="panel-name">Радиопереговоры</div>
+              </div>
+              <div class="panel-sub">Канал: 1-A-12</div>
+            </div>
+
+            <div class="badge-channel">Онлайн</div>
+          </div>
+
+          <div class="radio-list">
+            <div class="radio-item">
+              <div class="radio-dot blue"></div>
+              <div class="radio-time">20:42</div>
+              <div class="radio-text"><strong>1-A-12</strong> Патруль начал дежурство в районе Центральной площади.</div>
+            </div>
+
+            <div class="radio-item">
+              <div class="radio-dot red"></div>
+              <div class="radio-time">20:38</div>
+              <div class="radio-text"><strong>3-B-07</strong> Требуется подкрепление на 10-20 в районе Доки.</div>
+            </div>
+
+            <div class="radio-item">
+              <div class="radio-dot blue"></div>
+              <div class="radio-time">20:36</div>
+              <div class="radio-text"><strong>2-C-03</strong> Код 4, всё спокойно.</div>
+            </div>
+
+            <div class="radio-item">
+              <div class="radio-dot blue"></div>
+              <div class="radio-time">20:31</div>
+              <div class="radio-text"><strong>1-A-12</strong> Проверка транспорта на шоссе 68.</div>
+            </div>
+          </div>
+
+          <button class="panel-footer-btn" type="button">Открыть радио</button>
+        </div>
+      </section>
+
+      <!-- BOTTOM -->
+      <section class="bottom-grid">
+        <div class="chart-box glass">
+          <div class="panel-title">
+            <div>
+              <div class="panel-title-left">
+                <img src="./police_png/police_shield.png" alt="shield" />
+                <div class="panel-name">Статистика департамента</div>
+              </div>
+            </div>
+
+            <div class="badge-channel">За неделю</div>
+          </div>
+
+          <div class="chart-wrap">
+            <svg class="chart-svg" viewBox="0 0 900 240" preserveAspectRatio="none">
+              <path class="chart-path"
+                d="M20 190
+                   L90 178
+                   L160 150
+                   L230 165
+                   L300 130
+                   L370 82
+                   L440 118
+                   L510 95
+                   L580 108
+                   L650 78
+                   L720 84
+                   L790 44
+                   L860 92
+                   L860 220
+                   L20 220 Z" />
+              <circle class="chart-dot" cx="20" cy="190" r="5" />
+              <circle class="chart-dot" cx="90" cy="178" r="5" />
+              <circle class="chart-dot" cx="160" cy="150" r="5" />
+              <circle class="chart-dot" cx="230" cy="165" r="5" />
+              <circle class="chart-dot" cx="300" cy="130" r="5" />
+              <circle class="chart-dot" cx="370" cy="82" r="5" />
+              <circle class="chart-dot" cx="440" cy="118" r="5" />
+              <circle class="chart-dot" cx="510" cy="95" r="5" />
+              <circle class="chart-dot" cx="580" cy="108" r="5" />
+              <circle class="chart-dot" cx="650" cy="78" r="5" />
+              <circle class="chart-dot" cx="720" cy="84" r="5" />
+              <circle class="chart-dot" cx="790" cy="44" r="5" />
+              <circle class="chart-dot" cx="860" cy="92" r="5" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="leaders-box glass">
+          <div class="panel-title">
+            <div>
+              <div class="panel-title-left">
+                <img src="./police_png/rating.png" alt="rating" />
+                <div class="panel-name">Топ сотрудников</div>
+              </div>
+            </div>
+
+            <div class="badge-channel">Смотреть всех</div>
+          </div>
+
+          <div class="leader-list">
+            <div class="leader-item">
+              <div class="leader-rank gold">1</div>
+              <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
+              <div class="leader-main">
+                <div class="leader-name">Officer Platinum</div>
+                <div class="leader-role">SWAT Division</div>
+              </div>
+              <div class="leader-score">4 560<small>очков</small></div>
+            </div>
+
+            <div class="leader-item">
+              <div class="leader-rank silver">2</div>
+              <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
+              <div class="leader-main">
+                <div class="leader-name">Detective Morse</div>
+                <div class="leader-role">Detective Bureau</div>
+              </div>
+              <div class="leader-score">3 890<small>очков</small></div>
+            </div>
+
+            <div class="leader-item">
+              <div class="leader-rank bronze">3</div>
+              <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
+              <div class="leader-main">
+                <div class="leader-name">Officer Jackson</div>
+                <div class="leader-role">Patrol Division</div>
+              </div>
+              <div class="leader-score">3 450<small>очков</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="mobile-note">Police Platinum • неоновая версия сайта</div>
     </main>
   </div>
+
+  <script>
+    const navCards = document.querySelectorAll('.nav-card');
+    navCards.forEach(card => {
+      card.addEventListener('click', () => {
+        navCards.forEach(x => x.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+
+    // Автоподсветка иконки ареста в более красный тон
+    const arrestIcons = document.querySelectorAll('img[src*="arest.png"]');
+    arrestIcons.forEach(icon => {
+      icon.classList.add('red-arrest');
+    });
+  </script>
 </body>
 </html>
