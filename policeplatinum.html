@@ -15,54 +15,58 @@
     }
 
     :root {
-      --bg-main: #030713;
-      --bg-panel: rgba(7, 15, 32, 0.82);
-      --bg-card: rgba(8, 18, 38, 0.82);
-      --bg-card-2: rgba(11, 22, 46, 0.88);
-      --bg-soft: rgba(255,255,255,0.04);
+      --bg-0: #020611;
+      --bg-1: #040b18;
+      --bg-2: #071120;
+      --panel: rgba(6, 14, 30, 0.82);
+      --panel-2: rgba(7, 17, 36, 0.90);
+      --card: rgba(8, 19, 39, 0.88);
+      --card-2: rgba(10, 21, 45, 0.92);
 
-      --border: rgba(120, 185, 255, 0.16);
-      --border-strong: rgba(120, 210, 255, 0.28);
+      --text: #eef7ff;
+      --text-soft: #a8bde0;
+      --text-dim: #6f84aa;
 
-      --text: #edf6ff;
-      --text-soft: #9cb0d0;
-      --text-dim: #6e81a5;
+      --blue: #34b8ff;
+      --blue-2: #0b7fff;
+      --cyan: #6feeff;
+      --red: #ff4568;
+      --red-2: #ff8454;
+      --gold: #ffcb59;
+      --violet: #8f7eff;
 
-      --blue: #32b8ff;
-      --blue-2: #007dff;
-      --cyan: #58e9ff;
-      --red: #ff4567;
-      --red-2: #ff784f;
-      --gold: #ffcb58;
-      --violet: #8c7dff;
+      --border: rgba(120, 180, 255, 0.16);
+      --border-strong: rgba(120, 215, 255, 0.28);
+      --border-red: rgba(255, 95, 120, 0.18);
 
-      --shadow-blue: 0 0 24px rgba(50,184,255,0.22);
-      --shadow-red: 0 0 24px rgba(255,69,103,0.18);
-      --shadow-soft: 0 16px 42px rgba(0,0,0,0.34);
+      --shadow-soft: 0 16px 48px rgba(0,0,0,0.34);
+      --shadow-blue: 0 0 24px rgba(52,184,255,0.24);
+      --shadow-red: 0 0 24px rgba(255,69,104,0.18);
 
-      --radius-xl: 30px;
-      --radius-lg: 24px;
-      --radius: 20px;
-      --radius-sm: 16px;
+      --r-xl: 34px;
+      --r-lg: 26px;
+      --r-md: 22px;
+      --r-sm: 18px;
 
       --sidebar-width: 340px;
+      --topbar-height: 96px;
     }
 
     html, body {
       min-height: 100%;
-      background: var(--bg-main);
-      color: var(--text);
       font-family: "Inter", sans-serif;
+      background: var(--bg-0);
+      color: var(--text);
+      overflow-x: hidden;
     }
 
     body {
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 14% 18%, rgba(0,130,255,0.18), transparent 26%),
-        radial-gradient(circle at 86% 16%, rgba(255,64,102,0.16), transparent 24%),
-        radial-gradient(circle at 76% 72%, rgba(60,180,255,0.12), transparent 24%),
-        linear-gradient(180deg, #020611 0%, #061121 48%, #030713 100%);
       position: relative;
+      background:
+        radial-gradient(circle at 12% 14%, rgba(52,184,255,0.16), transparent 24%),
+        radial-gradient(circle at 88% 14%, rgba(255,69,104,0.14), transparent 22%),
+        radial-gradient(circle at 80% 72%, rgba(52,184,255,0.10), transparent 24%),
+        linear-gradient(180deg, var(--bg-0), var(--bg-2));
     }
 
     body::before {
@@ -71,52 +75,58 @@
       inset: 0;
       pointer-events: none;
       background:
-        linear-gradient(rgba(75,130,255,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(75,130,255,0.06) 1px, transparent 1px);
-      background-size: 44px 44px;
+        linear-gradient(rgba(80,130,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80,130,255,0.06) 1px, transparent 1px);
+      background-size: 46px 46px;
       opacity: .22;
-      mask-image: radial-gradient(circle at center, black 35%, transparent 100%);
-      animation: gridMove 16s linear infinite;
-    }
-
-    body::after {
-      content: "🖤";
-      position: fixed;
-      right: 28px;
-      bottom: 18px;
-      font-size: 110px;
-      opacity: 0.05;
-      filter: blur(1px);
-      pointer-events: none;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+      animation: gridShift 18s linear infinite;
       z-index: 0;
     }
 
-    @keyframes gridMove {
-      from { transform: translate3d(0,0,0); }
-      to { transform: translate3d(44px,44px,0); }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 80%, rgba(52,184,255,0.08), transparent 14%),
+        radial-gradient(circle at 82% 75%, rgba(255,69,104,0.08), transparent 16%);
+      z-index: 0;
+      animation: auraMove 8s ease-in-out infinite alternate;
     }
 
-    .page {
+    @keyframes gridShift {
+      from { transform: translate3d(0,0,0); }
+      to { transform: translate3d(46px,46px,0); }
+    }
+
+    @keyframes auraMove {
+      from { opacity: .7; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.04); }
+    }
+
+    .app {
       position: relative;
       z-index: 1;
       min-height: 100vh;
       display: grid;
       grid-template-columns: var(--sidebar-width) 1fr;
-      gap: 24px;
-      padding: 20px;
+      gap: 22px;
+      padding: 18px;
     }
 
     .glass {
       position: relative;
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02)),
-        var(--bg-panel);
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
+        var(--panel);
       border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-soft);
-      overflow: hidden;
+      border-radius: var(--r-xl);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
     }
 
     .glass::before {
@@ -125,143 +135,164 @@
       inset: 0;
       pointer-events: none;
       background:
-        linear-gradient(135deg, rgba(90, 180, 255, 0.10), transparent 20%, transparent 78%, rgba(255, 90, 120, 0.08));
+        linear-gradient(135deg, rgba(52,184,255,0.08), transparent 25%, transparent 74%, rgba(255,69,104,0.06)),
+        radial-gradient(circle at 50% -20%, rgba(255,255,255,0.05), transparent 35%);
       opacity: .95;
     }
 
+    /* SIDEBAR */
     .sidebar {
-      padding: 18px;
+      min-height: calc(100vh - 36px);
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      min-height: calc(100vh - 40px);
+      position: sticky;
+      top: 18px;
     }
 
-    .logo-box {
-      position: relative;
-      min-height: 200px;
-      padding: 18px;
+    .sidebar::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 18px;
+      bottom: 18px;
+      width: 3px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(52,184,255,0.0), rgba(52,184,255,0.75), rgba(255,69,104,0.55), rgba(255,69,104,0.0));
+      filter: blur(.4px);
+      opacity: .9;
+      pointer-events: none;
+    }
+
+    .brand {
+      min-height: 208px;
       border-radius: 30px;
+      position: relative;
+      overflow: hidden;
       background:
-        radial-gradient(circle at 15% 30%, rgba(60,180,255,0.18), transparent 35%),
-        radial-gradient(circle at 85% 70%, rgba(255,70,110,0.16), transparent 35%),
-        linear-gradient(180deg, rgba(8,16,34,0.96), rgba(5,10,23,0.94));
-      border: 1px solid rgba(120,185,255,0.20);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.04),
-        0 0 30px rgba(0,0,0,0.32);
+        radial-gradient(circle at 18% 28%, rgba(52,184,255,0.22), transparent 34%),
+        radial-gradient(circle at 84% 70%, rgba(255,69,104,0.20), transparent 34%),
+        linear-gradient(180deg, rgba(7,14,28,0.98), rgba(5,10,23,0.94));
+      border: 1px solid rgba(120,180,255,0.18);
       display: grid;
       place-items: center;
-      overflow: hidden;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.03),
+        0 0 28px rgba(0,0,0,0.28);
     }
 
-    .logo-box::before,
-    .logo-box::after {
+    .brand::before,
+    .brand::after {
       content: "";
       position: absolute;
       top: 0;
       bottom: 0;
       width: 5px;
       border-radius: 999px;
-      filter: blur(1px);
-      opacity: .92;
-      animation: sirenGlow 1.8s ease-in-out infinite alternate;
+      opacity: .95;
+      filter: blur(.5px);
+      animation: sirenBlink 1.5s ease-in-out infinite alternate;
     }
 
-    .logo-box::before {
+    .brand::before {
       left: 0;
       background: linear-gradient(180deg, transparent, var(--blue), var(--cyan), transparent);
-      box-shadow: 0 0 16px rgba(50,184,255,0.8);
+      box-shadow: 0 0 18px rgba(52,184,255,0.8);
     }
 
-    .logo-box::after {
+    .brand::after {
       right: 0;
-      background: linear-gradient(180deg, transparent, var(--red), #ff8c54, transparent);
-      box-shadow: 0 0 16px rgba(255,69,103,0.8);
-      animation-delay: .6s;
+      background: linear-gradient(180deg, transparent, var(--red), var(--red-2), transparent);
+      box-shadow: 0 0 18px rgba(255,69,104,0.8);
+      animation-delay: .7s;
     }
 
-    @keyframes sirenGlow {
-      from { opacity: .38; transform: scaleY(.88); }
+    @keyframes sirenBlink {
+      from { opacity: .35; transform: scaleY(.86); }
       to { opacity: 1; transform: scaleY(1); }
     }
 
-    .logo-frame {
-      width: 100%;
-      min-height: 148px;
+    .brand-frame {
+      width: calc(100% - 28px);
+      min-height: 156px;
       border-radius: 28px;
       border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(135deg, rgba(50,184,255,0.08), rgba(255,69,103,0.08)),
-        rgba(0,0,0,0.30);
       display: grid;
       place-items: center;
-      padding: 20px;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, rgba(52,184,255,0.06), rgba(255,69,104,0.06)),
+        rgba(0,0,0,0.24);
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,0.04),
-        0 0 22px rgba(0,0,0,0.22);
+        inset 0 0 0 1px rgba(255,255,255,0.03),
+        0 0 20px rgba(0,0,0,0.22);
     }
 
-    .logo-title {
+    .brand-title {
       text-align: center;
-      line-height: 0.95;
-      font-weight: 900;
-      letter-spacing: -0.05em;
-      text-transform: none;
+      line-height: .95;
       user-select: none;
     }
 
-    .logo-title .blue {
+    .brand-title .police {
       display: block;
       font-size: 62px;
-      color: #8ed8ff;
+      font-weight: 900;
+      letter-spacing: -.05em;
+      color: #9adfff;
       text-shadow:
-        0 0 6px rgba(90,180,255,0.4),
-        0 0 20px rgba(50,184,255,0.65),
-        0 0 40px rgba(50,184,255,0.32);
-      animation: policeBlink 1.35s ease-in-out infinite alternate;
+        0 0 8px rgba(52,184,255,0.45),
+        0 0 20px rgba(52,184,255,0.72),
+        0 0 44px rgba(52,184,255,0.28);
+      animation: bluePulse 1.4s ease-in-out infinite alternate;
     }
 
-    .logo-title .red {
+    .brand-title .platinum {
       display: block;
-      font-size: 60px;
-      color: #ffb1b9;
-      text-shadow:
-        0 0 6px rgba(255,100,120,0.35),
-        0 0 20px rgba(255,69,103,0.65),
-        0 0 40px rgba(255,69,103,0.30);
-      animation: platinumBlink 1.35s ease-in-out infinite alternate;
-      animation-delay: .7s;
       margin-top: 2px;
+      font-size: 60px;
+      font-weight: 900;
+      letter-spacing: -.05em;
+      color: #ffbcc5;
+      text-shadow:
+        0 0 8px rgba(255,69,104,0.45),
+        0 0 20px rgba(255,69,104,0.72),
+        0 0 44px rgba(255,69,104,0.28);
+      animation: redPulse 1.4s ease-in-out infinite alternate;
+      animation-delay: .7s;
     }
 
-    @keyframes policeBlink {
-      from { opacity: .74; filter: brightness(.92); }
+    @keyframes bluePulse {
+      from { opacity: .75; filter: brightness(.92); }
       to { opacity: 1; filter: brightness(1.14); }
     }
 
-    @keyframes platinumBlink {
-      from { opacity: .74; filter: brightness(.92); }
-      to { opacity: 1; filter: brightness(1.12); }
+    @keyframes redPulse {
+      from { opacity: .75; filter: brightness(.92); }
+      to { opacity: 1; filter: brightness(1.14); }
     }
 
-    .nav-stack {
+    .dock {
       display: grid;
       gap: 14px;
-      margin-top: 8px;
+      position: relative;
     }
 
-    .nav-card {
+    .dock-btn {
       position: relative;
+      border: none;
       width: 100%;
       min-height: 142px;
       border-radius: 28px;
-      border: 1px solid rgba(120,185,255,0.16);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
-        rgba(4,10,24,0.92);
-      overflow: hidden;
       cursor: pointer;
+      overflow: hidden;
+      text-align: left;
+      color: var(--text);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)),
+        rgba(5,12,27,0.94);
+      border: 1px solid rgba(120,185,255,0.14);
       transition:
         transform .28s cubic-bezier(.22,.68,0,1),
         border-color .28s ease,
@@ -270,191 +301,234 @@
       box-shadow: 0 10px 28px rgba(0,0,0,0.20);
     }
 
-    .nav-card::before {
+    .dock-btn::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(135deg, rgba(60,180,255,0.08), transparent 30%, transparent 70%, rgba(90,120,255,0.04)),
-        radial-gradient(circle at 50% -20%, rgba(80,180,255,0.14), transparent 45%);
-      opacity: .9;
       pointer-events: none;
-    }
-
-    .nav-card:hover {
-      transform: translateY(-4px) scale(1.01);
-      border-color: rgba(100, 210, 255, 0.34);
-      box-shadow:
-        0 18px 36px rgba(0,0,0,0.28),
-        0 0 22px rgba(50,184,255,0.14);
-    }
-
-    .nav-card.active {
-      border-color: rgba(90,220,255,0.42);
-      box-shadow:
-        0 20px 40px rgba(0,0,0,0.30),
-        0 0 28px rgba(50,184,255,0.24),
-        inset 0 0 0 1px rgba(120,220,255,0.10);
       background:
-        linear-gradient(180deg, rgba(80,160,255,0.10), rgba(255,255,255,0.02)),
-        rgba(5,15,36,0.96);
+        linear-gradient(135deg, rgba(52,184,255,0.08), transparent 30%, transparent 70%, rgba(143,126,255,0.05)),
+        radial-gradient(circle at 50% -12%, rgba(120,215,255,0.12), transparent 40%);
+      opacity: .95;
     }
 
-    .nav-card-content {
+    .dock-btn::after {
+      content: "";
+      position: absolute;
+      left: -50%;
+      top: 0;
+      width: 40%;
+      height: 100%;
+      transform: skewX(-18deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+      opacity: 0;
+    }
+
+    .dock-btn:hover::after {
+      animation: shineMove .9s ease;
+      opacity: 1;
+    }
+
+    @keyframes shineMove {
+      from { left: -50%; }
+      to { left: 130%; }
+    }
+
+    .dock-btn:hover {
+      transform: translateY(-4px) scale(1.01);
+      border-color: rgba(120,215,255,0.30);
+      box-shadow:
+        0 18px 38px rgba(0,0,0,0.28),
+        0 0 22px rgba(52,184,255,0.14);
+    }
+
+    .dock-btn.active {
+      border-color: rgba(120,220,255,0.42);
+      box-shadow:
+        0 20px 42px rgba(0,0,0,0.30),
+        0 0 26px rgba(52,184,255,0.20),
+        inset 0 0 0 1px rgba(120,220,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(52,184,255,0.10), rgba(255,255,255,0.02)),
+        rgba(7,18,40,0.98);
+    }
+
+    .dock-btn.active .dock-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .dock-btn-wrap {
       position: relative;
       z-index: 2;
       height: 100%;
-      padding: 20px 18px;
+      padding: 18px;
       display: grid;
-      justify-items: center;
       align-content: center;
-      gap: 12px;
+      justify-items: center;
       text-align: center;
+      gap: 12px;
     }
 
-    .nav-icon-wrap {
-      width: 76px;
-      height: 76px;
+    .dock-icon-shell {
+      width: 82px;
+      height: 82px;
+      border-radius: 24px;
       display: grid;
       place-items: center;
-      border-radius: 22px;
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
       transition:
-        transform .32s cubic-bezier(.22,.68,0,1),
-        box-shadow .32s ease,
-        filter .32s ease;
-      animation: idleFloat 3.8s ease-in-out infinite;
+        transform .34s cubic-bezier(.22,.68,0,1),
+        box-shadow .34s ease,
+        filter .34s ease;
+      animation: iconIdleFloat 3.5s ease-in-out infinite;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
     }
 
-    .nav-card:hover .nav-icon-wrap,
-    .nav-card.active .nav-icon-wrap {
+    .dock-btn:hover .dock-icon-shell,
+    .dock-btn.active .dock-icon-shell {
       transform: translateY(-10px) scale(1.08);
       box-shadow:
-        0 0 22px rgba(50,184,255,0.25),
-        0 0 40px rgba(50,184,255,0.12),
-        inset 0 1px 0 rgba(255,255,255,0.06);
+        0 0 24px rgba(52,184,255,0.22),
+        0 0 42px rgba(52,184,255,0.12);
       filter: brightness(1.10);
+      animation: iconHoverFloat 1.7s ease-in-out infinite;
     }
 
-    @keyframes idleFloat {
-      0%, 100% { transform: translateY(0); }
+    @keyframes iconIdleFloat {
+      0%,100% { transform: translateY(0); }
       50% { transform: translateY(-4px); }
     }
 
-    .nav-card:hover .nav-icon-wrap {
-      animation: hoverFloat 1.8s ease-in-out infinite;
+    @keyframes iconHoverFloat {
+      0%,100% { transform: translateY(-8px) scale(1.06); }
+      50% { transform: translateY(-14px) scale(1.10); }
     }
 
-    @keyframes hoverFloat {
-      0%,100% { transform: translateY(-8px) scale(1.05); }
-      50% { transform: translateY(-14px) scale(1.08); }
-    }
-
-    .nav-icon {
-      width: 52px;
-      height: 52px;
+    .dock-icon {
+      width: 56px;
+      height: 56px;
       object-fit: contain;
       display: block;
       filter:
-        drop-shadow(0 0 12px rgba(50,184,255,0.30))
-        drop-shadow(0 0 24px rgba(50,184,255,0.18));
-      transition: filter .3s ease, transform .3s ease;
+        drop-shadow(0 0 14px rgba(52,184,255,0.24))
+        drop-shadow(0 0 24px rgba(52,184,255,0.16));
+      transition: transform .3s ease, filter .3s ease;
     }
 
-    .nav-card:hover .nav-icon,
-    .nav-card.active .nav-icon {
-      transform: scale(1.04);
+    .dock-btn:hover .dock-icon,
+    .dock-btn.active .dock-icon {
+      transform: scale(1.05);
       filter:
-        drop-shadow(0 0 16px rgba(88,233,255,0.44))
-        drop-shadow(0 0 30px rgba(50,184,255,0.24));
+        drop-shadow(0 0 16px rgba(111,238,255,0.44))
+        drop-shadow(0 0 32px rgba(52,184,255,0.22));
     }
 
-    .nav-icon.red-arrest {
-      filter:
-        hue-rotate(145deg)
-        saturate(2.2)
-        drop-shadow(0 0 12px rgba(255,75,95,0.36))
-        drop-shadow(0 0 26px rgba(255,75,95,0.20));
-    }
-
-    .nav-card:hover .nav-icon.red-arrest,
-    .nav-card.active .nav-icon.red-arrest {
+    .dock-icon.red-tone {
       filter:
         hue-rotate(145deg)
-        saturate(2.35)
+        saturate(2.3)
+        drop-shadow(0 0 14px rgba(255,85,110,0.30))
+        drop-shadow(0 0 26px rgba(255,85,110,0.18));
+    }
+
+    .dock-btn:hover .dock-icon.red-tone,
+    .dock-btn.active .dock-icon.red-tone {
+      filter:
+        hue-rotate(145deg)
+        saturate(2.5)
         brightness(1.08)
-        drop-shadow(0 0 16px rgba(255,80,110,0.52))
-        drop-shadow(0 0 32px rgba(255,80,110,0.28));
+        drop-shadow(0 0 18px rgba(255,85,110,0.48))
+        drop-shadow(0 0 34px rgba(255,85,110,0.24));
     }
 
-    .nav-label {
+    .dock-label {
       font-size: 18px;
       font-weight: 800;
       line-height: 1.15;
-      color: #f0f7ff;
       transition: color .28s ease, text-shadow .28s ease;
     }
 
-    .nav-sub {
+    .dock-sub {
       font-size: 12px;
       color: var(--text-soft);
-      line-height: 1.3;
       transition: color .28s ease;
     }
 
-    .nav-card:hover .nav-label,
-    .nav-card.active .nav-label {
+    .dock-btn:hover .dock-label,
+    .dock-btn.active .dock-label {
       color: #fff;
-      text-shadow: 0 0 14px rgba(90,210,255,0.16);
+      text-shadow: 0 0 16px rgba(120,220,255,0.14);
     }
 
-    .nav-card:hover .nav-sub,
-    .nav-card.active .nav-sub {
-      color: #bddcff;
+    .dock-btn:hover .dock-sub,
+    .dock-btn.active .dock-sub {
+      color: #c4deff;
     }
 
-    .stars-box {
+    .dock-arrow {
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateX(-8px) translateY(-50%);
+      width: 34px;
+      height: 68px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .28s ease;
+      filter: drop-shadow(0 0 10px rgba(52,184,255,0.35));
+    }
+
+    .dock-arrow::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      background: linear-gradient(180deg, #7fefff, #26a7ff);
+    }
+
+    .stars-panel {
       margin-top: auto;
-      min-height: 118px;
+      min-height: 122px;
       border-radius: 30px;
-      border: 1px solid rgba(120,185,255,0.16);
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
-        rgba(5,11,26,0.92);
+        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
+        rgba(5,11,26,0.94);
+      border: 1px solid rgba(120,185,255,0.14);
       display: grid;
       place-items: center;
-      padding: 18px;
       position: relative;
       overflow: hidden;
     }
 
-    .stars-box::before {
+    .stars-panel::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(70,160,255,0.12), transparent 55%);
+      background: radial-gradient(circle at center, rgba(52,184,255,0.10), transparent 55%);
       pointer-events: none;
     }
 
     .stars-img {
-      width: 210px;
+      width: 216px;
       max-width: 100%;
       object-fit: contain;
       display: block;
       filter:
-        drop-shadow(0 0 18px rgba(50,184,255,0.18))
-        drop-shadow(0 0 28px rgba(50,184,255,0.12));
-      animation: starsGlow 2.8s ease-in-out infinite alternate;
+        drop-shadow(0 0 16px rgba(52,184,255,0.16))
+        drop-shadow(0 0 28px rgba(52,184,255,0.10));
+      animation: starGlow 2.6s ease-in-out infinite alternate;
+      position: relative;
+      z-index: 2;
     }
 
-    @keyframes starsGlow {
+    @keyframes starGlow {
       from { transform: translateY(0); opacity: .92; }
       to { transform: translateY(-2px); opacity: 1; }
     }
 
+    /* MAIN AREA */
     .main {
       display: grid;
       gap: 20px;
@@ -462,16 +536,16 @@
     }
 
     .topbar {
-      min-height: 94px;
+      min-height: var(--topbar-height);
       padding: 18px 22px;
       display: grid;
-      grid-template-columns: 1.15fr 1.1fr 0.95fr;
-      gap: 18px;
+      grid-template-columns: 1.1fr 1.1fr 0.95fr;
       align-items: center;
+      gap: 18px;
     }
 
-    .welcome-box,
-    .top-center,
+    .top-group,
+    .top-mid,
     .top-right {
       display: flex;
       align-items: center;
@@ -479,80 +553,79 @@
       min-width: 0;
     }
 
-    .welcome-icon,
-    .top-icon,
-    .profile-avatar {
-      width: 52px;
-      height: 52px;
-      min-width: 52px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
-    }
-
-    .welcome-icon img,
-    .top-icon img,
-    .profile-avatar img {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-      display: block;
-    }
-
-    .top-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #dff1ff;
-      line-height: 1.25;
-    }
-
-    .top-sub {
-      font-size: 12px;
-      color: var(--text-soft);
-      margin-top: 3px;
-    }
-
-    .top-center {
+    .top-mid {
       justify-content: center;
       gap: 28px;
-    }
-
-    .top-mini {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
     }
 
     .top-right {
       justify-content: flex-end;
     }
 
-    .notify-dot {
+    .mini-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mini-icon,
+    .profile-avatar {
+      width: 54px;
+      height: 54px;
+      min-width: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+      position: relative;
+    }
+
+    .mini-icon img,
+    .profile-avatar img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .mini-title {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #e6f3ff;
+    }
+
+    .mini-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .notify-badge {
       position: absolute;
       top: -4px;
       right: -4px;
       width: 22px;
       height: 22px;
       border-radius: 999px;
-      display: grid;
-      place-items: center;
       background: linear-gradient(135deg, var(--blue), var(--cyan));
       color: white;
+      display: grid;
+      place-items: center;
       font-size: 11px;
       font-weight: 900;
-      box-shadow: 0 0 14px rgba(50,184,255,0.35);
+      box-shadow: 0 0 16px rgba(52,184,255,0.34);
     }
 
-    .profile-wrap {
+    .profile-box {
       display: flex;
       align-items: center;
       gap: 12px;
       padding: 10px 14px;
-      border-radius: 22px;
+      border-radius: 24px;
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.08);
       min-width: 0;
@@ -571,21 +644,45 @@
     .profile-name {
       font-size: 18px;
       font-weight: 900;
-      line-height: 1.15;
+      line-height: 1.1;
     }
 
     .profile-role {
-      font-size: 12px;
-      color: #afd2ff;
       margin-top: 4px;
+      font-size: 12px;
+      color: #abd5ff;
+    }
+
+    /* SECTIONS */
+    .section-shell {
+      position: relative;
+      min-height: 620px;
+    }
+
+    .section-view {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(14px) scale(.985);
+      pointer-events: none;
+      transition:
+        opacity .42s ease,
+        transform .42s cubic-bezier(.22,.68,0,1);
+    }
+
+    .section-view.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      position: relative;
     }
 
     .hero {
-      min-height: 360px;
+      min-height: 368px;
       padding: 28px;
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 14px;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 12px;
       align-items: center;
       position: relative;
       overflow: hidden;
@@ -596,9 +693,9 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 74% 38%, rgba(50,184,255,0.14), transparent 18%),
-        radial-gradient(circle at 90% 38%, rgba(255,69,103,0.18), transparent 22%),
-        linear-gradient(90deg, rgba(10,26,56,0.65), rgba(7,12,28,0.18) 45%, rgba(7,12,28,0));
+        radial-gradient(circle at 76% 40%, rgba(52,184,255,0.16), transparent 18%),
+        radial-gradient(circle at 92% 40%, rgba(255,69,104,0.18), transparent 22%),
+        linear-gradient(90deg, rgba(10,26,56,0.68), rgba(7,12,28,0.16) 45%, rgba(7,12,28,0));
       pointer-events: none;
       z-index: 1;
     }
@@ -612,21 +709,20 @@
     .hero-kicker {
       font-size: 18px;
       font-weight: 800;
-      color: #38b7ff;
-      letter-spacing: .08em;
       text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #35b6ff;
       margin-bottom: 14px;
     }
 
     .hero-title {
-      font-size: clamp(40px, 4vw, 68px);
-      line-height: .96;
+      font-size: clamp(42px, 4vw, 70px);
       font-weight: 900;
-      letter-spacing: -0.06em;
-      text-transform: uppercase;
+      line-height: .96;
+      letter-spacing: -.06em;
       font-style: italic;
-      text-shadow: 0 8px 30px rgba(0,0,0,0.22);
-      max-width: 760px;
+      text-transform: uppercase;
+      text-shadow: 0 8px 28px rgba(0,0,0,0.22);
     }
 
     .hero-title span {
@@ -637,35 +733,35 @@
       margin-top: 18px;
       font-size: 24px;
       font-weight: 700;
-      color: #a9c3e9;
+      color: #a7c1e8;
     }
 
     .hero-line {
-      margin-top: 22px;
-      width: 420px;
+      width: 430px;
       max-width: 100%;
       height: 8px;
+      margin-top: 22px;
       border-radius: 999px;
       background:
-        linear-gradient(90deg, rgba(50,184,255,1), rgba(50,184,255,0.08) 34%, rgba(255,69,103,0.08) 66%, rgba(255,69,103,1));
+        linear-gradient(90deg, var(--blue), rgba(52,184,255,0.08) 35%, rgba(255,69,104,0.08) 65%, var(--red));
       box-shadow:
-        0 0 18px rgba(50,184,255,0.22),
-        0 0 18px rgba(255,69,103,0.18);
+        0 0 18px rgba(52,184,255,0.20),
+        0 0 18px rgba(255,69,104,0.14);
     }
 
     .hero-right {
       display: flex;
-      align-items: center;
       justify-content: flex-end;
+      align-items: center;
     }
 
     .hero-car {
-      width: min(720px, 100%);
+      width: min(730px, 100%);
       object-fit: contain;
       display: block;
       filter:
-        drop-shadow(0 0 30px rgba(50,184,255,0.22))
-        drop-shadow(0 0 26px rgba(255,69,103,0.12));
+        drop-shadow(0 0 30px rgba(52,184,255,0.22))
+        drop-shadow(0 0 22px rgba(255,69,104,0.14));
       animation: carFloat 4s ease-in-out infinite;
     }
 
@@ -674,168 +770,174 @@
       50% { transform: translateY(-6px); }
     }
 
-    .dashboard-grid {
+    .cards-3 {
+      margin-top: 20px;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 20px;
     }
 
     .panel {
-      min-height: 250px;
+      min-height: 260px;
       padding: 22px;
       display: flex;
       flex-direction: column;
       position: relative;
     }
 
-    .panel-title {
+    .panel-head {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 16px;
     }
 
-    .panel-title-left {
+    .panel-head-left {
       display: flex;
       align-items: center;
       gap: 10px;
-      min-width: 0;
     }
 
-    .panel-title-left img {
+    .panel-head-left img {
       width: 22px;
       height: 22px;
       object-fit: contain;
       display: block;
-      filter: drop-shadow(0 0 10px rgba(50,184,255,0.18));
+      filter: drop-shadow(0 0 10px rgba(52,184,255,0.18));
     }
 
-    .panel-name {
+    .panel-title {
       font-size: 22px;
       font-weight: 900;
       line-height: 1.1;
     }
 
     .panel-sub {
+      margin-top: 5px;
       font-size: 12px;
       color: var(--text-soft);
-      margin-top: 5px;
     }
 
-    .stats-row {
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(52,184,255,0.08);
+      border: 1px solid rgba(52,184,255,0.16);
+      color: #96daff;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
       margin-top: 10px;
     }
 
-    .stat-box {
+    .stat-card {
       min-height: 130px;
       border-radius: 22px;
-      background: rgba(255,255,255,0.025);
       border: 1px solid rgba(255,255,255,0.06);
-      padding: 16px 14px;
+      background: rgba(255,255,255,0.024);
       display: grid;
-      justify-items: center;
       align-content: center;
+      justify-items: center;
       gap: 10px;
+      padding: 16px 14px;
       text-align: center;
-      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+      transition:
+        transform .22s ease,
+        border-color .22s ease,
+        box-shadow .22s ease;
     }
 
-    .stat-box:hover {
+    .stat-card:hover {
       transform: translateY(-3px);
-      border-color: rgba(100,210,255,0.20);
-      box-shadow: 0 0 20px rgba(50,184,255,0.08);
+      border-color: rgba(120,215,255,0.20);
+      box-shadow: 0 0 18px rgba(52,184,255,0.08);
     }
 
-    .stat-box img {
+    .stat-card img {
       width: 34px;
       height: 34px;
       object-fit: contain;
       display: block;
-      filter: drop-shadow(0 0 14px rgba(50,184,255,0.18));
+      filter: drop-shadow(0 0 14px rgba(52,184,255,0.18));
     }
 
-    .stat-box.red img {
+    .stat-card.red img {
       filter:
         hue-rotate(145deg)
-        saturate(2.2)
-        drop-shadow(0 0 14px rgba(255,70,100,0.28));
+        saturate(2.3)
+        drop-shadow(0 0 14px rgba(255,90,110,0.28));
     }
 
-    .stat-value {
+    .stat-number {
       font-size: 34px;
       font-weight: 900;
       line-height: 1;
     }
 
-    .stat-value.red {
-      color: #ff5e72;
-      text-shadow: 0 0 18px rgba(255,80,110,0.12);
+    .stat-number.red {
+      color: #ff6075;
+      text-shadow: 0 0 16px rgba(255,90,110,0.12);
     }
 
-    .stat-label {
-      color: var(--text-soft);
+    .stat-text {
       font-size: 14px;
       font-weight: 700;
+      color: var(--text-soft);
     }
 
-    .panel-footer-btn {
+    .panel-btn {
       margin-top: auto;
       min-height: 56px;
+      border-radius: 18px;
       border: 1px solid rgba(120,185,255,0.16);
       background: rgba(255,255,255,0.03);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: #d6ebff;
+      color: #dceeff;
       font-size: 16px;
       font-weight: 800;
       cursor: pointer;
       transition: .24s ease;
     }
 
-    .panel-footer-btn:hover {
+    .panel-btn:hover {
       transform: translateY(-2px);
-      border-color: rgba(100,210,255,0.26);
       background: rgba(255,255,255,0.05);
-      box-shadow: 0 0 18px rgba(50,184,255,0.08);
+      border-color: rgba(120,215,255,0.24);
+      box-shadow: 0 0 18px rgba(52,184,255,0.08);
     }
 
-    .danger-gauge {
-      flex: 1;
+    .security-grid {
       display: grid;
       grid-template-columns: 220px 1fr;
       gap: 18px;
       align-items: center;
-      margin-top: 8px;
+      flex: 1;
+      margin-top: 6px;
     }
 
-    .gauge-circle-wrap {
-      display: grid;
-      place-items: center;
-    }
-
-    .gauge-circle {
-      position: relative;
+    .security-ring {
       width: 190px;
       height: 190px;
       border-radius: 50%;
-      background:
-        radial-gradient(circle at center, rgba(5,14,30,0.96) 52%, transparent 53%),
-        conic-gradient(from -90deg, var(--blue) 0 78%, rgba(255,255,255,0.08) 78% 100%);
-      box-shadow:
-        inset 0 0 0 8px rgba(255,255,255,0.03),
-        0 0 30px rgba(50,184,255,0.14);
+      margin: 0 auto;
       display: grid;
       place-items: center;
+      position: relative;
+      background:
+        radial-gradient(circle at center, rgba(5,14,30,0.96) 52%, transparent 53%),
+        conic-gradient(from -90deg, var(--blue) 0 78%, rgba(255,255,255,0.07) 78% 100%);
+      box-shadow:
+        inset 0 0 0 8px rgba(255,255,255,0.03),
+        0 0 28px rgba(52,184,255,0.14);
     }
 
-    .gauge-circle::after {
+    .security-ring::after {
       content: "";
       position: absolute;
       inset: 18px;
@@ -843,71 +945,70 @@
       border: 1px solid rgba(255,255,255,0.06);
     }
 
-    .gauge-value {
-      text-align: center;
+    .security-ring-value {
       position: relative;
       z-index: 2;
+      text-align: center;
     }
 
-    .gauge-value strong {
+    .security-ring-value strong {
       display: block;
       font-size: 46px;
       font-weight: 900;
       line-height: 1;
     }
 
-    .gauge-value span {
+    .security-ring-value span {
       display: block;
       margin-top: 6px;
-      color: #87bbff;
       font-size: 18px;
       font-weight: 800;
+      color: #87bcff;
       letter-spacing: .04em;
     }
 
-    .gauge-list {
+    .security-lines {
       display: grid;
-      gap: 18px;
+      gap: 16px;
     }
 
-    .gauge-line {
+    .sec-line {
       display: grid;
       gap: 8px;
     }
 
-    .gauge-line-top {
+    .sec-line-top {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       gap: 12px;
+      color: #dceeff;
       font-size: 14px;
-      color: #dbeeff;
       font-weight: 700;
     }
 
-    .gauge-track {
+    .sec-track {
       height: 7px;
       border-radius: 999px;
       background: rgba(255,255,255,0.06);
       overflow: hidden;
     }
 
-    .gauge-fill {
+    .sec-fill {
       height: 100%;
       border-radius: 999px;
       background: linear-gradient(90deg, var(--blue), var(--cyan));
-      box-shadow: 0 0 14px rgba(50,184,255,0.18);
+      box-shadow: 0 0 14px rgba(52,184,255,0.18);
     }
 
     .radio-list {
       display: grid;
       gap: 10px;
-      margin-top: 6px;
+      margin-top: 4px;
       flex: 1;
     }
 
     .radio-item {
-      min-height: 64px;
+      min-height: 66px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.06);
       background: rgba(255,255,255,0.02);
@@ -921,7 +1022,7 @@
 
     .radio-item:hover {
       transform: translateY(-2px);
-      border-color: rgba(100,210,255,0.18);
+      border-color: rgba(120,215,255,0.16);
       background: rgba(255,255,255,0.04);
     }
 
@@ -929,7 +1030,7 @@
       width: 10px;
       height: 10px;
       border-radius: 999px;
-      box-shadow: 0 0 14px currentColor;
+      box-shadow: 0 0 12px currentColor;
     }
 
     .radio-dot.blue { color: var(--blue); background: var(--blue); }
@@ -944,25 +1045,27 @@
 
     .radio-text {
       font-size: 14px;
-      color: #e8f4ff;
+      color: #eaf5ff;
       line-height: 1.35;
     }
 
     .bottom-grid {
+      margin-top: 20px;
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 20px;
     }
 
-    .chart-box {
-      min-height: 300px;
+    .chart-card,
+    .leaders-card,
+    .placeholder-card {
+      min-height: 310px;
       padding: 22px;
       display: flex;
       flex-direction: column;
     }
 
     .chart-wrap {
-      position: relative;
       flex: 1;
       margin-top: 14px;
       border-radius: 24px;
@@ -972,7 +1075,7 @@
         rgba(255,255,255,0.02);
       background-size: 48px 48px, 48px 48px, auto;
       overflow: hidden;
-      padding: 18px 18px 12px;
+      padding: 18px;
     }
 
     .chart-svg {
@@ -981,37 +1084,30 @@
       display: block;
     }
 
-    .chart-path {
-      fill: rgba(50,184,255,0.16);
-      stroke: #42beff;
+    .chart-area {
+      fill: rgba(52,184,255,0.16);
+      stroke: #44c1ff;
       stroke-width: 4;
-      filter: drop-shadow(0 0 12px rgba(50,184,255,0.22));
+      filter: drop-shadow(0 0 12px rgba(52,184,255,0.18));
     }
 
     .chart-dot {
-      fill: #7ee9ff;
-      stroke: rgba(255,255,255,0.6);
+      fill: #86eeff;
+      stroke: rgba(255,255,255,0.58);
       stroke-width: 2;
     }
 
-    .leaders-box {
-      min-height: 300px;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .leader-list {
+    .leaders-list {
       display: grid;
       gap: 10px;
       margin-top: 14px;
     }
 
-    .leader-item {
+    .leader-row {
       min-height: 78px;
       border-radius: 20px;
-      background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.03);
       display: grid;
       grid-template-columns: 48px 56px 1fr auto;
       align-items: center;
@@ -1020,10 +1116,10 @@
       transition: .22s ease;
     }
 
-    .leader-item:hover {
+    .leader-row:hover {
       transform: translateY(-2px);
-      border-color: rgba(100,210,255,0.18);
-      box-shadow: 0 0 18px rgba(50,184,255,0.06);
+      border-color: rgba(120,215,255,0.16);
+      box-shadow: 0 0 16px rgba(52,184,255,0.06);
     }
 
     .leader-rank {
@@ -1039,20 +1135,20 @@
     }
 
     .leader-rank.gold {
-      background: linear-gradient(135deg, #ffd25a, #ffb300);
-      color: #281a00;
+      background: linear-gradient(135deg, #ffd360, #ffb300);
+      color: #2a1900;
       border: none;
-      box-shadow: 0 0 18px rgba(255,203,88,0.24);
+      box-shadow: 0 0 18px rgba(255,203,89,0.20);
     }
 
     .leader-rank.silver {
-      background: linear-gradient(135deg, #cbd8ef, #7b8ca9);
-      color: #0d1728;
+      background: linear-gradient(135deg, #d7e2f3, #7e8ea9);
+      color: #111b2c;
       border: none;
     }
 
     .leader-rank.bronze {
-      background: linear-gradient(135deg, #ffb08d, #c76a45);
+      background: linear-gradient(135deg, #ffb38e, #c96d46);
       color: #241208;
       border: none;
     }
@@ -1063,12 +1159,11 @@
       border-radius: 18px;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.04);
       display: grid;
       place-items: center;
+      background: rgba(255,255,255,0.04);
       font-size: 20px;
       font-weight: 900;
-      color: white;
     }
 
     .leader-avatar img {
@@ -1085,7 +1180,7 @@
     .leader-name {
       font-size: 18px;
       font-weight: 900;
-      line-height: 1.15;
+      line-height: 1.1;
     }
 
     .leader-role {
@@ -1097,46 +1192,63 @@
     .leader-score {
       font-size: 28px;
       font-weight: 900;
-      color: #dff4ff;
+      color: #e1f6ff;
       white-space: nowrap;
+      text-align: right;
     }
 
     .leader-score small {
       display: block;
-      margin-top: 3px;
+      margin-top: 4px;
       font-size: 12px;
       color: var(--text-soft);
       font-weight: 700;
-      text-align: right;
     }
 
-    .badge-channel {
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(80,170,255,0.08);
-      border: 1px solid rgba(80,170,255,0.16);
-      color: #9cd9ff;
-      font-size: 12px;
-      font-weight: 800;
-      white-space: nowrap;
+    .placeholder-card {
+      display: grid;
+      place-items: center;
+      text-align: center;
     }
 
-    .mobile-note {
-      display: none;
+    .placeholder-inner {
+      max-width: 440px;
     }
 
-    @media (max-width: 1380px) {
-      :root {
-        --sidebar-width: 300px;
-      }
+    .placeholder-icon {
+      font-size: 74px;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 18px rgba(52,184,255,0.12));
+      animation: placeholderFloat 3s ease-in-out infinite;
+    }
 
+    @keyframes placeholderFloat {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .placeholder-title {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      margin-bottom: 10px;
+    }
+
+    .placeholder-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-soft);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1420px) {
       .topbar {
         grid-template-columns: 1fr;
       }
 
-      .dashboard-grid,
-      .bottom-grid,
-      .hero {
+      .hero,
+      .cards-3,
+      .bottom-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1144,51 +1256,44 @@
         justify-content: center;
       }
 
-      .danger-gauge {
+      .security-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 1080px) {
-      .page {
+    @media (max-width: 1100px) {
+      .app {
         grid-template-columns: 1fr;
       }
 
       .sidebar {
+        position: relative;
+        top: 0;
         min-height: auto;
       }
 
-      .nav-stack {
+      .dock {
         grid-template-columns: repeat(3, 1fr);
       }
 
-      .stars-box {
+      .stars-panel {
         margin-top: 0;
       }
     }
 
     @media (max-width: 760px) {
-      .page {
+      .app {
         padding: 12px;
         gap: 14px;
       }
 
-      .sidebar,
-      .topbar,
-      .hero,
-      .panel,
-      .chart-box,
-      .leaders-box {
-        border-radius: 22px;
-      }
-
-      .nav-stack,
-      .stats-row {
+      .dock,
+      .stats-grid {
         grid-template-columns: 1fr;
       }
 
-      .leader-item {
-        grid-template-columns: 40px 52px 1fr;
+      .leader-row {
+        grid-template-columns: 42px 52px 1fr;
       }
 
       .leader-score {
@@ -1196,125 +1301,129 @@
         text-align: left;
       }
 
-      .mobile-note {
-        display: block;
-        color: var(--text-soft);
-        text-align: center;
-        font-size: 12px;
-      }
-
-      .logo-title .blue,
-      .logo-title .red {
+      .brand-title .police,
+      .brand-title .platinum {
         font-size: 48px;
       }
 
       .hero-title {
         font-size: 34px;
       }
+
+      .mini-box,
+      .top-mid,
+      .top-right {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <!-- LEFT SIDEBAR -->
+  <div class="app">
+    <!-- SIDEBAR -->
     <aside class="sidebar glass">
-      <div class="logo-box">
-        <div class="logo-frame">
-          <div class="logo-title">
-            <span class="blue">Police</span>
-            <span class="red">Platinum</span>
+      <div class="brand">
+        <div class="brand-frame">
+          <div class="brand-title">
+            <span class="police">Police</span>
+            <span class="platinum">Platinum</span>
           </div>
         </div>
       </div>
 
-      <div class="nav-stack">
-        <button class="nav-card" type="button">
-          <div class="nav-card-content">
-            <div class="nav-icon-wrap">
-              <img class="nav-icon" src="./police_png/rukovodstvo.png" alt="Руководство" />
+      <div class="dock">
+        <button class="dock-btn active" type="button" data-target="guide">
+          <div class="dock-btn-wrap">
+            <div class="dock-icon-shell">
+              <img class="dock-icon" src="./police_png/rukovodstvo.png" alt="Руководство" />
             </div>
-            <div class="nav-label">Руководство</div>
-            <div class="nav-sub">Основные инструкции и правила</div>
+            <div class="dock-label">Руководство</div>
+            <div class="dock-sub">Основные инструкции и регламенты</div>
           </div>
+          <div class="dock-arrow"></div>
         </button>
 
-        <button class="nav-card active" type="button">
-          <div class="nav-card-content">
-            <div class="nav-icon-wrap">
-              <img class="nav-icon" src="./police_png/punishment_table.png" alt="Общая таблица наказаний" />
+        <button class="dock-btn" type="button" data-target="punishments">
+          <div class="dock-btn-wrap">
+            <div class="dock-icon-shell">
+              <img class="dock-icon" src="./police_png/punishment_table.png" alt="Таблица наказаний" />
             </div>
-            <div class="nav-label">Общая таблица<br>наказаний</div>
-            <div class="nav-sub">Все меры и дисциплинарные нормы</div>
+            <div class="dock-label">Общая таблица<br>наказаний</div>
+            <div class="dock-sub">Все меры и дисциплинарные нормы</div>
           </div>
+          <div class="dock-arrow"></div>
         </button>
 
-        <button class="nav-card" type="button">
-          <div class="nav-card-content">
-            <div class="nav-icon-wrap">
-              <img class="nav-icon" src="./police_png/rating.png" alt="Топ лидеров PD" />
+        <button class="dock-btn" type="button" data-target="leaders">
+          <div class="dock-btn-wrap">
+            <div class="dock-icon-shell">
+              <img class="dock-icon" src="./police_png/rating.png" alt="Топ лидеров PD" />
             </div>
-            <div class="nav-label">Топ лидеров PD</div>
-            <div class="nav-sub">Лучшие сотрудники и лидеры</div>
+            <div class="dock-label">Топ лидеров PD</div>
+            <div class="dock-sub">Лучшие сотрудники и лидеры</div>
           </div>
+          <div class="dock-arrow"></div>
         </button>
       </div>
 
-      <div class="stars-box">
+      <div class="stars-panel">
         <img class="stars-img" src="./police_png/five_zvezd.png" alt="Пять звёзд" />
       </div>
     </aside>
 
     <!-- MAIN -->
     <main class="main">
-      <!-- TOPBAR -->
       <section class="topbar glass">
-        <div class="welcome-box">
-          <div class="welcome-icon">
-            <img src="./police_png/police_shield.png" alt="Shield" />
-          </div>
-          <div>
-            <div class="top-title">Добро пожаловать,<br>Офицер</div>
-            <div class="top-sub">Police Platinum Department</div>
+        <div class="top-group">
+          <div class="mini-box">
+            <div class="mini-icon">
+              <img src="./police_png/police_shield.png" alt="Щит" />
+            </div>
+            <div>
+              <div class="mini-title">Добро пожаловать,<br>Офицер</div>
+              <div class="mini-sub">Police Platinum Department</div>
+            </div>
           </div>
         </div>
 
-        <div class="top-center">
-          <div class="top-mini">
-            <div class="top-icon">
+        <div class="top-mid">
+          <div class="mini-box">
+            <div class="mini-icon">
               <img src="./police_png/table.png" alt="Дата" />
             </div>
             <div>
-              <div class="top-title">Сегодня</div>
-              <div class="top-sub">24 мая 2025</div>
+              <div class="mini-title">Сегодня</div>
+              <div class="mini-sub">24 мая 2025</div>
             </div>
           </div>
 
-          <div class="top-mini">
-            <div class="top-icon">
+          <div class="mini-box">
+            <div class="mini-icon">
               <img src="./police_png/radio.png" alt="Время" />
             </div>
             <div>
-              <div class="top-title">Время</div>
-              <div class="top-sub">20:45</div>
+              <div class="mini-title">Время</div>
+              <div class="mini-sub">20:45</div>
             </div>
           </div>
 
-          <div class="top-mini" style="position:relative;">
-            <div class="top-icon">
+          <div class="mini-box">
+            <div class="mini-icon">
               <img src="./police_png/vizov.png" alt="Уведомления" />
-              <span class="notify-dot">3</span>
+              <div class="notify-badge">3</div>
             </div>
             <div>
-              <div class="top-title">Уведомления</div>
-              <div class="top-sub">Новые сигналы и вызовы</div>
+              <div class="mini-title">Уведомления</div>
+              <div class="mini-sub">Новые сигналы и вызовы</div>
             </div>
           </div>
         </div>
 
         <div class="top-right">
-          <div class="profile-wrap">
+          <div class="profile-box">
             <div class="profile-avatar">
-              <img src="./police_png/police_shield.png" alt="Officer" />
+              <img src="./police_png/police_shield.png" alt="Officer Platinum" />
             </div>
             <div>
               <div class="profile-name">Officer Platinum</div>
@@ -1324,280 +1433,305 @@
         </div>
       </section>
 
-      <!-- HERO -->
-      <section class="hero glass">
-        <div class="hero-left">
-          <div class="hero-kicker">Служим и защищаем</div>
-          <div class="hero-title">
-            <span>СПРАВЕДЛИВОСТЬ.</span>
-            <span>ПОРЯДОК. БЕЗОПАСНОСТЬ.</span>
-          </div>
-          <div class="hero-meta">Профессионализм • Честь • Отвага</div>
-          <div class="hero-line"></div>
+      <section class="section-shell">
+        <!-- GUIDE -->
+        <div class="section-view active" id="section-guide">
+          <section class="hero glass">
+            <div class="hero-left">
+              <div class="hero-kicker">Служим и защищаем</div>
+              <div class="hero-title">
+                <span>СПРАВЕДЛИВОСТЬ.</span>
+                <span>ПОРЯДОК. БЕЗОПАСНОСТЬ.</span>
+              </div>
+              <div class="hero-meta">Профессионализм • Честь • Отвага</div>
+              <div class="hero-line"></div>
+            </div>
+
+            <div class="hero-right">
+              <img class="hero-car" src="./police_png/car.png" alt="Police car" />
+            </div>
+          </section>
+
+          <section class="cards-3">
+            <div class="panel glass">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-head-left">
+                    <img src="./police_png/police_shield.png" alt="shield" />
+                    <div class="panel-title">Оперативная сводка</div>
+                  </div>
+                  <div class="panel-sub">За последние 24 часа</div>
+                </div>
+              </div>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <img src="./police_png/report.png" alt="Отчёты" />
+                  <div class="stat-number">128</div>
+                  <div class="stat-text">Новые отчёты</div>
+                </div>
+
+                <div class="stat-card red">
+                  <img class="red-tone-icon" src="./police_png/arest.png" alt="Аресты" />
+                  <div class="stat-number red">46</div>
+                  <div class="stat-text">Аресты</div>
+                </div>
+
+                <div class="stat-card">
+                  <img src="./police_png/vizov.png" alt="Вызовы" />
+                  <div class="stat-number">87</div>
+                  <div class="stat-text">Вызовы</div>
+                </div>
+
+                <div class="stat-card">
+                  <img src="./police_png/patrol.png" alt="Патрули" />
+                  <div class="stat-number">24</div>
+                  <div class="stat-text">Патрули</div>
+                </div>
+              </div>
+
+              <button class="panel-btn" type="button">Перейти к сводке</button>
+            </div>
+
+            <div class="panel glass">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-head-left">
+                    <img src="./police_png/vizov.png" alt="Безопасность" />
+                    <div class="panel-title">Уровень общественной безопасности</div>
+                  </div>
+                  <div class="panel-sub">Текущий статус по городу</div>
+                </div>
+              </div>
+
+              <div class="security-grid">
+                <div class="security-ring">
+                  <div class="security-ring-value">
+                    <strong>78%</strong>
+                    <span>СТАБИЛЬНО</span>
+                  </div>
+                </div>
+
+                <div class="security-lines">
+                  <div class="sec-line">
+                    <div class="sec-line-top"><span>Центр города</span><span>82%</span></div>
+                    <div class="sec-track"><div class="sec-fill" style="width:82%"></div></div>
+                  </div>
+
+                  <div class="sec-line">
+                    <div class="sec-line-top"><span>Спальные районы</span><span>74%</span></div>
+                    <div class="sec-track"><div class="sec-fill" style="width:74%"></div></div>
+                  </div>
+
+                  <div class="sec-line">
+                    <div class="sec-line-top"><span>Промышленный район</span><span>65%</span></div>
+                    <div class="sec-track"><div class="sec-fill" style="width:65%"></div></div>
+                  </div>
+
+                  <div class="sec-line">
+                    <div class="sec-line-top"><span>Пригород</span><span>90%</span></div>
+                    <div class="sec-track"><div class="sec-fill" style="width:90%"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="panel-btn" type="button">Подробнее</button>
+            </div>
+
+            <div class="panel glass">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-head-left">
+                    <img src="./police_png/radio.png" alt="Радио" />
+                    <div class="panel-title">Радиопереговоры</div>
+                  </div>
+                  <div class="panel-sub">Канал: 1-A-12</div>
+                </div>
+                <div class="pill">Онлайн</div>
+              </div>
+
+              <div class="radio-list">
+                <div class="radio-item">
+                  <div class="radio-dot blue"></div>
+                  <div class="radio-time">20:42</div>
+                  <div class="radio-text"><strong>1-A-12</strong> Патруль начал дежурство в районе Центральной площади.</div>
+                </div>
+
+                <div class="radio-item">
+                  <div class="radio-dot red"></div>
+                  <div class="radio-time">20:38</div>
+                  <div class="radio-text"><strong>3-B-07</strong> Требуется подкрепление на 10-20 в районе Доки.</div>
+                </div>
+
+                <div class="radio-item">
+                  <div class="radio-dot blue"></div>
+                  <div class="radio-time">20:36</div>
+                  <div class="radio-text"><strong>2-C-03</strong> Код 4, всё спокойно.</div>
+                </div>
+
+                <div class="radio-item">
+                  <div class="radio-dot blue"></div>
+                  <div class="radio-time">20:31</div>
+                  <div class="radio-text"><strong>1-A-12</strong> Проверка транспорта на шоссе 68.</div>
+                </div>
+              </div>
+
+              <button class="panel-btn" type="button">Открыть радио</button>
+            </div>
+          </section>
+
+          <section class="bottom-grid">
+            <div class="chart-card glass">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-head-left">
+                    <img src="./police_png/police_shield.png" alt="shield" />
+                    <div class="panel-title">Статистика департамента</div>
+                  </div>
+                </div>
+                <div class="pill">За неделю</div>
+              </div>
+
+              <div class="chart-wrap">
+                <svg class="chart-svg" viewBox="0 0 900 240" preserveAspectRatio="none">
+                  <path class="chart-area"
+                    d="M20 190
+                       L90 178
+                       L160 150
+                       L230 165
+                       L300 130
+                       L370 82
+                       L440 118
+                       L510 95
+                       L580 108
+                       L650 78
+                       L720 84
+                       L790 44
+                       L860 92
+                       L860 220
+                       L20 220 Z"></path>
+
+                  <circle class="chart-dot" cx="20" cy="190" r="5"></circle>
+                  <circle class="chart-dot" cx="90" cy="178" r="5"></circle>
+                  <circle class="chart-dot" cx="160" cy="150" r="5"></circle>
+                  <circle class="chart-dot" cx="230" cy="165" r="5"></circle>
+                  <circle class="chart-dot" cx="300" cy="130" r="5"></circle>
+                  <circle class="chart-dot" cx="370" cy="82" r="5"></circle>
+                  <circle class="chart-dot" cx="440" cy="118" r="5"></circle>
+                  <circle class="chart-dot" cx="510" cy="95" r="5"></circle>
+                  <circle class="chart-dot" cx="580" cy="108" r="5"></circle>
+                  <circle class="chart-dot" cx="650" cy="78" r="5"></circle>
+                  <circle class="chart-dot" cx="720" cy="84" r="5"></circle>
+                  <circle class="chart-dot" cx="790" cy="44" r="5"></circle>
+                  <circle class="chart-dot" cx="860" cy="92" r="5"></circle>
+                </svg>
+              </div>
+            </div>
+
+            <div class="leaders-card glass">
+              <div class="panel-head">
+                <div>
+                  <div class="panel-head-left">
+                    <img src="./police_png/rating.png" alt="rating" />
+                    <div class="panel-title">Топ сотрудников</div>
+                  </div>
+                </div>
+                <div class="pill">Смотреть всех</div>
+              </div>
+
+              <div class="leaders-list">
+                <div class="leader-row">
+                  <div class="leader-rank gold">1</div>
+                  <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
+                  <div class="leader-main">
+                    <div class="leader-name">Officer Platinum</div>
+                    <div class="leader-role">SWAT Division</div>
+                  </div>
+                  <div class="leader-score">4 560<small>очков</small></div>
+                </div>
+
+                <div class="leader-row">
+                  <div class="leader-rank silver">2</div>
+                  <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
+                  <div class="leader-main">
+                    <div class="leader-name">Detective Morse</div>
+                    <div class="leader-role">Detective Bureau</div>
+                  </div>
+                  <div class="leader-score">3 890<small>очков</small></div>
+                </div>
+
+                <div class="leader-row">
+                  <div class="leader-rank bronze">3</div>
+                  <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
+                  <div class="leader-main">
+                    <div class="leader-name">Officer Jackson</div>
+                    <div class="leader-role">Patrol Division</div>
+                  </div>
+                  <div class="leader-score">3 450<small>очков</small></div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
 
-        <div class="hero-right">
-          <img class="hero-car" src="./police_png/car.png" alt="Police car" />
+        <!-- PUNISHMENTS -->
+        <div class="section-view" id="section-punishments">
+          <section class="placeholder-card glass">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">📋</div>
+              <div class="placeholder-title">Общая таблица наказаний</div>
+              <div class="placeholder-text">
+                Здесь можно разместить полную систему наказаний, статьи, сроки, штрафы и внутренний регламент департамента.
+                Секция уже подключена и красиво переключается через левую панель.
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- LEADERS -->
+        <div class="section-view" id="section-leaders">
+          <section class="placeholder-card glass">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">🏆</div>
+              <div class="placeholder-title">Топ лидеров PD</div>
+              <div class="placeholder-text">
+                Тут позже можно сделать полноценный рейтинг сотрудников, отделов, патрулей, арестов,
+                отчётов и лучших офицеров по неделе или месяцу.
+              </div>
+            </div>
+          </section>
         </div>
       </section>
-
-      <!-- MIDDLE PANELS -->
-      <section class="dashboard-grid">
-        <div class="panel glass">
-          <div class="panel-title">
-            <div>
-              <div class="panel-title-left">
-                <img src="./police_png/police_shield.png" alt="shield" />
-                <div class="panel-name">Оперативная сводка</div>
-              </div>
-              <div class="panel-sub">За последние 24 часа</div>
-            </div>
-          </div>
-
-          <div class="stats-row">
-            <div class="stat-box">
-              <img src="./police_png/report.png" alt="Отчёты" />
-              <div class="stat-value">128</div>
-              <div class="stat-label">Новые отчёты</div>
-            </div>
-
-            <div class="stat-box red">
-              <img src="./police_png/arest.png" alt="Аресты" />
-              <div class="stat-value red">46</div>
-              <div class="stat-label">Аресты</div>
-            </div>
-
-            <div class="stat-box">
-              <img src="./police_png/vizov.png" alt="Вызовы" />
-              <div class="stat-value">87</div>
-              <div class="stat-label">Вызовы</div>
-            </div>
-
-            <div class="stat-box">
-              <img src="./police_png/patrol.png" alt="Патрули" />
-              <div class="stat-value">24</div>
-              <div class="stat-label">Патрули</div>
-            </div>
-          </div>
-
-          <button class="panel-footer-btn" type="button">Перейти к сводке</button>
-        </div>
-
-        <div class="panel glass">
-          <div class="panel-title">
-            <div>
-              <div class="panel-title-left">
-                <img src="./police_png/vizov.png" alt="safety" />
-                <div class="panel-name">Уровень общественной безопасности</div>
-              </div>
-              <div class="panel-sub">Текущий статус по городу</div>
-            </div>
-          </div>
-
-          <div class="danger-gauge">
-            <div class="gauge-circle-wrap">
-              <div class="gauge-circle">
-                <div class="gauge-value">
-                  <strong>78%</strong>
-                  <span>СТАБИЛЬНО</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="gauge-list">
-              <div class="gauge-line">
-                <div class="gauge-line-top">
-                  <span>Центр города</span>
-                  <span>82%</span>
-                </div>
-                <div class="gauge-track"><div class="gauge-fill" style="width:82%"></div></div>
-              </div>
-
-              <div class="gauge-line">
-                <div class="gauge-line-top">
-                  <span>Спальные районы</span>
-                  <span>74%</span>
-                </div>
-                <div class="gauge-track"><div class="gauge-fill" style="width:74%"></div></div>
-              </div>
-
-              <div class="gauge-line">
-                <div class="gauge-line-top">
-                  <span>Промышленный район</span>
-                  <span>65%</span>
-                </div>
-                <div class="gauge-track"><div class="gauge-fill" style="width:65%"></div></div>
-              </div>
-
-              <div class="gauge-line">
-                <div class="gauge-line-top">
-                  <span>Пригород</span>
-                  <span>90%</span>
-                </div>
-                <div class="gauge-track"><div class="gauge-fill" style="width:90%"></div></div>
-              </div>
-            </div>
-          </div>
-
-          <button class="panel-footer-btn" type="button">Подробнее</button>
-        </div>
-
-        <div class="panel glass">
-          <div class="panel-title">
-            <div>
-              <div class="panel-title-left">
-                <img src="./police_png/radio.png" alt="Радио" />
-                <div class="panel-name">Радиопереговоры</div>
-              </div>
-              <div class="panel-sub">Канал: 1-A-12</div>
-            </div>
-
-            <div class="badge-channel">Онлайн</div>
-          </div>
-
-          <div class="radio-list">
-            <div class="radio-item">
-              <div class="radio-dot blue"></div>
-              <div class="radio-time">20:42</div>
-              <div class="radio-text"><strong>1-A-12</strong> Патруль начал дежурство в районе Центральной площади.</div>
-            </div>
-
-            <div class="radio-item">
-              <div class="radio-dot red"></div>
-              <div class="radio-time">20:38</div>
-              <div class="radio-text"><strong>3-B-07</strong> Требуется подкрепление на 10-20 в районе Доки.</div>
-            </div>
-
-            <div class="radio-item">
-              <div class="radio-dot blue"></div>
-              <div class="radio-time">20:36</div>
-              <div class="radio-text"><strong>2-C-03</strong> Код 4, всё спокойно.</div>
-            </div>
-
-            <div class="radio-item">
-              <div class="radio-dot blue"></div>
-              <div class="radio-time">20:31</div>
-              <div class="radio-text"><strong>1-A-12</strong> Проверка транспорта на шоссе 68.</div>
-            </div>
-          </div>
-
-          <button class="panel-footer-btn" type="button">Открыть радио</button>
-        </div>
-      </section>
-
-      <!-- BOTTOM -->
-      <section class="bottom-grid">
-        <div class="chart-box glass">
-          <div class="panel-title">
-            <div>
-              <div class="panel-title-left">
-                <img src="./police_png/police_shield.png" alt="shield" />
-                <div class="panel-name">Статистика департамента</div>
-              </div>
-            </div>
-
-            <div class="badge-channel">За неделю</div>
-          </div>
-
-          <div class="chart-wrap">
-            <svg class="chart-svg" viewBox="0 0 900 240" preserveAspectRatio="none">
-              <path class="chart-path"
-                d="M20 190
-                   L90 178
-                   L160 150
-                   L230 165
-                   L300 130
-                   L370 82
-                   L440 118
-                   L510 95
-                   L580 108
-                   L650 78
-                   L720 84
-                   L790 44
-                   L860 92
-                   L860 220
-                   L20 220 Z" />
-              <circle class="chart-dot" cx="20" cy="190" r="5" />
-              <circle class="chart-dot" cx="90" cy="178" r="5" />
-              <circle class="chart-dot" cx="160" cy="150" r="5" />
-              <circle class="chart-dot" cx="230" cy="165" r="5" />
-              <circle class="chart-dot" cx="300" cy="130" r="5" />
-              <circle class="chart-dot" cx="370" cy="82" r="5" />
-              <circle class="chart-dot" cx="440" cy="118" r="5" />
-              <circle class="chart-dot" cx="510" cy="95" r="5" />
-              <circle class="chart-dot" cx="580" cy="108" r="5" />
-              <circle class="chart-dot" cx="650" cy="78" r="5" />
-              <circle class="chart-dot" cx="720" cy="84" r="5" />
-              <circle class="chart-dot" cx="790" cy="44" r="5" />
-              <circle class="chart-dot" cx="860" cy="92" r="5" />
-            </svg>
-          </div>
-        </div>
-
-        <div class="leaders-box glass">
-          <div class="panel-title">
-            <div>
-              <div class="panel-title-left">
-                <img src="./police_png/rating.png" alt="rating" />
-                <div class="panel-name">Топ сотрудников</div>
-              </div>
-            </div>
-
-            <div class="badge-channel">Смотреть всех</div>
-          </div>
-
-          <div class="leader-list">
-            <div class="leader-item">
-              <div class="leader-rank gold">1</div>
-              <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
-              <div class="leader-main">
-                <div class="leader-name">Officer Platinum</div>
-                <div class="leader-role">SWAT Division</div>
-              </div>
-              <div class="leader-score">4 560<small>очков</small></div>
-            </div>
-
-            <div class="leader-item">
-              <div class="leader-rank silver">2</div>
-              <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
-              <div class="leader-main">
-                <div class="leader-name">Detective Morse</div>
-                <div class="leader-role">Detective Bureau</div>
-              </div>
-              <div class="leader-score">3 890<small>очков</small></div>
-            </div>
-
-            <div class="leader-item">
-              <div class="leader-rank bronze">3</div>
-              <div class="leader-avatar"><img src="./police_png/police_shield.png" alt="avatar" /></div>
-              <div class="leader-main">
-                <div class="leader-name">Officer Jackson</div>
-                <div class="leader-role">Patrol Division</div>
-              </div>
-              <div class="leader-score">3 450<small>очков</small></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="mobile-note">Police Platinum • неоновая версия сайта</div>
     </main>
   </div>
 
   <script>
-    const navCards = document.querySelectorAll('.nav-card');
-    navCards.forEach(card => {
-      card.addEventListener('click', () => {
-        navCards.forEach(x => x.classList.remove('active'));
-        card.classList.add('active');
-      });
-    });
+    (function initPoliceSite() {
+      const dockButtons = document.querySelectorAll(".dock-btn");
+      const sections = document.querySelectorAll(".section-view");
 
-    // Автоподсветка иконки ареста в более красный тон
-    const arrestIcons = document.querySelectorAll('img[src*="arest.png"]');
-    arrestIcons.forEach(icon => {
-      icon.classList.add('red-arrest');
-    });
+      function setActiveSection(target) {
+        dockButtons.forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.target === target);
+        });
+
+        sections.forEach(section => {
+          section.classList.toggle("active", section.id === "section-" + target);
+        });
+      }
+
+      dockButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const target = btn.dataset.target || "guide";
+          setActiveSection(target);
+        });
+      });
+
+      // Красим иконку ареста в более красный
+      document.querySelectorAll('img[src*="arest.png"]').forEach(img => {
+        img.classList.add("red-tone");
+      });
+    })();
   </script>
 </body>
 </html>
